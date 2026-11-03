@@ -1,0 +1,76 @@
+path: null
+data_file: lssty1xdesi_desi_dr3.dataset
+# the DESI data vector is band powers at the explicit centers named in
+# the dataset's ell_file (linear Delta ell = 10, weighted centers)
+binning_space: fourier
+# the Fingers-of-God convolution rebuilds each thin bin's n(z) at every
+# sampled point, so the external-n(z) path is mandatory here
+external_nz_modeling: 1
+# clustering only: every (lens, source) ggl pair is excluded, or 380
+# never-computed ggl spectra would fill most of the data-vector layout
+ggl_exclude: all
+accuracyboost: 1.0
+internal_accuracyboost: 1.0 # C-FAST-PT convolution grid / output grid
+# refinements on top of accuracyboost (which multiplies them too):
+# the non-Limber FFTLog chi grid, and the z nodes of the P(k) tables
+nonlimber_accuracyboost: 1.0
+pk_z_refinement: 1
+integration_accuracy: 0
+# n(z) interpolation: 0 = cubic spline, 1 = linear, 2+ = Steffen (monotone)
+# 0: original midpoint curve (default); 1: histogram + Akima.
+# Akima ignores photoz_interpolation_type; select its fixed first factor below.
+photoz_histogram_akima: 0
+# Reconstruction choice: 3, 5 or 7; accuracy boosts never change this factor.
+photoz_histogram_akima_factor: 3
+photoz_interpolation_type: 0
+# n(z) file z column: 0 = Z_LOW (left bin edges), 1 = Z_MID (sample points)
+photoz_zmid_convention: 1
+# galaxy clustering: 0 = non-Limber, 1 = Limber at every multipole
+adopt_limber_gg: 0
+# galaxy probes: 0 = perturbative galaxy bias, 1 = halo-model (HOD) galaxy
+# power (Limber only: needs adopt_limber_gg = adopt_limber_gs = 1)
+include_HOD_GX: 0
+# shear and ggl IA: 0 = the IA_model above, 1 = halo-model IA
+# (Fortuna et al. 2021; NLA only, Limber gs, include_HOD_GX = 0)
+include_halo_IA: 0
+# The point of this project: the low-rank non-Limber method carries the
+# full nonlinear density-density power with no Limber hand-off below its
+# cap. Thin comoving bins (about 62.3 Mpc) keep real non-Limber power to
+# multipoles far past the FKEM default of 150, hence the cap of 1000.
+# The rank sweep on the lsst_y1 fiducial put the nrank = 5 truncation at
+# delta chi2 ~ 1e-11 against nrank = 16.
+nonlimber_lowrank_gg: 1
+nonlimber_lowrank_rank: 5
+nonlimber_lowrank_lmax: 1000
+# Ntable.LMAX: no real-space Legendre sums run in fourier mode; this
+# only bounds nonlimber_lowrank_lmax from above
+lmax: 5000
+kmax_boltzmann: 5.0
+speed: 1
+non_linear_emul: 2
+use_emulator: 0
+debug: false
+# IA REDSHIFT EVOLUTION: 0 = NO_IA (AMPLITUDES SET TO ZERO),
+#                        1 = IA_NLA_LF
+#                        2 = IA_REDSHIFT_BINNING,
+#                        3 = IA_REDSHIFT_EVOLUTION
+IA_redshift_evolution: 3
+# IA_MODEL: 0 = NLA, 1 = TATT
+IA_model: 0
+# IA_code: 0 = C FASTPT, 1 = Python PAST-PT
+IA_code: 1
+# BIAS REDSHIFT EVOLUTION [b1,b2,bs2,b3,bmag,bK] (see bias.c): the
+# per-bin amplitudes arrive from desi_cl.py (chunk amplitude over the
+# growth at the bin mean), so every term keeps the free-amplitude code
+bias_model: [0,0,0,1,0,0]
+add_baryons_on_dv: False
+which_bsims_add_on_dv: "antilles-2"
+use_baryon_pca: False
+create_baryon_pca: False
+baryon_pca_select_sims: "antilles-2-99/antilles-101-378/antilles-380-400"
+filename_baryon_pca: "./projects/lssty1xdesi/chains/pca.txt"
+external_baryon_suppression: False
+print_datavector: False
+print_datavector_file: "./projects/lssty1xdesi/chains/theory.modelvector"
+
+params: !defaults [params_desi]

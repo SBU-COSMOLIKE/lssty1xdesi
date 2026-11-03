@@ -1,0 +1,7 @@
+*.emul filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
+lssty1xdesi_cov filter=lfs diff=lfs merge=lfs -text
+tests/studies/results/inverse_covariance.npz filter=lfs diff=lfs merge=lfs -text
+data/lssty1xdesi_desi_dr3.nz filter=lfs diff=lfs merge=lfs -text
+data/lssty1xdesi_desi_dr3_windows.npz filter=lfs diff=lfs merge=lfs -text
+data/lssty1xdesi_desi_dr3_cov filter=lfs diff=lfs merge=lfs -text

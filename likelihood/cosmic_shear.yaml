@@ -1,0 +1,48 @@
+path: null
+data_file: lssty1xdesi_M1_GGL0.05.dataset
+accuracyboost: 1.0
+internal_accuracyboost: 1.0 # C-FAST-PT convolution grid / output grid
+# refinements on top of accuracyboost (which multiplies them too):
+# the non-Limber FFTLog chi grid, and the z nodes of the P(k) tables
+nonlimber_accuracyboost: 1.0
+pk_z_refinement: 1
+integration_accuracy: 0
+# n(z) interpolation: 0 = cubic spline, 1 = linear, 2+ = Steffen (monotone)
+# 0: original midpoint curve (default); 1: histogram + Akima.
+# Akima ignores photoz_interpolation_type; select its fixed first factor below.
+photoz_histogram_akima: 0
+# Reconstruction choice: 3, 5 or 7; accuracy boosts never change this factor.
+photoz_histogram_akima_factor: 3
+
+photoz_interpolation_type: 0
+# n(z) file z column: 0 = Z_LOW (left bin edges), 1 = Z_MID (sample points)
+photoz_zmid_convention: 0
+lmax: 50000 # lmax computed for real space correlation function
+kmax_boltzmann: 5.0
+speed: 1
+non_linear_emul: 2
+debug: False
+# IA REDSHIFT EVOLUTION: 0 = NO_IA (AMPLITUDES SET TO ZERO), 
+#                        1 = IA_NLA_LF
+#                        2 = IA_REDSHIFT_BINNING, 
+#                        3 = IA_REDSHIFT_EVOLUTION
+IA_redshift_evolution: 3
+# IA_MODEL: 0 = NLA, 1 = TATT
+IA_model: 0
+# IA_code: 0 = C FASTPT, 1 = Python PAST-PT
+IA_code: 1
+external_nz_modeling: 0
+use_emulator: 0
+
+add_baryons_on_dv: False
+which_bsims_add_on_dv: "antilles-2"
+
+use_baryon_pca: False
+create_baryon_pca: False
+baryon_pca_select_sims: "antilles-2-99/antilles-101-378/antilles-380-400"
+filename_baryon_pca: "./projects/lssty1xdesi/chains/pca.txt"
+external_baryon_suppression: False
+print_datavector: False
+print_datavector_file: "./projects/lssty1xdesi/chains/theory.modelvector"
+
+params: !defaults [params_source]

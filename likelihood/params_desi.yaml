@@ -1,0 +1,98 @@
+  # DESI galaxy bias amplitudes, one per chunk (the paper's Table 2
+  # ranges): the sampled value is the bias at z = 0 under passive
+  # evolution, b1(z) = amplitude / D(z); desi_cl.py divides by the
+  # growth at each thin bin's mean redshift. Fiducials from Table 1
+  # (one value per sample).
+  DESI_B1_BGS:
+    prior:
+      min: 0.8
+      max: 4.0
+    ref:
+      dist: norm
+      loc: 1.34
+      scale: 0.02
+    proposal: 0.02
+    latex: b_\mathrm{BGS}
+  DESI_B1_LRG1:
+    prior:
+      min: 0.8
+      max: 4.0
+    ref:
+      dist: norm
+      loc: 1.70
+      scale: 0.02
+    proposal: 0.02
+    latex: b_\mathrm{LRG}^1
+  DESI_B1_LRG2:
+    prior:
+      min: 0.8
+      max: 4.0
+    ref:
+      dist: norm
+      loc: 1.70
+      scale: 0.02
+    proposal: 0.02
+    latex: b_\mathrm{LRG}^2
+  DESI_B1_LRG3:
+    prior:
+      min: 0.8
+      max: 4.0
+    ref:
+      dist: norm
+      loc: 1.70
+      scale: 0.02
+    proposal: 0.02
+    latex: b_\mathrm{LRG}^3
+  DESI_B1_ELG1:
+    prior:
+      min: 0.8
+      max: 4.0
+    ref:
+      dist: norm
+      loc: 0.84
+      scale: 0.02
+    proposal: 0.02
+    latex: b_\mathrm{ELG}^1
+  DESI_B1_ELG2:
+    prior:
+      min: 0.8
+      max: 4.0
+    ref:
+      dist: norm
+      loc: 0.84
+      scale: 0.02
+    proposal: 0.02
+    latex: b_\mathrm{ELG}^2
+  # Velocity dispersions of the Fingers-of-God convolution, one per
+  # sample, in km/s (the paper's Table 1: BGS from Hawkins et al. 2003,
+  # LRG from Reid et al. 2014, ELG from Avila et al. 2020)
+  DESI_SIGV_BGS:
+    prior:
+      min: 100.0
+      max: 1000.0
+    ref:
+      dist: norm
+      loc: 357.0
+      scale: 5.0
+    proposal: 5.0
+    latex: \sigma_v^\mathrm{BGS}
+  DESI_SIGV_LRG:
+    prior:
+      min: 100.0
+      max: 1000.0
+    ref:
+      dist: norm
+      loc: 326.0
+      scale: 5.0
+    proposal: 5.0
+    latex: \sigma_v^\mathrm{LRG}
+  DESI_SIGV_ELG:
+    prior:
+      min: 100.0
+      max: 1000.0
+    ref:
+      dist: norm
+      loc: 200.0
+      scale: 5.0
+    proposal: 5.0
+    latex: \sigma_v^\mathrm{ELG}
