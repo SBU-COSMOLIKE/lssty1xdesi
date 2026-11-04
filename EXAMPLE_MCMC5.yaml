@@ -222,4 +222,4 @@ sampler:
     burn_in: 0
     Rminus1_single_split: 4
 
-output: ./projects/lssty1xdesi/chains/EXAMPLE_MCMC_DESI1
+output: ./projects/lssty1xdesi/chains/EXAMPLE_MCMC5

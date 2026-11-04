@@ -176,4 +176,4 @@ sampler:
       DESI_SIGV_19: 326.0
       DESI_SIGV_50: 200.0
 
-output: ./projects/lssty1xdesi/chains/EXAMPLE_EMUL2_EVALUATE_DESI1
+output: ./projects/lssty1xdesi/chains/EXAMPLE_EMUL2_EVALUATE3
