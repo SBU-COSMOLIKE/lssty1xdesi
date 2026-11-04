@@ -40,14 +40,11 @@ independent matrix with cosmolike's own kernels, so the two can be
 compared entry by entry (see
 [Checking against the source forecast](#source_forecast)).
 
-Two model choices differ from the wide-bin projects:
-
-- the Gaussian spectra carry the lens redshift-space distortion
-  window (`gaussian: rsd: true`): it moves the lowest bands of the
-  thin-bin rows onto the source forecast (the measured table below);
-- the density-only non-Limber recompute stays off
-  (`gaussian: nonlimber: false`): the covariance non-Limber transfers
-  carry density only and refuse the distortion window.
+Two model choices differ from the wide-bin projects: the Gaussian
+spectra carry the lens redshift-space distortions
+(`gaussian: rsd: true`) and the non-Limber recompute of the low
+multipoles (`gaussian: nonlimber: true`), whose transfers include the
+distortion kernel $`j_\ell''`$.
 
 The covariance cosmology sets $`m_\nu = 0`$: the halo forecast behind
 SSC and cNG requires massless neutrinos, and the sub-percent
@@ -122,20 +119,22 @@ representative clustering rows:
 
 | Gaussian spectra | lowest band | middle bands |
 |---|---|---|
-| Limber + distortion window (the default) | 0.72 - 1.18 | 1.1 - 1.9 |
+| non-Limber + distortions (the default) | 0.95 - 2.1 | 1.2 - 2.0 |
+| Limber + distortion window | 0.72 - 1.18 | 1.1 - 1.9 |
 | Limber, density only | 0.60 - 1.10 | 1.1 - 1.9 |
 | non-Limber, density only | 0.40 - 0.63 | 0.87 - 1.4 |
 
-The distortion window closes the lowest bands; the density-only
-non-Limber recompute instead repairs the middle bands, where the
-Limber projection genuinely overestimates a thin bin's
-density $`C_\ell`$, but loses the lowest ones because the distortion
-dominates there and its transfers cannot carry it. A distortion
-transfer in `cosmolike/covariances/nonlimber_cov.c` would reconcile
-the two regimes; the residual middle-band excess of the default also
-contains the fiducial-model differences the data-vector comparison
-against the sacc file shows (one-loop bias terms, the finger-of-god
-damping).
+The default's exact distortion term lands the lowest-redshift rows on
+the source forecast (0.95 - 0.96 at the first band of the first
+clustering auto and cross). The higher-redshift rows exceed it by up
+to a factor 2 in variance - the same direction and size as the
+fiducial-model differences the data-vector comparison against the
+sacc file shows (the source forecast's negative one-loop bias terms
+and finger-of-god damping, neither part of this covariance's
+spectra). The non-Limber correction itself rides the separable linear
+power, FKEM's split, so the nonlinear part of the distortions stays
+Limber; supplying the Gaussian assembly with the data-vector engine's
+exact spectra is the remaining path to one model across all bands.
 
 One qualitative difference matters at high multipole: adjacent-bin
 cross bandpowers of the source forecast turn negative (finger-of-god
@@ -179,28 +178,24 @@ $`[15+10b,\ 24+10b]`$ for $`b = 0..52`$ - the supports read from
 ## FAQ: What does the Gaussian term include? <a name="gaussian"></a>
 
 Linear per-bin galaxy bias over the nonlinear matter power, the lens
-redshift-space distortion window in its Limber form, shot and shape
-noise, and the exact per-band mode counting. The data vector's
+redshift-space distortions (exact non-Limber for the linear field,
+the Limber window for its nonlinear excess), shot and shape noise,
+and the exact per-band mode counting. The data vector's
 finger-of-god dispersion and one-loop bias terms are not part of the
 covariance model: covariance accuracy targets are parameter-error
 level, far looser than the data-vector $\chi^2$ rule.
 
-Two engine limits shape the choices here:
-
-- the covariance non-Limber transfers carry density only, so
-  `gaussian: rsd: true` requires `gaussian: nonlimber: false`; adding
-  a distortion transfer to
-  `cosmolike/covariances/nonlimber_cov.c` would reconcile the lowest
-  and middle bands (the comparison table above);
-- the distortion window's Limber form decays by $`\ell \approx 25`$,
-  so at higher multipoles the default's spectra are plain Limber.
-  Supplying the Gaussian assembly with the data-vector engine's exact
-  spectra is the other path to one model across all bands.
+One engine limit shapes the remaining gap: the non-Limber correction
+projects the separable linear field (FKEM's split), so the nonlinear
+excess of the density and distortion terms stays Limber, and the
+data-vector's finger-of-god damping and one-loop bias terms are not
+modeled at all. Supplying the Gaussian assembly with the data-vector
+engine's exact spectra would close both at once.
 
 ## FAQ: Which accuracy settings are available? <a name="accuracy-settings"></a>
 
 `default.yaml` holds the numerical controls; `configuration()`
 accepts single-entry overrides (for example
 `integration_accuracy=1`). The non-Limber controls
-(`nonlimber_lmax`, `nonlimber_accuracyboost`) are read only when
-`gaussian: nonlimber` is true, which this project's default is not.
+(`nonlimber_lmax`, `nonlimber_accuracyboost`) are read when
+`gaussian: nonlimber` is true, this project's default.

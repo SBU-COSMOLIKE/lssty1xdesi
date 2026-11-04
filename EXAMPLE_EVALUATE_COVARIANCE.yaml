@@ -42,9 +42,12 @@ covariance:
   # Internal refinements inherit covariance/default.yaml for this survey.
   accuracy_boost: 1
   integration_accuracy: 0
-  # Gaussian spectra only; SSC/cNG keep their existing model.
+  # Gaussian spectra only; SSC/cNG keep their existing model. The
+  # thin lens bins need the redshift distortions (rsd), carried by the
+  # Limber window and the non-Limber recompute's j_l'' transfer.
   gaussian:
     nonlimber: true
+    rsd: true
     ia: none
 
 output: ./projects/lssty1xdesi/covariance/production_covariance.npz

@@ -26,12 +26,11 @@ the source forecast's sacc file; this module computes an independent one
 with cosmolike's own kernels, so the two can be compared entry by entry.
 
 The Gaussian term's spectra model linear per-bin galaxy bias over the
-nonlinear matter power, with the lens redshift-space distortion window
-(gaussian rsd = true): the window moves the lowest bands of the
-thin-bin rows onto the source forecast's covariance. The covariance
-non-Limber transfers carry density only, so the project runs Limber
-spectra with the distortion window instead of the density-only
-non-Limber recompute (the measured three-model comparison lives in
+nonlinear matter power, with the lens redshift-space distortions in
+both the Limber window and the non-Limber recompute's j_l'' transfer
+(gaussian rsd = nonlimber = true): the exact distortion term lands
+the lowest-redshift clustering rows on the source forecast's
+covariance (the measured four-model comparison lives in
 covariance/README.md). The data vector's finger-of-god dispersion and
 one-loop bias terms are not part of the covariance model - covariance
 accuracy targets are parameter-error level, far looser than the
@@ -190,13 +189,13 @@ def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
         accuracy_boost = None uses the value in default.yaml; 1, 2, 4 or
             8 refines every boosted control of that file.
         gaussian = optional dictionary of Gaussian-term choices:
-            rsd (bool, default True here: the thin lens bins need the
-            distortion window), nonlimber (bool, default False here -
-            the non-Limber transfers carry density only and refuse
-            rsd), ia ("none", "NLA" or "TATT", default "none"), A1, A2
-            and B_TA (IA amplitudes, default 0). gaussian_model checks
-            it. The project fiducial has zero IA amplitudes, so the
-            default matches the likelihood examples.
+            rsd and nonlimber (both true here: thin lens bins need the
+            redshift distortions, and the non-Limber recompute carries
+            them through its j_l'' transfer), ia ("none", "NLA" or
+            "TATT", default "none"), A1, A2 and B_TA (IA amplitudes,
+            default 0). gaussian_model checks it. The project fiducial
+            has zero IA amplitudes, so the default matches the
+            likelihood examples.
         accuracy_overrides = keyword arguments that replace single
             entries of default.yaml (for example nonlimber_accuracyboost
             = 16); an unknown name raises TypeError.
@@ -280,9 +279,9 @@ def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
     }
     settings.update(numerical)
     if gaussian is None:
-        # the project default: distortion window on, density-only
-        # non-Limber recompute off (the two cannot combine)
-        gaussian = {"rsd": True, "nonlimber": False}
+        # the project default: redshift distortions on, in both the
+        # Limber window and the non-Limber recompute's j_l'' transfer
+        gaussian = {"rsd": True, "nonlimber": True}
     settings["gaussian"] = gaussian_model(
         gaussian=gaussian, nsource=NSOURCE,
     )

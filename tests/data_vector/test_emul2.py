@@ -1,0 +1,133 @@
+"""Advisory checks E1-E4: the EMUL2 emulated pipelines.
+
+The EXAMPLE_EMUL2 examples replace the Boltzmann code with trained
+machine-learning emulators (the emulrdrag, emulbaosn, and emulmps
+theory blocks) while the cosmolike likelihood stays exact. An
+emulator is an approximation of the exact physics, so these checks
+carry no pass/fail: they measure and report, and every method here
+ends green as long as the pipeline runs at all. What is reported:
+
+  - the emulator chi2 against the frozen emulator reference (did the
+    installed emulator stack change since the freeze);
+  - the emulator chi2 against the exact-physics reference at the same
+    cosmology (how accurate the emulator is), followed by the
+    printed recommendation: "RECOMMENDED for actual data analysis"
+    when |emulator - exact| chi2 < 0.2, "NOT recommended" otherwise;
+  - a race check identical in structure to tests 2/4/6/8, printed
+    with a warning instead of a failure.
+
+  E1. emul2 example1 (EE + gg + gg-cross): accuracy and recommendation.
+  E2. emul2 example1: race check, advisory.
+
+Two caveats a reader should know before trusting the deltas. First,
+the emulated configurations sample fewer parameters than the exact
+ones (mnu is fixed inside the emulator training), so part of the
+difference is a modeling choice, not emulator error. Second, the
+trained-network files are read from external_modules/data/emultrf
+(pinned by the EMULTRF keys in set_installation_options.sh), not from
+the frozen state: retraining or updating the emulators changes these
+numbers, and detecting that is part of this file's job. The network
+device is frozen to "cpu" so the numbers do not depend on GPU
+availability.
+
+To run (from the Cocoa/ folder, cocoa environment active,
+start_cocoa.sh sourced):
+
+    python -m pytest ./projects/lssty1xdesi/tests/data_vector/test_emul2.py
+"""
+
+import os
+
+# OpenMP reads OMP_NUM_THREADS when the compiled libraries load, so
+# this must run before any cobaya/cosmolike import in the process.
+os.environ["OMP_NUM_THREADS"] = "4"
+
+import sys
+import unittest
+
+# The tests folder is not a package; put it on the import path so the
+# shared harness resolves no matter where pytest was launched from.
+# insert(0, ...) puts the folder first in the search order, ahead of
+# every other place a same-named module could hide.
+sys.path.insert(0, os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__))))
+import cocoa_test_utils as u
+
+# The recommendation threshold on |emulator - exact| chi2. It equals
+# CHI2_TOLERANCE on purpose: the reference tests allow the exact
+# pipeline a 0.2 chi2 band, and an emulator whose own error already
+# rivals that band would eat the whole error margin of a real
+# analysis.
+RECOMMENDATION_LIMIT = u.CHI2_TOLERANCE
+
+
+class TestEmul2Advisory(unittest.TestCase):
+    """Advisory checks E1-E4, sharing one frozen-state verification.
+
+    setUpClass runs once: it moves to ROOTDIR, verifies every frozen
+    file against the SHA-256 manifest, and loads the frozen reference
+    chi2 values. The manifest check still applies here: the frozen
+    emulator configurations are pinned even though the trained-network
+    files are not.
+    """
+
+    # the classmethod decorator hands the method the class itself
+    # (cls), not an instance; unittest calls setUpClass once before
+    # the first test of the class
+    @classmethod
+    def setUpClass(cls):
+        """Move to ROOTDIR, verify the frozen state, load the references."""
+        u.require_cocoa_environment()
+        u.verify_frozen()
+        cls.reference = u.load_reference()
+
+    def _accuracy_check(self, name, example, label):
+        """Evaluate one emulated configuration and print the verdict.
+
+        Arguments:
+          name    = the advisory label (E1 or E3) for the report.
+          example = a key of cocoa_test_utils.EXAMPLES with the
+                    "emulator" flag.
+          label   = one line naming the emulated configuration.
+
+        Returns:
+          nothing; the report is printed and nothing is asserted.
+        """
+        chi2 = u.single_model_chi2(example, tatt=False)
+        frozen_ref = self.reference[f"{example}_nla"]
+        exact_ref = self.reference[u.EXAMPLES[example]["exact_reference"]]
+        u.report_emul2_advisory(f"{name}: {label}", chi2, frozen_ref,
+                                exact_ref, RECOMMENDATION_LIMIT)
+
+    def _race_check(self, name, example, label):
+        """Run one advisory race check on an emulated configuration.
+
+        Arguments:
+          name    = the advisory label (E2 or E4) for the report.
+          example = a key of cocoa_test_utils.EXAMPLES with the
+                    "emulator" flag.
+          label   = one line naming the emulated configuration.
+
+        Returns:
+          nothing; the report is printed and a difference above
+          RACE_TOLERANCE only prints a warning.
+        """
+        u.assert_omp_threads()
+        # the function returns a (fresh, tenth) pair; the assignment
+        # unpacks it into the two names
+        fresh, tenth = u.ten_in_a_row_chi2(example, tatt=False)
+        u.report_emul2_race(f"{name}: {label}", fresh, tenth)
+
+    def test_e1_emul2_example1_accuracy(self):
+        """emul2 example1: accuracy against the exact chi2, advisory."""
+        self._accuracy_check("E1", "emul2_example1",
+                             "example1 (EE + gg + gg-cross, emulated)")
+
+    def test_e2_emul2_example1_race(self):
+        """emul2 example1: 10-in-a-row race check, advisory."""
+        self._race_check("E2", "emul2_example1",
+                         "example1 (EE + gg + gg-cross, emulated) race check")
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

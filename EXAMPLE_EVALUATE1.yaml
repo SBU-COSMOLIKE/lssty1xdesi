@@ -197,6 +197,18 @@ theory:
 #      internal_accuracyboost: 1.0
 #      kmax_boltzmann: 7.5
 #      extrap_kmax: 250.0
+  # Baryonic feedback through the bfmt theory block: uncomment to
+  # multiply the matter power by a trained suppression model S(k, z).
+  # The baryon tests (tests/data_vector/test_baryons.py and
+  # test_accuracy_baryons.py) exercise every model against frozen
+  # per-method vectors; see external_modules/code/baryon_suppression.
+  # bfmt:
+  #   baryon_model: 2 # 1 = SP(k), 2 = BCEmu, 3 = FlamingoEmulator, 4 = BACCOemu, 5 = BCemu2025
+  #   nz: 20  # internal (z, k) computation grid; the result is 2D-splined
+  #   nk: 100 # onto the grid the likelihood requests
+  #   above_zmax: unity # S(k,z) above the model range: unity (default) or constant
+  #   q2_bcemu25: 0.70 # BCemu2025 only: q2 coordinate (native grid: 0.5, 0.7, 1.0)
+
 sampler:
   evaluate:
     N: 1
