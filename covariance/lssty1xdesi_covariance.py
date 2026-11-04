@@ -31,15 +31,19 @@ both the Limber window and the non-Limber recompute's j_l'' transfer
 (gaussian rsd = nonlimber = true): the exact distortion term lands
 the lowest-redshift clustering rows on the source forecast's
 covariance (the measured four-model comparison lives in
-covariance/README.md). The data vector's finger-of-god dispersion and
-one-loop bias terms are not part of the covariance model - covariance
-accuracy targets are parameter-error level, far looser than the
-data-vector chi2 rule.
+covariance/README.md). The lens kernels carry the fiducial
+finger-of-god smearing: each thin bin's n(z) is convolved once, at
+the fixed fiducial dispersions, matching what the data vector's
+sampled convolution computes at its fiducial point
+(_fog_convolved_lens_file). The one-loop bias terms remain outside
+the covariance model - covariance accuracy targets are
+parameter-error level, far looser than the data-vector chi2 rule.
 """
 
 from pathlib import Path
 
 import numpy as np
+from scipy.ndimage import gaussian_filter1d
 
 from cosmolike_notebook_utils.covariance.forecast import (
     initialize_forecast,
@@ -66,6 +70,29 @@ CHUNK_BIAS = {
     "ELG1": 0.84,
     "ELG2": 0.84,
 }
+
+# Fiducial Fingers-of-God velocity dispersions [km/s]: the forecast's
+# simulation-fit values, the same fiducials the likelihood's sampled
+# dispersions start from (the DESI_SIGV leaders of
+# likelihood/params_desi.yaml; keep groups and values in sync with
+# scripts/make_desi_params.py). The measured sigma_v(zbar) steps
+# inside BGS at SIGMA_V_BGS_SPLIT_Z, so the dispersions carry one
+# more group than the bias. The thin bins make the smearing a
+# kernel-level effect the covariance must share with the data vector.
+CHUNK_SIGMA_V = {
+    "BGS0": 371.0,
+    "BGS1": 358.0,
+    "LRG1": 357.0,
+    "LRG2": 348.0,
+    "LRG3": 343.0,
+    "ELG1": 304.0,
+    "ELG2": 289.0,
+}
+SIGMA_V_BGS_SPLIT_Z = 0.255
+
+# speed of light [km/s]: a line-of-sight velocity dispersion sigma_v
+# smears observed redshifts by sigma_z = (1 + zbar) sigma_v / c
+C_KMS = 299792.458
 
 
 def observable_rows():
@@ -178,6 +205,56 @@ def _lens_bias():
     return [CHUNK_BIAS[str(name)] for name in chunk_names]
 
 
+def _fog_convolved_lens_file():
+    """Write and return the fiducial-FoG-convolved lens n(z) file.
+
+    The likelihood convolves each thin bin's raw histogram with a
+    Gaussian in redshift of width sigma_z = (1 + zbar) sigma_v / c at
+    every sampled point (sigma_v sampled per chunk). A covariance is
+    built once, at the fiducial, so this adapter bakes the same
+    convolution at the fixed CHUNK_SIGMA_V values into a derived file
+    and hands that to the shared machinery. The smearing is this
+    project's radial systematic, so it lives here, in the adapter:
+    the shared covariance code never models FoG.
+
+    Returns:
+      the derived file's path, relative to the project folder (the
+      shared machinery joins it onto the project path).
+    """
+    raw = np.loadtxt(_PROJECT/"data/lssty1xdesi_desi_dr3.nz")
+    z = raw[:, 0]
+    dz = np.diff(z)
+    # the kernel width is expressed in grid steps, so the grid must be
+    # uniform; 1e-6 relative is far looser than the text round trip
+    if not np.all(dz > 0) or np.max(np.abs(dz - dz[0])) > 1.0e-6*dz[0]:
+        raise ValueError(
+            "the lens n(z) grid must be uniform and increasing")
+    bins_file = _PROJECT/"data/lssty1xdesi_desi_dr3_bins.txt"
+    chunk_names = np.loadtxt(bins_file, dtype=str, usecols=3)
+    zbar = np.loadtxt(bins_file, usecols=4)
+    if raw.shape[1] - 1 != NLENS or len(chunk_names) != NLENS:
+        raise ValueError(
+            f"n(z) holds {raw.shape[1] - 1} bins and the bins file "
+            f"{len(chunk_names)}, expected {NLENS}")
+    out = raw.copy()
+    for i in range(NLENS):
+        group = str(chunk_names[i])
+        if group == "BGS":
+            group = ("BGS0" if float(zbar[i]) < SIGMA_V_BGS_SPLIT_Z
+                     else "BGS1")
+        sigma_v = CHUNK_SIGMA_V[group]
+        sigma_z = (1.0 + float(zbar[i]))*sigma_v/C_KMS
+        # mode="constant" treats the histogram as zero beyond the
+        # grid, which is what a distribution that ends there means
+        out[:, i + 1] = gaussian_filter1d(
+            raw[:, i + 1], sigma=sigma_z/float(dz[0]), mode="constant")
+    path = _PROJECT/"covariance/lssty1xdesi_desi_dr3_fog.nz"
+    # full double precision: the uniform grid must survive the text
+    # round trip
+    np.savetxt(path, out, fmt="%.17e")
+    return "covariance/lssty1xdesi_desi_dr3_fog.nz"
+
+
 def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
     """Return resolved survey, cosmology and YAML accuracy choices.
 
@@ -242,11 +319,14 @@ def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
             "lens_potential_accuracy": 1.0,
             "halofit_version": "takahashi",
         },
-        # n(z) files, relative to the project folder. The likelihood
-        # reads the same files with photoz_interpolation_type = 0
-        # (cubic spline) and photoz_zmid_convention = 1 (the z column
-        # holds bin midpoints); the covariance matches both.
-        "lens_file": "data/lssty1xdesi_desi_dr3.nz",
+        # n(z) files, relative to the project folder. The lens file
+        # is the derived fiducial-FoG convolution of the raw
+        # histograms, rewritten on every call
+        # (_fog_convolved_lens_file). The likelihood reads the raw
+        # files with photoz_interpolation_type = 0 (cubic spline) and
+        # photoz_zmid_convention = 1 (the z column holds bin
+        # midpoints); the covariance matches both conventions.
+        "lens_file": _fog_convolved_lens_file(),
         "source_file": "data/lssty1xdesi_source.nz",
         "photoz_interpolation": 0,
         "photoz_zmid": 1,

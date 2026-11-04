@@ -4,11 +4,12 @@ The DESI-DR3 forecast samples (BGS, LRG, ELG) arrive as one text file
 per sample: the first row is a shared redshift grid (10^4 points,
 uniform from z = 1e-4 to 3.5) and each later row is the UNCONVOLVED
 redshift distribution of one thin comoving bin (equal comoving width,
-about 62.3 Mpc). This script stacks the three samples into the single
-multi-histogram n(z) file the cosmolike likelihood reads (one z column
-followed by one column per tomographic bin, 76 in all), and writes a
-bin table naming, for every bin, its sample, its bias chunk and its
-mean redshift. The likelihood uses the table to map the handful of
+about 62.3 Mpc). This script refines that grid five-fold by nested linear
+interpolation (REFINE below says why and how), stacks the three
+samples into the single multi-histogram n(z) file the cosmolike
+likelihood reads (one z column followed by one column per tomographic
+bin, 76 in all), and writes a bin table naming, for every bin, its
+sample, its bias chunk and its mean redshift. The likelihood uses the table to map the handful of
 sampled chunk parameters (one linear bias and one velocity dispersion
 per chunk) onto the 76 bins at every point.
 
@@ -51,6 +52,19 @@ CHUNKS = {
 
 PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Grid refinement factor of the written n(z). On the input grid
+# (dz = 3.5e-4) each thin bin holds 43-100 nonzero samples - the same
+# per-bin count as a broad photometric bin - but the sharpest feature
+# here is the Fingers-of-God-smoothed edge, sigma_z = (1 + zbar)
+# sigma_v / c = 1.3e-3 to 2.4e-3, and that edge gets only 4-7 input
+# samples per sigma. Refining five-fold gives every bin at least 215
+# samples and every edge about 20-34 per sigma. The refinement is
+# nested (new count = REFINE*(n - 1) + 1 over the same endpoints), so
+# the original samples keep their exact values and the new points are
+# linear interpolations: no information is invented beyond
+# connecting the given samples.
+REFINE = 5
+
 
 def load_sample(input_dir, sample):
     """Read one sample's text file and split grid from bin rows.
@@ -80,7 +94,12 @@ def load_sample(input_dir, sample):
         f"{path}: redshift grid is not uniform"
     for i, row in enumerate(rows):
         assert np.max(row) > 0.0, f"{path}: bin {i} is empty"
-    return z, rows
+    # nested refinement: same endpoints, REFINE*(n - 1) + 1 points, so
+    # every original node is kept and np.interp returns the original
+    # value there exactly
+    zf = np.linspace(z[0], z[-1], REFINE*(len(z) - 1) + 1)
+    rows = np.array([np.interp(zf, z, row) for row in rows])
+    return zf, rows
 
 
 def main():

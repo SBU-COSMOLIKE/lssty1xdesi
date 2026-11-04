@@ -143,8 +143,10 @@ HIGH_ACCURACY_LIKELIHOOD = {
 # the scan moves them together.
 #
 # The last three knobs are this project's own: the chi grid of the
-# low-rank non-Limber engine (the 0.05-wide comoving bins alias on a
-# coarse grid, so this is the accuracy-critical control), the kept
+# low-rank non-Limber engine (the log-spaced grid makes the
+# highest-redshift thin bins the narrowest in ln(chi): the default 64
+# is the first nested doubling past their FoG-edge resolution
+# threshold, so this is the accuracy-critical control), the kept
 # SVD ranks, and the engine's own multipole cap.
 ACCURACY_KNOBS = [
     ("accuracyboost 1->3", {"accuracyboost": 3.0}, {}),
@@ -156,8 +158,8 @@ ACCURACY_KNOBS = [
      {"kmax_boltzmann": 40.0}, {"kmax": 50.0}),
     ("camb AccuracyBoost 1.05->2", {}, {"AccuracyBoost": 2.0}),
     ("camb k_per_logint 10->50", {}, {"k_per_logint": 50}),
-    ("nonlimber_accuracyboost 16->32",
-     {"nonlimber_accuracyboost": 32.0}, {}),
+    ("nonlimber_accuracyboost 64->128",
+     {"nonlimber_accuracyboost": 128.0}, {}),
     ("nonlimber_lowrank_rank 5->8", {"nonlimber_lowrank_rank": 8}, {}),
     ("nonlimber_lowrank_lmax 1000->2000",
      {"nonlimber_lowrank_lmax": 2000}, {}),

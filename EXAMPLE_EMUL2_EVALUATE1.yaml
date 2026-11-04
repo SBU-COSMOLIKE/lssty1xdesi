@@ -172,8 +172,12 @@ sampler:
       DESI_B1_39: 1.70
       DESI_B1_50: 0.84
       DESI_B1_62: 0.84
-      DESI_SIGV_1: 357.0
-      DESI_SIGV_19: 326.0
-      DESI_SIGV_50: 200.0
+      DESI_SIGV_1: 371.0
+      DESI_SIGV_11: 358.0
+      DESI_SIGV_19: 357.0
+      DESI_SIGV_30: 348.0
+      DESI_SIGV_39: 343.0
+      DESI_SIGV_50: 304.0
+      DESI_SIGV_62: 289.0
 
 output: ./projects/lssty1xdesi/chains/EXAMPLE_EMUL2_EVALUATE1
