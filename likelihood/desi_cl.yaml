@@ -13,7 +13,10 @@ accuracyboost: 1.0
 internal_accuracyboost: 1.0 # C-FAST-PT convolution grid / output grid
 # refinements on top of accuracyboost (which multiplies them too):
 # the non-Limber FFTLog chi grid, and the z nodes of the P(k) tables
-nonlimber_accuracyboost: 1.0
+# 16 => NL_Nchi = 8192: converged for the 60-80 Mpc thin-bin kernels
+# (at the default 512 the FFTLog chi comb undersamples them: pure-CAMB
+# boost 1 vs 16 differs by chi2 = 1.5e5; 8 leaves 8.6; 16 vs 32 = 1.6)
+nonlimber_accuracyboost: 16.0
 pk_z_refinement: 1
 integration_accuracy: 0
 # n(z) interpolation: 0 = cubic spline, 1 = linear, 2+ = Steffen (monotone)
