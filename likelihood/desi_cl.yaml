@@ -20,6 +20,12 @@ internal_accuracyboost: 1.0 # C-FAST-PT convolution grid / output grid
 # 0.18 sigma broadband amplitude bias (delta chi2 = 1.9 on the full
 # vector); at 64 the ladder is converged (64 vs 128 = 7.5e-6)
 nonlimber_accuracyboost: 64.0
+# the FKEM non-Limber cap (limits.LMAX_NOLIMBER), read only with
+# nonlimber_lowrank_gg: 0: clustering (autos and cross pairs) is the FKEM
+# split below it and Limber above. 150 is the cosmolike default; above
+# the highest band center (539.5) FKEM covers every band - the setting
+# that compares FKEM with the low-rank engine at an equal cap
+lmax_nonlimber: 150
 pk_z_refinement: 1
 integration_accuracy: 0
 # n(z) interpolation: 0 = cubic spline, 1 = linear, 2+ = Steffen (monotone)

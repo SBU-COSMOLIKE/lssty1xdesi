@@ -34,13 +34,28 @@ SVD of sqrt(P_gg) whose rank-one profiles are FFTLog-projected with
 no internal Limber hand-off. Against the converged vector, scored
 with the project covariance:
 
-- pure Limber everywhere: delta chi2 = 21,072;
-- the standard FKEM path (non-Limber below ell = 150, Limber fill
-  above): 17,896;
+- pure Limber everywhere: delta chi2 = 21,158;
+- FKEM at its defaults (cap `lmax_nonlimber` 150, cross pairs with
+  the FKEM split): 4,243;
 - rank 5 -> 8: 0.000; engine cap 1000 -> 2000: 0.002.
 
-The two non-Limber tests in `tests/data_vector/` pin these as drift
-checks (10% relative), re-measured at every refreeze.
+The two non-Limber tests in `tests/data_vector/` pin the first two as
+drift checks (10% relative), re-measured at every refreeze.
+
+The fair method comparison (paper-grade, 2026-11-04, same chi grid)
+puts FKEM at cap 550 - every band - with its cross pairs: delta
+chi2 = 74.0 against the engine, the genuine cost of FKEM keeping the
+nonlinear density term in Limber. The unfair configurations it
+replaces: cap 150 with Limber pairs, 17,388; cap 150 with pairs,
+4,243. Never quote the first two as a method comparison.
+
+FKEM with cross pairs is a separate twin in cosmo2D.c
+(C_cl_tomo_fkem_pairs_core and C_gg_tomo_fkem_pairs_ells, in the
+CROSS-BIN section), dispatched from C_gg_tomo_ells only when a pair
+list is installed: every project without pairs runs the original
+C_cl_tomo_core, bitwise. The twin pools its storage by 16-multipole
+blocks, so a cap of 550 at NL_Nchi = 32,705 fits in about 1 GB (the
+original core's layout would need about 55 GB).
 
 ## The chi grid: nested refinement and the one-bin cliff
 
@@ -172,11 +187,17 @@ data-vector state.
   `tests/cocoa_test_utils.py`, and the shared suites resolve the
   getter at call time because the cross-pair list is installed only
   by the first model build.
-- **The gg-cross stash contract.** The low-rank cross corrections are
-  computed during the auto-gg pass and stashed for the same
-  evaluation (consumed once). The correction applies only when the
+- **The gg-cross stash contract.** Both engines (low-rank and the
+  FKEM twin) compute the cross corrections in the auto-gg pass and
+  stash them for the same evaluation (consumed once, through the
+  shared `ggx_stash_store`). The correction applies only when the
   autos are non-Limber; with `adopt_limber_gg: 1` the crosses are
   Limber too, and the stash guard must not fire.
+- **`lmax_nonlimber` is the FKEM cap** (`limits.LMAX_NOLIMBER`, set by
+  `init_lmax_nonlimber` after `init_ntable_lmax`, which it validates
+  against). It does nothing with the low-rank engine on, which has
+  its own cap. The standard gg and gs cores still size their arrays
+  by it, so raising it in another project costs memory.
 - **No early exit on the Fourier/cross path.** The engine refuses
   cross pairs with tol > 0 (cosmo2D.c): every multipole of every run
   is computed. Do not add per-pair freeze logic casually.

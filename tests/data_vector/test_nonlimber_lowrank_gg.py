@@ -6,8 +6,10 @@ adopt_limber_gg: 0):
 
   nonlimber_lowrank_gg: 0 - FKEM (Fang, Krause, Eifler & MacCrann,
       arXiv:1911.11947): an FFTLog integral of the separable linear
-      spectrum plus, in Limber, what linear theory misses. The
-      default of every project.
+      spectrum plus, in Limber, what linear theory misses, below the
+      cap lmax_nonlimber (default 150) and pure Limber above it; the
+      installed cross pairs get the same split. The default of every
+      project.
   nonlimber_lowrank_gg: 1 - the low-rank SVD engine
       (C_cl_tomo_lowrank in cosmo2D.c): the full nonlinear sqrt(P_g)
       decomposed into a short sum of separable terms, each projected
@@ -15,13 +17,14 @@ adopt_limber_gg: 0):
       at any multipole. Built for exactly this project's thin
       spectroscopic lens bins, and its default here.
 
-The engine difference - the SVD's rank truncation against FKEM's
-Limber hand-off of the nonlinear density term - matters here: the
-thin bins keep real non-Limber power far past any Limber switch,
-which is why the SVD engine is the project default. This test freezes
-the measured difference and both engines' runtimes.
+The engine difference - FKEM's Limber treatment of the nonlinear
+density term and its multipole cap, against the SVD's full nonlinear
+projection - matters here: the thin bins keep real non-Limber power
+far past the default cap, which is why the SVD engine is the project
+default. This test freezes the measured difference at the default
+settings and both engines' runtimes.
 
-It evaluates the frozen 3x2pt fiducial (NLA) three times in one
+It evaluates the frozen fiducial (NLA) three times in one
 process (FKEM, SVD, FKEM again) and computes
 
     delta chi2 = delta^T C^-1 delta,
@@ -64,9 +67,10 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(
 import cocoa_test_utils as u
 
 # The engine delta chi2 of this project's frozen fiducial, measured
-# at OMP 4 with rank 5 and the engine's l cap of 1000 (the likelihood
-# defaults): see assertion 4 of the module docstring.
-DCHI2_MEASURED = 1.738800e+04
+# at OMP 4 with the likelihood defaults (rank 5 and the engine's l cap
+# of 1000; FKEM at its cap of 150, cross pairs included): see
+# assertion 4 of the module docstring.
+DCHI2_MEASURED = 4.243368e+03
 
 # The shared factory (cosmolike_core/cocoa_testing_suites.py) builds
 # the class; assigning its return value to the usual module-level name

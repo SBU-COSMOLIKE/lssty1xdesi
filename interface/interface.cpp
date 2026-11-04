@@ -143,6 +143,13 @@ PYBIND11_MODULE(cosmolike_lssty1xdesi_interface, m)
       (py::arg("nonlimber_boost") = 1.0).none(false)
     );
 
+  m.def("init_lmax_nonlimber",
+      &cosmolike_interface::init_lmax_nonlimber,
+      "Multipole cap of the FKEM non-Limber paths (limits.LMAX_NOLIMBER; "
+      "default 150): below it FKEM, above it Limber",
+      py::arg("lmax").none(false)
+    );
+
   m.def("init_adopt_limber_gs",
       &cosmolike_interface::init_adopt_limber_gs,
       "Galaxy-galaxy lensing: 0 = non-Limber below limits.LMAX_NOLIMBER "
@@ -329,9 +336,9 @@ PYBIND11_MODULE(cosmolike_lssty1xdesi_interface, m)
         }
         return arma::conv_to<std::vector<double>>::from(dv);
       },
-      "Masked theory vector of the extended layout. The cross spectra "
-      "are Limber at every multipole until the low-rank non-Limber "
-      "pair correction lands. Masked dimensions are filled w/ zeros",
+      "Masked theory vector of the extended layout: the cross spectra "
+      "get the same non-Limber treatment as the autos (Limber everywhere "
+      "with adopt_limber_gg = 1). Masked dimensions are filled w/ zeros",
       py::return_value_policy::move
     );
 

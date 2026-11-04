@@ -250,10 +250,10 @@ surveys use, so the full density-density term is computed by the
 low-rank engine up to its multipole cap.
 
 Galaxy clustering, measured on 2026-11-04 (the test stores
-`measured = ` 21071.5 and re-asserts it to 10% relative - a
+`measured = ` 21157.6 and re-asserts it to 10% relative - a
 drift pin on both engines, not an accuracy limit):
 
-- $\Delta\chi^2 = $ 21071.5 between the non-Limber and
+- $\Delta\chi^2 = $ 21157.6 between the non-Limber and
   pure-Limber predictions of the 9,964-point vector - the thin bins
   make the Limber approximation unusable for this project, not merely
   inaccurate.
@@ -265,18 +265,40 @@ FFTLog engine (`nonlimber_lowrank_gg: 1`): a per-bin SVD compresses
 $\sqrt{P_{gg}}$ to `nonlimber_lowrank_rank` rank-one profiles, whose
 FFTLog projections rebuild every auto and cross spectrum up to
 `nonlimber_lowrank_lmax`, with no Limber hand-off inside that range.
-With the engine off, clustering falls back to the standard path,
-whose non-Limber coverage ends at the shared hand-off multipole with
-a Limber fill above - the approximation the thin bins cannot afford:
-that run scores $\chi^2 = 17896$ against the frozen data, while the
-engine reproduces its frozen reference exactly. The test pins the
-second-order difference between the two paths
-(`DCHI2_MEASURED = 17896.2`, re-asserted to 10% relative): a drift
-check on both engines, whose size is the measured cost of the
-hand-off this project's default removes. The pin and that run's
-$\chi^2$ agree to five digits because the frozen data vector is the
-engine's own prediction, so both numbers score the same difference -
-a consistency check the report prints side by side. The rank-5 compression
+With the engine off (`nonlimber_lowrank_gg: 0`), clustering uses
+FKEM: the FFTLog integral of the separable linear spectrum plus, in
+Limber, what linear theory misses, below the cap `lmax_nonlimber`
+(default 150), and pure Limber above. The cross pairs get the same
+split, through the FKEM twin of the cosmolike core.
+
+The test pins the difference between the two engines at the default
+settings (`DCHI2_MEASURED = 4243.4`, re-asserted to 10% relative), a
+drift check on both. The frozen data vector is the engine's own
+prediction, so the pin equals the χ² the FKEM run scores against it.
+
+To compare the methods fairly, FKEM must run to the same multipole
+as the engine and cover the cross pairs. Measured on 2026-11-04, on
+the same chi grid (`nonlimber_accuracyboost: 64`):
+
+| FKEM configuration | $\Delta\chi^2$ vs the engine |
+|---|---:|
+| cap 150, cross pairs in Limber (the previous FKEM path) | 17,388 |
+| cap 150, cross pairs with the FKEM split (the default) | 4,243 |
+| cap 550, cross pairs with the FKEM split (every band) | **74.0** |
+
+Each row isolates one approximation: the Limber cross pairs cost about
+13,100, and the cap at 150 about 4,200. The remaining 74.0 is the
+methods' genuine difference: FKEM keeps the nonlinear part of the
+density term in Limber, while the engine projects the full nonlinear
+$P_{gg}$ without approximation. It is spread over many spectra - the
+largest single contributions are mid-redshift cross pairs of about
+4.4 each - with 70.6 from the auto block and 59.5 from the cross
+block alone (the two overlap through the correlations of the
+covariance, so they do not add). At the equal cap, FKEM evaluates in
+about half the engine's time (4.7 s against 10.2 s, same run,
+8 threads).
+
+The rank-5 compression
 itself costs nothing at this precision (the A0 scan's rank 5 → 8 row
 moves 0.000).
 
