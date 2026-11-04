@@ -229,6 +229,20 @@ class _cosmolike_prototype_base(DataSetLikelihood):
       self.ell_file = ini.relativeFileName('ell_file')
       self.band_ells = np.loadtxt(self.ell_file)
 
+    # gg_cross_pairs_file: optional table of measured cross-bin gg
+    # pairs, one "bin_i bin_j" row per spectrum of the appended
+    # gg-cross block (the generator writes it from the sacc). Absent =
+    # the auto-only layout, the exact pre-cross behavior.
+    self.gg_cross_pairs = None
+    if self.binning_space == "fourier" and ini.hasKey('gg_cross_pairs_file'):
+      pairs_file = ini.relativeFileName('gg_cross_pairs_file')
+      self.gg_cross_pairs = np.atleast_2d(
+          np.loadtxt(pairs_file, dtype=int))
+      if self.gg_cross_pairs.shape[1] != 2:
+        raise LoggedError(self.log, "gg_cross_pairs_file %s: expected "
+                          "two columns (bin_i bin_j), found %d",
+                          pairs_file, self.gg_cross_pairs.shape[1])
+
     # ------------------------------------------------------------------------
     # z_interp_1D = redshifts of the 1D tables, the comoving distance chi(z)
     # and the growth factor G(z). Three uniform blocks: [0, 3) for the galaxy
@@ -450,8 +464,19 @@ class _cosmolike_prototype_base(DataSetLikelihood):
 
       if self.binning_space == "real":
         ci.init_data_real(self.cov_file, self.mask_file, self.data_vector_file)
-      else:
+      elif self.gg_cross_pairs is None:
         ci.init_data_fourier(self.cov_file, self.mask_file, self.data_vector_file)
+      else:
+        # the measured gg cross pairs extend the layout by one padded
+        # spectrum per pair after the auto gg block. The pair list must
+        # be installed after the redshift distributions (its validation
+        # reads the bin count) and before the data files are read (it
+        # sets the layout the mask and covariance span).
+        ci.init_gg_cross_pairs(
+            pairs=np.ascontiguousarray(
+                self.gg_cross_pairs.flatten(), dtype=int))
+        ci.init_data_fourier_gg_cross(
+            self.cov_file, self.mask_file, self.data_vector_file)
 
       if (int(self.IA_model) == 0) and (int(self.IA_code) == 1):
         # NLA (IA_model = 0) needs no FAST-PT intrinsic-alignment terms, so
@@ -1321,7 +1346,10 @@ class _cosmolike_prototype_base(DataSetLikelihood):
     elif self.binning_space == "fourier":
       # the band-power layout of init_data_fourier: the real-space
       # compute would index a data vector that was never loaded
-      datavector = ci.compute_data_vector_fourier_masked()
+      if self.gg_cross_pairs is None:
+        datavector = ci.compute_data_vector_fourier_masked()
+      else:
+        datavector = ci.compute_data_vector_fourier_gg_cross_masked()
     else:
       datavector = ci.compute_data_vector_masked()
 

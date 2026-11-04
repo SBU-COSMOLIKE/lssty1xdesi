@@ -249,6 +249,92 @@ PYBIND11_MODULE(cosmolike_lssty1xdesi_interface, m)
       py::arg("DATA").none(false)
     );
 
+  m.def("init_gg_cross_pairs",
+      &cosmolike_interface::init_gg_cross_pairs,
+      "Install the measured gg cross pairs (flattened [i0, j0, i1, j1, "
+      "...]); each pair becomes one spectrum of the gg-cross block the "
+      "extended data vector appends after the auto gg block",
+      py::arg("pairs").none(false)
+    );
+
+  m.def("compute_data_vector_fourier_with_gg_cross_sizes",
+      []()->std::vector<int> {
+        using namespace cosmolike_interface;
+        arma::Col<int>::fixed<3> s =
+            compute_data_vector_Mx2pt_N_sizes<1,3>();
+        return {s(0), s(1), s(2), like.Ncl*get_gg_cross_npairs()};
+      },
+      "Block sizes of the extended Fourier layout [EE, gs, gg, gg-cross]",
+      py::return_value_policy::move
+    );
+
+  m.def("init_data_fourier_gg_cross",
+      [](std::string cov, std::string mask, std::string data) {
+        using namespace cosmolike_interface;
+        // the extended layout spans all four blocks; like.Ndata must
+        // cover it before the IP reads its files. IP::set_mask only
+        // gates the three probe blocks (an appended block follows the
+        // mask file verbatim), so no IP change is needed - but the
+        // cross block is gg physics, and a disabled clustering probe
+        // with a nonempty pair list would leave it ungated: refused as
+        // a wiring error rather than silently half-masked.
+        if (get_gg_cross_npairs() > 0 && 1 != like.probe[PROBE_GG]) {
+          spdlog::critical("init_data_fourier_gg_cross: gg cross pairs "
+                           "need the clustering probe enabled");
+          exit(1);
+        }
+        arma::Col<int>::fixed<3> s =
+            compute_data_vector_Mx2pt_N_sizes<1,3>();
+        like.Ndata += s(0) + s(1) + s(2) +
+                      like.Ncl*get_gg_cross_npairs();
+        IP& survey = IP::get_instance();
+        arma::Col<int>::fixed<3> ord = {0, 1, 2};
+        survey.set_mask<1,3>(mask, ord); // set_mask must be called first
+        survey.set_data(data);
+        survey.set_inv_cov(cov);
+      },
+      "init_data_fourier of the extended [EE | gs | gg | gg-cross] "
+      "layout (cov, mask and data files span the full length)",
+      py::arg("COV").none(false),
+      py::arg("MASK").none(false),
+      py::arg("DATA").none(false)
+    );
+
+  m.def("compute_data_vector_fourier_gg_cross_masked",
+      []()->std::vector<double> {
+        using namespace cosmolike_interface;
+        // the shared 3-block assembly: like.Ndata already spans the
+        // cross block, so the base vector carries zeros there; the
+        // cross spectra then land in their slots wherever the mask
+        // admits a measured bandpower
+        arma::Col<int>::fixed<3> ord = {0, 1, 2};
+        arma::Col<double> dv = compute_Mx2pt_N_masked<1,3>(ord);
+        const int npairs = get_gg_cross_npairs();
+        if (npairs > 0) {
+          arma::Col<int>::fixed<3> s =
+              compute_data_vector_Mx2pt_N_sizes<1,3>();
+          const int ggx_start = s(0) + s(1) + s(2);
+          IP& survey = IP::get_instance();
+          double** out = (double**) malloc2d(npairs, like.Ncl);
+          C_gg_cross_tomo_ells(like.ell, like.Ncl, out);
+          for (int n=0; n<npairs; n++) {
+            for (int i=0; i<like.Ncl; i++) {
+              const int index = ggx_start + like.Ncl*n + i;
+              if (survey.get_mask(index)) {
+                dv(index) = out[n][i];
+              }
+            }
+          }
+          free(out);
+        }
+        return arma::conv_to<std::vector<double>>::from(dv);
+      },
+      "Masked theory vector of the extended layout. The cross spectra "
+      "are Limber at every multipole until the low-rank non-Limber "
+      "pair correction lands. Masked dimensions are filled w/ zeros",
+      py::return_value_policy::move
+    );
+
   m.def("init_IA",
       &cosmolike_interface::init_IA_fastpt,
       "Init IA related options",

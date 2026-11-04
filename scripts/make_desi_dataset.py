@@ -10,35 +10,44 @@ text files instead - data vector, mask and covariance, all indexed by
 the position in ITS data-vector layout - plus the n(z) files named in a
 .dataset descriptor. This script maps one onto the other.
 
-Layout: the Fourier 3x2pt data vector is [EE | gs | gg], each block
-Ncl entries per spectrum, where Ncl = the number of band centers and
-the gg block holds one auto spectrum per clustering bin (the cross-bin
-spectra of the sacc have no cosmolike slot yet: the cross-bin wiring is
-a held design discussion, so v0 imports the AUTO rows only). The block
-sizes come from the compiled interface itself - the ggl pair count
-depends on the lens/source overlap the C code enumerates - so this
-script initializes the interface with the project's n(z) files and asks
-compute_data_vector_3x2pt_fourier_sizes.
+Layout: the Fourier 3x2pt data vector is [EE | gs | gg | gg-cross],
+each block Ncl entries per spectrum, where Ncl = the number of band
+centers. The gg block holds one auto spectrum per clustering bin, in
+the same positions as the auto-only import (existing masks and
+fiducial vectors stay valid prefixes); the gg-cross block appends one
+padded spectrum per measured cross pair, sorted by (bin_i, bin_j). The
+pairs are whatever the sacc measured - the DESI forecast pairs bins by
+REDSHIFT proximity, so besides the within-sample adjacent pairs it
+holds LRG x ELG same-redshift crosses that are far apart in the global
+bin index. The block sizes come from the compiled interface itself -
+the ggl pair count depends on the lens/source overlap, and the
+gg-cross count on the pair list this script passes first - so the
+script initializes the interface with the project's n(z) files, sends
+the pair list, and asks for the extended layout.
 
 Outputs (into the project's data/ folder):
   lssty1xdesi_desi_dr3_ells.txt     = the union band-center list (one
                                       per line; every sacc spectrum
                                       uses a prefix of it)
+  lssty1xdesi_desi_dr3_pairs.txt    = the measured cross pairs, one
+                                      "bin_i bin_j" per line (i < j),
+                                      sorted; the gg-cross block order
   lssty1xdesi_desi_dr3_sacc.datavector = [index, value], full layout,
-                                      sacc auto values in the gg block,
-                                      zero elsewhere
+                                      sacc auto and cross values in
+                                      their gg blocks, zero elsewhere
   lssty1xdesi_desi_dr3.mask         = [index, 0/1], 1 exactly where a
-                                      sacc auto bandpower exists (the
-                                      per-bin scale cuts of the paper)
-  lssty1xdesi_desi_dr3_cov          = [i, j, cov] for the imported auto
-                                      rows, plus a placeholder 1.0
-                                      diagonal on every masked index
-                                      (the reader demands a positive
-                                      diagonal everywhere; masked rows
-                                      never reach the chi2)
-  lssty1xdesi_desi_dr3_windows.npz  = per-auto-spectrum integer
-                                      multipoles and weights, kept for
-                                      the exact-bandpower follow-up
+                                      sacc bandpower exists (the
+                                      per-spectrum scale cuts)
+  lssty1xdesi_desi_dr3_cov          = [i, j, cov] for every imported
+                                      row (auto and cross, with their
+                                      correlations), plus a placeholder
+                                      1.0 diagonal on every masked
+                                      index (the reader demands a
+                                      positive diagonal everywhere;
+                                      masked rows never reach the chi2)
+  lssty1xdesi_desi_dr3_windows.npz  = per-spectrum integer multipoles
+                                      and weights, kept for the
+                                      exact-bandpower follow-up
   lssty1xdesi_desi_dr3.dataset      = the descriptor naming all of the
                                       above plus the n(z) files
 
@@ -139,8 +148,30 @@ def main():
             raise AssertionError(
                 f"{name}: band centers are not a prefix of the union "
                 "grid - the shared-binning assumption is wrong")
-    print(f"{nrows} sacc rows ({int(auto.sum())} autos), "
-          f"Ncl = {ncl} band centers: {centers[0]:.3f}..{centers[-1]:.3f}")
+
+    # ---- the measured cross pairs, in the canonical sorted order ---------
+    # the same prefix check applies to every cross spectrum: one shared
+    # band grid, a per-spectrum scale cut
+    pair_rows = {}
+    for row in range(nrows):
+        if tracer_0[row] == tracer_1[row]:
+            continue
+        b1 = tracer_to_bin(tracer_0[row])
+        b2 = tracer_to_bin(tracer_1[row])
+        pair_rows.setdefault((min(b1, b2), max(b1, b2)), []).append(row)
+    pairs = sorted(pair_rows)
+    pair_index = {p: n for n, p in enumerate(pairs)}
+    npairs = len(pairs)
+    for p, rows_p in pair_rows.items():
+        mine = np.sort([center_key(ells[r]) for r in rows_p])
+        if not np.array_equal(mine, centers[:len(mine)]):
+            raise AssertionError(
+                f"cross pair {p}: band centers are not a prefix of the "
+                "union grid - the shared-binning assumption is wrong")
+    print(f"{nrows} sacc rows ({int(auto.sum())} autos, "
+          f"{nrows - int(auto.sum())} cross bandpowers over {npairs} "
+          f"pairs), Ncl = {ncl} band centers: "
+          f"{centers[0]:.3f}..{centers[-1]:.3f}")
 
     # ---- the cosmolike layout, from the compiled interface ---------------
     # the ggl pair count depends on the lens/source overlap the C code
@@ -163,31 +194,51 @@ def main():
         lens_ntomo=NBIN,
         source_multihisto_file=os.path.join(DATA, "lssty1xdesi_source.nz"),
         source_ntomo=N_SOURCE)
-    sizes = ci.compute_data_vector_3x2pt_fourier_sizes()
-    size_ee, size_gs, size_gg = int(sizes[0]), int(sizes[1]), int(sizes[2])
+    # the pair list goes in BEFORE the layout is asked: the gg-cross
+    # block size is Ncl per pair, appended after the auto gg block
+    # (flattened [i0, j0, i1, j1, ...], the init_ggl_exclude convention)
+    ci.init_gg_cross_pairs(
+        pairs=np.asarray(pairs, dtype=int).flatten())
+    sizes = ci.compute_data_vector_fourier_with_gg_cross_sizes()
+    size_ee, size_gs = int(sizes[0]), int(sizes[1])
+    size_gg, size_ggx = int(sizes[2]), int(sizes[3])
     if size_gg != ncl * NBIN:
         raise AssertionError(
             f"gg block is {size_gg}, expected Ncl*{NBIN} = {ncl*NBIN}")
+    if size_ggx != ncl * npairs:
+        raise AssertionError(
+            f"gg-cross block is {size_ggx}, expected Ncl*{npairs} = "
+            f"{ncl*npairs}")
     gg_start = size_ee + size_gs
-    ndata = size_ee + size_gs + size_gg
+    ggx_start = gg_start + size_gg
+    ndata = size_ee + size_gs + size_gg + size_ggx
     print(f"fourier layout: EE {size_ee} + gs {size_gs} + gg {size_gg} "
-          f"= {ndata} entries; gg starts at {gg_start}")
+          f"+ gg-cross {size_ggx} = {ndata} entries; gg starts at "
+          f"{gg_start}, gg-cross at {ggx_start}")
 
-    # ---- map the sacc auto rows into the gg block ------------------------
-    # cosmolike index of (bin, band) = gg_start + Ncl*bin + band
+    # ---- map the sacc rows into the gg and gg-cross blocks ---------------
+    # cosmolike index of (bin, band)  = gg_start  + Ncl*bin + band
+    # cosmolike index of (pair, band) = ggx_start + Ncl*pair + band
     dv = np.zeros(ndata)
     mask = np.zeros(ndata, dtype=int)
     sacc_row_of = {}
+    n_auto_rows = 0
     for row in range(nrows):
-        if tracer_0[row] != tracer_1[row]:
-            continue  # cross-bin rows wait for the cross wiring
-        b = tracer_to_bin(tracer_0[row])
         band = center_index[center_key(ells[row])]
-        index = gg_start + ncl * b + band
+        if tracer_0[row] == tracer_1[row]:
+            b = tracer_to_bin(tracer_0[row])
+            index = gg_start + ncl * b + band
+            n_auto_rows += 1
+        else:
+            b1 = tracer_to_bin(tracer_0[row])
+            b2 = tracer_to_bin(tracer_1[row])
+            p = pair_index[(min(b1, b2), max(b1, b2))]
+            index = ggx_start + ncl * p + band
         dv[index] = values[row]
         mask[index] = 1
         sacc_row_of[index] = row
-    print(f"imported {len(sacc_row_of)} auto bandpowers; "
+    print(f"imported {n_auto_rows} auto and "
+          f"{len(sacc_row_of) - n_auto_rows} cross bandpowers; "
           f"masked in {int(mask.sum())} of {ndata} entries")
 
     # ---- write data vector and mask --------------------------------------
@@ -216,7 +267,14 @@ def main():
                 out.write(f"{i} {i} 1.0\n")
     print(f"wrote {out_cov}")
 
-    # ---- the band-center list and the dataset descriptor -----------------
+    # ---- the pair table, band-center list and dataset descriptor ---------
+    out_pairs = os.path.join(DATA, "lssty1xdesi_desi_dr3_pairs.txt")
+    with open(out_pairs, "w") as out:
+        out.write("# bin_i  bin_j (i < j): the measured gg cross pairs,\n")
+        out.write("# sorted; row n is spectrum n of the gg-cross block\n")
+        for b1, b2 in pairs:
+            out.write(f"{b1} {b2}\n")
+    print(f"wrote {out_pairs} ({npairs} pairs)")
     np.savetxt(os.path.join(DATA, "lssty1xdesi_desi_dr3_ells.txt"),
                centers, fmt="%.8f")
     descriptor = os.path.join(DATA, "lssty1xdesi_desi_dr3.dataset")
@@ -230,6 +288,7 @@ def main():
         out.write(f"source_ntomo = {N_SOURCE}\n")
         out.write("ell_file = lssty1xdesi_desi_dr3_ells.txt\n")
         out.write("lens_bin_table = lssty1xdesi_desi_dr3_bins.txt\n")
+        out.write("gg_cross_pairs_file = lssty1xdesi_desi_dr3_pairs.txt\n")
     print(f"wrote {descriptor}")
 
     # ---- keep the exact bandpower windows for the follow-up --------------
@@ -242,19 +301,24 @@ def main():
             window_of[int(hdu.header["SACCNAME"])] = hdu
     win = {}
     for row in range(nrows):
-        if tracer_0[row] != tracer_1[row]:
-            continue
         hdu = window_of[int(d["window"][row])]
-        b = tracer_to_bin(tracer_0[row])
         band = center_index[center_key(ells[row])]
-        key = f"bin{b}_band{band}"
+        if tracer_0[row] == tracer_1[row]:
+            b = tracer_to_bin(tracer_0[row])
+            key = f"bin{b}_band{band}"
+        else:
+            b1 = tracer_to_bin(tracer_0[row])
+            b2 = tracer_to_bin(tracer_1[row])
+            lo, hi = min(b1, b2), max(b1, b2)
+            key = f"bin{lo}x{hi}_band{band}"
         w = np.asarray(hdu.data["weight"], dtype=float)
         if w.ndim == 2:
             w = w[:, int(d["window_ind"][row])]
         win[key + "_ells"] = np.asarray(hdu.data["values"], dtype=float)
         win[key + "_weights"] = w
     np.savez(os.path.join(DATA, "lssty1xdesi_desi_dr3_windows.npz"), **win)
-    print(f"wrote the bandpower windows ({len(win)//2} auto bandpowers)")
+    print(f"wrote the bandpower windows ({len(win)//2} bandpowers, "
+          "auto and cross)")
 
     f.close()
 
