@@ -1,0 +1,59 @@
+{
+  "project": "lssty1xdesi",
+  "part": "defaults",
+  "point": {
+    "As_1e9": 2.1,
+    "DESI_B1_1": 1.34,
+    "DESI_B1_19": 1.7,
+    "DESI_B1_30": 1.7,
+    "DESI_B1_39": 1.7,
+    "DESI_B1_50": 0.84,
+    "DESI_B1_62": 0.84,
+    "DESI_SIGV_1": 357.0,
+    "DESI_SIGV_19": 326.0,
+    "DESI_SIGV_50": 200.0,
+    "H0": 67.32,
+    "mnu": 0.06,
+    "ns": 0.96605,
+    "omegab": 0.04,
+    "omegam": 0.3,
+    "w": -1.0,
+    "w0pwa": -1.0
+  },
+  "input_files": {
+    "source_file": {
+      "name": "lssty1xdesi_source.nz",
+      "sha256": "de0bd0ee395ade11ca08af7fbee3b414528ff4c628fda8c56a1da76befe995f8"
+    },
+    "lens_file": {
+      "name": "lssty1xdesi_desi_dr3.nz",
+      "sha256": "dae11b5a7d428333b960f8f1bd5f18d6d0aa72abe6d314374175111283d68531"
+    },
+    "cov_file": {
+      "name": "lssty1xdesi_desi_dr3_cov",
+      "sha256": "6f81b62b8a33be800905e60b3f25543ce8b21a86e11d83de0c2002c616503595"
+    },
+    "mask_file": {
+      "name": "lssty1xdesi_desi_dr3.mask",
+      "sha256": "34650c072fd1aabb7c21d779e36fef21b0a4207d7c11ef7c59e7cdebd335f210"
+    },
+    "data_vector_file": {
+      "name": "lssty1xdesi_desi_dr3_fid.datavector",
+      "sha256": "5ba2c59a1bf142469d6d1de72aa657abb90fbdda9beef57e5715b25f04cd55b9"
+    }
+  },
+  "accuracyboost": 1.0,
+  "integration_accuracy": 0,
+  "defaults_yaml_sha256": "25f0a93aeb1d445b0c8553baf325a279ab3cfb49c9af301e790ff6daa51b2351",
+  "interface_sha256": "3dd24de15080d8e97c2ec8bc36d88b296604b43e2ee2548b3730b50c66bdd921",
+  "study_sha256": "584c74e2d9d470ec95b62fa65ea879ccf123fe87b6f6b39cc936c913db94745b",
+  "delta_chi2": {},
+  "elapsed_seconds": 142.621212500002,
+  "thread_environment": {
+    "OMP_NUM_THREADS": "8",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "inverse_covariance_sha256": "16fa9ccd9677aada8cbf0e2558ad50ec95efda314ae9ee5710aac930a41bea5f"
+}

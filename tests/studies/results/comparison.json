@@ -1,0 +1,14 @@
+{
+  "project": "lssty1xdesi",
+  "default_accuracyboost": 1.0,
+  "default_integration_accuracy": 0,
+  "refined_accuracyboost": 5.0,
+  "refined_integration_accuracy": 7,
+  "original_default_to_refined": 2.297865476763589,
+  "reconstruction_distances": {
+    "original_to_three": 1.5452460542690494,
+    "three_to_five": 0.06315247194776699,
+    "three_to_seven": 0.13030892146483736,
+    "five_to_seven": 0.01482032319377264
+  }
+}

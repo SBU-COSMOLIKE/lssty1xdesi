@@ -29,10 +29,10 @@ stability at 0.2.
 
 | Original → 3 | 3 → 5 | 3 → 7 | 5 → 7 |
 |---:|---:|---:|---:|
-| 1.4846183 | 0.06613885 | 0.13307625 | 0.014780390 |
+| 1.5452461 | 0.063152472 | 0.13030892 | 0.014820323 |
 
 Original at its YAML defaults versus the refined study settings:
-**Δχ² = 2.1266902** - numerical accuracy alone, without changing
+**Δχ² = 2.2978655** - numerical accuracy alone, without changing
 the histogram interpretation.
 
 Both numbers are two to three orders of magnitude above their LSST Y1
