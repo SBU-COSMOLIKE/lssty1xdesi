@@ -27,7 +27,9 @@ Every data-vector test reads only the pinned snapshot in `frozen/`.
 Asserted checks fail the run when a number moves: the $\Delta\chi^2$
 checks against `frozen/reference_chi2.json`, the race conditions (OpenMP
 threading), the cache ladder, the EuclidEmulator2 modification pin, the
-baryonic-feedback drift tests, and the photo-z and non-Limber switches.
+baryonic-feedback drift tests, the photo-z and non-Limber switches, and
+the FKEM vs low-rank engine comparisons (at the defaults and at an equal
+multipole cap).
 Advisory checks print measurements without a pass limit: the accuracy
 scans (with and without feedback), Halofit versus EuclidEmulator2, and
 the hybrid emulators.

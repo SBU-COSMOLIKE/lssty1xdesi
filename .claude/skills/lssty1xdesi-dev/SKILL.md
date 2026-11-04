@@ -48,6 +48,10 @@ chi2 = 74.0 against the engine, the genuine cost of FKEM keeping the
 nonlinear density term in Limber. The unfair configurations it
 replaces: cap 150 with Limber pairs, 17,388; cap 150 with pairs,
 4,243. Never quote the first two as a method comparison.
+`tests/data_vector/test_nonlimber_fkem_fair.py` pins the fair value
+(through the shared lowrank_gg_suite's `overrides` argument); the
+17,388 configuration no longer exists in the code (pre-twin commit
+0851ce4).
 
 FKEM with cross pairs is a separate twin in cosmo2D.c
 (C_cl_tomo_fkem_pairs_core and C_gg_tomo_fkem_pairs_ells, in the

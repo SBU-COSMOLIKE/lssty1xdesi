@@ -44,7 +44,7 @@ its own. The sampled nuisance block is DESI's: 76 linear biases
     6. [Baryonic feedback checks](#baryon_checks)
     7. [The photo-z convention checks](#photoz_conventions)
     8. [The non-Limber checks](#nonlimber_checks)
-    9. [The low-rank engine check](#lowrank_check)
+    9. [The FKEM vs low-rank engine checks](#lowrank_check)
     10. [The n(z) reader and cache checks](#nz_readers)
     11. [The sector-ladder cache check](#cache_ladder)
 3. [Appendix](#appendix)
@@ -97,7 +97,8 @@ configurations and test numbers:
 | `test_accuracy_baryons.py` | feedback accuracy reports | BF0-BF7 |
 | `test_photoz_conventions.py` | the runtime n(z) conventions | - |
 | `test_nonlimber_gg.py` | non-Limber vs Limber clustering | - |
-| `test_nonlimber_lowrank_gg.py` | low-rank vs FKEM engine | - |
+| `test_nonlimber_lowrank_gg.py` | low-rank vs FKEM engine, at the defaults | - |
+| `test_nonlimber_fkem_fair.py` | low-rank vs FKEM engine, at an equal multipole cap | - |
 | `test_nz_histogram_reader.py`, `test_nz_cache_roundtrip.py` | n(z) file reading and cache rebuilds | - |
 | `test_cache_consistency.py` | the sector-ladder cache check | - |
 
@@ -258,7 +259,7 @@ drift pin on both engines, not an accuracy limit):
   make the Limber approximation unusable for this project, not merely
   inaccurate.
 
-### The low-rank engine check (`test_nonlimber_lowrank_gg.py`) <a name="lowrank_check"></a>
+### The FKEM vs low-rank engine checks (`test_nonlimber_lowrank_gg.py`, `test_nonlimber_fkem_fair.py`) <a name="lowrank_check"></a>
 
 The project computes its non-Limber clustering with the low-rank
 FFTLog engine (`nonlimber_lowrank_gg: 1`): a per-bin SVD compresses
@@ -271,20 +272,32 @@ Limber, what linear theory misses, below the cap `lmax_nonlimber`
 (default 150), and pure Limber above. The cross pairs get the same
 split, through the FKEM twin of the cosmolike core.
 
-The test pins the difference between the two engines at the default
-settings (`DCHI2_MEASURED = 4243.4`, re-asserted to 10% relative), a
-drift check on both. The frozen data vector is the engine's own
-prediction, so the pin equals the χ² the FKEM run scores against it.
+Two tests compare the engines on the frozen fiducial. Each evaluates
+the engine, then FKEM, then the engine again in one process, and
+asserts that only clustering entries change, that the round trip is
+bitwise, and that the difference matches its pinned value to 10%:
 
-To compare the methods fairly, FKEM must run to the same multipole
-as the engine and cover the cross pairs. Measured on 2026-11-04, on
-the same chi grid (`nonlimber_accuracyboost: 64`):
+- `test_nonlimber_lowrank_gg.py` compares them at the likelihood
+  defaults (FKEM cap 150). It pins `DCHI2_MEASURED = 4243.4`: a
+  drift check on both engines, dominated by FKEM's cap rather than
+  by its method.
+- `test_nonlimber_fkem_fair.py` is the fair comparison. It sets
+  `lmax_nonlimber: 550` in every build - above the highest band
+  center, so FKEM is non-Limber at every band, cross pairs included,
+  like the engine (which ignores the key). It pins
+  `DCHI2_MEASURED = 74.0`.
 
-| FKEM configuration | $\Delta\chi^2$ vs the engine |
-|---|---:|
-| cap 150, cross pairs in Limber (the previous FKEM path) | 17,388 |
-| cap 150, cross pairs with the FKEM split (the default) | 4,243 |
-| cap 550, cross pairs with the FKEM split (every band) | **74.0** |
+The frozen data vector is the engine's own prediction, so each pin
+equals the χ² the FKEM run scores against it.
+
+Measured on 2026-11-04, on the same chi grid
+(`nonlimber_accuracyboost: 64`):
+
+| FKEM configuration | $\Delta\chi^2$ vs the engine | reproduced by |
+|---|---:|---|
+| cap 150, cross pairs in Limber | 17,388 | none: code before the FKEM twin (project commit `0851ce4`) |
+| cap 150, cross pairs with the FKEM split (the default) | 4,243 | `test_nonlimber_lowrank_gg.py` |
+| cap 550, cross pairs with the FKEM split (every band) | **74.0** | `test_nonlimber_fkem_fair.py` |
 
 Each row isolates one approximation: the Limber cross pairs cost about
 13,100, and the cap at 150 about 4,200. The remaining 74.0 is the
@@ -298,9 +311,14 @@ covariance, so they do not add). At the equal cap, FKEM evaluates in
 about half the engine's time (4.7 s against 10.2 s, same run,
 8 threads).
 
-The rank-5 compression
-itself costs nothing at this precision (the A0 scan's rank 5 → 8 row
-moves 0.000).
+The rank-5 compression itself costs nothing at this precision (the
+A0 scan's rank 5 → 8 row moves 0.000).
+
+Run them on their own (each builds three models; about ten minutes
+together on a laptop):
+
+    python -m pytest ./projects/lssty1xdesi/tests/data_vector/test_nonlimber_lowrank_gg.py
+    python -m pytest ./projects/lssty1xdesi/tests/data_vector/test_nonlimber_fkem_fair.py
 
 ### The n(z) reader and cache checks (`test_nz_histogram_reader.py`, `test_nz_cache_roundtrip.py`) <a name="nz_readers"></a>
 
@@ -373,9 +391,9 @@ file under `frozen/data/`, and re-pins the manifest. Review the
 printed $\chi^2$ values of both steps before committing: they become
 the new references the tests compare against.
 
-**Step :four:**: re-measure and re-pin the two non-Limber deltas. The
-Limber-vs-non-Limber and engine-agreement values stored in
-`test_nonlimber_gg.py` (`measured=`) and
-`test_nonlimber_lowrank_gg.py` (`DCHI2_MEASURED`) belong to the frozen
-vector; after a re-freeze, run each file once with `-s`, read the
-printed `delta^T C^-1 delta`, and update the stored value.
+**Step :four:**: re-measure and re-pin the three non-Limber deltas.
+The Limber-vs-non-Limber and engine-difference values stored in
+`test_nonlimber_gg.py` (`measured=`), `test_nonlimber_lowrank_gg.py`
+and `test_nonlimber_fkem_fair.py` (`DCHI2_MEASURED`) belong to the
+frozen vector; after a re-freeze, run each file once with `-s`, read
+the printed `delta^T C^-1 delta`, and update the stored value.
