@@ -256,7 +256,7 @@ OBJECTCPP += \
 # Covariance generation is optional. Every covariance source and object ends
 # in _cov; omit both the kernels and notebook wrappers from a data-vector build.
 # The matching define also removes their includes and bindings in interface.cpp.
-ifdef IGNORE_COSMOLIKE_lssty1xdesi_COVARIANCE
+ifdef IGNORE_COSMOLIKE_LSSTY1XDESI_COVARIANCE
 CXXFLAGS += -DCOSMOLIKE_NO_COVARIANCE
 CSOURCES := $(filter-out %_cov.c,$(CSOURCES))
 OBJECTC := $(filter-out %_cov.o,$(OBJECTC))
