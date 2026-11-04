@@ -166,14 +166,14 @@ sampler:
       omegam: 0.3
       w0pwa: -1.0
       w: -1.0
-      DESI_B1_BGS: 1.34
-      DESI_B1_LRG1: 1.70
-      DESI_B1_LRG2: 1.70
-      DESI_B1_LRG3: 1.70
-      DESI_B1_ELG1: 0.84
-      DESI_B1_ELG2: 0.84
-      DESI_SIGV_BGS: 357.0
-      DESI_SIGV_LRG: 326.0
-      DESI_SIGV_ELG: 200.0
+      DESI_B1_1: 1.34
+      DESI_B1_19: 1.70
+      DESI_B1_30: 1.70
+      DESI_B1_39: 1.70
+      DESI_B1_50: 0.84
+      DESI_B1_62: 0.84
+      DESI_SIGV_1: 357.0
+      DESI_SIGV_19: 326.0
+      DESI_SIGV_50: 200.0
 
 output: ./projects/lssty1xdesi/chains/EXAMPLE_EMUL2_EVALUATE_DESI1
