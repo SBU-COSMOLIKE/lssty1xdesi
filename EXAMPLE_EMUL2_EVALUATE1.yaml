@@ -3,21 +3,31 @@ debug: False
 stop_at_error: True
 
 likelihood:
-  lssty1xdesi.cosmic_shear:
+  lssty1xdesi.desi_cl:
+    # hybrid emulators (use_emulator = 2): the P(k), distances and
+    # H(z) come from the trained emulators below instead of CAMB; the
+    # data vector itself is computed exactly, as in the CAMB example
     use_emulator: 2
     path: ./external_modules/data/lssty1xdesi
-    data_file: lssty1xdesi_M1_GGL0.05.dataset   # 705 non-masked elements  (EE2 delta chi^2 ~ 11.8)
-    accuracyboost: 1.0
+    data_file: lssty1xdesi_desi_dr3.dataset
+    binning_space: fourier
+    external_nz_modeling: 1
+    print_datavector: False
+    print_datavector_file: "./projects/lssty1xdesi/chains/desi_theory_emul2.modelvector"
+    accuracyboost: 1
     integration_accuracy: 0
-    lmax: 50000 
+    lmax: 5000
     kmax_boltzmann: 5.0
-    # 1 EE2, 2 Halofit
     non_linear_emul: 2
     IA_model: 0
-    IA_code: 0    # CFASTPT (0) or FASTPT (1) (only works if not NLA)
+    IA_code: 0
     IA_redshift_evolution: 3
-    print_datavector: False
-    print_datavector_file: "./projects/lssty1xdesi/chains/example1_lssty1xdesi_theory_emul.modelvector"
+    adopt_limber_gg: 0
+    nonlimber_lowrank_gg: 1
+    nonlimber_lowrank_rank: 5
+    nonlimber_lowrank_lmax: 1000
+    debug: false
+
 params: # EE2 PRIORS
   As_1e9:
     prior:
@@ -114,37 +124,6 @@ params: # EE2 PRIORS
   # ------------------------------------------------------------------------
   # ------------------------------------------------------------------------
   # Intrinsic alignment
-  LSST_A2_1:
-    prior:
-      min: -5
-      max:  5
-    ref:
-      dist: norm
-      loc: -1.36
-      scale: 0.5
-    proposal: 0.5
-    latex: A_\mathrm{2-IA,LSST}^1
-  LSST_A2_2:
-    prior:
-      min: -5
-      max:  5
-    ref:
-      dist: norm
-      loc: -2.5
-      scale: 0.5
-    proposal: 0.5
-    latex: A_\mathrm{2-IA,LSST}^2
-  LSST_BTA_1:
-    prior:
-      min: 0
-      max: 2
-    ref:
-      dist: norm
-      loc: 1
-      scale: 0.15
-    proposal: 0.1
-    latex: A_\mathrm{BTA-IA,LSST}^1
-
 theory:
   emulrdrag:
     path: ./cobaya/cobaya/theories/
@@ -185,23 +164,16 @@ sampler:
       H0: 67.32
       omegab: 0.04
       omegam: 0.3
-      w0pwa: -0.9
-      w: -0.9
-      LSST_DZ_S1: 0.0414632
-      LSST_DZ_S2: 0.00147332
-      LSST_DZ_S3: 0.0237035
-      LSST_DZ_S4: -0.0773436
-      LSST_DZ_S5: -8.67127e-05
-      LSST_M1: 0.0191832
-      LSST_M2: -0.0431752
-      LSST_M3: -0.034961
-      LSST_M4: -0.0158096
-      LSST_M5: -0.0158096
-      LSST_A1_1: 0.606102
-      LSST_A1_2: -1.51541
-      LSST_A2_1: 0.0
-      LSST_BTA_1: 0.0
-      #LSST_A2_1:  0.05
-      #LSST_BTA_1: 0.05
-      LSST_A2_2: -1.51541
+      w0pwa: -1.0
+      w: -1.0
+      DESI_B1_1: 1.34
+      DESI_B1_19: 1.70
+      DESI_B1_30: 1.70
+      DESI_B1_39: 1.70
+      DESI_B1_50: 0.84
+      DESI_B1_62: 0.84
+      DESI_SIGV_1: 357.0
+      DESI_SIGV_19: 326.0
+      DESI_SIGV_50: 200.0
+
 output: ./projects/lssty1xdesi/chains/EXAMPLE_EMUL2_EVALUATE1

@@ -49,7 +49,7 @@ def run(nl_boost):
     Returns:
       (datavector, chi2 against the stored fiducial, boost used)
     """
-    info = yaml_load_file(os.path.join(PRJ, "EXAMPLE_EVALUATE6.yaml"))
+    info = yaml_load_file(os.path.join(PRJ, "EXAMPLE_EVALUATE1.yaml"))
     point = dict(info["sampler"]["evaluate"]["override"])
     for key in ("sampler", "output", "timing"):
         info.pop(key, None)
