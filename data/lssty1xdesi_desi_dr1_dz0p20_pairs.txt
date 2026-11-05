@@ -1,0 +1,15 @@
+# bin_i  bin_j (i < j): bins whose n(z) supports overlap or touch;
+# row n is spectrum n of the gg-cross block
+0 1
+1 2
+2 3
+3 4
+3 6
+4 5
+4 6
+4 7
+5 6
+5 7
+6 7
+7 8
+8 9

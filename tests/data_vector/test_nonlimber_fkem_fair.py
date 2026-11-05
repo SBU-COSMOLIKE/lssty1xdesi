@@ -68,10 +68,10 @@ import cocoa_test_utils as u
 FAIR_OVERRIDES = {"lmax_nonlimber": 550}
 
 # The engine delta chi2 of this project's frozen fiducial with FKEM at
-# the fair cap, measured on 2026-11-04 (rank 5, the engine's l cap of
-# 1000, nonlimber_accuracyboost 64): see assertion 4 of the module
-# docstring.
-DCHI2_MEASURED = 74.0168
+# the fair cap, measured on 2026-11-04 with CAMB's halofit tolerance
+# patch (rank 5, the engine's l cap of 1000, nonlimber_accuracyboost
+# 64): see assertion 4 of the module docstring.
+DCHI2_MEASURED = 74.0106
 
 # The shared factory (cosmolike_core/cocoa_testing_suites.py) builds
 # the class; assigning its return value to the usual module-level name
@@ -79,6 +79,32 @@ DCHI2_MEASURED = 74.0168
 TestNonLimberFKEMFair = u.lowrank_gg_suite(
     u, name="TestNonLimberFKEMFair", measured=DCHI2_MEASURED,
     example="example1", default=1, overrides=FAIR_OVERRIDES)
+
+# The same fair comparison on the DESI DR1 fixed-width Delta z
+# binnings (data_vector/README.md tabulates every layout): the bands
+# are shared, so cap 550 covers every band of every case. Each case
+# runs on its likelihood's chi grid; measured on 2026-11-04 with the
+# halofit patch.
+DCHI2_MEASURED_CASES = {
+    "example2": 92.6880,   # Delta z = 0.02, 90 lens bins (boost 64)
+    "example3": 5.22811,   # Delta z = 0.05, 36 lens bins (boost 32)
+    "example4": 0.146726,  # Delta z = 0.2, 10 lens bins (boost 8)
+}
+
+TestNonLimberFKEMFairExample2 = u.lowrank_gg_suite(
+    u, name="TestNonLimberFKEMFairExample2",
+    measured=DCHI2_MEASURED_CASES["example2"],
+    example="example2", default=1, overrides=FAIR_OVERRIDES)
+
+TestNonLimberFKEMFairExample3 = u.lowrank_gg_suite(
+    u, name="TestNonLimberFKEMFairExample3",
+    measured=DCHI2_MEASURED_CASES["example3"],
+    example="example3", default=1, overrides=FAIR_OVERRIDES)
+
+TestNonLimberFKEMFairExample4 = u.lowrank_gg_suite(
+    u, name="TestNonLimberFKEMFairExample4",
+    measured=DCHI2_MEASURED_CASES["example4"],
+    example="example4", default=1, overrides=FAIR_OVERRIDES)
 
 # __name__ is "__main__" only when this file runs directly as a
 # script; pytest imports the module instead, so this block stays

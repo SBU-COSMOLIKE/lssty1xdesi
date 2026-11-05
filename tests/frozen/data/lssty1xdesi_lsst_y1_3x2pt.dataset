@@ -1,0 +1,8 @@
+data_file = lssty1xdesi_lsst_y1_3x2pt_fid.datavector
+cov_file = lssty1xdesi_lsst_y1_3x2pt_cov
+mask_file = lssty1xdesi_lsst_y1_3x2pt.mask
+nz_lens_file = lssty1xdesi_lens.nz
+nz_source_file = lssty1xdesi_source.nz
+lens_ntomo = 5
+source_ntomo = 5
+ell_file = lssty1xdesi_desi_dr3_ells.txt

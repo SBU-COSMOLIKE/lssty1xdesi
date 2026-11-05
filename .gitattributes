@@ -8,3 +8,7 @@ data/lssty1xdesi_desi_dr3_cov filter=lfs diff=lfs merge=lfs -text
 tests/frozen/data/lssty1xdesi_desi_dr3_windows.npz filter=lfs diff=lfs merge=lfs -text
 tests/frozen/data/lssty1xdesi_desi_dr3.nz filter=lfs diff=lfs merge=lfs -text
 tests/frozen/data/lssty1xdesi_desi_dr3_cov filter=lfs diff=lfs merge=lfs -text
+data/lssty1xdesi_desi_dr1_*.nz filter=lfs diff=lfs merge=lfs -text
+tests/frozen/data/lssty1xdesi_desi_dr1_*.nz filter=lfs diff=lfs merge=lfs -text
+tests/frozen/data/lssty1xdesi_desi_dr1_*_cov filter=lfs diff=lfs merge=lfs -text
+tests/frozen/data/lssty1xdesi_lsst_y1_3x2pt_cov filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,7 @@
+# combo_3x2pt in Fourier band powers on the LSST Y1 lens and source
+# samples, built by scripts/make_lsst_3x2pt_case.py; every option not
+# set here is combo_3x2pt.yaml's (its photoz_zmid_convention: 0 is the
+# Z_LOW reading of the LSST Y1 n(z) files).
+data_file: lssty1xdesi_lsst_y1_3x2pt.dataset
+# band powers at the dataset's explicit centers (the DESI bands)
+binning_space: fourier

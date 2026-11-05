@@ -103,6 +103,27 @@ EXAMPLES = {
         "provenance": "EXAMPLE_EVALUATE1.yaml",
         "likelihood": "lssty1xdesi.desi_cl",
     },
+    # the DESI DR1 fixed-width Delta z binnings (10, 36 and 90 lens bins;
+    # scripts/make_desi_dz_case.py): the same likelihood on each, frozen
+    # for the FKEM vs low-rank engine comparisons
+    # Delta z = 0.02, 90 lens bins (case dr1_dz0p02)
+    "example2": {
+        "frozen_module": "frozen_config_example2.py",
+        "provenance": "EXAMPLE_EVALUATE2.yaml",
+        "likelihood": "lssty1xdesi.desi_cl_dr1_dz0p02",
+    },
+    # Delta z = 0.05, 36 lens bins (case dr1_dz0p05)
+    "example3": {
+        "frozen_module": "frozen_config_example3.py",
+        "provenance": "EXAMPLE_EVALUATE3.yaml",
+        "likelihood": "lssty1xdesi.desi_cl_dr1_dz0p05",
+    },
+    # Delta z = 0.2, 10 lens bins (case dr1_dz0p20)
+    "example4": {
+        "frozen_module": "frozen_config_example4.py",
+        "provenance": "EXAMPLE_EVALUATE4.yaml",
+        "likelihood": "lssty1xdesi.desi_cl_dr1_dz0p20",
+    },
     "emul2_example1": {
         "frozen_module": "frozen_config_emul2_example1.py",
         "provenance": "EXAMPLE_EMUL2_EVALUATE1.yaml",

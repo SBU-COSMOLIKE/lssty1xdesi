@@ -83,6 +83,26 @@ cNG, their sum, the row coordinates and the resolved settings in one
 > A library compiled without covariance support stops the script with
 > a message naming the key of Step :two:.
 
+The same CLI builds the covariances of the project's other layouts.
+The `case:` key of the covariance yaml selects the layout and its data
+files:
+
+| Covariance yaml | `case:` | Layout | Area |
+|---|---|---|---:|
+| `EXAMPLE_EVALUATE_COVARIANCE.yaml` | `dr3` (the default) | 76 comoving DESI bins | 14,000 deg² |
+| `EXAMPLE_EVALUATE_COVARIANCE2.yaml` | `dr1_dz0p02` | 90 DESI bins, $\Delta z = 0.02$ | 14,000 deg² |
+| `EXAMPLE_EVALUATE_COVARIANCE3.yaml` | `dr1_dz0p05` | 36 DESI bins, $\Delta z = 0.05$ | 14,000 deg² |
+| `EXAMPLE_EVALUATE_COVARIANCE4.yaml` | `dr1_dz0p20` | 10 DESI bins, $\Delta z = 0.2$ | 14,000 deg² |
+| `EXAMPLE_EVALUATE_COVARIANCE5.yaml` | `lsst_y1_3x2pt` | LSST Y1 3x2pt, 5 lens bins | 12,300 deg² |
+
+The LSST case's lenses are photometric, so they get no finger-of-god
+convolution. Its Gaussian term carries nonlinear-alignment intrinsic
+alignments. The likelihood's power law
+$A_1[(1+z)/1.62]^{\eta_1}$ is evaluated at each source bin's mean
+redshift, because the Gaussian term takes one amplitude per bin. The
+builders of these cases (the project README's sections on them) turn
+each archive's Gaussian term into the likelihood's covariance file.
+
 # Running the covariance notebook <a name="running"></a>
 
 **Step :one:**: activate Cocoa and enable covariance generation as in

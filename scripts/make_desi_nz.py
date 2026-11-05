@@ -66,13 +66,16 @@ PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REFINE = 5
 
 
-def load_sample(input_dir, sample):
+def load_sample(input_dir, sample, filename=None):
     """Read one sample's text file and split grid from bin rows.
 
     Arguments:
-      input_dir = folder holding desi_<sample>_comoving_binned_
-                  distribution_DR3.txt.
+      input_dir = folder holding the sample's file.
       sample    = "bgs", "lrg" or "elg".
+      filename  = the file's name inside input_dir; None reads the
+                  comoving DR3 file desi_<sample>_comoving_binned_
+                  distribution_DR3.txt (the default layout). Every
+                  DESI distribution file shares that format.
 
     Returns:
       (z, rows): z = the shared redshift grid (length 10^4); rows =
@@ -82,8 +85,9 @@ def load_sample(input_dir, sample):
       AssertionError when the grid is not uniform (the cosmolike n(z)
       reader interpolates on a uniform grid) or a row is empty.
     """
-    path = os.path.join(
-        input_dir, f"desi_{sample}_comoving_binned_distribution_DR3.txt")
+    if filename is None:
+        filename = f"desi_{sample}_comoving_binned_distribution_DR3.txt"
+    path = os.path.join(input_dir, filename)
     table = np.loadtxt(path)
     z = table[0]
     rows = table[1:]

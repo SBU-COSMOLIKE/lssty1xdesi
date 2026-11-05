@@ -35,7 +35,13 @@ belongs to the group of its (sample, chunk) row.
 
 Usage (from the Cocoa/ folder):
     python ./projects/lssty1xdesi/scripts/make_desi_params.py
+
+With --case <name> (a fixed-width Delta z case of
+scripts/make_desi_dz_case.py, e.g. dr1_dz0p02) it writes instead the
+single fragment likelihood/params_desi_<name>.yaml - the project
+default model on that case's bin table.
 """
+import argparse
 import os
 
 import numpy as np
@@ -177,12 +183,27 @@ def emit_blocks(out, prefix, groups, values, prior, scale, latex_of):
 
 
 def main():
-    table = np.loadtxt(BIN_TABLE, usecols=(1, 3), dtype=str)
+    parser = argparse.ArgumentParser(
+        description="Write the per-bin DESI nuisance-parameter fragments.")
+    parser.add_argument(
+        "--case", default=None,
+        help="a Delta z case (e.g. dr1_dz0p02): write only its "
+             "params_desi_<case>.yaml from its bin table")
+    args = parser.parse_args()
+    bin_table = BIN_TABLE
+    models = MODELS
+    if args.case is not None:
+        bin_table = os.path.join(
+            PROJECT, "data", f"lssty1xdesi_desi_{args.case}_bins.txt")
+        models = {f"params_desi_{args.case}.yaml":
+                  MODELS["params_desi.yaml"]}
+
+    table = np.loadtxt(bin_table, usecols=(1, 3), dtype=str, ndmin=2)
     samples = [s for s, c in table]
     chunks = [c for s, c in table]
-    zbars = np.loadtxt(BIN_TABLE, usecols=4)
+    zbars = np.loadtxt(bin_table, usecols=4, ndmin=1)
 
-    for fname, model in MODELS.items():
+    for fname, model in models.items():
         bias_groups = [group_key(s, c, model["bias_groups"])
                        for s, c in zip(samples, chunks)]
         sigv_groups = [sigv_group_key(s, c, z)

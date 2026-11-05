@@ -1,0 +1,12 @@
+# bin  sample  chunk_index  chunk_name  mean_redshift
+# DESI DR1 fixed-width Delta z = 0.2 bins; chunk_index counts chunks within the sample
+   0  bgs    0  BGS    0.20282381
+   1  bgs    0  BGS    0.34451881
+   2  lrg    0  LRG1   0.50954046
+   3  lrg    1  LRG2   0.70585580
+   4  lrg    2  LRG3   0.88640678
+   5  lrg    2  LRG3   1.04211547
+   6  elg    0  ELG1   0.90578335
+   7  elg    0  ELG1   1.09787786
+   8  elg    1  ELG2   1.29906669
+   9  elg    1  ELG2   1.49184175

@@ -1,0 +1,11 @@
+# desi_cl on the DESI DR1 fixed-width Delta z = 0.02 bins (90 lens
+# bins), built by scripts/make_desi_dz_case.py; every option not set
+# here is desi_cl.yaml's.
+data_file: lssty1xdesi_desi_dr1_dz0p02.dataset
+# the non-Limber FFTLog chi grid of this binning (see desi_cl.yaml): the
+# smallest boost whose delta chi2 against boost 128 stays below 0.01 at
+# it and every larger boost (measured 2026-11-04, the case's covariance;
+# against 128: 8 -> 0.52, 16 -> 0.106, 32 -> 0.020,
+# 64 -> 3.4e-3)
+nonlimber_accuracyboost: 64.0
+params: !defaults [params_desi_dr1_dz0p02]

@@ -1,0 +1,12 @@
+# bin  ngal [arcmin^-2]: the DESI DR1 forecast density of each Delta z = 0.2 bin
+# (the forecast's probes_properties_0.2.yaml, whose ngal is its only current entry)
+   0  1.9410001737e-01
+   1  6.3527666467e-02
+   2  2.7293562598e-02
+   3  4.1551646464e-02
+   4  3.9353292080e-02
+   5  6.8617973650e-03
+   6  6.9259796256e-02
+   7  6.7485592831e-02
+   8  6.2424275668e-02
+   9  5.0549267900e-02

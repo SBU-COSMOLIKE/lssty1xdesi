@@ -5,7 +5,7 @@ baryon_accuracy_suite (cosmolike_core/cocoa_testing_suites.py), and
 what each check means physically is documented in the cosmolike_core
 README's shared data-vector checks, baryonic-feedback section. In
 short: each check evaluates this project's example1 configuration
-(cosmic shear, NLA) with the bfmt theory block computing one feedback
+(EE + gg + gg-cross, NLA) with the bfmt theory block computing one feedback
 method and reports the advisory delta
 
     delta chi2 = chi2(high accuracy) - chi2(default)

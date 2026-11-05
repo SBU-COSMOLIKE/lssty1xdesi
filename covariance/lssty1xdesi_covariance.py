@@ -38,6 +38,23 @@ sampled convolution computes at its fiducial point
 (_fog_convolved_lens_file). The one-loop bias terms remain outside
 the covariance model - covariance accuracy targets are
 parameter-error level, far looser than the data-vector chi2 rule.
+
+Cases. The layout above is the default case, "dr3" (the comoving bins
+of the source forecast's sacc file). The fixed-width Delta z binnings
+of the DR1 distributions are further cases ("dr1_dz0p02", "dr1_dz0p05",
+"dr1_dz0p20"; data built by scripts/make_desi_dz_case.py). A DESI case
+selects only the data files - the n(z), bin table, densities and cross
+pairs - and with them the number of lens bins and of rows.
+
+One case has a different lens sample: "lsst_y1_3x2pt", the LSST Y1
+photometric lenses of a Fourier 3x2pt layout (scripts/
+make_lsst_3x2pt_case.py). Its lens kernels carry no FoG smearing, its
+biases, densities and footprint are the LSST Y1 values of the lsst_y1
+project's adapter, its n(z) files are read with the Z_LOW convention,
+and its rows add galaxy-galaxy lensing for every lens-source pair.
+
+The model, the bands and the accuracy controls are the same for every
+case. A covariance yaml picks one with the key covariance: case: <name>.
 """
 
 from pathlib import Path
@@ -55,7 +72,29 @@ from cosmolike_notebook_utils import covariance as cov
 # the project folder (one level above covariance/), where data/ lives
 _PROJECT = Path(__file__).resolve().parents[1]
 
-# number of lens (DESI thin comoving) and source (LSST Y1) bins
+# The cases this adapter covers: case name -> (the stem of its data
+# files, its lens sample). A "desi" case reads data/<stem>.nz,
+# <stem>_bins.txt, <stem>_ngal.txt and <stem>_pairs.txt; the "lsst" case
+# reads the LSST Y1 lens n(z) and the constants below.
+CASES = {
+    "dr3": ("lssty1xdesi_desi_dr3", "desi"),
+    "dr1_dz0p02": ("lssty1xdesi_desi_dr1_dz0p02", "desi"),
+    "dr1_dz0p05": ("lssty1xdesi_desi_dr1_dz0p05", "desi"),
+    "dr1_dz0p20": ("lssty1xdesi_desi_dr1_dz0p20", "desi"),
+    "lsst_y1_3x2pt": ("lssty1xdesi_lsst_y1_3x2pt", "lsst"),
+}
+
+# The LSST Y1 lens sample of the "lsst" case, the values of the lsst_y1
+# project's covariance adapter: five photometric bins at 3.6 galaxies per
+# arcmin^2 each, its fiducial linear biases (the LSST_B1 values of its
+# 3x2pt example), and the LSST Y1 footprint
+LSST_LENS_NZ = "data/lssty1xdesi_lens.nz"
+LSST_LENS_DENSITY = 3.6
+LSST_LENS_BIAS = [1.72716, 1.65168, 1.61423, 1.92886, 2.11633]
+LSST_AREA_DEG2 = 12300.0
+
+# number of lens bins of the default case (DESI thin comoving), and of
+# source (LSST Y1) bins in every case
 NLENS = 76
 NSOURCE = 5
 
@@ -95,31 +134,76 @@ SIGMA_V_BGS_SPLIT_Z = 0.255
 C_KMS = 299792.458
 
 
-def observable_rows():
-    """Return the (probe,A,B) rows of the measured 9964-entry layout.
+def _stem(case):
+    """Return the data-file stem of one case (see CASES).
 
-    Field IDs put the 76 lenses before the 5 sources, the shared
+    Raises:
+      ValueError for a case this adapter does not know.
+    """
+    if case not in CASES:
+        raise ValueError(f"unknown case {case!r}: one of {sorted(CASES)}")
+    return CASES[case][0]
+
+
+def _lsst(case):
+    """Whether the case's lens sample is the LSST Y1 photometric one."""
+    _stem(case)
+    return CASES[case][1] == "lsst"
+
+
+def _nlens(case):
+    """Return the number of lens bins of one case.
+
+    A DESI case counts its bin-table rows; the LSST case counts the n(z)
+    file's distribution columns.
+    """
+    if _lsst(case):
+        return np.loadtxt(_PROJECT/LSST_LENS_NZ).shape[1] - 1
+    return len(np.loadtxt(_PROJECT/f"data/{_stem(case)}_bins.txt",
+                          dtype=str, usecols=3, ndmin=1))
+
+
+def observable_rows(case="dr3"):
+    """Return the (probe,A,B) rows of one case's measured layout.
+
+    Field IDs put the lenses before the 5 sources, the shared
     package's convention. Probe IDs are 0 = EE bandpowers (cosmic
     shear) and 3 = galaxy clustering; no gamma_t (probe 2) rows are
-    measured. Clustering carries the 76 auto rows first, then the 97
-    measured cross pairs with A < B - exactly the data-vector block
-    order, so row r of the covariance is entry 53*r of the vector.
+    measured in a DESI case. Clustering carries one auto row per lens
+    bin first, then the measured cross pairs with A < B - exactly the
+    data-vector block order, so row r of the covariance is entry 53*r of
+    the vector. The default case has 76 lens bins and 97 pairs: 188
+    rows. The LSST case inserts galaxy-galaxy lensing (probe 2, rows
+    (lens, source)) for every pair, lens bin outer, between EE and the
+    clustering autos, and has no cross pairs.
+
+    Arguments:
+      case = one of CASES (default "dr3").
 
     Returns:
-      int32 [188, 3] array, columns (probe, A, B).
+      int32 [n_rows, 3] array, columns (probe, A, B).
     """
+    nlens = _nlens(case)
     rows = []
     # EE: each unordered source pair once, first <= second; source
-    # field IDs follow the NLENS lens IDs
+    # field IDs follow the lens IDs
     for first in range(NSOURCE):
         for second in range(first, NSOURCE):
-            rows.append((0, NLENS + first, NLENS + second))
+            rows.append((0, nlens + first, nlens + second))
+    # galaxy-galaxy lensing, every pair (the data vector's enumeration
+    # with no ggl_exclude list), lens bin outer
+    if _lsst(case):
+        for lens in range(nlens):
+            for source in range(NSOURCE):
+                rows.append((2, lens, nlens + source))
     # clustering autos, bin order
-    for lens in range(NLENS):
+    for lens in range(nlens):
         rows.append((3, lens, lens))
+    if _lsst(case):
+        return np.array(rows, dtype=np.int32)
     # clustering cross pairs, file order (sorted, A < B)
-    pairs = np.loadtxt(_PROJECT/"data/lssty1xdesi_desi_dr3_pairs.txt",
-                       dtype=np.int32)
+    pairs = np.loadtxt(_PROJECT/f"data/{_stem(case)}_pairs.txt",
+                       dtype=np.int32, ndmin=2)
     for a, b in pairs:
         rows.append((3, int(a), int(b)))
     return np.array(rows, dtype=np.int32)
@@ -187,26 +271,28 @@ def _band_edges():
     return first, last
 
 
-def _lens_bias():
-    """Return the fiducial linear bias of each of the 76 lens bins.
+def _lens_bias(case="dr3"):
+    """Return the fiducial linear bias of each lens bin of one case.
 
-    data/lssty1xdesi_desi_dr3_bins.txt names each bin's chunk (BGS,
-    LRG1..LRG3, ELG1, ELG2); CHUNK_BIAS maps the chunk to its leader
-    value. Every downstream bin order follows that file.
+    The case's bin table names each bin's chunk (BGS, LRG1..LRG3,
+    ELG1, ELG2); CHUNK_BIAS maps the chunk to its leader value. Every
+    downstream bin order follows that file.
+
+    Arguments:
+      case = one of CASES (default "dr3").
 
     Returns:
-      float list [76].
+      float list, one entry per lens bin (the LSST case: LSST_LENS_BIAS).
     """
-    chunk_names = np.loadtxt(_PROJECT/"data/lssty1xdesi_desi_dr3_bins.txt",
-                             dtype=str, usecols=3)
-    if len(chunk_names) != NLENS:
-        raise ValueError(
-            f"bins file lists {len(chunk_names)} bins, expected {NLENS}")
+    if _lsst(case):
+        return list(LSST_LENS_BIAS)
+    chunk_names = np.loadtxt(_PROJECT/f"data/{_stem(case)}_bins.txt",
+                             dtype=str, usecols=3, ndmin=1)
     return [CHUNK_BIAS[str(name)] for name in chunk_names]
 
 
-def _fog_convolved_lens_file():
-    """Write and return the fiducial-FoG-convolved lens n(z) file.
+def _fog_convolved_lens_file(case="dr3"):
+    """Write and return the fiducial-FoG-convolved lens n(z) of a case.
 
     The likelihood convolves each thin bin's raw histogram with a
     Gaussian in redshift of width sigma_z = (1 + zbar) sigma_v / c at
@@ -217,11 +303,18 @@ def _fog_convolved_lens_file():
     project's radial systematic, so it lives here, in the adapter:
     the shared covariance code never models FoG.
 
+    Arguments:
+      case = one of CASES (default "dr3").
+
     Returns:
       the derived file's path, relative to the project folder (the
-      shared machinery joins it onto the project path).
+      shared machinery joins it onto the project path). The LSST case's
+      photometric lenses carry no FoG: its lens n(z) is returned as is.
     """
-    raw = np.loadtxt(_PROJECT/"data/lssty1xdesi_desi_dr3.nz")
+    if _lsst(case):
+        return LSST_LENS_NZ
+    stem = _stem(case)
+    raw = np.loadtxt(_PROJECT/f"data/{stem}.nz")
     z = raw[:, 0]
     dz = np.diff(z)
     # the kernel width is expressed in grid steps, so the grid must be
@@ -229,15 +322,16 @@ def _fog_convolved_lens_file():
     if not np.all(dz > 0) or np.max(np.abs(dz - dz[0])) > 1.0e-6*dz[0]:
         raise ValueError(
             "the lens n(z) grid must be uniform and increasing")
-    bins_file = _PROJECT/"data/lssty1xdesi_desi_dr3_bins.txt"
-    chunk_names = np.loadtxt(bins_file, dtype=str, usecols=3)
-    zbar = np.loadtxt(bins_file, usecols=4)
-    if raw.shape[1] - 1 != NLENS or len(chunk_names) != NLENS:
+    bins_file = _PROJECT/f"data/{stem}_bins.txt"
+    chunk_names = np.loadtxt(bins_file, dtype=str, usecols=3, ndmin=1)
+    zbar = np.loadtxt(bins_file, usecols=4, ndmin=1)
+    nlens = len(chunk_names)
+    if raw.shape[1] - 1 != nlens:
         raise ValueError(
             f"n(z) holds {raw.shape[1] - 1} bins and the bins file "
-            f"{len(chunk_names)}, expected {NLENS}")
+            f"{nlens}")
     out = raw.copy()
-    for i in range(NLENS):
+    for i in range(nlens):
         group = str(chunk_names[i])
         if group == "BGS":
             group = ("BGS0" if float(zbar[i]) < SIGMA_V_BGS_SPLIT_Z
@@ -248,14 +342,15 @@ def _fog_convolved_lens_file():
         # grid, which is what a distribution that ends there means
         out[:, i + 1] = gaussian_filter1d(
             raw[:, i + 1], sigma=sigma_z/float(dz[0]), mode="constant")
-    path = _PROJECT/"covariance/lssty1xdesi_desi_dr3_fog.nz"
+    path = f"covariance/{stem}_fog.nz"
     # full double precision: the uniform grid must survive the text
     # round trip
-    np.savetxt(path, out, fmt="%.17e")
-    return "covariance/lssty1xdesi_desi_dr3_fog.nz"
+    np.savetxt(_PROJECT/path, out, fmt="%.17e")
+    return path
 
 
-def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
+def configuration(accuracy_boost=None, gaussian=None, case="dr3",
+                  **accuracy_overrides):
     """Return resolved survey, cosmology and YAML accuracy choices.
 
     "Resolved" means that every value the calculation uses is written
@@ -273,13 +368,15 @@ def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
             default 0). gaussian_model checks it. The project fiducial
             has zero IA amplitudes, so the default matches the
             likelihood examples.
+        case = one of CASES (default "dr3"): the layout and data files
+            the covariance describes.
         accuracy_overrides = keyword arguments that replace single
             entries of default.yaml (for example nonlimber_accuracyboost
             = 16); an unknown name raises TypeError.
     Returns:
         dict of fully resolved settings: the survey and cosmology
         entries below, the accuracy entries of default.yaml (boosted,
-        and also their unboosted values) and "gaussian".
+        and also their unboosted values), "gaussian" and "case".
     """
     numerical = cov.load_covariance_accuracy(
         filename=Path(__file__).with_name("default.yaml"),
@@ -288,8 +385,11 @@ def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
     band_first, band_last = _band_edges()
     # per-bin DESI densities [arcmin^-2], shipped in the bin order of
     # every project data file (see the file's header)
-    lens_density = np.loadtxt(
-        _PROJECT/"data/lssty1xdesi_desi_dr3_ngal.txt", usecols=1)
+    if _lsst(case):
+        lens_density = np.full(_nlens(case), LSST_LENS_DENSITY)
+    else:
+        lens_density = np.loadtxt(
+            _PROJECT/f"data/{_stem(case)}_ngal.txt", usecols=1, ndmin=1)
     settings = {
         # Fiducial cosmology and CAMB settings, the EXAMPLE yaml
         # override point: As_1e9 = 10^9 A_s, w0pwa = w0 + wa (-1 with
@@ -326,10 +426,12 @@ def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
         # files with photoz_interpolation_type = 0 (cubic spline) and
         # photoz_zmid_convention = 1 (the z column holds bin
         # midpoints); the covariance matches both conventions.
-        "lens_file": _fog_convolved_lens_file(),
+        "lens_file": _fog_convolved_lens_file(case),
         "source_file": "data/lssty1xdesi_source.nz",
         "photoz_interpolation": 0,
-        "photoz_zmid": 1,
+        # the LSST Y1 n(z) files of the lsst case use Z_LOW (lsst_y1's
+        # convention, and its likelihood's photoz_zmid_convention: 0)
+        "photoz_zmid": 0 if _lsst(case) else 1,
         # no gamma_t rows are measured; internal field spectra keep
         # every pair regardless
         "excluded_gammat": [],
@@ -346,11 +448,11 @@ def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
         # per bin; the LSST Y1 sources split the SRD total equally
         # (10/5 = 2.0 per arcmin^2) with shape noise 0.26 per
         # ellipticity component
-        "area_deg2": 14000.0,
+        "area_deg2": LSST_AREA_DEG2 if _lsst(case) else 14000.0,
         "lens_density_arcmin2": lens_density.tolist(),
         "source_density_arcmin2": [2.0]*NSOURCE,
         "sigma_e_component": [0.26]*NSOURCE,
-        "bias": _lens_bias(),
+        "bias": _lens_bias(case),
         # scale-factor edges of the line-of-sight integration panels,
         # at z = 3.5, 2, 1.5, 1, 0.7, 0.4, 0.2 and 1e-5 (the last edge
         # stops just short of the observer); the DESI bins live inside
@@ -365,6 +467,7 @@ def configuration(accuracy_boost=None, gaussian=None, **accuracy_overrides):
     settings["gaussian"] = gaussian_model(
         gaussian=gaussian, nsource=NSOURCE,
     )
+    settings["case"] = case
     return settings
 
 
@@ -396,7 +499,8 @@ def compute(interface, settings, space="fourier", rows=None, progress=None,
             bandpowers); the project measures no real-space vector.
         rows = optional subset of measured rows, an int32 [n_rows, 3]
             table of (type, A, B); None selects the full 188-row layout
-            of observable_rows(), the data-vector order.
+            of observable_rows() for settings["case"], the
+            data-vector order.
         progress = optional function called as progress(stage,
             elapsed_seconds) while the calculation runs.
         backend = None for the notebook wrappers, interface.covariance
@@ -405,10 +509,10 @@ def compute(interface, settings, space="fourier", rows=None, progress=None,
         the shared forecast dict (compute_forecast): the G, SSC, cNG and
         total matrices, mean signals, the coordinate of each row (band
         centers in multipole) and the resolved settings. The full layout
-        has 9964 entries.
+        has 9964 entries in the default case.
     """
     if rows is None:
-        rows = observable_rows()
+        rows = observable_rows(settings.get("case", "dr3"))
     return compute_forecast(
         interface=interface, settings=settings, space=space, rows=rows,
         progress=progress, backend=backend,

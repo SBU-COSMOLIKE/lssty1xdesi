@@ -17,4 +17,4 @@ data/.DS_Store
 chains2/
 chains*/
 covariance/*.npz
-covariance/lssty1xdesi_desi_dr3_fog.nz
+covariance/*_fog.nz

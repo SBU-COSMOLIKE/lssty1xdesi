@@ -48,11 +48,13 @@ LDFLAGS += -L$(CONDA_PREFIX)/lib -L$(ROOTDIR)/.local/lib
 LDFLAGS += -Wl,-rpath,$(CONDA_PREFIX)/lib -Wl,-rpath,$(ROOTDIR)/.local/lib
 VEC_FLAGS =
 
-# lssty1xdesi carries 76 spectroscopic DESI bins (18 BGS + 31 LRG +
-# 27 ELG); the core's fixed tomography arrays default to 20 slots
-# (structs.h MAX_SIZE_ARRAYS), raised here at compile time. The core is
-# compiled per project, so this never leaks into other projects.
-COMMON_FLAGS += -DMAX_SIZE_ARRAYS=80
+# lssty1xdesi carries up to 90 spectroscopic DESI bins (76 in the
+# comoving DR3 layout, 90 in the DR1 Delta z = 0.02 one); the core's
+# fixed tomography arrays default to 20 slots (structs.h
+# MAX_SIZE_ARRAYS), raised here at compile time. 128 also covers the
+# covariance field IDs (lens bins + 5 sources). The core is compiled per
+# project, so this never leaks into other projects.
+COMMON_FLAGS += -DMAX_SIZE_ARRAYS=128
 
 # Fast-math builds can produce incorrect covariance inverses. Keep the
 # optimized strict-IEEE default; debug mode remains available for diagnostics.

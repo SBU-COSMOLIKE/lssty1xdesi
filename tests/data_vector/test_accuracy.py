@@ -28,7 +28,7 @@ the interface instead of refining it, and the one-at-a-time delta is
 what tells such cases apart), and three knobs of this project's own:
 the chi grid of the low-rank non-Limber engine
 (nonlimber_accuracyboost, the accuracy-critical control of the
-0.05-wide comoving bins), the kept SVD ranks and the engine's
+thin comoving bins), the kept SVD ranks and the engine's
 multipole cap.
 
 One opt-in check extends the scan beyond the fiducial: the
