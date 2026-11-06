@@ -116,9 +116,14 @@ configurations and test numbers:
 | `test_nz_histogram_reader.py`, `test_nz_cache_roundtrip.py` | n(z) file reading and cache rebuilds | - |
 | `test_cache_consistency.py` | the sector-ladder cache check | - |
 
-The snapshot was frozen on 2026-11-04. Each of the four layouts
-reproduces its frozen reference at $\chi^2 = 0$: its shipped data
-vector is the model at its fiducial point.
+The snapshot was frozen on 2026-11-04 and refrozen on 2026-11-05,
+with every layout's fiducial data vector regenerated at the reference
+settings of the [N-random-models section](#nmodels_check). Each of
+the four layouts reproduces its frozen reference at $\chi^2 = 0$: its
+shipped data vector is the model at its fiducial point. The refreeze
+moved the $\Delta z = 0.05$ fiducial vector by $\Delta\chi^2 = 0.033$
+against the previous version, with the largest single entry moving by
+$0.02\sigma$.
 
 The numbers below are measured with CAMB installed with the halofit
 tolerance patch (`PATCH_CAMB_HALOFIT_TOLERANCE` in
@@ -179,13 +184,19 @@ check A0 scans one setting at a time on `example1` (including
 every shared setting pushed at once. Beyond the shared knobs, the scan
 covers this project's own non-Limber controls:
 
-- the FFTLog $\chi$-grid density (`nonlimber_accuracyboost`, default
-  64): the accuracy-critical control, because the narrowest bins in
-  $\ln\chi$ alias on a coarse grid;
+- the FFTLog $\chi$-grid density (`nonlimber_accuracyboost`): the
+  accuracy-critical control, because the narrowest bins in $\ln\chi$
+  alias on a coarse grid;
 - the kept SVD ranks (`nonlimber_lowrank_rank`, default 5);
 - the engine's multipole cap (`nonlimber_lowrank_lmax`, default 1000).
 
-Measured (A0, one knob at a time, advisory):
+Measured on 2026-11-04 (A0, one knob at a time, advisory), at the
+settings `example1` shipped then: `accuracyboost` 1 with
+`nonlimber_accuracyboost` 64, the same combined $\chi$-grid factor as
+the current `accuracyboost` 2 with 32. The scan's re-measurement at
+the reference settings of the
+[N-random-models section](#nmodels_check) runs with the full suite
+and is pending:
 
 | setting | change | $\chi^2$ against the frozen vector |
 |---|---|---:|
@@ -220,14 +231,158 @@ vector are slow):
 ### The N-random-models check (opt-in) <a name="nmodels_check"></a>
 
 [Mechanism](https://github.com/CosmoLike/cocoa-cosmolike-core/blob/main/README.md#dv_nmodels):
-seeded random points across the NLA prior, each scored high-accuracy
-against its own default-settings vector. Enable and run it with
+seeded random points across the prior, each scored with every setting
+of the A-checks pushed at once against its own reference-settings
+vector. Each layout has its own check (`test_ax99_nmodels` for
+`example1`, `test_ax99_nmodels_example2` to `_example4`). Model $m$
+draws its point with the seed $137 + m$, so every run repeats the same
+points and the same figures. Enable and run it with
 
     COCOA_ACCURACY_NMODELS=10 python -m pytest \
         ./projects/lssty1xdesi/tests/data_vector/test_accuracy.py -k nmodels
 
 Running the file as a script accepts `--nmodels N` in place of the
-environment variable.
+environment variable. Two more variables change a run:
+
+- `COCOA_ACCURACY_NMODELS_SEED` sets another seed base, for a second
+  reproducible set of points;
+- `COCOA_ACCURACY_NMODELS_FIGURES` names the folder of the figures
+  (unset: the system temporary folder, so the run changes no project
+  file).
+
+Unlike A0-A4, this check fails: every model must stay below
+$|\Delta\chi^2| = 0.2$, and a failure names each model and its seed.
+Three settings in `test_accuracy.py` shape the draw to the prior of
+the examples:
+
+- `nmodels_box`: $\Omega_m$ is drawn in $[0.2, 0.5]$, $w_0$ in
+  $[-3, -1/3]$ (an accelerating universe today) and $w_0 + w_a$ in
+  $[-3, -0.01]$, the boxes of the examples. The frozen configurations
+  keep their wider boxes, and the overrides narrow the draw without a
+  refreeze; they change only the drawn values of a seeded point.
+- `nmodels_hold`: every odd model (seed 138, 140, ...) resets
+  $\Omega_m$, the primordial amplitude $A_s$ (sampled as `As_1e9`
+  $= 10^9 A_s$) and the DESI linear galaxy biases $b_i$ to the
+  fiducial after its draw,
+  so only the other cosmological parameters vary ($H_0$, $n_s$,
+  $\Omega_b$, $m_\nu$, $w_0$, $w_0 + w_a$). Those models measure what
+  the other parameters do to the accuracy. The FoG dispersions have
+  Gaussian priors and keep their fiducial values in every draw.
+- `nmodels_amplitude_cut`: every drawn point keeps the
+  clustering-amplitude ratio
+  $(A_s/A_{s,{\rm fid}})(b_i/b_{i,{\rm fid}})^2$ at or below 8 in
+  every one of the six DESI bias groups - the amplitude cut of the
+  examples' prior, and the cut shared by all projects in this group.
+  A draw above the cut is replaced by the next draw of the same
+  seeded generator, so the points stay reproducible.
+
+The cut is what makes the check passable at all. Every bias box spans
+$[0.8, 4]$ while the ELG fiducial bias is 0.84, so an uncut draw
+reaches $A_s b_i^2$ of about 50 times its fiducial value, and a
+numerical error that is a fixed fraction of the signal costs a
+$\Delta\chi^2$ that grows as the square of that ratio. The Fisher
+forecasts of `EXAMPLE_EVALUATE4.ipynb` (section 8) put the DESI
+$2\sigma$ contours at an amplitude ratio of about 2, so the cut at 8
+removes only prior volume the data already exclude.
+
+Each check prints a summary of each half and draws its layout's
+figure: $\Delta\chi^2$ against $\Omega_m$ and against the
+clustering-amplitude ratio (the largest over the six bias groups),
+and the plane of the two. Circles are drawn across the prior;
+diamonds hold $\Omega_m$, $A_s$ and the biases at the fiducial, so
+they stack at $\Omega_m = 0.3$ and ratio 1. The color saturates
+above 100.
+
+Each model is scored against a reference vector generated at the
+settings its likelihood ships (finalized 2026-11-05; every layout at
+`accuracyboost` 2 and CAMB `AccuracyBoost` 1.05):
+
+| layout | `nonlimber_accuracyboost` | `kmax_boltzmann` |
+|---|---:|---:|
+| DR3 (`example1`) | 32 | 20 |
+| $\Delta z = 0.02$ (`example2`) | 32 | 20 |
+| $\Delta z = 0.05$ (`example3`) | 16 | 20 |
+| $\Delta z = 0.2$ (`example4`) | 4 | 20 |
+
+`kmax_boltzmann: 20` is set by the low-$\Omega_m$ corner of the
+prior. At a drawn point with $\Omega_m = 0.237$, $w_0 = -2.39$,
+$w_0 + w_a = -2.87$ and $H_0 = 78.6$, the pushed settings move
+$\chi^2$ by 2.09 on DR3 and 2.06 on $\Delta z = 0.02$ against a
+reference generated with `kmax_boltzmann: 5`, and by 0.12 and 0.10
+against one generated with 20 (measured 2026-11-05).
+
+Measured with the seed base 137 under this prior and these reference
+settings:
+
+| layout | models | held: median / maximum $\Delta\chi^2$ | drawn: median / maximum $\Delta\chi^2$ |
+|---|---:|---:|---:|
+| `example1` (DR3, 62 Mpc) | - | pending | pending |
+| `example2` ($\Delta z = 0.02$) | - | pending | pending |
+| `example3` ($\Delta z = 0.05$) | 20 | 0.069 / 0.138 | 0.60 / 12.1 |
+| `example4` ($\Delta z = 0.2$) | 20 | 0.017 / 0.027 | 0.19 / 1.53 |
+
+The `example1` and `example2` reruns under this prior are pending
+(each takes an hour or more); their figures appear here once they
+finish.
+
+On $\Delta z = 0.05$ (measured 2026-11-05, 20 models) every held
+model passes: the other cosmological parameters alone leave
+$\Delta\chi^2$ at 0.138 or less. The drawn half:
+
+| $\Delta\chi^2$ | $\Omega_m$ | amplitude ratio |
+|---:|---:|---:|
+| 12.1 | 0.489 | 6.86 |
+| 4.30 | 0.468 | 4.62 |
+| 3.85 | 0.348 | 7.14 |
+| 0.92 | 0.356 | 7.43 |
+| 0.90 | 0.407 | 3.88 |
+| 0.30 | 0.264 | 4.85 |
+| 0.19 | 0.452 | 2.95 |
+| 0.13 | 0.261 | 3.13 |
+| 0.10 | 0.243 | 3.01 |
+| 0.038 | 0.235 | 2.95 |
+
+Every drawn point with a ratio up to about 3.1 stays below 0.2. The
+values above 1 sit at ratios of 4.6 or more together with
+$\Omega_m \ge 0.35$, the extreme corner of the prior; the DESI
+Fisher $2\sigma$ contours reach a ratio of only 1.54 on this layout.
+No one-setting-at-a-time scan was run on this layout, so the residual
+is not attributed to a particular setting.
+
+On $\Delta z = 0.2$ (measured 2026-11-05, 20 models) every held
+model passes: the other cosmological parameters alone leave
+$\Delta\chi^2$ at 0.027 or less. In the drawn half the three largest
+values sit at the high-amplitude, high-$\Omega_m$ corner the cut
+still admits:
+
+| $\Delta\chi^2$ | $\Omega_m$ | amplitude ratio |
+|---:|---:|---:|
+| 1.53 | 0.49 | 6.9 |
+| 0.73 | 0.47 | 4.6 |
+| 0.31 | 0.50 | 3.5 |
+
+The other drawn values are 0.21, 0.20, 0.17, 0.17, 0.054, 0.046 and
+0.010. A one-setting-at-a-time scan at the three worst points puts
+this residual entirely on CAMB's precision: raising CAMB's
+`AccuracyBoost` from 1.05 to 2 alone reproduces 1.55, 0.76 and 0.26,
+while every cosmolike setting (`accuracyboost`, the non-Limber
+$\chi$ grid, the integration accuracy, `lmax`) and CAMB's $k$ range
+move these points by at most 0.13. The worst points combine high
+$\Omega_m$ (0.47 to 0.50) with large neutrino masses (0.35, 0.21 and
+0.08 eV) and a high amplitude. A higher CAMB `AccuracyBoost` would
+cost much more per evaluation, and the project keeps 1.05.
+
+The check's pass/fail line is the 0.2 budget, so these corner models
+fail it. The project accepts these values at the extreme,
+data-excluded corners of the prior - a high amplitude together with
+high $\Omega_m$, where the DESI Fisher $2\sigma$ contours reach an
+amplitude ratio of only 1.54 to 2.11 - as a documented judgment. It
+flags a $\Delta\chi^2$ well above 1 only where the amplitude is
+moderate, and none occurs here.
+
+![example3, Delta z = 0.05: delta chi2 against Omega_m and the clustering amplitude](accuracy_nmodels_example3_seed137.png)
+
+![example4, Delta z = 0.2: delta chi2 against Omega_m and the clustering amplitude](accuracy_nmodels_example4_seed137.png)
 
 ### Baryonic feedback checks (`test_accuracy_baryons.py` BF0-BF7, `test_baryons.py` BD1-BD7) <a name="baryon_checks"></a>
 
@@ -300,6 +455,9 @@ not an accuracy limit):
   pure-Limber predictions. The thin bins make the Limber
   approximation unusable for this project, not merely inaccurate.
 
+The stored pin predates the 2026-11-05 settings change; it is being
+re-measured with the full suite (see the note in the next section).
+
 ### The FKEM vs low-rank engine checks (`test_nonlimber_fkem_fair.py`, `test_nonlimber_lowrank_gg.py`) <a name="lowrank_check"></a>
 
 The project computes its non-Limber clustering with the low-rank
@@ -344,6 +502,15 @@ wide) and 93 (the 90 $\Delta z = 0.02$ bins). Keeping the nonlinear
 part of $P_{gg}$ in Limber is therefore adequate only for wide
 spectroscopic bins; the thin layouts need the engine's full
 projection. Measured on 2026-11-04.
+
+The pinned differences above, and the drift pins of
+`test_nonlimber_gg.py` and `test_nonlimber_lowrank_gg.py`, were
+measured at the settings the likelihoods shipped on 2026-11-04
+(`accuracyboost` 1 with the `nonlimber_accuracyboost` column above).
+The likelihoods now ship `accuracyboost` 2 with
+`nonlimber_accuracyboost` 32, 32, 16 and 4, the same combined
+$\chi$-grid factor, and the pins are being re-measured at these
+settings with the full suite, which is pending.
 
 The full projection costs more. The test prints each engine's
 steady-state evaluation time (4 OpenMP threads, Apple M2 Pro laptop

@@ -12,17 +12,21 @@ cocoa_test_utils.HIGH_ACCURACY_*) and reports
     delta chi2 = chi2(high accuracy) - chi2(default, frozen)
 
 There is no pass/fail: how much numerical error an analysis tolerates
-is a judgment call. One check covers the measured vector:
+is a judgment call. One check per DESI layout covers its whole
+vector (EE + gg + gg-cross, NLA):
 
-  A1. EE + gg + gg-cross (example1), NLA
+  A1. example1, DR3 comoving bins (62 Mpc)
+  A2. example2, DR1 Delta z = 0.02
+  A3. example3, DR1 Delta z = 0.05
+  A4. example4, DR1 Delta z = 0.2
 
 The shipped data vector is the model at the frozen fiducial, so the
 chi2 sits at a minimum and the delta is a stable, quadratic response
 instead of a linear one.
 
-Before the all-knobs check, one scan (K) evaluates each accuracy
-knob alone on the example1 configuration, so a large all-knobs
-delta can be attributed to the knob causing it. The scan includes
+Before the all-knobs checks, one scan (K) per layout evaluates each
+accuracy knob alone on that example's configuration, so a large
+all-knobs delta can be attributed to the knob causing it. The scan includes
 accuracyboost 5 as a stress knob (in another survey that boost broke
 the interface instead of refining it, and the one-at-a-time delta is
 what tells such cases apart), and three knobs of this project's own:
@@ -31,12 +35,13 @@ the chi grid of the low-rank non-Limber engine
 thin comoving bins), the kept SVD ranks and the engine's
 multipole cap.
 
-One opt-in check extends the scan beyond the fiducial: the
-N-random-models check evaluates the same delta at N reproducible
-random points across the prior, each against a synthetic data vector
-generated at that point (see test_ax99_nmodels). It runs only when
-the COCOA_ACCURACY_NMODELS environment variable is a positive
-integer:
+One opt-in check per layout extends the scan beyond the fiducial:
+the N-random-models check evaluates the all-knobs delta at N
+reproducible random points across the prior (seed 137 + m for model
+m), each against a synthetic data vector generated at that point
+with the reference settings, and fails when any |delta chi2| reaches
+0.2 (see test_ax99_nmodels). It runs only when the
+COCOA_ACCURACY_NMODELS environment variable is a positive integer:
 
     COCOA_ACCURACY_NMODELS=10 python -m pytest \\
         ./projects/lssty1xdesi/tests/data_vector/test_accuracy.py -k nmodels
@@ -85,10 +90,44 @@ TestAccuracyAdvisory = u.accuracy_suite(
     u, name="TestAccuracyAdvisory",
     checks=(
         ("test_a1_full_vector_nla", "A1", "example1",
-         False, "example1 (EE + gg + gg-cross, NLA)"),
+         False, "example1 (DR3 comoving, EE + gg + gg-cross, NLA)"),
+        ("test_a2_full_vector_dz0p02_nla", "A2", "example2",
+         False, "example2 (Delta z = 0.02, EE + gg + gg-cross, NLA)"),
+        ("test_a3_full_vector_dz0p05_nla", "A3", "example3",
+         False, "example3 (Delta z = 0.05, EE + gg + gg-cross, NLA)"),
+        ("test_a4_full_vector_dz0p20_nla", "A4", "example4",
+         False, "example4 (Delta z = 0.2, EE + gg + gg-cross, NLA)"),
     ),
-    knob_scan="example1",
-    nmodels_example=("example1", "example1 (EE + gg + gg-cross, NLA)"))
+    knob_scan=("example1", "example2", "example3", "example4"),
+    # one N-random-models check per layout; model m draws its point
+    # from numpy.random.default_rng(137 + m), the seed the README's
+    # recorded points come from, and fails at |delta chi2| >= 0.2
+    nmodels_example=(
+        ("example1", "example1 (DR3 comoving, NLA)"),
+        ("example2", "example2 (Delta z = 0.02, NLA)"),
+        ("example3", "example3 (Delta z = 0.05, NLA)"),
+        ("example4", "example4 (Delta z = 0.2, NLA)")),
+    nmodels_seed=137,
+    nmodels_limit=u.CHI2_TOLERANCE,
+    # Omega_m is drawn in [0.2, 0.5], the box of the examples: above 0.5
+    # the pushed settings move the LSST Y1 3x2pt chi2 by up to 10^3
+    # against the fiducial covariance. The frozen configurations keep
+    # their [0.1, 0.9] box; the draw narrows it.
+    # w0 < -1/3 (an accelerating universe today) and w0 + wa > -3, the
+    # boxes of the examples
+    nmodels_box={"omegam": (0.2, 0.5), "w": (-3.0, -1.0/3.0),
+                 "w0pwa": (-3.0, -0.01)},
+    # every odd model holds Omega_m, A_s (the primordial amplitude) and
+    # the DESI biases at the fiducial (the clustering amplitude A_s b_i^2
+    # with them), so its
+    # delta chi2 shows what the other parameters do to the accuracy
+    nmodels_hold=("omegam", "As_1e9", "DESI_B1_"),
+    # every drawn bin keeps (A_s/A_s,fid)(b_i/b_i,fid)^2 <= 8, the cut of
+    # the examples' prior and of every project: the DESI Fisher 2 sigma
+    # contours reach a ratio of about 2 (EXAMPLE_EVALUATE4.ipynb,
+    # section 8), and the bias boxes alone would reach about 50 through
+    # the ELG fiducial of 0.84
+    nmodels_amplitude_cut=8.0)
 
 # __name__ is "__main__" only when this file runs directly as a
 # script; pytest imports the module instead, so this block stays

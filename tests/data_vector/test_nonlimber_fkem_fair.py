@@ -25,7 +25,7 @@ It evaluates the frozen fiducial (NLA) three times in one process
     delta = dv(FKEM) - dv(SVD),
 
 with C^-1 the masked inverse covariance. Both engines run on the
-frozen chi grid (nonlimber_accuracyboost: 64). Each engine's
+frozen chi grid (accuracyboost x nonlimber_accuracyboost = 64). Each engine's
 steady-state evaluation time is reported (informational).
 
 Assertions (the shared factory's five checks):
@@ -68,10 +68,10 @@ import cocoa_test_utils as u
 FAIR_OVERRIDES = {"lmax_nonlimber": 550}
 
 # The engine delta chi2 of this project's frozen fiducial with FKEM at
-# the fair cap, measured on 2026-11-04 with CAMB's halofit tolerance
+# the fair cap, measured on 2026-11-05 with CAMB's halofit tolerance
 # patch (rank 5, the engine's l cap of 1000, nonlimber_accuracyboost
-# 64): see assertion 4 of the module docstring.
-DCHI2_MEASURED = 74.0106
+# 32, accuracyboost 2): see assertion 4 of the module docstring.
+DCHI2_MEASURED = 73.0792
 
 # The shared factory (cosmolike_core/cocoa_testing_suites.py) builds
 # the class; assigning its return value to the usual module-level name
@@ -83,10 +83,10 @@ TestNonLimberFKEMFair = u.lowrank_gg_suite(
 # The same fair comparison on the DESI DR1 fixed-width Delta z
 # binnings (data_vector/README.md tabulates every layout): the bands
 # are shared, so cap 550 covers every band of every case. Each case
-# runs on its likelihood's chi grid; measured on 2026-11-04 with the
-# halofit patch.
+# runs on its likelihood's chi grid and accuracyboost; measured on
+# 2026-11-05 with the halofit patch.
 DCHI2_MEASURED_CASES = {
-    "example2": 92.6880,   # Delta z = 0.02, 90 lens bins (boost 64)
+    "example2": 91.8280,   # Delta z = 0.02, 90 lens bins (chi grid 64)
     "example3": 5.22811,   # Delta z = 0.05, 36 lens bins (boost 32)
     "example4": 0.146726,  # Delta z = 0.2, 10 lens bins (boost 8)
 }

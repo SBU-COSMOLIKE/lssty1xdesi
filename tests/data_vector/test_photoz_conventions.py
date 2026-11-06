@@ -66,6 +66,17 @@ import cocoa_test_utils as u
 TestPhotozConventions = u.photoz_conventions_suite(
     u, name="TestPhotozConventions", zmid_default=1)
 
+# the same sweep on each DESI DR1 layout (Delta z = 0.02, 0.05, 0.2)
+TestPhotozConventionsExample2 = u.photoz_conventions_suite(
+    u, name="TestPhotozConventionsExample2", example="example2",
+    zmid_default=1)
+TestPhotozConventionsExample3 = u.photoz_conventions_suite(
+    u, name="TestPhotozConventionsExample3", example="example3",
+    zmid_default=1)
+TestPhotozConventionsExample4 = u.photoz_conventions_suite(
+    u, name="TestPhotozConventionsExample4", example="example4",
+    zmid_default=1)
+
 # __name__ is "__main__" only when this file runs directly as a
 # script; pytest imports the module instead, so this block stays
 # idle under pytest

@@ -7,5 +7,13 @@ data_file: lssty1xdesi_desi_dr1_dz0p20.dataset
 # it and every larger boost (measured 2026-11-04, the case's covariance;
 # against 128: 1 -> 681, 2 -> 37.8, 4 -> 0.43, 8 -> 9.7e-4,
 # 16 -> 1.6e-3, 32 -> 3.6e-5)
-nonlimber_accuracyboost: 8.0
+# 4 with accuracyboost 2 keeps the combined chi-grid factor 8
+nonlimber_accuracyboost: 4.0
+# 2, not 1: across the prior (Omega_m in [0.2, 0.5], w0 <= -1/3,
+# w0 + wa >= -3, amplitude cut 3.5) boost 1 with a 10/Mpc P(k) table lets
+# the pushed-settings delta chi2 reach 0.9 at low Omega_m; boost 2 with
+# kmax_boltzmann 20 keeps it below 0.04 (2026-11-05)
+accuracyboost: 2.0
+# P(k) up to kmax_boltzmann x accuracyboost = 40/Mpc
+kmax_boltzmann: 20.0
 params: !defaults [params_desi_dr1_dz0p20]

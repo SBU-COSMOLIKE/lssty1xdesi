@@ -142,11 +142,12 @@ EXAMPLES = {
 # bound (its default is 5000; in this binning it only caps the
 # low-rank non-Limber cutoff).
 HIGH_ACCURACY_LIKELIHOOD = {
-    # boost 3 is the highest value that stays healthy in every project
-    # scanned (desy1xplanck breaks down above it), so the all-knobs
-    # check compares the default against 3; the one-at-a-time scan
-    # keeps 5 as a deliberate stress knob
-    "accuracyboost": 3.0,       # default 1.0
+    # this project's reference boost is 2 on every layout
+    # (likelihood/*.yaml), so the all-knobs check pushes it to 4, twice
+    # the reference, and the one-at-a-time scan keeps 6 as a deliberate
+    # stress knob (other projects stop at 3: desy1xplanck breaks down
+    # above it)
+    "accuracyboost": 4.0,       # reference 2
     "internal_accuracyboost": 2.0, # default 1.0 (denser convolution grid)
     "integration_accuracy": 10,  # default 0
     "lmax": 20000,              # default 5000
@@ -170,16 +171,16 @@ HIGH_ACCURACY_LIKELIHOOD = {
 # threshold, so this is the accuracy-critical control), the kept
 # SVD ranks, and the engine's own multipole cap.
 ACCURACY_KNOBS = [
-    ("accuracyboost 1->3", {"accuracyboost": 3.0}, {}),
-    ("accuracyboost 1->5 (stress)", {"accuracyboost": 5.0}, {}),
+    ("accuracyboost -> 4", {"accuracyboost": 4.0}, {}),
+    ("accuracyboost -> 6 (stress)", {"accuracyboost": 6.0}, {}),
     ("internal_accuracyboost 1->2", {"internal_accuracyboost": 2.0}, {}),
     ("integration_accuracy 0->10", {"integration_accuracy": 10}, {}),
     ("lmax 5000->20000", {"lmax": 20000}, {}),
     ("kmax_boltzmann -> 40 + camb kmax -> 50",
      {"kmax_boltzmann": 40.0}, {"kmax": 50.0}),
     ("camb AccuracyBoost 1.05->2", {}, {"AccuracyBoost": 2.0}),
-    ("camb k_per_logint 10->50", {}, {"k_per_logint": 50}),
-    ("nonlimber_accuracyboost 64->128",
+    ("camb k_per_logint 15->50", {}, {"k_per_logint": 50}),
+    ("nonlimber_accuracyboost -> 128",
      {"nonlimber_accuracyboost": 128.0}, {}),
     ("nonlimber_lowrank_rank 5->8", {"nonlimber_lowrank_rank": 8}, {}),
     ("nonlimber_lowrank_lmax 1000->2000",

@@ -2,55 +2,53 @@
 
 cosmolike keeps the result of every expensive stage in memory (a
 cache) and recomputes it only when an input it depends on changed.
-Each group of parameters (a sector) has its own change marker, a key
-the cached tables compare: cosmology (distances, growth,
-power-spectrum tables), intrinsic alignment (FAST-PT tables under
-TATT), photo-z shifts (n(z) splines, lens efficiencies), and the
-shear calibrations (a pure data-vector rescale). Invalidation is the
-step that marks a cached table stale when its sector changes. A
+Each group of parameters (a sector) reaches the pipeline through its
+own update path: cosmology (distances, growth, power-spectrum tables,
+the non-Limber engine's tables), galaxy bias (set_nuisance_bias, with
+each bin's amplitude divided by the growth at its mean redshift), and
+the finger-of-god velocity dispersions (each bin's raw n(z) is
+convolved and the whole lens sample is replaced through
+set_lens_sample, which invalidates the lens kernels). A
 partial-invalidation bug (one sector's update path failing to rebuild
 a cached C static variable that another sector reads) produces wrong
 data vectors only in mixed update sequences, which the per-point
 tests never exercise.
 
-The test walks a deterministic ladder in one process, evaluating the
-model after every step (each sector's later steps keep the earlier
-sectors at their last values, so the ladder ends at one well-defined
-point):
+The vector under test is the DESI galaxy clustering (autos and the
+measured cross pairs). The LSST shear rows are masked and the
+likelihoods sample no intrinsic-alignment, photo-z or
+shear-calibration parameters, so the ladder walks the three sectors
+the clustering depends on, evaluating the model after every step
+(each sector's later steps keep the earlier sectors at their last
+values, so the ladder ends at one well-defined point):
 
-    3 x cosmology-only steps   (omegam, H0, As_1e9)
-    3 x IA-only steps          (A1; under TATT also A2 and BTA)
-    3 x source-photo-z steps   (every DZ_S shift)
-    3 x lens-photo-z steps     (every DZ_L shift)
-    3 x shear-calibration steps (every M)
-
-(a sector the configuration samples no parameters in drops out of the
-ladder: this project samples cosmology, galaxy bias and the FoG
-velocity dispersions only, so the source-side rungs all drop and the
-TATT variant skips; bias still moves at the scramble point)
+    3 x cosmology-only steps  (omegam, H0, As_1e9)
+    3 x bias-only steps       (every sampled DESI_B1)
+    3 x FoG-only steps        (every sampled DESI_SIGV, 5 km/s each)
 
 It records the final data vector, then evaluates one scramble point
-(every sector moved at once, galaxy bias included; the chi2 is
-discarded) and returns to the ladder's final point: the pipeline must
-reproduce the recorded vector bit for bit. A second model instance
-walks the mirrored ladder (M -> DZ_L -> DZ_S -> IA -> cosmology) to
-the same final point: the answer must depend on the point, never on
-the invalidation history.
+(every sector moved at once; the chi2 is discarded) and returns to the
+ladder's final point: the pipeline must reproduce the recorded vector
+bit for bit. A second model instance in the same process walks the
+mirrored ladder (FoG -> bias -> cosmology) to the same final point:
+the answer must depend on the point, never on the invalidation
+history. Building the second model after the first also exercises
+the reset of the model-defining statics (the cross-pair list among
+them).
 
-Assertions, in each intrinsic-alignment model (NLA and TATT; the
-TATT ladder exercises the FAST-PT rebuild machinery NLA never
-touches):
+Assertions, on each of the four layouts (the cross-pair lists and bin
+counts differ, so each one has its own static state):
   1. every ladder step changes the data vector (a dead sector flag
      would pass the later checks vacuously);
-  2. each M-only step rescales the masked vector by the analytic
-     (1+m_i)(1+m_j) block factors to 1e-12 relative (cosmic shear by
-     both bins' factors, gamma_t by the source factor, w by nothing);
-  3. a no-op update (re-sending the current M values) leaves the
+  2. a no-op update (re-evaluating the current point) leaves the
      vector bitwise unchanged;
-  4. after the scramble, returning to the ladder's final point
+  3. after the scramble, returning to the ladder's final point
      reproduces the recorded vector and chi2 bit for bit;
-  5. the mirrored-order instance lands on the same final vector bit
+  4. the mirrored-order instance lands on the same final vector bit
      for bit.
+
+The TATT variant of the shared class skips: no intrinsic alignment
+enters a clustering-only vector.
 
 Every evaluation forces a full recomputation (cobaya's cache is
 bypassed), so each assertion tests cosmolike's own invalidation, not
@@ -80,9 +78,21 @@ import cocoa_test_utils as u
 # The shared factory (cosmolike_core/cocoa_testing_suites.py) builds
 # the class; assigning its return value to the usual module-level name
 # is what makes pytest collect it here, with unchanged test ids.
+# the clustering ladder: cosmology, then galaxy bias, then the FoG
+# velocity dispersions; one class per layout
+WGG_SECTORS = ("cosmo", "bias", "fog")
 TestCacheConsistency = u.cache_ladder_suite(
     u, name="TestCacheConsistency", example="example1",
-    required_sectors=("cosmo",))
+    required_sectors=WGG_SECTORS, phases=WGG_SECTORS)
+TestCacheConsistencyExample2 = u.cache_ladder_suite(
+    u, name="TestCacheConsistencyExample2", example="example2",
+    required_sectors=WGG_SECTORS, phases=WGG_SECTORS)
+TestCacheConsistencyExample3 = u.cache_ladder_suite(
+    u, name="TestCacheConsistencyExample3", example="example3",
+    required_sectors=WGG_SECTORS, phases=WGG_SECTORS)
+TestCacheConsistencyExample4 = u.cache_ladder_suite(
+    u, name="TestCacheConsistencyExample4", example="example4",
+    required_sectors=WGG_SECTORS, phases=WGG_SECTORS)
 
 # __name__ is "__main__" only when this file runs directly as a
 # script; pytest imports the module instead, so this block stays

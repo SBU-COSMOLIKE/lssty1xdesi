@@ -50,6 +50,12 @@ TestHalofitVsEE2 = u.nonlinear_suite(
     cases=(
         ('test_nl1_halofit_vs_ee2_full_vector', 'NL1', 'example1',
          'example1 (EE + gg + gg-cross'),
+        ('test_nl2_halofit_vs_ee2_dz0p02', 'NL2', 'example2',
+         'example2 (Delta z = 0.02, EE + gg + gg-cross'),
+        ('test_nl3_halofit_vs_ee2_dz0p05', 'NL3', 'example3',
+         'example3 (Delta z = 0.05, EE + gg + gg-cross'),
+        ('test_nl4_halofit_vs_ee2_dz0p20', 'NL4', 'example4',
+         'example4 (Delta z = 0.2, EE + gg + gg-cross'),
     ))
 
 # __name__ is "__main__" only when this file runs directly as a

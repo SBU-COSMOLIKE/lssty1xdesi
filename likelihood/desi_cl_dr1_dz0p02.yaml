@@ -3,9 +3,13 @@
 # here is desi_cl.yaml's.
 data_file: lssty1xdesi_desi_dr1_dz0p02.dataset
 # the non-Limber FFTLog chi grid of this binning (see desi_cl.yaml): the
-# smallest boost whose delta chi2 against boost 128 stays below 0.01 at
-# it and every larger boost (measured 2026-11-04, the case's covariance;
-# against 128: 8 -> 0.52, 16 -> 0.106, 32 -> 0.020,
-# 64 -> 3.4e-3)
-nonlimber_accuracyboost: 64.0
+# smallest combined factor (accuracyboost x nonlimber_accuracyboost)
+# whose delta chi2 against 128 stays below 0.01 at it and every larger
+# factor (measured 2026-11-04 at accuracyboost 1, the case's covariance;
+# against 128: 8 -> 0.52, 16 -> 0.106, 32 -> 0.020, 64 -> 3.4e-3).
+# 32 with accuracyboost 2 keeps the factor 64
+nonlimber_accuracyboost: 32.0
+# cosmolike's table boost: 1 moves chi2 by 0.10 against boost 5; 2 sits
+# 0.033 away (0.011 with factor 128, at twice the cost; 2026-11-05)
+accuracyboost: 2.0
 params: !defaults [params_desi_dr1_dz0p02]

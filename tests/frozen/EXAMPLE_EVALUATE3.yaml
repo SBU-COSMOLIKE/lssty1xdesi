@@ -14,11 +14,13 @@ likelihood:
     external_nz_modeling: 1
     print_datavector: False
     print_datavector_file: "./projects/lssty1xdesi/chains/desi_dr1_dz0p05_theory.modelvector"
-    accuracyboost: 1
+    accuracyboost: 2 # dz = 0.05 bins: 1 lets the N-random-models error reach 0.7
     integration_accuracy: 0
     # Ntable.LMAX: only bounds the low-rank cap in fourier mode
     lmax: 5000
-    kmax_boltzmann: 5.0
+    # P(k) up to kmax_boltzmann x accuracyboost = 40/Mpc: at low Omega_m a
+    # 10/Mpc table moves the dz = 0.05 chi2 by up to 6 (the extrapolated tail)
+    kmax_boltzmann: 20.0
     # 1 EE2, 2 Halofit
     non_linear_emul: 2
     IA_model: 0
@@ -32,6 +34,17 @@ likelihood:
     nonlimber_lowrank_rank: 5
     nonlimber_lowrank_lmax: 1000
     debug: false
+
+# The amplitude cut: every DESI bias group keeps (As/As_fid)(b/b_fid)^2 <= 8,
+# the cut of every project. The galaxy power of a bin scales as As b^2. The
+# flat boxes alone reach a ratio of about 50 (the ELG fiducial bias is 0.84),
+# where the numerical error of the data vector costs many units of chi2 (the
+# N-random-models check, tests/data_vector/README.md); the DESI Fisher 2 sigma
+# contours reach a ratio of only about 2 (EXAMPLE_EVALUATE4.ipynb, section 8).
+# A point outside the cut has prior -inf, so cobaya never evaluates its
+# likelihood.
+prior:
+  amplitude_cut: "lambda As_1e9, DESI_B1_1, DESI_B1_7, DESI_B1_11, DESI_B1_15, DESI_B1_21, DESI_B1_27: 0.0 if (As_1e9/2.1)*max((DESI_B1_1/1.34)**2, (DESI_B1_7/1.7)**2, (DESI_B1_11/1.7)**2, (DESI_B1_15/1.7)**2, (DESI_B1_21/0.84)**2, (DESI_B1_27/0.84)**2) <= 8 else -np.inf"
 
 params:
   As_1e9:
@@ -79,8 +92,8 @@ params:
     drop: true
   omegam:
     prior:
-      min: 0.1
-      max: 0.9
+      min: 0.2
+      max: 0.5
     ref:
       dist: norm
       loc: 0.316
@@ -91,7 +104,7 @@ params:
   w:
     prior:
       min: -3
-      max: -0.01
+      max: -0.33333 # w0 < -1/3: the expansion accelerates today
     ref:
       dist: norm
       loc: -0.99
@@ -100,7 +113,7 @@ params:
     latex: w_{0,\mathrm{DE}}
   w0pwa:
     prior:
-      min: -5 
+      min: -3 # w0 + wa > -3: below it the early phantom regime needs a costlier CAMB
       max: -0.01
     ref:
       dist: norm

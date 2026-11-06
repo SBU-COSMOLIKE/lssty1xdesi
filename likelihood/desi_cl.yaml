@@ -9,17 +9,26 @@ external_nz_modeling: 1
 # clustering only: every (lens, source) ggl pair is excluded, or 380
 # never-computed ggl spectra would fill most of the data-vector layout
 ggl_exclude: all
-accuracyboost: 1.0
+# 2, not 1: at 1 the DR3 chi2 sits 0.133 from boost 5, most of the 0.2
+# numerical budget a joint fit with LSST Y1 3x2pt must share. The shift
+# is cosmolike's tables, not the chi grid this boost also multiplies:
+# boost 1 with nonlimber_accuracyboost 512 is still 0.129 away. Boost 2
+# with nonlimber_accuracyboost 32 keeps the chi grid of boost 1 with 64
+# and sits 0.017 away, at 13.7 s per evaluation (12.7 s at boost 1;
+# 24.5 s with 64, 0.010 away; 4 threads, 2026-11-05). Each DR1 yaml
+# sets its own value.
+accuracyboost: 2.0
 internal_accuracyboost: 1.0 # C-FAST-PT convolution grid / output grid
 # refinements on top of accuracyboost (which multiplies them too; the
 # combined factor rounds up to a power of two and refines the chi grid
-# by nested interval doubling): 64 => NL_Nchi = 511*64 + 1 = 32705.
+# by nested interval doubling): 2 x 32 => NL_Nchi = 511*64 + 1 = 32705.
 # The log-spaced grid makes the highest-redshift thin bins the
 # narrowest in ln(chi), and their FoG-smoothed edges resolve between
-# boost 32 and 64: below that, the z = 1.32 ELG bin carries a coherent
-# 0.18 sigma broadband amplitude bias (delta chi2 = 1.9 on the full
-# vector); at 64 the ladder is converged (64 vs 128 = 7.5e-6)
-nonlimber_accuracyboost: 64.0
+# combined factors 32 and 64: below that, the z = 1.32 ELG bin carries
+# a coherent 0.18 sigma broadband amplitude bias (delta chi2 = 1.9 on
+# the full vector). Factor 64 vs 128: 0.0033 at accuracyboost 1, 0.0045
+# at 2 (2026-11-05)
+nonlimber_accuracyboost: 32.0
 # the FKEM non-Limber cap (limits.LMAX_NOLIMBER), read only with
 # nonlimber_lowrank_gg: 0: clustering (autos and cross pairs) is the FKEM
 # split below it and Limber above. 150 is the cosmolike default; above
@@ -57,7 +66,11 @@ nonlimber_lowrank_lmax: 1000
 # Ntable.LMAX: no real-space Legendre sums run in fourier mode; this
 # only bounds nonlimber_lowrank_lmax from above
 lmax: 5000
-kmax_boltzmann: 5.0
+# P(k) up to kmax_boltzmann x accuracyboost = 40/Mpc: at low Omega_m the
+# 10/Mpc table moves chi2 by about 2 through the extrapolated tail on the
+# DR3 and dz = 0.02 bins, and 40/Mpc brings it to about 0.1 (2026-11-05;
+# the dz = 0.02 layout inherits this value)
+kmax_boltzmann: 20.0
 speed: 1
 non_linear_emul: 2
 use_emulator: 0

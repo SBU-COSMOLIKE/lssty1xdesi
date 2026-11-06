@@ -71,7 +71,20 @@ import cocoa_test_utils as u
 # is what makes pytest collect it here, with unchanged test ids.
 TestNonLimberGG = u.nonlimber_suite(
     u, name="TestNonLimberGG", kind="gg", example="example1",
-    measured=21157.6637, default=0)
+    measured=21165.2199, default=0)
+
+# the same sweep on each DESI DR1 layout (Delta z = 0.02, 0.05, 0.2);
+# every value was measured on 2026-11-05 at each layout's reference
+# settings (data_vector/README.md tabulates them)
+TestNonLimberGGExample2 = u.nonlimber_suite(
+    u, name="TestNonLimberGGExample2", kind="gg", example="example2",
+    measured=41799.9045, default=0)
+TestNonLimberGGExample3 = u.nonlimber_suite(
+    u, name="TestNonLimberGGExample3", kind="gg", example="example3",
+    measured=3964.1013, default=0)
+TestNonLimberGGExample4 = u.nonlimber_suite(
+    u, name="TestNonLimberGGExample4", kind="gg", example="example4",
+    measured=377.5727, default=0)
 
 # __name__ is "__main__" only when this file runs directly as a
 # script; pytest imports the module instead, so this block stays

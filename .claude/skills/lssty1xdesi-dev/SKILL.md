@@ -1,6 +1,6 @@
 ---
 name: lssty1xdesi-dev
-description: Development on the lssty1xdesi project - DESI DR3 thin-bin spectroscopic clustering (76 comoving bins) cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebook (EXAMPLE_FISHER1). Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, or the dndz FoG convolution. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
+description: Development on the lssty1xdesi project - DESI DR3 thin-bin spectroscopic clustering (76 comoving bins) cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebook (EXAMPLE_EVALUATE4.ipynb). Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, or the dndz FoG convolution. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
 ---
 
 # lssty1xdesi: the thin-bin extreme
@@ -72,24 +72,56 @@ effectively dyadic; 3 buys the same grid as 4). Non-nested
 ceil-scaling was replaced because consecutive doublings measured
 delta chi2 = 1.3, 1.1 of pure node-placement difference.
 
-The project default is `nonlimber_accuracyboost: 64`
-(NL_Nchi = 32,705). The log spacing makes the HIGHEST-redshift thin
-bins the narrowest in ln(chi), and their FoG-smoothed edges resolve
-between boost 32 and 64: below that threshold the z = 1.32 ELG bin
-(bin 68) carries a coherent +0.18 sigma broadband amplitude bias
-across all its bands (delta chi2 = 1.9 with its crosses), constant
-from boost 16 to 32, gone at 64. The ladder at 64 is converged:
-64 vs 128 = 7.5e-6. This is a cliff, not smooth convergence - do not
-infer safety at intermediate boosts from a two-point scan.
+The DR3 and Delta z = 0.02 references use the combined factor 64
+(NL_Nchi = 32,705) as `accuracyboost: 2` with
+`nonlimber_accuracyboost: 32`. The log spacing makes the
+HIGHEST-redshift thin bins the narrowest in ln(chi), and their
+FoG-smoothed edges resolve between combined factors 32 and 64: below
+that threshold the z = 1.32 ELG bin (bin 68) carries a coherent
++0.18 sigma broadband amplitude bias across all its bands
+(delta chi2 = 1.9 with its crosses), constant from 16 to 32, gone at
+64. This is a cliff, not smooth convergence - do not infer safety at
+intermediate factors from a two-point scan. Factor 64 vs 128 on DR3:
+0.0033 at accuracyboost 1, 0.0045 at 2.
 
-The global accuracyboost stays 1 in production: with the chi grid
-held fixed, accuracyboost 1 -> 2 moves only delta chi2 = 0.34 (all in
-clustering; shear moves exactly 0), and the P(k) z-grid probe
-(`pk_z_refinement` 2) moves 0.0006. The remaining suspect for the
-0.34 is `Ntable.nz_fine_sampling_factor`, which has no dedicated
-setter yet. Fiducial evaluation: 7.8 s at 8 threads, 43 s serial
-(2026-11-04, Apple laptop; x86 production timings are a separate
-measurement).
+The global accuracyboost (cosmolike's tables: the a grid, the P(k) z
+nodes, the ell and n(z) sampling) is 2 on all four layouts; CAMB's
+own AccuracyBoost stays at the examples' 1.05. Against accuracyboost
+5 (DR3 / Delta z = 0.02, 2026-11-05, patched CAMB halofit):
+
+| accuracyboost, combined chi-grid factor | DR3 | dz 0.02 | DR3 evaluation |
+|---|---:|---:|---:|
+| 1, 64 | 0.133 | 0.101 | 12.7 s |
+| 1, 512 | 0.129 | 0.096 | - |
+| 2, 64 (the reference) | 0.017 | 0.033 | 13.7 s |
+| 2, 128 | 0.010 | 0.011 | 24.5 s |
+
+The tables carry the error; a finer chi grid alone does not remove
+it, and doubling the chi grid doubles the evaluation (4 threads, Apple
+laptop on AC power; x86 production timings are a separate
+measurement). At the fiducial the wide layouts move by at most 0.053
+(Delta z = 0.05) and 0.013 (Delta z = 0.2) at accuracyboost 6, but at
+amplitude-cut prior corners boost 1 lets the pushed-settings delta
+chi2 of the N-random-models check reach 0.7 (Delta z = 0.05) and 0.9
+(Delta z = 0.2, measured with a 10/Mpc power table), so they run
+boost 2 as well, with nonlimber_accuracyboost 16 and 4 keeping their
+combined chi-grid factors at 32 and 8.
+
+## The Boltzmann k range (measured 2026-11-05)
+
+Every DESI layout sets kmax_boltzmann 20 (`likelihood/desi_cl.yaml`;
+the Delta z = 0.02 case inherits it), so CAMB's P(k) table reaches
+kmax_boltzmann x accuracyboost = 40/Mpc at the reference boost 2. The
+range protects the prior corners, not the fiducial: at a low-Omega_m
+point (Omega_m 0.237, w0 -2.39, w0 + wa -2.87, H0 78.6) a 10/Mpc
+table moved chi2 by 2.09 (DR3) and 2.06 (Delta z = 0.02) through the
+extrapolated high-k tail; 40/Mpc brings that to 0.12 and 0.10. The
+Delta z = 0.05 and 0.2 layouts carry 20 for the same reason.
+
+EXAMPLE_MCMC1.yaml runs EXAMPLE_EVALUATE1's settings (accuracyboost
+2, kmax_boltzmann 20), so chains sample with the settings that
+generated the data vector. The EMUL2 examples keep accuracyboost 1
+and kmax_boltzmann 5.
 
 ## The Fingers-of-God model
 
@@ -343,6 +375,34 @@ each from a failure it prevents:
   the notebook rescales the DESI inverse covariance to 12,300 deg^2
   (x 0.879, giving 0.129 at the likelihood's chi grid) and runs at
   `nonlimber_accuracyboost: 64` and AB 3.
+
+## The amplitude cut prior
+
+Every sampling example (EXAMPLE_EVALUATE1-4, EXAMPLE_MCMC1,
+EXAMPLE_EMUL2_EVALUATE1, EXAMPLE_EMUL2_MCMC1) carries the cobaya
+prior `amplitude_cut`: each DESI bias group keeps
+(As/As_fid)(b_i/b_i,fid)^2 <= 8, with prior 0 inside and -inf
+outside, so cobaya never evaluates an excluded point.
+EXAMPLE_EVALUATE5 applies the same cut to the five LSST Y1 lens
+biases. 8 is the common cut of the cosmolike project family (lsst_y1
+uses 8), not a tuning of this survey.
+
+The galaxy power of a bin scales as As b_i^2, and the flat boxes
+(1e9 As in [0.5, 5], biases in [0.8, 4]) reach a ratio of about 50
+for the ELG groups (fiducial bias 0.84). A fixed relative numerical
+error of the data vector costs delta chi2 proportional to the ratio
+squared against the fiducial covariance: many units of chi2 at ratio
+50. The cut is safe for inference because the DESI Fisher 2 sigma
+contours reach a ratio of only about 2.1 on the Delta z = 0.2 binning
+(EXAMPLE_EVALUATE4.ipynb, section 8): it removes only prior volume
+the data already exclude.
+
+What the cut costs: at the extreme corners a cut of 8 still admits,
+the pushed-settings delta chi2 of the N-random-models check can sit
+modestly above the 0.2 budget, 0.29 to 0.32 measured on Delta z =
+0.05 at ratios of 3.9 to 4.9. The project accepts that at those
+data-excluded corners; a delta chi2 of order one would not be
+accepted.
 
 ## Traps this project springs
 
