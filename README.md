@@ -63,7 +63,7 @@ flowchart TB
   A --> E["EXAMPLE_EMUL2_*: hybrid examples"]
   A --> F["EXAMPLE_EVALUATE_COVARIANCE.ipynb: covariance terms"]
   F --> G["covariance/compute_covariance.py: production covariance"]
-  B --> H["EXAMPLE_EVALUATE4.ipynb: forecasts and projection biases"]
+  B --> H["EXAMPLE_EVALUATE_FISHER.ipynb: forecasts and projection biases on every DESI layout"]
   C --> H
 ```
 
@@ -78,9 +78,10 @@ flowchart TB
 - `EXAMPLE_EMUL2_EVALUATE1.yaml` is the hybrid-emulator variant of the
   first example, with MCMC and Nautilus examples alongside
   ([hybrid emulators](#cobaya_base_code_examples_emul2)).
-- `EXAMPLE_EVALUATE4.ipynb` forecasts the DESI clustering, LSST 3×2pt
-  and combined constraints, and the parameter biases of the projection
-  approximations ([running Fisher](#fisher)).
+- `EXAMPLE_EVALUATE_FISHER.ipynb` forecasts, on every DESI layout, the
+  constraints of DESI clustering, LSST Y1 3×2pt and their combination,
+  and the parameter biases of the projection approximations
+  ([running Fisher](#fisher)).
 - The covariance notebook and the production CLI need the optional
   covariance build ([computing covariances](#computing_covariances)).
 - [tests/](tests/README.md) checks the predictions against stored
@@ -519,21 +520,32 @@ convergence record. Reaching `--maxfeval` is not convergence.
 
 # Running Fisher <a name="fisher"></a>
 
-`EXAMPLE_EVALUATE4.ipynb` forecasts the $`w_0w_a`$CDM constraints of
-three probes on the $`\Delta z = 0.2`$ binning:
+`EXAMPLE_EVALUATE_FISHER.ipynb` forecasts the $`w_0w_a`$CDM
+constraints of three probes on every DESI layout: DR3 (76 comoving
+bins) and the DR1 fixed-width binnings $`\Delta z = 0.02`$ (90 bins),
+$`\Delta z = 0.05`$ (36) and $`\Delta z = 0.2`$ (10). The probes are:
 
 - DESI clustering alone;
 - LSST Y1 3×2pt;
-- their combination as independent data sets (a block-diagonal
-  "6×2pt": no LSST×DESI cross spectra and no cross-covariance).
+- their combination as independent data sets (block-diagonal: no
+  LSST×DESI cross spectra and no cross-covariance).
+
+For each layout the notebook gives the marginalized errors and the
+figure of merit of DESI alone and of the combination, the Fisher
+biases of the DESI projection approximations (FKEM with the cap at
+550, Limber), the amplitude cut and the prior walls against the
+forecast, the figure of merit against a scale cut $`k_\mathrm{max}`$,
+and the $`w_0`$ - $`w_a`$ ellipses.
 
 Every probe uses one area, 12,300 deg², and is marginalized over all
-of its nuisance parameters. The derivatives are recomputed at four
-stencil steps and at two CAMB accuracy boosts, and a forecast is
-trusted only where neither moves it. At `AccuracyBoost: 3` the
-dark-energy figure of merit FoM($`w_0`$, $`w_a`$) agrees to 0.6%
-across the steps: about 5.7 for DESI clustering, 17.4 for LSST 3×2pt
-and 32.2 for the combination.
+of its nuisance parameters. On the $`\Delta z = 0.2`$ binning the
+derivatives are recomputed at four stencil steps and at two CAMB
+accuracy boosts, and a forecast is trusted only where neither moves
+it; the other layouts run at accuracy boost 1 and the single step
+$`h = 0.02`$. At `AccuracyBoost: 3` the dark-energy figure of merit
+FoM($`w_0`$, $`w_a`$) agrees to 0.6% across the steps: on
+$`\Delta z = 0.2`$, about 5.7 for DESI clustering, 17.4 for LSST
+3×2pt and 32.2 for the combination.
 
 > [!WARNING]
 > The forecast needs CAMB installed with
@@ -565,7 +577,13 @@ for the combination. At an equal multipole cap, FKEM shifts no DESI
 parameter by more than 0.01σ on the $`\Delta z = 0.2`$ bins, and the
 low-rank engine shifts no LSST parameter by more than 0.003σ. Limber
 clustering on the DESI bins shifts parameters by up to 5.6σ alone, and
-by up to 2.1σ in the combination.
+by up to 2.1σ in the combination. The two DESI comparisons repeat on
+every layout: FKEM with the cap at 550 stays below 0.02σ on
+$`\Delta z = 0.2`$ but shifts the thin-bin layouts by up to 0.85σ in
+the combination ($`\Omega_b`$ on $`\Delta z = 0.02`$), and Limber
+clustering reaches tens of σ there, so Limber is excluded for DESI
+clustering on every layout. The notebook tabulates the per-layout
+shifts and their $`\Delta\chi^2`$.
 
 Section 8 of the notebook tests a cut on the clustering amplitude
 against the Fisher forecast of every DESI layout. Here $`A_s`$ is
@@ -584,41 +602,79 @@ For every DESI layout the section draws two figures: a triangle of
 $`A_s`$ and the six bias groups that shades the region the cut
 (`AMPLITUDE_CUT`, 8 by default) excludes, under the $`1\sigma`$ and
 $`2\sigma`$ contours of that layout's DESI clustering forecast, and a
-triangle of ($`\Omega_m`$, $`w_0`$, $`w_a`$) that draws the DESI and
-6×2pt contours against the cosmological prior walls
+triangle of ($`\Omega_m`$, $`w_0`$, $`w_a`$) that draws the
+DESI-alone and combination contours against the cosmological prior
+walls
 ($`\Omega_m \in [0.2, 0.5]`$, $`w_0 \le -1/3`$,
 $`-3 \le w_0 + w_a \le -0.01`$). Measured at the step $`h = 0.02`$:
 
-- On the $`\Delta z = 0.2`$ bins the DESI $`2\sigma`$ contours reach
-  an amplitude ratio of 2.11, and on $`\Delta z = 0.05`$ of 1.54, so
-  a cut at 8 removes only prior volume the data already exclude while
-  bounding the amplitude, and with it the numerical error, of every
-  bin. The value 8 is the common cut of the cosmolike projects
-  (lsst_y1 samples its lens biases under the same cut), not a tuning
-  of this survey.
-- On $`\Delta z = 0.05`$ no DESI or 6×2pt $`2\sigma`$ contour touches
-  a prior wall; FoM($`w_0`$, $`w_a`$) is 32 for DESI alone and 72.5
-  for the 6×2pt combination. On the wide $`\Delta z = 0.2`$ bins DESI
-  alone is partly prior-bounded: its $`2\sigma`$ contours cross the
-  $`w_0 = -1/3`$ wall and both $`w_0 + w_a`$ walls, while the 6×2pt
-  contour crosses only $`w_0 + w_a = -0.01`$ (FoM: DESI 5.7, 6×2pt
-  32.2).
-- The DR3 and $`\Delta z = 0.02`$ Fisher matrices are not computed
-  yet; the notebook computes and caches each on its first run (about
-  40-50 minutes per layout).
+- The DESI $`2\sigma`$ contours reach an amplitude ratio of 1.33 on
+  DR3, 1.36 on $`\Delta z = 0.02`$, 1.54 on $`\Delta z = 0.05`$ and
+  2.11 on $`\Delta z = 0.2`$, so a cut at 8 removes only prior
+  volume the data already exclude while bounding the amplitude,
+  and with it the numerical error, of every bin. The value 8 is
+  the common cut of the cosmolike projects (lsst_y1 samples its
+  lens biases under the same cut), not a tuning of this survey.
+- On DR3, $`\Delta z = 0.02`$ and $`\Delta z = 0.05`$ no DESI or
+  combination $`2\sigma`$ contour touches a prior wall. On the wide
+  $`\Delta z = 0.2`$ bins DESI alone is partly prior-bounded: its
+  $`2\sigma`$ contours cross the $`w_0 = -1/3`$ wall and both
+  $`w_0 + w_a`$ walls, while the combination contour crosses only
+  $`w_0 + w_a = -0.01`$.
+- The marginalized errors and FoM($`w_0`$, $`w_a`$); each cell is
+  DESI alone / the combination:
 
-The pass/fail line of the N-random-models check is its 0.2 budget.
-At the extreme corners a cut at 8 still admits - a high amplitude
-together with high $`\Omega_m`$ - the pushed-settings
-$`\Delta\chi^2`$ exceeds it: the worst points are 1.53 on the
-$`\Delta z = 0.2`$ bins and 12.1 on $`\Delta z = 0.05`$, both at
-$`\Omega_m = 0.49`$ and an amplitude ratio of 6.9 (on
-$`\Delta z = 0.2`$ a one-setting-at-a-time scan places the residual
-entirely on CAMB's precision). The project accepts these values at
-the data-excluded corners - the DESI Fisher $`2\sigma`$ contours
-reach an amplitude ratio of only 1.54 to 2.11 - as a documented
-judgment. A $`\Delta\chi^2`$ well above 1 at a moderate amplitude
-would not be accepted, and none occurs.
+| layout | $`\sigma(\Omega_m)`$ | $`\sigma(w_0)`$ | $`\sigma(w_a)`$ | FoM($`w_0`$, $`w_a`$) |
+|---|---|---|---|---|
+| DR3 (76 comoving bins) | 0.0100 / 0.0066 | 0.065 / 0.062 | 0.210 / 0.193 | 135 / 203 |
+| $`\Delta z = 0.02`$ (90 bins) | 0.0104 / 0.0066 | 0.063 / 0.060 | 0.206 / 0.187 | 126 / 198 |
+| $`\Delta z = 0.05`$ (36 bins) | 0.0186 / 0.0117 | 0.138 / 0.115 | 0.437 / 0.357 | 32.0 / 72.5 |
+| $`\Delta z = 0.2`$ (10 bins) | 0.0361 / 0.0170 | 0.316 / 0.190 | 1.109 / 0.622 | 5.67 / 32.2 |
+
+The errors shrink as the binning gets finer, and the two finest
+layouts, DR3 and $`\Delta z = 0.02`$, agree to about 7%. The
+$`\Delta z = 0.2`$ matrices are the main forecast's, at the overall
+accuracy boost 3 (at boost 1 that layout moves by about 1%: DESI FoM
+5.61); the other three layouts run at accuracy boost 1 with a
+combined non-Limber $`\chi`$-grid factor of 64. The notebook caches
+each matrix in `chains/` on its first run; without the cache the DR3
+and $`\Delta z = 0.02`$ matrices take about 45 and 65 minutes on a
+laptop with 4 threads.
+
+**Known limitation - the covariance bias mismatch.** The DESI
+covariance files are computed with each bin's linear bias set to its
+group's raw value (1.34 / 1.70 / 0.84), while the likelihood's data
+vector uses $`b_i = B_1/D(\bar z_i)`$: the group amplitude $`B_1`$
+(`DESI_B1`) divided by the growth factor $`D`$ at the bin's mean
+redshift $`\bar z_i`$. At high redshift the covariance's signal term
+is therefore too small by $`D(\bar z_i)^2`$, which understates the
+variances and inflates every layout's FoM by a factor of about
+2.4-3.2: a self-consistent Gaussian covariance gives DESI clustering
+alone FoM about 2.3 ($`\Delta z = 0.2`$), 13 ($`\Delta z = 0.05`$),
+52 ($`\Delta z = 0.02`$) and 42 (DR3) instead of 5.7 / 32 / 126 /
+135; the ratios between the layouts are unchanged. The fix will be
+made together with the effective-field-theory scale cuts and the
+higher-order galaxy bias model, the next modeling step. Until then
+the absolute FoM values of this section are upper bounds of a rigid
+linear-bias model, not forecasts.
+
+The pass/fail line of the N-random-models check is its 0.2 budget,
+and at the extreme corners a cut at 8 still admits - a high amplitude
+or $`\Omega_m`$ at the box edge, mostly with large neutrino masses -
+the pushed-settings $`\Delta\chi^2`$ exceeds it (measured
+2026-11-06, 50 models per layout): the worst point, an amplitude
+ratio of 6.2 at $`\Omega_m = 0.50`$, reaches 47.4 on DR3 and 37.6 on
+$`\Delta z = 0.02`$, and the worst on $`\Delta z = 0.05`$ is 12.1.
+On the thin layouts the residual is mainly cosmolike's table
+resolution (`accuracyboost`); on the wide $`\Delta z = 0.2`$ bins it
+is mainly CAMB's precision. The project accepts these values at the
+data-excluded corners - the DESI Fisher $`2\sigma`$ contours reach
+an amplitude ratio of only 1.33 to 2.11, with $`\Omega_m`$ inside
+0.21-0.39 - as a documented judgment: the held models stay at or
+below 0.304, every drawn model with an amplitude ratio of 3.5 or less
+stays at or below 1.45, and raising `accuracyboost` on the thin
+layouts is the lever that would reduce the corners, at a cost per
+evaluation.
 Every example that samples linear biases carries this cut as a cobaya
 prior, `amplitude_cut` (0 inside, $`-\infty`$ outside, so cobaya skips
 the likelihood of an excluded point); the LSST Y1 3×2pt example applies
@@ -702,7 +758,7 @@ jupyter notebook --no-browser --port=8888
 | Notebook | Contents |
 |---|---|
 | [EXAMPLE_EVALUATE_COVARIANCE.ipynb](EXAMPLE_EVALUATE_COVARIANCE.ipynb) | The covariance terms of the DR3 layout and matrix diagnostics; needs the covariance build ([covariance guide](covariance/README.md#running)). |
-| [EXAMPLE_EVALUATE4.ipynb](EXAMPLE_EVALUATE4.ipynb) | Fisher forecasts of DESI clustering, LSST 3×2pt and the 6×2pt combination, and the Fisher biases of the projection approximations ([running Fisher](#fisher)). |
+| [EXAMPLE_EVALUATE_FISHER.ipynb](EXAMPLE_EVALUATE_FISHER.ipynb) | Fisher forecasts of DESI clustering, LSST 3×2pt and their combination on every DESI layout, and the Fisher biases of the projection approximations ([running Fisher](#fisher)). |
 
 Choose the Python kernel from the activated Cocoa environment and
 restart it after recompiling.

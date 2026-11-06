@@ -97,6 +97,37 @@ BINNING_SPACE = "fourier"
 #                     counterpart whose frozen layout the harness
 #                     copies, and "exact_reference" the reference
 #                     chi2 their accuracy is judged against.
+# The N-random-models check (test_accuracy.py, test_ax99_nmodels), one
+# per DESI layout: the default settings against the pushed accuracy
+# settings at 50 fixed points of the prior (seed 137 + m for model m).
+# generate_frozen_reference.py --nmodels stores the pushed vectors in
+# frozen/nmodels_<example>.npz and reads these same draw settings.
+NMODELS_EXAMPLES = (
+    ("example1", "example1 (DR3 comoving, NLA)"),
+    ("example2", "example2 (Delta z = 0.02, NLA)"),
+    ("example3", "example3 (Delta z = 0.05, NLA)"),
+    ("example4", "example4 (Delta z = 0.2, NLA)"))
+# every model must stay below the 0.2 budget of the reference tests
+NMODELS_LIMIT = _cct.CHI2_TOLERANCE
+# Omega_m is drawn in [0.2, 0.5], the box of the examples: above 0.5
+# the pushed settings move the LSST Y1 3x2pt chi2 by up to 10^3 against
+# the fiducial covariance. w0 <= -1/3 (an accelerating universe today)
+# and w0 + wa >= -3 are the other boxes of the examples. The frozen
+# configurations keep wider boxes; the draw narrows them.
+NMODELS_BOX = {"omegam": (0.2, 0.5), "w": (-3.0, -1.0/3.0),
+               "w0pwa": (-3.0, -0.01)}
+# every odd model holds Omega_m, A_s (the primordial amplitude) and the
+# DESI biases at the fiducial (the clustering amplitude A_s b_i^2 with
+# them), so its delta chi2 shows what the other parameters do to the
+# accuracy
+NMODELS_HOLD = ("omegam", "As_1e9", "DESI_B1_")
+# every drawn bin keeps (A_s/A_s,fid)(b_i/b_i,fid)^2 <= 8, the cut of
+# the examples' prior and of every project: the DESI Fisher 2 sigma
+# contours reach a ratio of about 2 (EXAMPLE_EVALUATE_FISHER.ipynb, section
+# 8), while the bias boxes alone would reach about 50 through the ELG
+# fiducial of 0.84
+NMODELS_AMPLITUDE_CUT = 8.0
+
 EXAMPLES = {
     "example1": {
         "frozen_module": "frozen_config_example1.py",
@@ -283,7 +314,8 @@ ten_in_a_row_chi2 = _H.ten_in_a_row_chi2
 baryon_accuracy_delta = _H.baryon_accuracy_delta
 baryon_drift_chi2 = _H.baryon_drift_chi2
 draw_uniform_point = _H.draw_uniform_point
-random_model_accuracy = _H.random_model_accuracy
+nmodels_points = _H.nmodels_points
+nmodels_config_hash = _H.nmodels_config_hash
 ee2_original_vs_cocoa_dchi2s = _H.ee2_original_vs_cocoa_dchi2s
 _ee2_comparison_block = _H._ee2_comparison_block
 _worker = _H._worker

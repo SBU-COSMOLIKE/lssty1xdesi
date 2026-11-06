@@ -70,12 +70,16 @@ TestPhotozConventions = u.photoz_conventions_suite(
 TestPhotozConventionsExample2 = u.photoz_conventions_suite(
     u, name="TestPhotozConventionsExample2", example="example2",
     zmid_default=1)
+# On the wider bins the half-cell shift of the z-reading flip moves
+# chi2 less (8.8e-3 on Delta z = 0.05, 1.1e-3 on Delta z = 0.2,
+# measured 2026-11-06), so their dead-flag floor is 1e-4: still far
+# above the numerical zero a dead flag would give.
 TestPhotozConventionsExample3 = u.photoz_conventions_suite(
     u, name="TestPhotozConventionsExample3", example="example3",
-    zmid_default=1)
+    zmid_default=1, zmid_floor=1.0e-4)
 TestPhotozConventionsExample4 = u.photoz_conventions_suite(
     u, name="TestPhotozConventionsExample4", example="example4",
-    zmid_default=1)
+    zmid_default=1, zmid_floor=1.0e-4)
 
 # __name__ is "__main__" only when this file runs directly as a
 # script; pytest imports the module instead, so this block stays

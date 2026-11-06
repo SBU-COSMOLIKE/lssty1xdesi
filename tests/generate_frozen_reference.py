@@ -20,7 +20,10 @@ start_cocoa.sh sourced):
 Incremental modes on an existing frozen state (each verifies the
 state against the manifest, then re-pins it):
   --tatt-masks rewrites the per-mask descriptors;
-  --baryons regenerates the feedback vectors.
+  --baryons regenerates the feedback vectors;
+  --nmodels [example ...] computes the stored high-accuracy
+    vectors of the N-random-models check (all of its examples
+    when none is listed; hours on the thin DESI layouts).
 """
 
 import os

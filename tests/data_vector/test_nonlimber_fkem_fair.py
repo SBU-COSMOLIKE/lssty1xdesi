@@ -68,10 +68,10 @@ import cocoa_test_utils as u
 FAIR_OVERRIDES = {"lmax_nonlimber": 550}
 
 # The engine delta chi2 of this project's frozen fiducial with FKEM at
-# the fair cap, measured on 2026-11-05 with CAMB's halofit tolerance
+# the fair cap, measured on 2026-11-06 with CAMB's halofit tolerance
 # patch (rank 5, the engine's l cap of 1000, nonlimber_accuracyboost
 # 32, accuracyboost 2): see assertion 4 of the module docstring.
-DCHI2_MEASURED = 73.0792
+DCHI2_MEASURED = 73.0830
 
 # The shared factory (cosmolike_core/cocoa_testing_suites.py) builds
 # the class; assigning its return value to the usual module-level name
@@ -84,11 +84,11 @@ TestNonLimberFKEMFair = u.lowrank_gg_suite(
 # binnings (data_vector/README.md tabulates every layout): the bands
 # are shared, so cap 550 covers every band of every case. Each case
 # runs on its likelihood's chi grid and accuracyboost; measured on
-# 2026-11-05 with the halofit patch.
+# 2026-11-06 with the halofit patch.
 DCHI2_MEASURED_CASES = {
-    "example2": 91.8280,   # Delta z = 0.02, 90 lens bins (chi grid 64)
-    "example3": 5.22811,   # Delta z = 0.05, 36 lens bins (boost 32)
-    "example4": 0.146726,  # Delta z = 0.2, 10 lens bins (boost 8)
+    "example2": 91.8275,   # Delta z = 0.02, 90 lens bins (chi grid 64)
+    "example3": 5.08506,   # Delta z = 0.05, 36 lens bins (chi grid 32)
+    "example4": 0.132481,  # Delta z = 0.2, 10 lens bins (chi grid 8)
 }
 
 TestNonLimberFKEMFairExample2 = u.lowrank_gg_suite(

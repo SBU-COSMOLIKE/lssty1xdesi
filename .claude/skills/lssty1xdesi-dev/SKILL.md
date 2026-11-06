@@ -1,6 +1,6 @@
 ---
 name: lssty1xdesi-dev
-description: Development on the lssty1xdesi project - DESI DR3 thin-bin spectroscopic clustering (76 comoving bins) cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebook (EXAMPLE_EVALUATE4.ipynb). Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, or the dndz FoG convolution. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
+description: Development on the lssty1xdesi project - DESI DR3 thin-bin spectroscopic clustering (76 comoving bins) cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebook (EXAMPLE_EVALUATE_FISHER.ipynb). Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, or the dndz FoG convolution. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
 ---
 
 # lssty1xdesi: the thin-bin extreme
@@ -308,7 +308,7 @@ each from a failure it prevents:
 - **Area.** DESI case covariances are built at 14,000 deg^2; the
   common-area forecast multiplies their inverse by 12,300/14,000 (exact
   for a Gaussian covariance).
-- **6x2pt = block-diagonal sum.** `combine` adds Fisher matrices by
+- **LSST Y1 3x2pt + DESI C_gg = block-diagonal sum.** `combine` adds Fisher matrices by
   parameter name; no prior is shared between the probes, so none is
   double-counted. The joint likelihood for chains still needs the
   concatenated LSST+DESI lens sample.
@@ -341,9 +341,9 @@ each from a failure it prevents:
 
   | probe | AB 1 | AB 3 |
   |---|---|---|
-  | DESI 1x2pt | 6.62 / 5.61 / 5.59 / 5.71 | 5.70 / 5.67 / 5.66 / 5.66 |
+  | DESI C_gg | 6.62 / 5.61 / 5.59 / 5.71 | 5.70 / 5.67 / 5.66 / 5.66 |
   | LSST 3x2pt | 17.68 / 17.67 / 17.65 / 17.68 | 17.36 at every step |
-  | 6x2pt | 34.4 / 32.0 / 32.0 / 32.3 | 32.24 / 32.20 / 32.20 / 32.19 |
+  | LSST Y1 3x2pt + DESI C_gg | 34.4 / 32.0 / 32.0 / 32.3 | 32.24 / 32.20 / 32.20 / 32.19 |
 
   Cost (M2 Pro, AC, 8 threads, quiet, 2026-11-05): one evaluation is
   3.8 s / 14.3 s (DESI at NL 64, AB 1 / 3) and 0.8 s / 2.4 s (LSST);
@@ -363,18 +363,83 @@ each from a failure it prevents:
 
   | alternative | probe | max abs(delta p/sigma) | Delta chi2 |
   |---|---|---:|---:|
-  | FKEM, cap 550 | DESI 1x2pt | 0.006 | 0.115 |
-  | Limber | DESI 1x2pt | 5.6 (n_s) | 332 |
+  | FKEM, cap 550 | DESI C_gg | 0.006 | 0.115 |
+  | Limber | DESI C_gg | 5.6 (n_s) | 332 |
   | SVD engine | LSST 3x2pt | 0.0024 | 1.4e-4 |
   | Limber | LSST 3x2pt | 0.40 (A_s) | 11.2 |
-  | DESI FKEM, cap 550 | 6x2pt | 0.013 | 0.115 |
-  | DESI Limber | 6x2pt | 2.1 (w_a) | 332 |
-  | Limber in both | 6x2pt | 2.1 (w_a) | 343 |
+  | DESI FKEM, cap 550 | LSST Y1 3x2pt + DESI C_gg | 0.013 | 0.115 |
+  | DESI Limber | LSST Y1 3x2pt + DESI C_gg | 2.1 (w_a) | 332 |
+  | Limber in both | LSST Y1 3x2pt + DESI C_gg | 2.1 (w_a) | 343 |
 
   The fair FKEM Delta chi2 is 0.115 here against the test pin 0.147:
   the notebook rescales the DESI inverse covariance to 12,300 deg^2
   (x 0.879, giving 0.129 at the likelihood's chi grid) and runs at
   `nonlimber_accuracyboost: 64` and AB 3.
+- **Per-layout Fisher biases.** The notebook repeats the two DESI
+  alternatives on every layout: each alternative vector is evaluated
+  at the layout's own overrides and AB 1 and cached in
+  `chains/EXAMPLE_EVALUATE_FISHER_ALTERNATIVES.pkl`, and one bar
+  figure draws the shifts of the four layouts side by side. Measured
+  at h = 0.02 (max |delta p/sigma| over the seven cosmological
+  parameters, DESI C_gg alone / LSST Y1 3x2pt + DESI C_gg; Delta chi2
+  at 12,300 deg^2, FKEM / Limber):
+
+  | layout | FKEM, cap 550 | Limber | Delta chi2 |
+  |---|---|---|---|
+  | DR3 | 0.32 (w_a) / 0.64 (Omega_b) | tens of sigma | 64.2 / 1.86e4 |
+  | Delta z = 0.02 | 0.47 (w_a) / 0.85 (Omega_b) | 43 (Omega_m) alone | 80.7 / 3.67e4 |
+  | Delta z = 0.05 | 0.06 / 0.18 | tens of sigma | 4.47 / 3483 |
+  | Delta z = 0.2 | 0.006 / 0.013 | 5.6 (n_s) / 2.1 (w_a) | 0.115 / 332 |
+
+  FKEM's Limber treatment of the nonlinear correction is harmless on
+  the wide bins but biases the thin layouts by a sizable fraction of
+  sigma; Limber is excluded for DESI clustering on every layout.
+
+## The FoM scale and the bias model (review conclusions, 2026-11-06)
+
+An adversarial physics and code review of the DESI C_ell^gg Fisher
+forecast fixed conclusions that bind every future headline number and
+the higher-order bias work. Full detail - measurement tables, the
+CCL term-by-term check and the arXiv citations - lives in
+`references/fom_and_bias_review.md`. The load-bearing conclusions:
+
+- **The thin/wide FoM ratio (~24x) is physical.** About 7x is radial
+  mode counting (k_parallel resolved to ~0.006 /Mpc at Delta z = 0.2
+  against ~0.06 /Mpc at 0.02) and about 3x is degeneracy breaking by
+  Kaiser RSD and radial BAO, which wide bins wash out. The ratio
+  survives a free bias per bin, an autos-only vector, a
+  self-consistent covariance and an ell <= 100 cut, and it saturates
+  near Delta chi ~ 0.6-0.8 lambda_min (Asorey et al. 1207.6487),
+  where the DR3 layout already sits.
+- **The absolute FoM (126-135, DESI C_gg alone) is inflated; the
+  honest range is ~10-40.** The largest single factor, 2.4-3.2x in
+  every layout, is a confirmed and still unfixed covariance bug: the
+  likelihood evaluates b_i = DESI_B1 / D(zbar_i) while
+  `covariance/lssty1xdesi_covariance.py::_lens_bias` passes the raw
+  CHUNK_BIAS, so the covariance signal is low by D(z)^2 at high z.
+  The fix is to divide by D(zbar_i) in `_lens_bias` and regenerate
+  the DESI covariances. The rest is model rigidity: linear bias +
+  halofit to the shipped k = 0.1185 /Mpc (~0.18 h/Mpc) cut with six
+  constant amplitudes and seven sigma_v groups as the entire
+  ignorance budget - an EFT-grade cut gives linear bias only
+  k_max ~ 0.08-0.12 h/Mpc, and reaching ~0.2 h/Mpc requires the
+  one-loop model with 7-12 marginalized nuisances per chunk. The
+  "DR1" label is also wrong: the density is the completed survey
+  (~28M tracers), not DR1 (~6M).
+- **"LSST barely helps" is an artifact** of the inflated DESI side:
+  LSST Y1 3x2pt alone (FoM 17.4) matches the DESC SRD (1809.01669).
+
+Implementing higher-order galaxy bias (the next todo) requires: the
+b2, b_s (or b_G2), b3nl, counterterm and stochastic parameters per
+tracer chunk with priors; one-loop templates (cosmolike's C-FAST-PT
+bias path, bias_model [b1, b2, bs2, b3, bmag], already serves the
+real-space 3x2pt projects, and the low-rank engine projects the full
+P_g through a per-bin SVD of sqrt(P_g), so it can carry the one-loop
+galaxy power); a covariance consistent with the extended model;
+EFT-grade scale cuts; and the matching Fisher nuisance set. The
+draft paper's EPT expression matches CCL's EulerianPTCalculator term
+by term, but its tidal-bias values need a convention check before
+any implementation adopts them - see the reference file.
 
 ## The amplitude cut prior
 
@@ -394,7 +459,7 @@ error of the data vector costs delta chi2 proportional to the ratio
 squared against the fiducial covariance: many units of chi2 at ratio
 50. The cut is safe for inference because the DESI Fisher 2 sigma
 contours reach a ratio of only about 2.1 on the Delta z = 0.2 binning
-(EXAMPLE_EVALUATE4.ipynb, section 8): it removes only prior volume
+(EXAMPLE_EVALUATE_FISHER.ipynb, section 8): it removes only prior volume
 the data already exclude.
 
 What the cut costs: at the extreme corners a cut of 8 still admits,

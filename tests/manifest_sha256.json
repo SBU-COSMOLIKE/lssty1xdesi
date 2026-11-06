@@ -87,6 +87,10 @@
     "frozen/frozen_config_example2.py": "008438562ebd05bb3860729bb4514114220f5f9bc007f17adea737e1d39b1fbd",
     "frozen/frozen_config_example3.py": "c2f32468e4c5aa636baad89eebbe82a8b7149015416bfba94f1caf9f5ee35464",
     "frozen/frozen_config_example4.py": "022c1e4bfe3c6677a35827a41183706678ff9df685358f3ffd991c8f00c627ad",
+    "frozen/nmodels_example1.npz": "1716a84fb69f67df7df15ae4eaa4e5f1bbf676ffa09d129264eeb5a211a9cb34",
+    "frozen/nmodels_example2.npz": "fbca8a3c3370e9ba5ac9f7c2a432214438367568a66a55cef73056af97eb7af9",
+    "frozen/nmodels_example3.npz": "bfdccb97455a9a9d7d7388b212928dfc81d7b27158f9fb58497284dfdc2309f6",
+    "frozen/nmodels_example4.npz": "137e5ae73a0da7ee8d4c7cc3a11d77b9229e89916506c9270c1372c1c2894dd9",
     "frozen/reference_chi2.json": "6ea710888f57d6c7e525fda4d7a1f58b3296e6b1647a0ca33408cf4bfa728288"
   }
 }

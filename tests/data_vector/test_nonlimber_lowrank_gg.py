@@ -69,8 +69,8 @@ import cocoa_test_utils as u
 # The engine delta chi2 of this project's frozen fiducial, measured
 # at OMP 4 with the likelihood defaults (rank 5 and the engine's l cap
 # of 1000; FKEM at its cap of 150, cross pairs included; accuracyboost
-# 2, measured on 2026-11-05): see assertion 4 of the module docstring.
-DCHI2_MEASURED = 4.249476e+03
+# 2, measured on 2026-11-06): see assertion 4 of the module docstring.
+DCHI2_MEASURED = 4.249205e+03
 
 # The shared factory (cosmolike_core/cocoa_testing_suites.py) builds
 # the class; assigning its return value to the usual module-level name

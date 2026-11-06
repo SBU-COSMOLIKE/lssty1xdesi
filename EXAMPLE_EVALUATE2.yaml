@@ -42,7 +42,7 @@ likelihood:
 # fiducial bias is 0.84),
 # where the numerical error of the data vector costs many units of chi2 (the
 # N-random-models check, tests/data_vector/README.md); the DESI Fisher 2 sigma
-# contours reach a ratio of only about 2 (EXAMPLE_EVALUATE4.ipynb, section 8).
+# contours reach a ratio of only about 2 (EXAMPLE_EVALUATE_FISHER.ipynb, section 8).
 # A point outside the cut has prior -inf, so cobaya never evaluates its
 # likelihood.
 prior:

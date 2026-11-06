@@ -228,39 +228,67 @@ vector are slow):
     python -m pytest ./projects/lssty1xdesi/tests/data_vector/test_accuracy.py
     python -m pytest ./projects/lssty1xdesi/tests/data_vector --ignore ./projects/lssty1xdesi/tests/data_vector/test_accuracy.py
 
-### The N-random-models check (opt-in) <a name="nmodels_check"></a>
+### The N-random-models check <a name="nmodels_check"></a>
 
 [Mechanism](https://github.com/CosmoLike/cocoa-cosmolike-core/blob/main/README.md#dv_nmodels):
-seeded random points across the prior, each scored with every setting
-of the A-checks pushed at once against its own reference-settings
-vector. Each layout has its own check (`test_ax99_nmodels` for
-`example1`, `test_ax99_nmodels_example2` to `_example4`). Model $m$
-draws its point with the seed $137 + m$, so every run repeats the same
-points and the same figures. Enable and run it with
+the A-checks measure the numerical error of the default settings at
+the one frozen fiducial point; this check measures it at 50 fixed
+points across the prior of the examples. Each layout has its own
+check (`test_ax99_nmodels` for `example1`,
+`test_ax99_nmodels_example2` to `_example4`). Model $m$ draws its
+point with the seed $137 + m$ (`numpy.random.default_rng(137 + m)`),
+so every run repeats the same 50 points and the same figures. Run the
+four checks with
 
-    COCOA_ACCURACY_NMODELS=10 python -m pytest \
-        ./projects/lssty1xdesi/tests/data_vector/test_accuracy.py -k nmodels
+    python -m pytest ./projects/lssty1xdesi/tests/data_vector/test_accuracy.py -k nmodels
 
-Running the file as a script accepts `--nmodels N` in place of the
-environment variable. Two more variables change a run:
+Each point is scored by the difference of two theory vectors,
+$\Delta\chi^2 = (v_\mathrm{high} - v_\mathrm{def})^T C^{-1}
+(v_\mathrm{high} - v_\mathrm{def})$: $v_\mathrm{high}$ is the vector
+with every accuracy setting of the A-checks pushed at once,
+$v_\mathrm{def}$ the vector at the default settings of the layout's
+likelihood, and $C$ the layout's covariance. The expensive half is
+precomputed: the pushed-settings vectors of the 50 points are
+generated once by
 
-- `COCOA_ACCURACY_NMODELS_SEED` sets another seed base, for a second
-  reproducible set of points;
-- `COCOA_ACCURACY_NMODELS_FIGURES` names the folder of the figures
-  (unset: the system temporary folder, so the run changes no project
-  file).
+    python ./projects/lssty1xdesi/tests/generate_frozen_reference.py --nmodels [example ...]
 
-Unlike A0-A4, this check fails: every model must stay below
-$|\Delta\chi^2| = 0.2$, and a failure names each model and its seed.
-Three settings in `test_accuracy.py` shape the draw to the prior of
-the examples:
+and stored in `tests/frozen/nmodels_<example>.npz` together with the
+points themselves, the held flags, the seed, the draw settings and a
+SHA-256 fingerprint of the high-accuracy configuration (path entries
+excluded, so the fingerprint is machine-independent); the manifest
+pins these files with the rest of the frozen state. The routine check
+builds one default-settings model per layout and evaluates the 50
+points against the stored vectors, so no pushed-settings model runs
+during tests. The check requires the redrawn points to equal the
+stored ones and the fingerprint to match: a changed prior, draw
+setting or configuration fails with "regenerate the stored vectors
+with generate_frozen_reference.py --nmodels" instead of comparing
+vectors that mean different things, and without a stored file the
+check is skipped with that same instruction. A full `--overwrite`
+refreeze keeps the existing `nmodels_*.npz` files.
 
-- `nmodels_box`: $\Omega_m$ is drawn in $[0.2, 0.5]$, $w_0$ in
+Generating the stored vectors is the expensive one-time step: one
+pushed-settings evaluation takes about 2 minutes on the thin
+$\Delta z = 0.02$ layout, against about 36 s at the default settings.
+The stored-vector design was validated on lsst_y1, where it
+reproduces the older per-point method (which built two models and a
+synthetic data vector per point) to $10^{-6}$ in $\Delta\chi^2$.
+
+Unlike the A-checks, this check fails: every model must stay below
+$|\Delta\chi^2| = 0.2$ (`NMODELS_LIMIT`, the budget of the reference
+tests), and a failure names each model above the limit and its seed.
+The draw settings live in `tests/cocoa_test_utils.py`, the one place
+both the check and the generator read, so the two always use the
+same points:
+
+- `NMODELS_EXAMPLES` lists the four layouts, one check per layout.
+- `NMODELS_BOX`: $\Omega_m$ is drawn in $[0.2, 0.5]$, $w_0$ in
   $[-3, -1/3]$ (an accelerating universe today) and $w_0 + w_a$ in
   $[-3, -0.01]$, the boxes of the examples. The frozen configurations
   keep their wider boxes, and the overrides narrow the draw without a
   refreeze; they change only the drawn values of a seeded point.
-- `nmodels_hold`: every odd model (seed 138, 140, ...) resets
+- `NMODELS_HOLD`: every odd model (seed 138, 140, ...) resets
   $\Omega_m$, the primordial amplitude $A_s$ (sampled as `As_1e9`
   $= 10^9 A_s$) and the DESI linear galaxy biases $b_i$ to the
   fiducial after its draw,
@@ -268,7 +296,7 @@ the examples:
   $\Omega_b$, $m_\nu$, $w_0$, $w_0 + w_a$). Those models measure what
   the other parameters do to the accuracy. The FoG dispersions have
   Gaussian priors and keep their fiducial values in every draw.
-- `nmodels_amplitude_cut`: every drawn point keeps the
+- `NMODELS_AMPLITUDE_CUT`: every drawn point keeps the
   clustering-amplitude ratio
   $(A_s/A_{s,{\rm fid}})(b_i/b_{i,{\rm fid}})^2$ at or below 8 in
   every one of the six DESI bias groups - the amplitude cut of the
@@ -281,9 +309,10 @@ $[0.8, 4]$ while the ELG fiducial bias is 0.84, so an uncut draw
 reaches $A_s b_i^2$ of about 50 times its fiducial value, and a
 numerical error that is a fixed fraction of the signal costs a
 $\Delta\chi^2$ that grows as the square of that ratio. The Fisher
-forecasts of `EXAMPLE_EVALUATE4.ipynb` (section 8) put the DESI
-$2\sigma$ contours at an amplitude ratio of about 2, so the cut at 8
-removes only prior volume the data already exclude.
+forecasts of `EXAMPLE_EVALUATE_FISHER.ipynb` (section 8) put the DESI
+$2\sigma$ contours at an amplitude ratio of 1.33 to 2.11 across the
+layouts, so the cut at 8 removes only prior volume the data already
+exclude.
 
 Each check prints a summary of each half and draws its layout's
 figure: $\Delta\chi^2$ against $\Omega_m$ and against the
@@ -291,10 +320,12 @@ clustering-amplitude ratio (the largest over the six bias groups),
 and the plane of the two. Circles are drawn across the prior;
 diamonds hold $\Omega_m$, $A_s$ and the biases at the fiducial, so
 they stack at $\Omega_m = 0.3$ and ratio 1. The color saturates
-above 100.
+above 100. `COCOA_ACCURACY_NMODELS_FIGURES` names the folder of the
+figures (unset: the system temporary folder, so a run changes no
+project file).
 
-Each model is scored against a reference vector generated at the
-settings its likelihood ships (finalized 2026-11-05; every layout at
+The default-settings model of each layout runs the settings its
+likelihood ships (finalized 2026-11-05; every layout at
 `accuracyboost` 2 and CAMB `AccuracyBoost` 1.05):
 
 | layout | `nonlimber_accuracyboost` | `kmax_boltzmann` |
@@ -311,74 +342,64 @@ $\chi^2$ by 2.09 on DR3 and 2.06 on $\Delta z = 0.02$ against a
 reference generated with `kmax_boltzmann: 5`, and by 0.12 and 0.10
 against one generated with 20 (measured 2026-11-05).
 
-Measured with the seed base 137 under this prior and these reference
-settings:
+Measured with the seed base 137 under this prior and these settings
+(2026-11-06, 50 models per layout; the last column restricts the
+drawn half to the models with an amplitude ratio of 3.5 or less):
 
-| layout | models | held: median / maximum $\Delta\chi^2$ | drawn: median / maximum $\Delta\chi^2$ |
+| layout | held: median / maximum $\Delta\chi^2$ | drawn: median / maximum $\Delta\chi^2$ | drawn, ratio $\le 3.5$: maximum |
 |---|---:|---:|---:|
-| `example1` (DR3, 62 Mpc) | - | pending | pending |
-| `example2` ($\Delta z = 0.02$) | - | pending | pending |
-| `example3` ($\Delta z = 0.05$) | 20 | 0.069 / 0.138 | 0.60 / 12.1 |
-| `example4` ($\Delta z = 0.2$) | 20 | 0.017 / 0.027 | 0.19 / 1.53 |
+| `example1` (DR3, 62 Mpc) | 0.110 / 0.294 | 1.41 / 47.4 | 1.45 (6 models) |
+| `example2` ($\Delta z = 0.02$) | 0.083 / 0.304 | 1.31 / 37.6 | 1.26 (6 models) |
+| `example3` ($\Delta z = 0.05$) | 0.067 / 0.158 | 0.46 / 12.1 | 0.21 (7 models) |
+| `example4` ($\Delta z = 0.2$) | 0.012 / 0.040 | 0.21 / 4.64 | 0.23 (6 models) |
 
-The `example1` and `example2` reruns under this prior are pending
-(each takes an hour or more); their figures appear here once they
-finish.
+The large values sit at high $\Omega_m$ (0.44-0.50) or a high
+amplitude ratio (5 or more), mostly together with large neutrino
+masses, so the same points top every layout. The largest is model 29
+($\Omega_m = 0.50$, ratio 6.2, $m_\nu = 0.60$ eV): 47.4 on DR3,
+37.6 on $\Delta z = 0.02$ and 4.64 on $\Delta z = 0.2$. The largest
+on $\Delta z = 0.05$ is model 15 ($\Omega_m = 0.49$, ratio 6.9):
+12.1. One $\Delta z = 0.02$ point with a moderate ratio but
+$\Omega_m$ at the box edge, model 19 ($\Omega_m = 0.499$, ratio
+3.53, $m_\nu = 0.08$ eV), gives 8.7.
 
-On $\Delta z = 0.05$ (measured 2026-11-05, 20 models) every held
-model passes: the other cosmological parameters alone leave
-$\Delta\chi^2$ at 0.138 or less. The drawn half:
+Which setting carries the residual depends on the layout. On the thin
+layouts it is mainly cosmolike's table resolution: at the
+$\Delta z = 0.02$ models 19 and 43 ($\Omega_m$ 0.42-0.50, ratios of
+about 3.5-3.7, full $\Delta\chi^2$ 8.73 and 4.59) each pushed
+setting alone gives 7.37 and 3.32 from cosmolike's `accuracyboost`
+2 $\to$ 4 - most of the total - against 1.37 and 1.44 from CAMB's
+`AccuracyBoost` 1.05 $\to$ 2, and 0.000 each from
+`integration_accuracy` 10, `kmax_boltzmann` 40 and `lmax` 20000.
 
-| $\Delta\chi^2$ | $\Omega_m$ | amplitude ratio |
-|---:|---:|---:|
-| 12.1 | 0.489 | 6.86 |
-| 4.30 | 0.468 | 4.62 |
-| 3.85 | 0.348 | 7.14 |
-| 0.92 | 0.356 | 7.43 |
-| 0.90 | 0.407 | 3.88 |
-| 0.30 | 0.264 | 4.85 |
-| 0.19 | 0.452 | 2.95 |
-| 0.13 | 0.261 | 3.13 |
-| 0.10 | 0.243 | 3.01 |
-| 0.038 | 0.235 | 2.95 |
+On the wide $\Delta z = 0.2$ bins the balance reverses: a
+one-setting-at-a-time scan at that layout's three worst points
+(measured 2026-11-05) puts the residual entirely on CAMB's precision.
+Raising CAMB's `AccuracyBoost` from 1.05 to 2 alone
+reproduces their $\Delta\chi^2$ of 1.55, 0.76 and 0.26, while every
+cosmolike setting (`accuracyboost`, the non-Limber $\chi$ grid, the
+integration accuracy, `lmax`) and CAMB's $k$ range move these points
+by at most 0.13. The worst points combine high $\Omega_m$ (0.47 to
+0.50) with large neutrino masses (0.35, 0.21 and 0.08 eV) and a high
+amplitude. A higher CAMB `AccuracyBoost` would cost much more per
+evaluation, and the project keeps 1.05.
 
-Every drawn point with a ratio up to about 3.1 stays below 0.2. The
-values above 1 sit at ratios of 4.6 or more together with
-$\Omega_m \ge 0.35$, the extreme corner of the prior; the DESI
-Fisher $2\sigma$ contours reach a ratio of only 1.54 on this layout.
-No one-setting-at-a-time scan was run on this layout, so the residual
-is not attributed to a particular setting.
+The check's pass/fail line is the 0.2 budget, so the check fails on
+every layout through these corners; the test reports the failure as a
+documented judgment, not a bug. The held models ($\Omega_m$, $A_s$
+and the DESI biases at the fiducial) stay at or below 0.304 on
+every layout, and the drawn models with an amplitude ratio of 3.5 or less
+stay at or below 1.45. The values of order 10 sit at the edge of the
+$\Omega_m$ box together with a high amplitude, where the DESI Fisher
+$2\sigma$ contours never reach: their amplitude ratios stop at 1.33
+to 2.11, and their $\Omega_m$ ranges stay inside 0.21-0.39. Raising
+`accuracyboost` on the thin layouts would reduce these corner values;
+it is the available lever, at a cost per evaluation, not an adopted
+setting.
 
-On $\Delta z = 0.2$ (measured 2026-11-05, 20 models) every held
-model passes: the other cosmological parameters alone leave
-$\Delta\chi^2$ at 0.027 or less. In the drawn half the three largest
-values sit at the high-amplitude, high-$\Omega_m$ corner the cut
-still admits:
+![example1, DR3: delta chi2 against Omega_m and the clustering amplitude](accuracy_nmodels_example1_seed137.png)
 
-| $\Delta\chi^2$ | $\Omega_m$ | amplitude ratio |
-|---:|---:|---:|
-| 1.53 | 0.49 | 6.9 |
-| 0.73 | 0.47 | 4.6 |
-| 0.31 | 0.50 | 3.5 |
-
-The other drawn values are 0.21, 0.20, 0.17, 0.17, 0.054, 0.046 and
-0.010. A one-setting-at-a-time scan at the three worst points puts
-this residual entirely on CAMB's precision: raising CAMB's
-`AccuracyBoost` from 1.05 to 2 alone reproduces 1.55, 0.76 and 0.26,
-while every cosmolike setting (`accuracyboost`, the non-Limber
-$\chi$ grid, the integration accuracy, `lmax`) and CAMB's $k$ range
-move these points by at most 0.13. The worst points combine high
-$\Omega_m$ (0.47 to 0.50) with large neutrino masses (0.35, 0.21 and
-0.08 eV) and a high amplitude. A higher CAMB `AccuracyBoost` would
-cost much more per evaluation, and the project keeps 1.05.
-
-The check's pass/fail line is the 0.2 budget, so these corner models
-fail it. The project accepts these values at the extreme,
-data-excluded corners of the prior - a high amplitude together with
-high $\Omega_m$, where the DESI Fisher $2\sigma$ contours reach an
-amplitude ratio of only 1.54 to 2.11 - as a documented judgment. It
-flags a $\Delta\chi^2$ well above 1 only where the amplitude is
-moderate, and none occurs here.
+![example2, Delta z = 0.02: delta chi2 against Omega_m and the clustering amplitude](accuracy_nmodels_example2_seed137.png)
 
 ![example3, Delta z = 0.05: delta chi2 against Omega_m and the clustering amplitude](accuracy_nmodels_example3_seed137.png)
 

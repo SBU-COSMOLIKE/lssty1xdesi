@@ -5,7 +5,7 @@ data/lssty1xdesi_source.nz, five bins each, the lsst_y1 project's files,
 read with the Z_LOW convention) on the bands of the DESI layouts (the 53
 DR3 bands, data/lssty1xdesi_desi_dr3_ells.txt), so a Fisher matrix of
 this case and one of a DESI case share one multipole grid and can be
-summed (the block-diagonal 6x2pt).
+summed (the block-diagonal LSST Y1 3x2pt + DESI C_gg combination).
 
 The layout is cosmolike's Fourier 3x2pt: cosmic shear (15 source
 pairs), galaxy-galaxy lensing (every lens-source pair: 25, the
