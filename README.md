@@ -534,8 +534,8 @@ For each layout the notebook gives the marginalized errors and the
 figure of merit of DESI alone and of the combination, the Fisher
 biases of the DESI projection approximations (FKEM with the cap at
 550, Limber), the amplitude cut and the prior walls against the
-forecast, the figure of merit against a scale cut $`k_\mathrm{max}`$,
-and the $`w_0`$ - $`w_a`$ ellipses.
+forecast, the figure of merit against the non-Limber UV-fraction
+scale cuts, and the $`w_0`$ - $`w_a`$ ellipses.
 
 Every probe uses one area, 12,300 deg², and is marginalized over all
 of its nuisance parameters. On the $`\Delta z = 0.2`$ binning the
@@ -641,6 +641,34 @@ each matrix in `chains/` on its first run; without the cache the DR3
 and $`\Delta z = 0.02`$ matrices take about 45 and 65 minutes on a
 laptop with 4 threads.
 
+The section ends with the non-Limber UV-fraction scale cuts,
+following arXiv:2603.13031. Each band power $`C_\ell`$ is split in
+two by a step on the 3D power spectrum: an infrared part
+$`C_\ell^\mathrm{IR}`$ sourced by the modes
+$`k \le k_\mathrm{max}/D(z)`$, with $`D`$ the linear growth factor
+($`D(0) = 1`$) and $`k_\mathrm{max}`$ quoted in
+$`h\,\mathrm{Mpc}^{-1}`$ at $`z = 0`$, and the ultraviolet rest
+$`C_\ell^\mathrm{UV}`$; a band is kept while its UV fraction
+$`|C_\ell^\mathrm{UV}| / (|C_\ell^\mathrm{UV}| + |C_\ell^\mathrm{IR}|)`$
+stays below $`\alpha = 0.05`$. The step multiplies
+$`P(k)`$ inside every $`C_\ell^{gg}`$ engine, Limber and non-Limber
+alike, so the criterion needs no Limber relation: it counts the
+radial modes $`k_\parallel \sim 2\pi/\Delta\chi`$ a thin bin
+collects, which a Limber-relation cut
+$`\ell \le k_\mathrm{max}\,\chi(\bar z) - 1/2`$ misses, and it
+removes most bands of the cross spectra of adjacent thin bins, whose
+signal lives on small radial separations across the shared edge. The
+fit applies the cut on top of the shipped masks, which stop every
+bin at the fixed $`k = 0.1185\ \mathrm{Mpc}^{-1}`$
+($`\approx 0.176\,h\,\mathrm{Mpc}^{-1}`$, no growth scaling).
+Inside the reach of linear bias, at
+$`k_\mathrm{max} = 0.1\,h\,\mathrm{Mpc}^{-1}`$, the DESI-alone
+FoM($`w_0`$, $`w_a`$) is 54.9 on DR3, 57.0 on $`\Delta z = 0.02`$,
+14.2 on $`\Delta z = 0.05`$ and 3.06 on $`\Delta z = 0.2`$, against
+135 / 126 / 32.0 / 5.67 at the shipped masks; at
+$`k_\mathrm{max} = 0.05\,h\,\mathrm{Mpc}^{-1}`$ the
+$`\Delta z = 0.02`$ layout keeps no band at all.
+
 **Known limitation - the covariance bias mismatch.** The DESI
 covariance files are computed with each bin's linear bias set to its
 group's raw value (1.34 / 1.70 / 0.84), while the likelihood's data
@@ -653,10 +681,12 @@ variances and inflates every layout's FoM by a factor of about
 alone FoM about 2.3 ($`\Delta z = 0.2`$), 13 ($`\Delta z = 0.05`$),
 52 ($`\Delta z = 0.02`$) and 42 (DR3) instead of 5.7 / 32 / 126 /
 135; the ratios between the layouts are unchanged. The fix will be
-made together with the effective-field-theory scale cuts and the
-higher-order galaxy bias model, the next modeling step. Until then
-the absolute FoM values of this section are upper bounds of a rigid
-linear-bias model, not forecasts.
+made together with the higher-order galaxy bias model, the next
+modeling step. Until then the absolute FoM values of this section
+are upper bounds of a rigid linear-bias model, not forecasts; the
+UV-fraction scale cuts locate the model's defensible range,
+$`k_\mathrm{max} \approx 0.08`$-$`0.12\,h\,\mathrm{Mpc}^{-1}`$,
+but do not repair the covariance.
 
 The pass/fail line of the N-random-models check is its 0.2 budget,
 and at the extreme corners a cut at 8 still admits - a high amplitude

@@ -888,6 +888,33 @@ PYBIND11_MODULE(cosmolike_lssty1xdesi_interface, m)
       py::return_value_policy::move
     );
 
+  m.def("C_gg_kwindow_tomo",
+      &cosmolike_interface::C_gg_kwindow_tomo_cpp,
+      "The Fourier gg spectra (autos, cross pairs) at the data-vector band "
+      "centers with the k window of the UV-fraction scale cut "
+      "(arXiv:2603.13031): IR part (keep_ir = 1, modes k <= kmax/D(z), "
+      "kmax in h/Mpc at z = 0, D the linear growth factor with D(0) = 1) "
+      "or UV part (keep_ir = 0); kmax <= 0 gives the full spectra.",
+      py::arg("kmax").none(false),
+      py::arg("keep_ir") = 1,
+      py::return_value_policy::move
+    );
+
+  m.def("gg_scale_cuts_tomo",
+      &cosmolike_interface::gg_scale_cuts_tomo_cpp,
+      "The UV-fraction scale cut (arXiv:2603.13031) for the Fourier gg "
+      "spectra (autos, then cross pairs) at the data-vector band "
+      "centers. Per kmax (h/Mpc at z = 0; the cut is kmax/D(z), D the "
+      "linear growth factor with D(0) = 1), C_l is split into IR and UV "
+      "parts by a step on the 3D power spectrum, in every gg engine "
+      "(Limber and non-Limber); a band is kept while "
+      "|C_UV|/(|C_UV| + |C_IR|) < alpha. Returns a dict of lmax, mask, "
+      "uv_fraction, full and ir arrays.",
+      py::arg("kmax").none(false),
+      py::arg("alpha") = 0.05,
+      py::return_value_policy::move
+    );
+
   m.def("dlnxi_dlnk_pm_tomo_limber",
       py::overload_cast<const double>(
         &cosmolike_interface::dlnxi_dlnk_pm_tomo_limber_cpp

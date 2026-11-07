@@ -46,9 +46,13 @@ choice (b)'s reach with choice (a)'s rigidity.
 In angular C_ell a per-bin cut is ell_max = k_max chi(z_bin) - 1/2.
 Thin bins also resolve k_parallel up to ~pi/Delta chi ~ 0.05 /Mpc, so
 a cut on the total k is slightly stricter than the transverse-only
-rule. The project's intended criterion follows Evans et al. (the
-group's EFT scale-cut methodology; the paper is not yet in the
-repository). The draft paper (paper_latex/main.tex) instead uses a
+rule. The implemented criterion is the non-Limber UV-fraction scale
+cut, following arXiv:2603.13031: a step on P(k) keeps
+k <= k_max/D(z), with D the linear growth factor (D(0) = 1) and
+k_max quoted in h/Mpc at z = 0, and a band is kept while its UV
+fraction |C_UV| / (|C_UV| + |C_IR|) stays below alpha = 0.05. The
+skill's scale-cut section holds the implementation, validation
+and results. The draft paper (paper_latex/main.tex) instead uses a
 scale-leakage criterion with threshold alpha = 0.3 (its equation for
 ell_max^ii), and finds that the Limber relation ell_max = k_max chi is
 optimistic at low redshift (BGS).
@@ -73,8 +77,14 @@ Decomposition from the cached derivatives (same layout order):
   thin/wide ratio, close to radial mode counting;
 - **ell <= 100 only**: a ratio of 17x, so the gain comes from linear
   scales;
-- **per-bin k_max cut at 0.05 /Mpc**: DESI FoM 1.5 / 8.5 / 33.7 /
-  38.0, against LSST Y1 3x2pt alone at 17.4.
+- **per-bin Limber-relation k_max cut at 0.05 /Mpc**: DESI FoM
+  1.5 / 8.5 / 33.7 / 38.0, against LSST Y1 3x2pt alone at 17.4.
+  Superseded by the non-Limber UV-fraction scale cuts (Sec. 2),
+  which count the thin bins' radial modes: at the matching
+  k_max = 0.075 h/Mpc (~0.05 /Mpc) they give 1.91 / 8.29 / 19.9 /
+  32.9, and at k_max = 0.05 h/Mpc the Delta z = 0.02 layout keeps
+  no band at all. The full tables are in the skill's scale-cut
+  section.
 
 Interpretation: about 7x from radial modes (k_parallel resolved to
 ~0.006 /Mpc at Delta z = 0.2 against ~0.06 /Mpc at Delta z = 0.02),

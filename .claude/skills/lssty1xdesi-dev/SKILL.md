@@ -423,7 +423,9 @@ CCL term-by-term check and the arXiv citations - lives in
   constant amplitudes and seven sigma_v groups as the entire
   ignorance budget - an EFT-grade cut gives linear bias only
   k_max ~ 0.08-0.12 h/Mpc, and reaching ~0.2 h/Mpc requires the
-  one-loop model with 7-12 marginalized nuisances per chunk. The
+  one-loop model with 7-12 marginalized nuisances per chunk; the
+  UV-fraction scale cuts (next section) measure the FoM inside
+  that reach. The
   "DR1" label is also wrong: the density is the completed survey
   (~28M tracers), not DR1 (~6M).
 - **"LSST barely helps" is an artifact** of the inflated DESI side:
@@ -436,10 +438,111 @@ bias path, bias_model [b1, b2, bs2, b3, bmag], already serves the
 real-space 3x2pt projects, and the low-rank engine projects the full
 P_g through a per-bin SVD of sqrt(P_g), so it can carry the one-loop
 galaxy power); a covariance consistent with the extended model;
-EFT-grade scale cuts; and the matching Fisher nuisance set. The
+the UV-fraction scale cuts (implemented; next section); and the
+matching Fisher nuisance set. The
 draft paper's EPT expression matches CCL's EulerianPTCalculator term
 by term, but its tidal-bias values need a convention check before
 any implementation adopts them - see the reference file.
+
+## The non-Limber UV-fraction scale cuts
+
+The Fisher notebook's scale cuts (section 8) are the non-Limber
+UV-fraction criterion, following arXiv:2603.13031; they replace the
+Limber relation ell <= k_max chi(zbar) - 1/2. Each C_ell^gg band
+power splits into C_IR + C_UV: C_IR is computed with the 3D power
+spectrum multiplied by a step that keeps k <= k_max/D(z), with D the
+linear growth factor (D(0) = 1) and k_max quoted in h/Mpc at z = 0,
+so the cut grows with redshift as the nonlinear scale does; C_UV is
+the rest. A band is kept while its UV fraction
+|C_UV| / (|C_UV| + |C_IR|) stays below alpha = 0.05 (the paper's
+baseline; it also uses 0.01). Kept bands form a prefix in ell, every
+band up to the first failure; where the fraction is non-monotonic in
+k_max, each prefix is shortened to that of the next larger k_max, so
+the cut only tightens as k_max falls. The fit uses (shipped mask) AND
+(UV-fraction cut): the covariance files have entries only inside the
+shipped masks, which stop every bin at the fixed k = 0.1185/Mpc
+(~0.176 h/Mpc) with no growth scaling, so they cap every band count
+and every FoM curve.
+
+The step multiplies P(k) inside every gg engine of the compiled code,
+so the criterion never assumes the Limber relation:
+
+- Limber sums: per line-of-sight node, at that node's own k_max/D(a);
+- non-Limber sums (the low-rank engine and FKEM): in the final sum
+  over the FFTLog wavenumbers, one threshold per bin (per pair for
+  the cross spectra), with D at the bin's mean redshift.
+
+The interface exposes `gg_scale_cuts_tomo(kmax, alpha)` - a dict with
+`lmax`, `mask`, `uv_fraction`, `full` and `ir`, rows the autos then
+the cross pairs in data-vector order - and
+`C_gg_kwindow_tomo(kmax, keep_ir)` for the IR or UV spectra directly.
+The notebook caches the cuts in
+`chains/EXAMPLE_EVALUATE_FISHER_SCALE_CUTS.pkl` and the FoM scan in
+`chains/EXAMPLE_EVALUATE_FISHER_FOM_SCALE_CUTS.pkl`.
+
+Validation (measured):
+
+- window off: the data vector is bitwise identical to the pre-window
+  code, and the driver's full spectra equal the data vector exactly;
+- IR + UV = full to 1e-14 (low-rank and FKEM) and 1e-15 (Limber);
+  k_max = 1e3 gives IR = full exactly, and k_max = 1e-4 gives IR = 0;
+- Delta z = 0.05 autos kept at k_max = 0.05 / 0.075 / 0.1 / 0.125 /
+  0.15 h/Mpc, against independent references:
+
+| engine | kept bands | independent reference |
+|---|---|---|
+| Limber hook | 518 / 808 / 1067 / 1171 / 1198 | numpy Limber integral: 519 / 808 / 1068 / 1171 / 1198 |
+| low-rank non-Limber | 367 / 663 / 945 / 1148 / 1195 | flat-sky non-Limber estimate: 376 / 683 / 973 / 1154 / 1198 |
+| FKEM with pairs | 370 / 674 / 975 / 1154 / 1196 | - |
+
+Band powers kept (shipped mask AND UV-fraction cut, alpha = 0.05;
+each cell autos / cross pairs; k_max in h/Mpc at z = 0):
+
+| k_max | DR3 | Delta z = 0.02 | Delta z = 0.05 | Delta z = 0.2 |
+|---|---|---|---|---|
+| 0.05 | 167 / 74 | 0 / 0 | 367 / 70 | 122 / 44 |
+| 0.075 | 903 / 750 | 904 / 952 | 663 / 184 | 198 / 82 |
+| 0.1 | 1585 / 1124 | 1928 / 2471 | 945 / 269 | 267 / 111 |
+| 0.125 | 2049 / 1432 | 2755 / 3062 | 1148 / 522 | 307 / 138 |
+| 0.15 | 2220 / 2038 | 2982 / 3118 | 1195 / 623 | 319 / 156 |
+| 0.2 | 2276 / 2889 | 3016 / 4496 | 1205 / 1240 | 325 / 306 |
+| 0.25 | 2276 / 3025 | 3016 / 4605 | 1205 / 1560 | 327 / 415 |
+| shipped | 2276 / 3033 | 3016 / 4605 | 1205 / 1777 | 329 / 415 |
+
+FoM(w0, wa) of DESI C_ell^gg alone, the Fisher matrix rebuilt from
+the cached derivatives on the kept covariance block. A galaxy-bias
+parameter whose bins lost every band has a flat prior and no data,
+so it is dropped without touching the cosmology; with no band
+power left at all there is no w0-wa constraint, and the FoM is
+reported as 0:
+
+| k_max | DR3 | Delta z = 0.02 | Delta z = 0.05 | Delta z = 0.2 |
+|---|---:|---:|---:|---:|
+| 0.05 | 2.17 | 0 (no band left) | 1.90 | 0.73 |
+| 0.075 | 32.9 | 19.9 | 8.29 | 1.91 |
+| 0.1 | 54.9 | 57.0 | 14.2 | 3.06 |
+| 0.125 | 84.7 | 89.0 | 23.3 | 3.94 |
+| 0.15 | 114 | 111 | 27.8 | 4.73 |
+| 0.2 | 132 | 125 | 30.9 | 5.19 |
+| 0.25 | 135 | 126 | 31.6 | 5.51 |
+| shipped mask | 135.2 | 125.6 | 32.0 | 5.67 |
+
+Conclusions:
+
+- A thin bin's C_ell collects radial modes up to k_parallel ~
+  2 pi / Delta chi, so its UV part is large even at the lowest
+  bands. The criterion sees those modes because it is a step on
+  P(k); a cut built on the Limber relation counts only transverse
+  modes and is badly optimistic on the thin layouts.
+- The cross spectra of adjacent thin bins come mostly from close
+  pairs across the shared edge - small radial scales - and are
+  strongly UV-dominated.
+- At k_max = 0.05 h/Mpc, Delta z = 0.02 keeps nothing, and DR3
+  keeps only the bins above z ~ 0.9, where 1/D(z) raises the cut
+  the most.
+- The absolute FoM values remain inflated by the covariance bias
+  mismatch (2.4-3.2x, the section above); the linear-bias validity,
+  about 0.08-0.12 h/Mpc, is unchanged.
 
 ## The amplitude cut prior
 
