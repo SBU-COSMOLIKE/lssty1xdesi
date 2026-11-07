@@ -22,7 +22,8 @@ every sampled point:
   galaxy bias - one sampled amplitude per bias chunk (BGS, LRG1-3,
     ELG1-2; the paper's Table 2 ranges), with the per-bin linear bias
     b1_i = amplitude / D(zbar_i): the amplitude is the bias at z = 0 in
-    a constant-clustering-amplitude (passive) evolution, and D(zbar_i)
+    a constant-clustering-amplitude evolution (b D fixed; not the
+    passive evolution of a conserved population, b - 1 ~ 1/D), and D(zbar_i)
     is the linear growth at the bin's mean redshift, measured from the
     linear P(k) ratio at one large scale where growth is scale
     independent;
@@ -150,8 +151,9 @@ class desi_cl(_cosmolike_prototype_base):
 
     Arguments:
       **params = the parameters of this point, as keyword arguments:
-        DESI_B1_<n>   = bias amplitude of bin n (b1 at z = 0 under
-                        passive evolution), n = 1..lens_ntomo;
+        DESI_B1_<n>   = bias amplitude of bin n (b1 at z = 0 under a
+                        constant clustering amplitude b D),
+                        n = 1..lens_ntomo;
         DESI_SIGV_<n> = velocity dispersion of bin n in km/s.
       Every per-bin parameter must be present: the yaml fragment
       declares all of them (group members tied to their leaders), so a

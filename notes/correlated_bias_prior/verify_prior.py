@@ -15,7 +15,16 @@ sampling), and the numbers of the worked example in the note.  The
 note's section on physical values of L and sigma_b adds three more
 checks: the conserved-population bias law b(z) - 1 = (b_c - 1) D_c/D(z)
 against a direct integration of the continuity equation, the
-conserved-population deviation table, and the neighbor rms table.
+conserved-population deviation table, and the neighbor rms table.  The
+memory-model section adds nine more: the projection P = Q - Q U
+(U^T Q U)^-1 U^T Q with U = [1, z - zbar] annihilates U and has rank
+n - 2; the Woodbury inverse approaches it as 1/W^2; the null-space
+identity P = N (N^T C N)^-1 N^T; the three-bin curvature penalty with
+closed-form variance 2 sigma_b^2 (1 - r)(3 - r); P = 0 for one and two
+bins; the universal-kriging predictor against a direct Gaussian
+conditional; the end-to-end correlation tending to +-1 with a shared
+slope; and the straight-line fits of the note's conserved-population
+and BGS flux-limit drifts, plus the LRG3 magnitude-limit rate.
 
 Run with the cocoa environment:
 
@@ -511,8 +520,8 @@ def check_conserved_deviation_table():
 
     delta(z) = (D(z)/D(z_c) - 1)/b_c with z_c at the group midpoint and
     b_c = B/D(z_c), for the three groups quoted in the note.  The table
-    rounds to one decimal in percent, so the comparison allows 0.06
-    (percentage points, and the same margin on b_c).
+    rounds to one decimal in percent, so the comparison allows 0.05
+    percentage points, half a rounding unit (the same margin on b_c).
     """
     omega_matter = 0.3
     ln_a_grid, growth_grid, _ = growth_solution(omega_matter)
@@ -522,10 +531,10 @@ def check_conserved_deviation_table():
     # change across one Delta z = 0.05 step at the midpoint (percent).
     groups = [
         ("BGS",  1.34, 0.10, 0.40, 0.25, 1.5, +5.3, -4.9, 1.7),
-        ("LRG1", 1.70, 0.40, 0.60, 0.50, 2.2, +2.3, -2.2, 1.1),
+        ("LRG1", 1.70, 0.40, 0.60, 0.50, 2.2, +2.4, -2.2, 1.1),
         ("LRG3", 1.70, 0.80, 1.10, 0.95, 2.7, +2.6, -2.3, 0.8),
     ]
-    tolerance = 0.06
+    tolerance = 0.05
 
     worst_deviation = 0.0
     for (name, amplitude, z_low, z_high, z_mid,
@@ -585,6 +594,375 @@ def check_neighbor_rms_table():
                   f"worst |computed - quoted| {worst_deviation:.3f}")
 
 
+def memory_design(redshifts):
+    """The memory model's design matrix U = [1, v], v = z - mean(z).
+
+    Column one is the ones vector (the free amplitude direction) and
+    column two the centered redshifts (the free tilt direction).
+    Returns an (n, 2) array.
+    """
+    number_of_bins = len(redshifts)
+    centered = redshifts - np.mean(redshifts)
+    design = np.column_stack([np.ones(number_of_bins), centered])
+    return design
+
+
+def memory_projection(covariance, design):
+    """The memory projection P = Q - Q U (U^T Q U)^-1 U^T Q."""
+    precision = np.linalg.inv(covariance)
+    weighted_design = precision @ design
+    normal_matrix = design.T @ weighted_design
+    return precision - weighted_design @ np.linalg.inv(normal_matrix) @ weighted_design.T
+
+
+def design_nullspace(design):
+    """Columns spanning the vectors Euclidean-orthogonal to U's columns.
+
+    Computed from the full singular value decomposition of U: the left
+    singular vectors beyond U's rank span the orthogonal complement.
+    Returns an (n, n - rank) array (empty for a single bin).
+    """
+    left_vectors, singular_values, _ = np.linalg.svd(design)
+    tolerance = np.max(design.shape) * np.finfo(float).eps * np.max(singular_values)
+    rank = int(np.sum(singular_values > tolerance))
+    return left_vectors[:, rank:]
+
+
+def luminosity_distance_mpc_over_h(redshifts, omega_matter):
+    """Luminosity distance in Mpc/h for flat LCDM (trapezoid integral)."""
+    redshift_grid = np.linspace(0.0, 2.0, 200001)
+    inverse_e = 1.0/np.sqrt(omega_matter*(1.0 + redshift_grid)**3
+                            + 1.0 - omega_matter)
+    hubble_distance_mpc_over_h = 2997.92458
+    panel_areas = 0.5*(inverse_e[1:] + inverse_e[:-1])*np.diff(redshift_grid)
+    comoving_grid = hubble_distance_mpc_over_h*np.concatenate(
+        [[0.0], np.cumsum(panel_areas)])
+    comoving = np.interp(redshifts, redshift_grid, comoving_grid)
+    return (1.0 + np.asarray(redshifts))*comoving
+
+
+def zehavi_threshold_bias(absolute_magnitude):
+    """The threshold-bias fit b = 1.06 + 0.21 (L/L*)^1.12, M* = -20.44."""
+    luminosity_ratio = 10.0**(-0.4*(absolute_magnitude + 20.44))
+    return 1.06 + 0.21*luminosity_ratio**1.12
+
+
+def check_memory_projection_properties(redshifts, spread, correlation_length):
+    """P U = 0, positive semidefinite, rank n - 2 on uneven redshifts."""
+    covariance = exponential_covariance(redshifts, spread, correlation_length)
+    design = memory_design(redshifts)
+    projection = memory_projection(covariance, design)
+
+    null_residual = np.max(np.abs(projection @ design))
+    eigenvalues = np.linalg.eigvalsh(projection)
+    scale = np.max(eigenvalues)
+    smallest = eigenvalues[0]
+    zero_count = int(np.sum(np.abs(eigenvalues) < ALGEBRA_TOLERANCE*scale))
+
+    passed = (null_residual < ALGEBRA_TOLERANCE*scale
+              and smallest > -ALGEBRA_TOLERANCE*scale
+              and zero_count == 2)
+    detail = (f"|P U|_max/|P| {null_residual/scale:.3e}, "
+              f"min eig/max eig {smallest/scale:.3e}, "
+              f"zero eigenvalues {zero_count}")
+    return report("memory projection: P U = 0, PSD, rank n - 2", passed, detail)
+
+
+def check_memory_woodbury_limit(redshifts, spread, correlation_length):
+    """The Woodbury inverse approaches the projection as 1/W^2."""
+    covariance = exponential_covariance(redshifts, spread, correlation_length)
+    design = memory_design(redshifts)
+    projection = memory_projection(covariance, design)
+
+    deviations = []
+    for prior_width in [1.0, 10.0, 100.0, 1000.0]:
+        widened = covariance + prior_width**2 * (design @ design.T)
+        deviations.append(np.max(np.abs(np.linalg.inv(widened) - projection)))
+
+    decreasing = (deviations[0] > deviations[1] > deviations[2] > deviations[3])
+    final_ratio = deviations[2]/deviations[3]
+    passed = decreasing and 80.0 < final_ratio < 125.0
+    detail = ("max deviations " +
+              ", ".join(f"{d:.3e}" for d in deviations) +
+              f" at W = 1, 10, 100, 1000; last ratio {final_ratio:.1f}")
+    return report("memory projection: Woodbury inverse approaches P as 1/W^2",
+                  passed, detail)
+
+
+def check_memory_nullspace_identity(redshifts, spread, correlation_length):
+    """P equals N (N^T C N)^-1 N^T with N spanning the non-line space."""
+    covariance = exponential_covariance(redshifts, spread, correlation_length)
+    design = memory_design(redshifts)
+    projection = memory_projection(covariance, design)
+
+    nullspace = design_nullspace(design)
+    middle = np.linalg.inv(nullspace.T @ covariance @ nullspace)
+    alternative = nullspace @ middle @ nullspace.T
+
+    deviation = np.max(np.abs(projection - alternative))/np.max(np.abs(projection))
+    return report("memory projection: null-space identity",
+                  deviation < ALGEBRA_TOLERANCE,
+                  f"max relative deviation {deviation:.3e}")
+
+
+def check_memory_three_bin_curvature():
+    """Three even bins: the penalty is the curvature over its variance."""
+    spacing = 0.02
+    correlation_length = 0.05
+    sigma_b = 0.10
+    redshifts = np.array([0.30, 0.32, 0.34])
+    neighbor_correlation = np.exp(-spacing/correlation_length)
+
+    covariance = exponential_covariance(redshifts, sigma_b, correlation_length)
+    design = memory_design(redshifts)
+    projection = memory_projection(covariance, design)
+
+    curvature_vector = np.array([1.0, -2.0, 1.0])
+    curvature_variance = curvature_vector @ covariance @ curvature_vector
+    closed_form = 2.0*sigma_b**2*(1.0 - neighbor_correlation)*(3.0 - neighbor_correlation)
+    variance_deviation = abs(curvature_variance - closed_form)/closed_form
+
+    rng = np.random.default_rng(RANDOM_SEED + 1)
+    worst_penalty_deviation = 0.0
+    for trial in range(10):
+        delta = rng.normal(0.0, 1.0, 3)
+        penalty = delta @ projection @ delta
+        curvature = curvature_vector @ delta
+        penalty_closed = curvature**2/closed_form
+        deviation = abs(penalty - penalty_closed)/max(penalty_closed, 1.0e-6)
+        worst_penalty_deviation = max(worst_penalty_deviation, deviation)
+
+    passed = (variance_deviation < ALGEBRA_TOLERANCE
+              and worst_penalty_deviation < ALGEBRA_TOLERANCE)
+    detail = (f"variance vs 2 sigma_b^2 (1-r)(3-r): {variance_deviation:.3e}, "
+              f"penalty vs curvature form: {worst_penalty_deviation:.3e}")
+    return report("memory projection: three-bin curvature closed form",
+                  passed, detail)
+
+
+def check_memory_small_groups(spread, correlation_length):
+    """One and two bins are fully free: the memory projection vanishes."""
+    # One bin: nothing is orthogonal to both columns, so N is empty and
+    # the null-space form gives the zero matrix.
+    single = np.array([0.5])
+    covariance_one = exponential_covariance(single, spread, correlation_length)
+    nullspace_one = design_nullspace(memory_design(single))
+    if nullspace_one.shape[1] == 0:
+        projection_one = np.zeros((1, 1))
+    else:
+        middle = np.linalg.inv(nullspace_one.T @ covariance_one @ nullspace_one)
+        projection_one = nullspace_one @ middle @ nullspace_one.T
+
+    # Two bins: U is square and invertible, and the formula collapses.
+    pair = np.array([0.40, 0.46])
+    covariance_two = exponential_covariance(pair, spread, correlation_length)
+    projection_two = memory_projection(covariance_two, memory_design(pair))
+    precision_scale = np.max(np.abs(np.linalg.inv(covariance_two)))
+
+    one_bin_size = np.max(np.abs(projection_one))
+    two_bin_size = np.max(np.abs(projection_two))/precision_scale
+    passed = one_bin_size == 0.0 and two_bin_size < ALGEBRA_TOLERANCE
+    detail = (f"one bin |P| {one_bin_size:.1e}, "
+              f"two bins |P|/|Q| {two_bin_size:.3e}")
+    return report("memory projection: P = 0 for one and two bins",
+                  passed, detail)
+
+
+def check_memory_kriging(redshifts, sigma_b, correlation_length, rng):
+    """The universal-kriging predictor against a wide-prior conditional."""
+    design = memory_design(redshifts)
+    centered = design[:, 1]
+    prior_width = 1.0e4
+
+    worst_deviation = 0.0
+    for known_count in [2, 3, 4]:
+        known_block = redshifts[:known_count + 1]
+        covariance = exponential_covariance(known_block, sigma_b,
+                                            correlation_length)
+        past_covariance = covariance[:known_count, :known_count]
+        past_design = design[:known_count, :]
+        past_precision = np.linalg.inv(past_covariance)
+
+        for trial in range(5):
+            past_values = rng.normal(0.0, sigma_b, known_count)
+
+            # The formula: the generalized-least-squares line through
+            # the past, then one Markov step from the last residual.
+            normal_matrix = past_design.T @ past_precision @ past_design
+            line_fit = np.linalg.solve(normal_matrix,
+                                       past_design.T @ past_precision @ past_values)
+            step_correlation = np.exp(-(redshifts[known_count]
+                                        - redshifts[known_count - 1])
+                                      / correlation_length)
+            last_residual = (past_values[-1] - line_fit[0]
+                             - line_fit[1]*centered[known_count - 1])
+            predicted = (line_fit[0] + line_fit[1]*centered[known_count]
+                         + step_correlation*last_residual)
+
+            # The direct conditional mean of the wide-prior Gaussian.
+            widened = (covariance
+                       + prior_width**2 * (design[:known_count + 1, :]
+                                           @ design[:known_count + 1, :].T))
+            conditional = (widened[known_count, :known_count]
+                           @ np.linalg.solve(widened[:known_count, :known_count],
+                                             past_values))
+            worst_deviation = max(worst_deviation,
+                                  abs(predicted - conditional))
+
+    return report("memory model: universal-kriging predictor",
+                  worst_deviation < 1.0e-6,
+                  f"worst |formula - conditional| {worst_deviation:.3e}")
+
+
+def check_memory_end_correlation(redshifts, sigma_b, correlation_length):
+    """A shared slope correlates the group ends toward +-1."""
+    centered = redshifts - np.mean(redshifts)
+    first, last = 0, len(redshifts) - 1
+    separation = redshifts[last] - redshifts[first]
+    kernel_cross = sigma_b**2*np.exp(-separation/correlation_length)
+
+    def full_correlation(slope_width):
+        covariance_ij = (slope_width**2*centered[first]*centered[last]
+                         + kernel_cross)
+        variance_i = slope_width**2*centered[first]**2 + sigma_b**2
+        variance_j = slope_width**2*centered[last]**2 + sigma_b**2
+        return covariance_ij/np.sqrt(variance_i*variance_j)
+
+    def asymptotic_correlation(slope_width):
+        covariance_ij = slope_width**2*centered[first]*centered[last]
+        variance_i = slope_width**2*centered[first]**2 + sigma_b**2
+        variance_j = slope_width**2*centered[last]**2 + sigma_b**2
+        return covariance_ij/np.sqrt(variance_i*variance_j)
+
+    moderate = 5.0*sigma_b
+    formula_deviation = abs(full_correlation(moderate)
+                            - asymptotic_correlation(moderate))
+    formula_tolerance = 2.0*np.exp(-separation/correlation_length)
+
+    strong = 1000.0*sigma_b
+    limiting = full_correlation(strong)
+    expected_sign = np.sign(centered[first]*centered[last])
+
+    passed = (formula_deviation < formula_tolerance
+              and np.sign(limiting) == expected_sign
+              and abs(limiting) > 0.999)
+    detail = (f"formula deviation {formula_deviation:.3e} "
+              f"(tolerance {formula_tolerance:.3e}), "
+              f"rho at large tau {limiting:+.4f}")
+    return report("memory model: end-to-end correlation tends to +-1",
+                  passed, detail)
+
+
+def check_memory_line_removes_drift():
+    """The note's table of straight-line fits to the conserved drift."""
+    omega_matter = 0.3
+    ln_a_grid, growth_grid, _ = growth_solution(omega_matter)
+
+    # Group name, amplitude B, z range, then the quoted numbers: span
+    # of delta, fitted slope per unit z, residual rms, residual max,
+    # all in percent, at the Delta z = 0.05 bin centers.
+    groups = [
+        ("BGS",  1.34, 0.10, 0.40,  8.49, -34.0, 0.062, 0.084),
+        ("LRG1", 1.70, 0.40, 0.60,  3.41, -22.7, 0.020, 0.020),
+        ("LRG2", 1.70, 0.60, 0.80,  2.94, -19.6, 0.018, 0.019),
+        ("LRG3", 1.70, 0.80, 1.10,  4.07, -16.3, 0.038, 0.052),
+        ("ELG1", 0.84, 0.80, 1.10,  8.23, -32.9, 0.077, 0.104),
+        ("ELG2", 0.84, 1.10, 1.60, 11.09, -24.6, 0.158, 0.270),
+    ]
+
+    worst_deviation = 0.0
+    for (name, amplitude, z_low, z_high,
+         quoted_span, quoted_slope, quoted_rms, quoted_max) in groups:
+        centers = np.arange(z_low + 0.025, z_high, 0.05)
+        z_mid = 0.5*(z_low + z_high)
+        growth_mid = growth_at_redshift(z_mid, ln_a_grid, growth_grid)[0]
+        bias_mid = amplitude/growth_mid
+
+        growth_centers = growth_at_redshift(centers, ln_a_grid, growth_grid)
+        deviation = (growth_centers/growth_mid - 1.0)/bias_mid
+
+        line = np.polyfit(centers, deviation, 1)
+        residual = deviation - np.polyval(line, centers)
+
+        span_percent = 100.0*(deviation[0] - deviation[-1])
+        slope_percent = 100.0*line[0]
+        rms_percent = 100.0*np.sqrt(np.mean(residual**2))
+        max_percent = 100.0*np.max(np.abs(residual))
+
+        for computed, quoted, tol in [(span_percent, quoted_span, 0.01),
+                                      (slope_percent, quoted_slope, 0.1),
+                                      (rms_percent, quoted_rms, 0.001),
+                                      (max_percent, quoted_max, 0.001)]:
+            worst_deviation = max(worst_deviation, abs(computed - quoted)/tol)
+
+    return report("memory model: a line removes the conserved drift (table)",
+                  worst_deviation < 1.0,
+                  f"worst deviation {worst_deviation:.2f} tolerance units")
+
+
+def check_memory_bgs_flux_line():
+    """The BGS flux-limit drift and its straight-line residual."""
+    omega_matter = 0.3
+    ln_a_grid, growth_grid, _ = growth_solution(omega_matter)
+
+    centers = np.arange(0.125, 0.40, 0.05)
+    distances = luminosity_distance_mpc_over_h(centers, omega_matter)
+    magnitudes = 19.5 - 25.0 - 5.0*np.log10(distances)
+    biases = zehavi_threshold_bias(magnitudes)
+
+    # The deviation from the tied trend with the group amplitude set so
+    # the mean deviation vanishes (the free B_g absorbs the mean).
+    amplitude_track = biases*growth_at_redshift(centers, ln_a_grid, growth_grid)
+    deviation = amplitude_track/np.mean(amplitude_track) - 1.0
+
+    line = np.polyfit(centers, deviation, 1)
+    residual = deviation - np.polyval(line, centers)
+
+    quoted = [(magnitudes[0], -18.56, 0.008), (magnitudes[-1], -21.24, 0.008),
+              (biases[0], 1.09, 0.008), (biases[-1], 1.54, 0.008),
+              (100.0*(deviation[-1] - deviation[0]), 22.3, 0.08),
+              (100.0*line[0], 89.0, 0.8),
+              (100.0*np.sqrt(np.mean(residual**2)), 2.4, 0.08),
+              (100.0*np.max(np.abs(residual)), 3.3, 0.08)]
+    worst_deviation = 0.0
+    for computed, expected, tol in quoted:
+        worst_deviation = max(worst_deviation, abs(computed - expected)/tol)
+
+    return report("memory model: BGS flux-limit drift and line residual",
+                  worst_deviation < 1.0,
+                  f"worst deviation {worst_deviation:.2f} tolerance units; "
+                  f"M {magnitudes[0]:.2f} to {magnitudes[-1]:.2f}, "
+                  f"b {biases[0]:.2f} to {biases[-1]:.2f}")
+
+
+def check_lrg3_flux_drift():
+    """The LRG3 magnitude-limit drift: 0.27 mag per dz = 0.1, 6-11% bias.
+
+    Past z = 0.8 the LRG selection is a fixed flux limit, so the
+    luminosity threshold rises with the distance modulus.  The note
+    quotes the rate 0.27 magnitudes per Delta z = 0.1 at z = 1, and
+    converts it with the Zehavi slope of 0.5-1.0 in bias per magnitude
+    into a 6-11% drift of b = 2.4.  Both numbers are recomputed here.
+    """
+    omega_matter = 0.3
+    lower, upper = 0.95, 1.05
+    distances = luminosity_distance_mpc_over_h(np.array([lower, upper]),
+                                               omega_matter)
+    magnitude_step = 5.0*np.log10(distances[1]/distances[0])
+
+    reference_bias = 2.4
+    drift_low = 100.0*0.5*magnitude_step/reference_bias
+    drift_high = 100.0*1.0*magnitude_step/reference_bias
+
+    passed = (abs(magnitude_step - 0.27) < 0.01
+              and abs(drift_low - 6.0) < 0.6
+              and abs(drift_high - 11.0) < 0.6)
+    detail = (f"magnitude step {magnitude_step:.3f} per dz = 0.1, "
+              f"drift {drift_low:.1f} to {drift_high:.1f} percent")
+    return report("memory model: LRG3 magnitude-limit drift rate",
+                  passed, detail)
+
+
 def main():
     rng = np.random.default_rng(RANDOM_SEED)
 
@@ -613,6 +991,21 @@ def main():
     results.append(check_bias_continuity())
     results.append(check_conserved_deviation_table())
     results.append(check_neighbor_rms_table())
+    results.append(check_memory_projection_properties(uneven_redshifts, spread,
+                                                      correlation_length))
+    results.append(check_memory_woodbury_limit(uneven_redshifts, spread,
+                                               correlation_length))
+    results.append(check_memory_nullspace_identity(uneven_redshifts, spread,
+                                                   correlation_length))
+    results.append(check_memory_three_bin_curvature())
+    results.append(check_memory_small_groups(spread, correlation_length))
+    results.append(check_memory_kriging(uneven_redshifts, spread,
+                                        correlation_length, rng))
+    results.append(check_memory_end_correlation(uneven_redshifts, spread,
+                                                correlation_length))
+    results.append(check_memory_line_removes_drift())
+    results.append(check_memory_bgs_flux_line())
+    results.append(check_lrg3_flux_drift())
 
     number_failed = results.count(False)
     if number_failed == 0:

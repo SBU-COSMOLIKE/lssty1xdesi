@@ -1,0 +1,79 @@
+"""Redraw theory_delta.pdf from data.json: the fractional deviations from
+the tied shape B/D of a conserved population (every group) and of the BGS
+flux limit, with the best straight line through each (top), and what the
+line leaves (bottom). data.json comes from ../make_theory_data.py. Run from
+any folder: python plot_theory_delta.py
+"""
+import json
+import os
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.lines import Line2D
+
+# Figure style of the whole notebook: the shared plotting functions never change
+# rcParams, so these lines set every font, tick and grid default.
+matplotlib.rcParams['mathtext.fontset'] = 'stix'
+matplotlib.rcParams['font.family'] = 'STIXGeneral'
+matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
+matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
+matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
+matplotlib.rcParams['xtick.bottom'] = True
+matplotlib.rcParams['xtick.top'] = False
+matplotlib.rcParams['ytick.right'] = False
+matplotlib.rcParams['axes.edgecolor'] = 'black'
+matplotlib.rcParams['axes.linewidth'] = '1.0'
+matplotlib.rcParams['axes.labelsize'] = 'medium'
+matplotlib.rcParams['axes.grid'] = True
+matplotlib.rcParams['grid.linewidth'] = '0.0'
+matplotlib.rcParams['grid.alpha'] = '0.18'
+matplotlib.rcParams['grid.color'] = 'lightgray'
+matplotlib.rcParams['legend.labelspacing'] = 0.77
+matplotlib.rcParams['savefig.bbox'] = 'tight'
+matplotlib.rcParams['savefig.format'] = 'pdf'
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+GROUP_COLORS = {'BGS': '#1f77b4', 'LRG1': '#d62728', 'LRG2': '#9467bd',
+                'LRG3': '#8c564b', 'ELG1': '#2ca02c', 'ELG2': '#ff7f0e'}
+LAW_STYLE = {'conserved': ('--', 'o'), 'flux_limit': ('-.', 's')}
+# heights of the group labels (percent); LRG3 and ELG1 share a redshift
+# range, so ELG1 sits one row lower
+LABEL_HEIGHT = {'ELG1': -14.5, 'LRG3': -12.0}
+
+with open(os.path.join(HERE, 'data.json')) as f:
+    data = json.load(f)
+
+fig, (top, bottom) = plt.subplots(2, 1, figsize=(7.5, 6.6), sharex=True,
+                                  gridspec_kw={'height_ratios': [2.0, 1.0], 'hspace': 0.08})
+labeled = set()
+for curve in data['curves']:
+    color = GROUP_COLORS[curve['group']]
+    style, marker = LAW_STYLE[curve['law']]
+    z = np.array(curve['z'])
+    top.plot(z, 100.0*np.array(curve['line']), color='0.45', lw=1.0)
+    top.plot(z, 100.0*np.array(curve['delta']), color=color, lw=1.8, ls=style,
+             marker=marker, ms=5)
+    bottom.plot(z, 100.0*np.array(curve['residual']), color=color, lw=1.8, ls=style,
+                marker=marker, ms=5)
+    if curve['group'] not in labeled:
+        labeled.add(curve['group'])
+        top.text(z[-1] + 0.015, LABEL_HEIGHT.get(curve['group'], -13.2), curve['group'],
+                 color=color, fontsize=11, ha='right')
+top.axhline(0.0, color='0.2', lw=0.8)
+bottom.axhline(0.0, color='0.2', lw=0.8)
+top.set_ylabel(r'$\delta(z) = b\,D/B_g - 1$ [%]')
+bottom.set_ylabel('left by the line [%]')
+bottom.set_xlabel(r'redshift $z$')
+top.set_ylim(-16.0, 18.0)
+bottom.set_ylim(-4.0, 4.0)
+handles = [
+    Line2D([], [], color='0.25', lw=1.8, ls='--', marker='o', ms=5,
+           label='conserved population'),
+    Line2D([], [], color='0.25', lw=1.8, ls='-.', marker='s', ms=5,
+           label=r'BGS flux limit $r < 19.5$'),
+    Line2D([], [], color='0.45', lw=1.0, label='best straight line per group'),
+]
+top.legend(handles=handles, loc='upper right', frameon=False, fontsize=11)
+fig.savefig(os.path.join(HERE, 'theory_delta.pdf'))

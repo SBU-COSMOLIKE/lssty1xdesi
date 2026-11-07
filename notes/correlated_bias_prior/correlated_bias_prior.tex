@@ -187,7 +187,8 @@ $\sigma_b \sqrt{0.8} = 0.89\,\sigma_b$, an $8.9\%$ jump.  The
 approximation overestimates because $\Delta z / L = 0.4$ is not
 actually small: the expansion replaces $1 - e^{-x}$ by $x$, and
 $x$ exceeds $1 - e^{-x}$ already at second order ($x^2/2$), by about
-ten percent here.
+twenty percent here; the square root halves that, so the rms jump is
+overestimated by about ten percent.
 
 \subsection{The free group amplitude and the projection}
 \label{sec:projintro}
@@ -264,15 +265,16 @@ from $z_c$ to any other redshift gives \cite{Fry1996}
 The excess clumping set when the galaxies formed stays fixed while
 the matter clustering grows underneath it, so the bias decays toward
 one with time.  Tegmark and Peebles \cite{TegmarkPeebles1998} extend
-the calculation to stochastic bias, where newly formed galaxies trace
-the matter imperfectly, and find the same decay of $b$ toward one;
+the calculation to stochastic bias, where the conserved galaxy field
+traces the matter imperfectly (correlation $\rho_{gm} < 1$), and find
+the same decay of $b$ toward one;
 Appendix~\ref{app:continuity} summarizes their result.
 
 The tied shape $b = B/D$ freezes a different quantity.  Constant
 $b\,D$ means $\delta_g = b\,\delta_m \propto (B/D)\,D = B$: the galaxy
 clustering amplitude itself does not grow.  A conserved population
-never does that; its $\delta_g$ keeps growing through the matter term
-in Eq.~\eqref{eq:frozen}.  Constant $b\,D$ instead describes a
+never does that; its $\delta_g$ keeps growing with the matter piece
+$\delta_m(z)$ (Appendix~\ref{app:continuity}).  Constant $b\,D$ instead describes a
 selection: at each redshift it picks a different and rarer set of
 objects, whose stronger clumping compensates the smaller $D$.
 
@@ -316,7 +318,7 @@ a step of $0.3$--$0.7\%$ between neighbors at $\Delta z = 0.02$.
     per $\Delta z = 0.05$ \\
     \hline
     BGS  & 1.34 & 0.1--0.4 & 1.5 & $+5.3\%$, $-4.9\%$ & $1.7\%$ \\
-    LRG1 & 1.70 & 0.4--0.6 & 2.2 & $+2.3\%$, $-2.2\%$ & $1.1\%$ \\
+    LRG1 & 1.70 & 0.4--0.6 & 2.2 & $+2.4\%$, $-2.2\%$ & $1.1\%$ \\
     LRG3 & 1.70 & 0.8--1.1 & 2.7 & $+2.6\%$, $-2.3\%$ & $0.8\%$ \\
     \hline
   \end{tabular}
@@ -328,6 +330,24 @@ a step of $0.3$--$0.7\%$ between neighbors at $\Delta z = 0.02$.
     midpoint.}
   \label{tab:conserved}
 \end{table}
+
+Figure~\ref{fig:theorybz} draws the shapes behind the table.  Look
+at any group: the dashed conserved curve is flatter than the solid
+$B_g/D$, because the frozen excess clumping is divided by a growing
+$D$, so the conserved bias rises more slowly toward high redshift.
+On BGS, the dash-dot flux-limit curve is the opposite: much steeper
+than $B_g/D$, and convex.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/theory_bz/theory_bz.pdf}
+  \caption{The bias $b(z)$ of every group.  Solid: the tied shape
+    $B_g/D(z)$.  Dashed: a conserved population anchored at the group
+    midpoint, $b(z) = 1 + (b_c - 1)\,D(z_c)/D(z)$
+    (Eq.~\eqref{eq:fry}).  Dash-dot, on BGS only: the $r < 19.5$
+    flux-limit bias, anchored at the same midpoint.}
+  \label{fig:theorybz}
+\end{figure}
 
 \subsection{The prior's yardstick: the neighbor rms}
 \label{sec:pessimistic}
@@ -440,9 +460,11 @@ the ELG redshift, lands on sky emission lines and loses
 signal-to-noise, especially at $z > 1.5$ (mechanism
 measured~\cite{Raichoor2023}): each window is
 $\Delta z \approx 0.001$--$0.01$ wide, and its amplitude in bias is
-assumed, of order $1$--$2\%$.
+assumed, of order $1$--$2\%$: a judgment from the weak dependence of
+ELG bias on [OII] flux, not a measured bound.
 
-No measurement resolves bias below $\Delta z \approx 0.1$.  The
+None of the measurements collected here resolves bias below
+$\Delta z \approx 0.1$.  The
 finest binning is the $\Delta z \approx 0.1$ of \cite{Zhou2021};
 \cite{Rocher2023} use $0.3$ and $0.5$; and the lensing tomography of
 the same samples \cite{White2022, Sailer2024, Sailer2025}, built on
@@ -513,7 +535,12 @@ The forecast behind the scan is the ${\rm FoM}(w_0, w_a)$ of the DESI
 clustering band powers alone ($C_\ell^{gg}$, no shear), computed
 non-Limber with the ultraviolet-fraction Fourier scale cut at
 $k_{\rm max} = 0.075\,h/{\rm Mpc}$ of \cite{Saraivanov2026}, which
-follows DeRose et al. 2025.  The figure of merit is the usual inverse
+follows DeRose and Chen \cite{DeRoseChen2025}.  The cut keeps a band
+while the ultraviolet fraction
+$|C_\ell^{\rm UV}|/(|C_\ell^{\rm UV}| + |C_\ell^{\rm IR}|)$ stays
+below $\alpha = 0.05$, where the two pieces are the band power
+computed from the power spectrum above and below the split
+$k_{\rm max}/D(z)$.  The figure of merit is the usual inverse
 area of the $(w_0, w_a)$ error ellipse,
 ${\rm FoM} = [\det \mathrm{Cov}(w_0, w_a)]^{-1/2}$: larger is better.
 Four thin-bin layouts are scanned: the $\Delta d_{\rm com} = 62$~Mpc
@@ -521,11 +548,42 @@ layout (bins of equal comoving width) and the fixed-width layouts
 with $\Delta z = 0.02$, $0.05$ and $0.2$.  In each layout the grid of
 Eq.~\eqref{eq:scan} is bracketed by the tied and independent models.
 
+\paragraph{Forecast setup.}
+The survey covers $12{,}300$ square degrees.  The data vector is the
+project's measured DESI clustering block: the band powers of every
+bin auto-spectrum plus the measured adjacent cross-bin pairs ($76$
+autos and $97$ pairs on the $\Delta d_{\rm com} = 62$~Mpc layout), in
+$53$ bands of width $\Delta \ell = 10$ over $\ell = 15$--$544$.  The
+covariance is the source forecast's Gaussian matrix (cosmic variance
+plus shot noise), computed for $14{,}000$ square degrees, with the
+inverse rescaled to the survey area.  The model is linear bias with
+linear Kaiser redshift-space distortions; a per-group velocity
+dispersion smears each bin's $n(z)$ (the Fingers-of-God convolution);
+magnification is not modeled.  The Fisher matrix varies seven
+cosmological parameters ($10^9 A_s$, $n_s$, $H_0$, $\Omega_b$,
+$\Omega_m$, $w_0$, $w_a$, all with flat priors, at the project
+examples' fiducial values) plus the per-bin biases and the per-group
+velocity dispersions, the latter with their Gaussian priors of
+widths $30$--$145$ km/s.  Derivatives are finite differences; on
+$\Delta z = 0.2$ they are recomputed at four step sizes and two CAMB
+accuracy settings, and the FoM agrees to $0.6\%$ across the steps,
+the numerical side of the Fisher approximation's validity.
+
 \paragraph{Preliminary: linear bias only.}
-The forecast models the galaxy field with linear bias alone.  The
-absolute FoM values will move when higher-order bias terms enter the
-model; the comparisons between bias priors on a fixed layout are the
-robust content of this section.
+The forecast models the galaxy field with linear bias alone, with
+no magnification; the absolute FoM values will move when
+higher-order bias terms enter the model.  A second caveat is larger.
+The DESI covariance files are computed with each group's raw bias
+($1.34$, $1.70$, $0.84$) while the data vector uses
+$b_i = B_g/D(\bar{z}_i)$, which understates the high-redshift
+variances and inflates every layout's absolute FoM by a factor of
+about $2.4$--$3.2$; the project README quantifies the mismatch, and
+the ratios between the layouts are unchanged by it.  Until the
+covariance is rebuilt with the matching bias, the absolute values
+here are upper bounds of a rigid linear-bias model, and the content
+of this section is the comparison between bias priors on a fixed
+layout, which holds the layout, the data vector and the covariance
+fixed and changes only the prior.
 
 Figure~\ref{fig:range} places every scanned $(L, \sigma_b)$ between
 its layout's two caps.  At the baseline ($\sigma_b = 3\%$,
@@ -535,14 +593,18 @@ respective tied values.  At $\sigma_b = 1\%$ the tied fraction spans
 $0.45$--$0.79$ across layouts and correlation lengths.  At
 $\sigma_b \geq 5\%$ the $\Delta d_{\rm com} = 62$~Mpc and
 $\Delta z = 0.05$ layouts sit near their independent values: most of
-the information the tying provided is already spent.  One scanned
-point exceeds the LSST Y1 3x2pt reference of $17.3$ (the dashed
-line): the $\Delta d_{\rm com} = 62$~Mpc layout at $\sigma_b = 1\%$,
-$L = 0.2$, with ${\rm FoM} = 20.8$.
+the information the tying provided is already spent.  Two scanned
+points exceed the LSST Y1 3x2pt reference of $17.3$ (the dashed
+line), both on the $\Delta d_{\rm com} = 62$~Mpc layout at
+$\sigma_b = 1\%$: ${\rm FoM} = 18.7$ at $L = 0.1$ and $20.8$ at
+$L = 0.2$.  The reference is the \texttt{lsst\_y1} project's 3x2pt
+Fisher forecast in the DESC Science Requirements Document Year 1
+setup \cite{DESCSRD2018}, with the figure of merit defined as
+here.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figures/fom_range.png}
+  \includegraphics[width=\linewidth]{plots/fom_range/fom_range.pdf}
   \caption{The ${\rm FoM}(w_0, w_a)$ of each thin-bin layout: the
     tied model (black cap), independent biases (gray cap), every
     scanned $(L, \sigma_b)$ point (dots), the plausible region
@@ -552,20 +614,26 @@ $L = 0.2$, with ${\rm FoM} = 20.8$.
 \end{figure}
 
 Figure~\ref{fig:heatmap} resolves the same numbers on the
-$(L, \sigma_b)$ grid.  $\Delta z = 0.02$ is the only layout where $L$
-matters strongly: at $\sigma_b = 3\%$ its FoM runs from $6.8$ at
-$L = 0.02$ to $10.9$ at $L = 0.2$.  The reason is the short neighbor
-separation: with $\Delta z = 0.02$ the neighbor correlation
-$e^{-\Delta z / L}$ stays high over the whole $L$ grid, from $0.37$
-at $L = 0.02$ to $0.90$ at $L = 0.2$, so lengthening $L$ keeps
-converting bin-to-bin freedom back into effective tying.  In the
-other layouts the bins are as far apart as $L$ itself or farther, the
-neighbor correlation is low everywhere on the grid, and $L$ moves the
-FoM only weakly.
+$(L, \sigma_b)$ grid.  $L$ matters where neighboring bins sit much
+closer than $L$, so that the correlation $e^{-\Delta z/L}$ stays
+high and lengthening $L$ keeps converting bin-to-bin freedom back
+into effective tying.  Both thin layouts are in that regime: the
+$\Delta d_{\rm com} = 62$~Mpc bins are $\Delta z = 0.016$--$0.030$
+apart between $z = 0.2$ and $1.3$, and on the $\Delta z = 0.02$
+layout $e^{-\Delta z/L}$ runs from $0.37$ at $L = 0.02$ to $0.90$ at
+$L = 0.2$.  At $\sigma_b = 1\%$ both layouts respond: the
+$\Delta z = 0.02$ FoM rises from $13.5$ to $15.7$ across the $L$
+grid, and the $\Delta d_{\rm com}$ FoM by $28\%$, from $16.3$ to
+$20.8$.  At $\sigma_b \geq 3\%$ the $\Delta z = 0.02$ layout keeps a
+strong response ($6.8$ to $10.9$ at $3\%$) while
+$\Delta d_{\rm com} = 62$~Mpc sits close to its independent floor of
+$10.69$, which no prior choice moves.  In the two wide layouts the
+bins are as far apart as $L$ or farther, the neighbor correlation is
+low everywhere on the grid, and $L$ moves the FoM only weakly.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figures/fom_heatmap.png}
+  \includegraphics[width=\linewidth]{plots/fom_heatmap/fom_heatmap.pdf}
   \caption{${\rm FoM}/{\rm FoM}_{\rm tied}$ across the scanned
     $(L, \sigma_b)$ grid, one panel per layout, with the absolute FoM
     in parentheses.}
@@ -583,14 +651,46 @@ coherently over the whole group, a freedom the roughness alone does
 not capture.  The Fisher matrix pays for both kinds of freedom, so no
 single-variable description of the grid should be expected.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figures/fom_collapse.png}
+  \includegraphics[width=\linewidth]{plots/fom_collapse/fom_collapse.pdf}
   \caption{${\rm FoM}/{\rm FoM}_{\rm tied}$ against the roughness
-    combination $\sqrt{2}\,\kappa = \sigma_b \sqrt{2/L}$.  Dotted
-    lines: each layout's independent fraction
-    ${\rm FoM}_{\rm indep}/{\rm FoM}_{\rm tied}$.  The points do not
-    collapse onto a single curve per layout.}
+    combination $\sqrt{2}\,\kappa = \sigma_b \sqrt{2/L}$, which sets
+    the rms neighbor change at small separations,
+    $\sigma_b \sqrt{2\,\Delta z/L}$ (Eq.~\eqref{eq:roughness}): for
+    $\sqrt{2}\,\kappa = 0.1$, the bias changes by $1\%$ between bins
+    $\Delta z = 0.01$ apart, and $1.4\%$ for $\Delta z = 0.02$.  Colors
+    distinguish the four layouts, with each layout's
+    independent fraction ${\rm FoM}_{\rm indep}/{\rm FoM}_{\rm tied}$
+    dotted; marker shapes give $L$ (circle $0.02$, square $0.05$,
+    triangle $0.1$, diamond $0.2$).  Markers are filled when
+    $(L, \sigma_b)$ lies inside the plausible region,
+    $\sigma_b = 1$--$5\%$ and $L = 0.02$--$0.1$, and open outside it.
+    Plausible means inside the following edges, not a probability.
+    The lower edge $\sigma_b = 1\%$ is derived: a conserved
+    population drifts from $B/D$ by about $1\%$ per
+    $\Delta z = 0.05$ (Section~\ref{sec:tilt}), so a narrower prior
+    would be tighter than population evolution alone.  The upper
+    edge $\sigma_b = 5\%$ rests on measurements: the measured LRG
+    residuals around $B/D$ are at most $2.3\%$, with errors of
+    $1$--$3.4\%$, at $\Delta z \approx 0.1$ spacing (\cite{Zhou2021};
+    Section~\ref{sec:evidence}); the collected measurements of
+    Appendix~\ref{app:literature} place the upper envelope of the
+    smooth LRG and ELG deviations at about $5\%$; and the
+    neighbor-rms comparison of Section~\ref{sec:pessimistic} shows
+    that $\sigma_b \geq 10\%$ lets neighboring bins differ by
+    $8$--$27\%$, which no identified mechanism produces, so $10\%$
+    and $20\%$ are excluded from the region and $10\%$ stays in the
+    scan only as the edge of the grid.  The upper edge $L = 0.1$ is
+    a modeling choice: the argument of Section~\ref{sec:scan} that a
+    sample's flux limit and color cuts change the galaxy mix over
+    $\Delta z \approx 0.1$, although the measured drifts are smooth
+    and favor the long end of the $L$ grid
+    (Section~\ref{sec:drift}), the case the memory model of
+    Section~\ref{sec:memory} addresses.  The lower edge $L = 0.02$
+    is the thinnest bin spacing of the scanned layouts: below it,
+    neighboring bins would decorrelate faster than the bins are
+    spaced.}
   \label{fig:collapse}
 \end{figure}
 
@@ -601,8 +701,449 @@ $8.285$ and $1.907$, against tied values $32.94$, $19.93$, $8.288$
 and $1.908$; at $\sigma_b = 1000\%$ they land on the independent
 values $10.69$, $4.016$, $1.225$ and $0.5154$ exactly.
 
+\section{The memory model}
+\label{sec:memory}
+
+\subsection{Why a second model}
+\label{sec:memwhy}
+
+The kernel model carries one amplitude and one length, and
+Section~\ref{sec:drift} found that the measured deviations are not
+the kind it describes best.  Every deviation found, except the narrow
+sky-line windows, is a line-like drift across its group: the BGS flux
+limit drifts by $10$--$25\%$ across the group, the LRG3 magnitude
+limit by $6$--$11\%$ per $\Delta z = 0.1$, and a conserved population
+by about $1\%$ per $\Delta z = 0.05$ (Section~\ref{sec:evidence}).
+
+The kernel model can admit such a drift, but only at a price.  To
+pass a $20\%$ drift with $L \leq 0.1$ it needs
+$\sigma_b = 10$--$15\%$, and that spread also allows roughly $10\%$
+scatter between neighboring bins (Table~\ref{tab:rms}), which no
+identified mechanism produces.  One $\sigma_b$ controls both the
+drift and the scatter, so the kernel cannot say ``large smooth
+drift, small local scatter''.  The memory model separates the two.
+The left panel of Figure~\ref{fig:theorydraws} shows what the kernel
+model assumes a galaxy population does; Figure~\ref{fig:theorydelta}
+shows what the measured physics does.
+
+\subsection{Why the kernel forgets}
+\label{sec:memforget}
+
+The kernel's limitation is built into its correlation,
+$e^{-|z_i - z_j|/L}$, which decays with separation: at $L = 0.05$,
+bins $0.15$ apart share $e^{-3} \approx 0.05$ of their deviation.
+Prediction makes the decay concrete.  Appendix~\ref{app:chain} shows
+that the best guess of the next bin given all earlier ones is
+\begin{equation}
+  \mathrm{E}\bigl[\delta_{k+1} \mid \delta_1, \dots, \delta_k\bigr]
+  \;=\; r_k\, \delta_k :
+  \label{eq:memmarkov}
+\end{equation}
+only the nearest neighbor matters, and the influence of any one bin
+on the rest of the chain fades as the product of the neighbor
+correlations, roughly $r^n$ after $n$ steps.  The kernel forgets.
+
+\subsection{The model, and why it remembers}
+\label{sec:memmodel}
+
+The memory model adds one number per group: a tilt.  The bias keeps
+the form of Eq.~\eqref{eq:model}, and the deviation splits into a
+line and a residual,
+\begin{equation}
+  b_i \;=\; \frac{B_g}{D(z_i)}\,\bigl(1 + \delta_i\bigr),
+  \qquad
+  \delta_i \;=\; s_g\, v_i + \varepsilon_i,
+  \qquad
+  v_i \;=\; z_i - \bar{z}_g,
+  \label{eq:memdef}
+\end{equation}
+where $\bar{z}_g$ is the mean of the group's bin redshifts, $s_g$ is
+a free tilt per group with a flat prior (the same status as $B_g$),
+and the residual $\varepsilon_i$ carries the exponential kernel of
+Eq.~\eqref{eq:priorkernel},
+$\langle \varepsilon_i \varepsilon_j \rangle =
+\sigma_b^2\, e^{-|z_i - z_j|/L}$.
+
+To see what the tilt changes, give the slope a Gaussian prior of
+variance $\tau^2$ first (the flat prior is the limit
+$\tau \to \infty$).  The deviations then have covariance
+\begin{equation}
+  \mathrm{Cov}(\delta_i, \delta_j)
+  \;=\;
+  \tau^2\, v_i\, v_j
+  \;+\;
+  \sigma_b^2\, e^{-|z_i - z_j|/L} .
+  \label{eq:memcov}
+\end{equation}
+The new term does not decay with separation.  Bins on the same side
+of the group center ($v_i v_j > 0$) are positively correlated, bins
+on opposite sides negatively.  For separations much larger than $L$
+the kernel term is gone and the correlation coefficient tends to
+\begin{equation}
+  \rho_{ij}
+  \;\longrightarrow\;
+  \frac{\tau^2 v_i v_j}
+       {\sqrt{\bigl(\tau^2 v_i^2 + \sigma_b^2\bigr)
+              \bigl(\tau^2 v_j^2 + \sigma_b^2\bigr)}}
+  \;\longrightarrow\; \pm 1
+  \quad \text{when } \tau |v| \gg \sigma_b :
+  \label{eq:memrho}
+\end{equation}
+the two ends of a group remember each other through the shared slope
+(Appendix~\ref{app:memory} derives both steps).
+
+Prediction shows the same memory.  The best guess of the next bin
+becomes
+\begin{equation}
+  \mathrm{E}\bigl[\delta_{k+1} \mid \delta_1, \dots, \delta_k\bigr]
+  \;=\;
+  \hat{a} + \hat{s}_g\, v_{k+1}
+  \;+\;
+  r_k\,\bigl(\delta_k - \hat{a} - \hat{s}_g\, v_k\bigr),
+  \label{eq:memkriging}
+\end{equation}
+where $(\hat{a}, \hat{s}_g)$ is the best-fitting straight line through
+all the past bins, weighted by $\Cov^{-1}$ (it needs at least two
+past bins).  Every past bin now enters, through the fitted line; only
+the wiggle around the line stays Markov.  Statistics calls
+Eq.~\eqref{eq:memkriging} the universal-kriging predictor, prediction
+with an unknown linear mean; Appendix~\ref{app:memory} proves it.
+
+Figure~\ref{fig:theorydraws} makes the difference visible on the BGS
+bins at $\Delta z = 0.02$.  In the left panel, kernel draws at
+$\sigma_b = 10\%$, about what the kernel needs to admit a drift of
+BGS size, zigzag and forget: bins $0.1$ apart are unrelated, and no
+draw looks like the thick flux-limit drift.  In the right panel,
+memory draws with a tilt plus $\sigma_b = 2\%$ are lines with small
+wiggles, and the drift looks like a typical draw.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/theory_draws/theory_draws.pdf}
+  \caption{Random prior draws of the deviations of the 15 BGS bins at
+    $\Delta z = 0.02$, each draw's mean removed ($B_g$ is free).  The
+    thick dash-dot line is the BGS flux-limit drift.  Left: the
+    kernel model with $\sigma_b = 10\%$ and $L = 0.05$.  Right: the
+    memory model, a tilt plus $\sigma_b = 2\%$ and $L = 0.05$.  The
+    slope is a free parameter of the model; for display only, the
+    drawn slopes come from a Gaussian of width $0.6$ per unit
+    redshift.}
+  \label{fig:theorydraws}
+\end{figure}
+
+\subsection{Why the memory model differs physically}
+\label{sec:memphysics}
+
+A selected sample changes along a group in two physically different
+ways.  The first kind is coherent: an evolution of the whole sample
+that moves every bin the same way.  A flux or magnitude threshold
+that rises with distance, the debiasing of a conserved population,
+and the drift of the halo-mass threshold at fixed number density all
+act like this.  The second kind is local: features of the selection
+that change bins independently and are forgotten over a short range,
+such as the sky-line windows and filter-edge crossings of
+Section~\ref{sec:selection}.  The exponential kernel knows only the
+second kind, so it must inflate $\sigma_b$ to admit the first.  The
+memory model gives the first kind to the tilt and the second to the
+kernel.
+
+One straight line is enough for the coherent kind because the drifts
+are smooth functions of redshift, set by $D(z)$ and the distance
+modulus, which change on $\Delta z$ of order one.  Over a group span
+of $0.2$--$0.5$ the first-order Taylor term dominates.
+Table~\ref{tab:linefit} measures this (derived): the best-fitting
+straight line through each group's conserved-population deviation,
+evaluated at the $\Delta z = 0.05$ bin centers with equal weights,
+and the residual the line leaves.  A line removes the
+conserved-population drift to better than $0.3\%$.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lccccc}
+    \hline
+    Group & $z$ range & span of $\delta$ & slope per unit $z$ &
+    residual rms & residual max \\
+    \hline
+    BGS  & 0.1--0.4 & $8.49\%$  & $-34.0\%$ & $0.062\%$ & $0.084\%$ \\
+    LRG1 & 0.4--0.6 & $3.41\%$  & $-22.7\%$ & $0.020\%$ & $0.020\%$ \\
+    LRG2 & 0.6--0.8 & $2.94\%$  & $-19.6\%$ & $0.018\%$ & $0.019\%$ \\
+    LRG3 & 0.8--1.1 & $4.07\%$  & $-16.3\%$ & $0.038\%$ & $0.052\%$ \\
+    ELG1 & 0.8--1.1 & $8.23\%$  & $-32.9\%$ & $0.077\%$ & $0.104\%$ \\
+    ELG2 & 1.1--1.6 & $11.09\%$ & $-24.6\%$ & $0.158\%$ & $0.270\%$ \\
+    \hline
+  \end{tabular}
+  \caption{The best-fitting straight line through each group's
+    conserved-population deviation $\delta(z)$ of
+    Eq.~\eqref{eq:tilt}, at the $\Delta z = 0.05$ bin centers with
+    equal weights (derived; flat $\Lambda$CDM, $\Omega_m = 0.3$,
+    amplitudes $B = 1.34$ for BGS, $1.70$ for the LRGs and $0.84$
+    for the ELGs, the reference at the group midpoint).  The span is
+    $\delta$ at the first center minus $\delta$ at the last; the
+    residual columns describe what the line leaves.}
+  \label{tab:linefit}
+\end{table}
+
+The flux-limit drift is larger and not exactly straight.  For BGS
+($r < 19.5$, with $r$ the apparent-magnitude band rather than a
+correlation coefficient; no K-correction; the threshold-bias fit of
+\cite{Zehavi2011} with $M_* = -20.44$ used without evolution;
+magnitudes in the $M - 5\log_{10} h$ convention that matches
+$M_*$; and the group amplitude set so the mean deviation vanishes),
+the
+limiting magnitude runs from $-18.56$ to $-21.24$ between the first
+and last bin centers, the bias from $1.09$ to $1.54$, and the
+deviation spans $22.3\%$ with a fitted slope of $89\%$ per unit
+redshift.  The line leaves $2.4\%$ rms and $3.3\%$ at most: the
+drift is convex, because the bias grows exponentially with the
+luminosity threshold (through the magnitude).  So for BGS the memory
+model's residual scatter must be about $2$--$3\%$, or the model
+needs a quadratic term.  The estimate is crude: no K-correction, and
+no evolution of the threshold-bias fit.
+
+Figure~\ref{fig:theorydelta} carries both statements.  In the top
+panel every conserved deviation is a straight line, and the thin
+gray fitted lines sit on top of them.  In the bottom panel the
+conserved residuals are flat at zero, while the BGS flux limit
+leaves a $\pm 3\%$ U shape: that U is the curvature the memory
+model's $\sigma_b$ must absorb.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/theory_delta/theory_delta.pdf}
+  \caption{Top: the deviation $\delta(z) = b\,D/B_g - 1$ at the
+    $\Delta z = 0.05$ bin centers, with $B_g$ set so the mean
+    deviation vanishes.  Dashed with circles: the conserved
+    population, every group.  Dash-dot with squares: the BGS
+    flux limit.  Thin gray: the best straight line per curve.
+    Bottom: what the line leaves.  The conserved residuals are
+    invisible (under $0.3\%$); the BGS flux-limit residual is
+    convex, about $\pm 3\%$.  This is the figure behind
+    Table~\ref{tab:linefit}.}
+  \label{fig:theorydelta}
+\end{figure}
+
+The two models use the same symbol $\sigma_b$ for different physical
+quantities.  In the kernel model, $\sigma_b$ is the total departure
+of a bin from the $B_g/D$ trend: drift plus scatter.  In the memory
+model, $\sigma_b$ is the departure from the group's own straight
+line: curvature plus local scatter.  The physically plausible values
+differ accordingly: about $0.1\%$ for a conserved population
+(Table~\ref{tab:linefit}), $1$--$2\%$ for the local selection
+features (Section~\ref{sec:evidence}), and $2$--$3\%$ for the BGS
+curvature.
+
+The honest limit is unchanged: none of the measurements collected in
+Section~\ref{sec:evidence} resolves bias below
+$\Delta z \approx 0.1$.  The memory
+model rests on the same evidence as the kernel model; it encodes
+that evidence in a form closer to the physics.
+
+\subsection{What the prior charges}
+\label{sec:memcharge}
+
+With the flat priors restored (slope variance $\tau^2 \to \infty$,
+and amplitude variance $W^2 \to \infty$ for $B_g$), the prior
+precision of a group's bin amplitudes becomes
+\begin{equation}
+  \Prec_{\rm mem}
+  \;=\;
+  \mathsf{Q} - \mathsf{Q}\,\mathsf{U}
+  \bigl(\mathsf{U}\T \mathsf{Q}\, \mathsf{U}\bigr)^{-1}
+  \mathsf{U}\T \mathsf{Q},
+  \qquad
+  \mathsf{Q} = \Cov^{-1},
+  \qquad
+  \mathsf{U} = [\,\ones,\ v\,],
+  \label{eq:memproj}
+\end{equation}
+the same construction as Eq.~\eqref{eq:projdef} with one more
+column: $\mathsf{U}$ is the $n \times 2$ matrix whose columns are
+the ones vector and the centered redshifts $v$.  The penalty it
+charges is
+\begin{equation}
+  \delta\T \Prec_{\rm mem}\, \delta
+  \;=\;
+  \min_{a,\, s_g}\;
+  \bigl(\delta - a\,\ones - s_g\, v\bigr)\T
+  \mathsf{Q}
+  \bigl(\delta - a\,\ones - s_g\, v\bigr) :
+  \label{eq:memmin}
+\end{equation}
+the prior subtracts the best-fitting straight line, weighted by
+$\Cov^{-1}$, and charges only the residual.  A monotonic drift of
+any size costs nothing; bumps around the line still cost, and still
+forget over the length $L$.
+
+The structure of $\Prec_{\rm mem}$ separates local from global.
+$\mathsf{Q}$ is tridiagonal (Appendix~\ref{sec:general}): a local
+object that links neighbors.  The subtracted correction has rank two
+and is dense: it couples every bin to every other, because the
+fitted line listens to all of them.  The kernel model already had
+one dense rank-one piece, the subtracted mean of
+Eq.~\eqref{eq:projdef}; the memory model adds the slope.
+$\Prec_{\rm mem}$ annihilates both columns,
+$\Prec_{\rm mem}\mathsf{U} = 0$, is positive semidefinite, and has
+rank $n - 2$ (Appendix~\ref{app:memory}).
+
+A group of one or two bins has $\Prec_{\rm mem} = 0$: an amplitude
+and a slope fix every bin, so the group is fully free.  Among the
+scanned layouts this mostly affects $\Delta z = 0.2$, whose groups
+hold the fewest bins.
+
+\subsection{What the slope costs}
+\label{sec:memcost}
+
+The tilt has a physical price.  In linear theory the clustering band
+powers of bin $i$ scale as $b_i^2\, D(z_i)^2$, so the data measure
+the product $b\,D$, not the factors.  Why a free tilt costs growth
+information takes one line: with $f = d\ln D/d\ln a$ the linear
+growth rate, $d\ln D/dz = -f(z)/(1+z)$, so inside a group
+\begin{equation}
+  \frac{d \ln (b D)}{dz}
+  \;=\;
+  \frac{d \ln b}{dz} \;-\; \frac{f(z)}{1+z} .
+  \label{eq:tiltcost}
+\end{equation}
+A free tilt in $b$ removes the channel that measures $f$ through the
+amplitude evolution inside a group.  The free amplitude $B_g$
+already handed each group's overall growth to the bias; the free
+tilt also hands over the relative growth inside a group.
+
+Not everything is lost to the degeneracy.  The redshift-space terms
+scale as $b\,f$, not as $b^2$, and measure $f$ directly; the
+geometric distances and the shape of the power spectrum are
+untouched; and the comparison of growth between groups survives,
+because each group gives away only its own interior tilt, a
+statement this note does not test.  This is
+why ``tied plus free tilt'' sits below the tied model, and why it
+should sit well above the independent one.  The limit
+$\sigma_b \to 0$ of the memory model isolates the question: it
+measures how much of the figure of merit came from growth measured
+inside groups.
+
+\subsection{Results of the memory model}
+\label{sec:memresults}
+
+The memory model was scanned on the same grid as the kernel model:
+the same four layouts and the same ${\rm FoM}(w_0, w_a)$ of the DESI
+clustering band powers alone at
+$k_{\rm max} = 0.075\,h/{\rm Mpc}$, with $\sigma_b$ and $L$ now
+describing the residuals around each group's free line.  The caveat
+of Section~\ref{sec:results} applies unchanged: these results are
+preliminary, linear bias only.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lccccc}
+    \hline
+    Layout & tied & tied $+$ free tilt & memory, $1\%$ &
+    kernel, $1\%$ & independent \\
+    \hline
+    $\Delta d_{\rm com} = 62$~Mpc & $32.94$ & $24.35$ $(0.74)$ &
+    $14.99$ & $17.12$ & $10.69$ \\
+    $\Delta z = 0.02$ & $19.93$ & $13.34$ $(0.67)$ &
+    $11.39$ & $14.29$ & $4.016$ \\
+    $\Delta z = 0.05$ & $8.288$ & $2.654$ $(0.32)$ &
+    $1.683$ & $3.701$ & $1.225$ \\
+    $\Delta z = 0.2$  & $1.908$ & $0.5154$ $(0.27)$ &
+    $0.5154$ & $1.056$ & $0.5154$ \\
+    \hline
+  \end{tabular}
+  \caption{${\rm FoM}(w_0, w_a)$ at $L = 0.05$.  The
+    tied-plus-free-tilt column is the $\sigma_b \to 0$ limit of the
+    memory model, with its fraction of the tied value in
+    parentheses; the memory and kernel columns are both at
+    $\sigma_b = 1\%$.}
+  \label{tab:memside}
+\end{table}
+
+The price of the tilt alone is the distance between the first two
+columns of Table~\ref{tab:memside}.  One free tilt per group costs
+$26\%$ of the tied FoM on $\Delta d_{\rm com} = 62$~Mpc, $33\%$ on
+$\Delta z = 0.02$, $68\%$ on $\Delta z = 0.05$, and $73\%$ on
+$\Delta z = 0.2$, where the free amplitude and tilt already free
+every one- and two-bin group completely.  That is the
+information the tied model drew from the evolution of $b\,D$ inside
+each group, the growth channel of Eq.~\eqref{eq:tiltcost}.
+$\Delta z = 0.05$ leans on that channel far more than the thinner
+layouts; a plausible reading, offered as interpretation rather than
+an established result, is that the thinner layouts measure more
+through the redshift-space terms and the cross-bin structure, which
+a tilt does not absorb.
+
+At the same $\sigma_b$ the memory model sits below the kernel model,
+as it must: it has strictly more freedom.  In
+Figure~\ref{fig:memlines} the dashed memory curves run below the
+solid kernel curves at small $\sigma_b$.  That is not the comparison
+that matters.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/memory_lines/memory_lines.pdf}
+  \caption{The two models against $\sigma_b$ at $L = 0.05$, as the
+    fraction of each layout's tied FoM.  Solid lines with circles:
+    the kernel model.  Dashed lines with triangles: the memory
+    model.  Dotted: each layout's independent value.  At
+    $\sigma_b = 0$ the kernel model sits at one (the tied model) and
+    the memory model at its tied-plus-free-tilt value.  The dashed
+    orange line of $\Delta z = 0.2$ lies on its dotted independent
+    line.}
+  \label{fig:memlines}
+\end{figure}
+
+The comparison that matters pairs each model with the $\sigma_b$ it
+needs to describe the physics of Sections~\ref{sec:physical} and
+\ref{sec:memphysics}: about $10\%$ for the kernel model to admit the
+measured drifts, and about $1\%$ (a conserved, LRG-like population)
+to $3\%$ (the BGS curvature) for the memory model.  At $L = 0.05$,
+$\Delta d_{\rm com} = 62$~Mpc gives memory $14.99$ at $1\%$ and
+$11.45$ at $3\%$ against kernel $10.81$ at $10\%$;
+$\Delta z = 0.02$ gives $11.39$ and $7.41$ against $4.64$; and
+$\Delta z = 0.05$ gives $1.68$ and $1.33$ against $1.38$.  Once the
+measured drifts are admitted, the memory model keeps more of the FoM
+on the two thinnest layouts, and about the same on
+$\Delta z = 0.05$.
+
+Figure~\ref{fig:memheatmap} resolves the memory grid.  As in the
+kernel model, $L$ matters where neighbors sit much closer than $L$:
+at $\sigma_b = 3\%$ the $\Delta z = 0.02$ FoM runs from $6.1$ at
+$L = 0.02$ to $10.0$ at $L = 0.2$, and the
+$\Delta d_{\rm com} = 62$~Mpc layout responds at $\sigma_b = 1\%$
+($14.0$ to $18.2$) before its independent floor takes over.  $\Delta z = 0.2$ is degenerate by
+construction: every cell equals the independent value $0.5154$,
+because each of its groups holds one or two bins, which the free
+amplitude and tilt free completely
+(Section~\ref{sec:memcharge}).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/memory_heatmap/memory_heatmap.pdf}
+  \caption{The memory model across the scanned $(L, \sigma_b)$ grid,
+    in the format of Figure~\ref{fig:heatmap}: one panel per layout,
+    with the absolute FoM in parentheses and each panel's
+    tied-plus-free-tilt value in its title.}
+  \label{fig:memheatmap}
+\end{figure}
+
+The scan reaches its limits numerically.  At $\sigma_b = 1000\%$ the
+memory model lands on the independent values exactly ($10.69$,
+$4.016$, $1.225$, $0.5154$), and at $\sigma_b \to 0$ on the
+tied-plus-free-tilt values of Table~\ref{tab:memside}, as
+Section~\ref{sec:memlimits} says it must.
+
+\subsection{The limits}
+\label{sec:memlimits}
+
+The memory model contains the same two endpoints as the kernel
+model, shifted by the tilt.  As $\sigma_b \to 0$ the residuals
+vanish and every group is a rigid line with a free level and a free
+slope: the tied model plus a free tilt per group.  As
+$\sigma_b \to \infty$ the prior charges nothing and the biases are
+independent.  Between the endpoints, $\sigma_b$ and $L$ keep the
+same meanings as before, now applied to the wiggles around each
+group's line.
+
 \section*{Summary}
-\label{sec:summary}
 
 The intermediate bias model frees one amplitude $B_g$ per tracer group
 and lets each bin deviate fractionally from the group's
@@ -610,12 +1151,18 @@ constant-amplitude trend $B_g / D(z)$, with deviations correlated over a
 redshift length $L$ and a per-bin wander $\sigma_b$.  In the Fisher
 matrix this becomes one projected precision $\Prec$ per group, added to
 the bin-amplitude block: $\Prec$ charges for differences between
-neighboring amplitudes but never for a uniform shift of the group,
-links only neighboring bins directly (the inverse covariance is
-tridiagonal, even though the correlation itself reaches far), and
-reduces to the tied model as
+neighboring amplitudes but never for a uniform shift of the group.  The
+unprojected inverse covariance links only neighboring bins directly
+(it is tridiagonal, even though the correlation itself reaches far);
+the projection adds one dense rank-one piece, the subtracted mean.
+The prior reduces to the tied model as
 $L \to \infty$ and to independent flat-prior biases as
-$\sigma_b \to \infty$.
+$\sigma_b \to \infty$.  A second model adds a free tilt per group
+and reserves $\sigma_b$ for the residuals around each group's line:
+the tilt alone costs $26$--$73\%$ of the tied FoM, and at the
+$\sigma_b$ each model needs to admit the measured drifts (about
+$1$--$3\%$ with a tilt, about $10\%$ without), the memory model
+keeps more of the figure of merit on the thinnest layouts.
 
 \appendix
 
@@ -1248,6 +1795,216 @@ in units of $\sigma_b^2$; replacing $\delta$ by
 $\Delta\beta = B_g\,\delta$ and $\sigma_b$ by $s = \sigma_b B_g$ gives
 the same matrix for the bin amplitudes.
 
+\section{The memory projection, step by step}
+\label{app:memory}
+
+Throughout, a group has $n$ bins, $\Cov$ is the kernel covariance
+$\Cov_{ij} = \sigma_b^2 e^{-|z_i - z_j|/L}$ of the residuals,
+$\mathsf{Q} = \Cov^{-1}$, $\mathsf{U} = [\,\ones,\ v\,]$ is the
+$n \times 2$ design matrix of Eq.~\eqref{eq:memproj}, and
+$\theta = (a, s_g)\T$ collects a line's level and slope.  (For the bin
+amplitudes $\beta$, every covariance carries a factor $B_g^2$ that
+cancels in each identity below.)
+
+\subsection{The line fit, the split, and the marginalization}
+
+The three views of Appendix~\ref{sec:threeviews} generalize from the
+single column $\ones$ to $\mathsf{U}$ without change of structure.
+
+Minimizing the penalty of a displacement $\delta$ over the line,
+$\chi^2(\theta) = (\delta - \mathsf{U}\theta)\T \mathsf{Q}\,
+(\delta - \mathsf{U}\theta)$, gives the normal equations of a
+generalized least-squares fit,
+\begin{equation}
+  \mathsf{U}\T \mathsf{Q}\,\mathsf{U}\;\hat{\theta}
+  \;=\;
+  \mathsf{U}\T \mathsf{Q}\,\delta ,
+  \qquad
+  \hat{\theta} = (\hat{a}, \hat{s}_g)\T ,
+  \label{eq:memnormal}
+\end{equation}
+with $\mathsf{U}\T\mathsf{Q}\mathsf{U}$ a $2 \times 2$ matrix,
+positive definite whenever the group has at least two distinct
+redshifts (then $\ones$ and $v$ are linearly independent and
+$\mathsf{U}$ has full column rank).
+
+Writing $\delta = \mathsf{U}\hat{\theta} + w$, the normal equations
+say $\mathsf{U}\T \mathsf{Q}\, w = 0$: the residual is orthogonal to
+both columns in the $\mathsf{Q}$ metric.  The cross terms then
+vanish and the penalty splits,
+\begin{equation}
+  \delta\T \mathsf{Q}\,\delta
+  \;=\;
+  \hat{\theta}\T
+  \bigl(\mathsf{U}\T \mathsf{Q}\,\mathsf{U}\bigr)\hat{\theta}
+  \;+\;
+  w\T \mathsf{Q}\, w ,
+  \qquad
+  \delta\T \Prec_{\rm mem}\,\delta
+  \;=\;
+  w\T \mathsf{Q}\, w :
+  \label{eq:memsplit}
+\end{equation}
+the projection keeps the residual's penalty and discards the
+line's.  A pure line has $w = 0$, so
+$\Prec_{\rm mem}\mathsf{U} = 0$; the residuals obey two linear
+constraints, so $\Prec_{\rm mem}$ has rank $n - 2$; and
+$w\T \mathsf{Q}\, w \geq 0$ makes it positive semidefinite.
+
+Marginalization gives the same matrix.  With
+$\delta \sim \mathcal{N}(\mathsf{U}\theta, \Cov)$ and
+$\theta \sim \mathcal{N}(0, \Lambda)$,
+$\Lambda = \mathrm{diag}(W^2, \tau^2)$, the marginal covariance of
+$\delta$ is $\Cov + \mathsf{U}\Lambda\mathsf{U}\T$, and the Woodbury
+identity inverts it:
+\begin{equation}
+  \bigl(\Cov + \mathsf{U}\Lambda\mathsf{U}\T\bigr)^{-1}
+  \;=\;
+  \mathsf{Q} - \mathsf{Q}\,\mathsf{U}
+  \bigl(\Lambda^{-1} + \mathsf{U}\T \mathsf{Q}\,\mathsf{U}\bigr)^{-1}
+  \mathsf{U}\T \mathsf{Q} .
+  \label{eq:woodbury}
+\end{equation}
+As the prior widths grow, $\Lambda^{-1} \to 0$ and the right-hand
+side becomes $\Prec_{\rm mem}$.  The deviation falls
+inverse-quadratically in the widths: expanding the middle inverse,
+the leading correction carries
+$\Lambda^{-1}$, so the deviation falls as $1/W^2$, a factor of one
+hundred per decade of $W$.  The script of Appendix~\ref{app:verify}
+verifies the fall.
+
+\subsection{The null-space form}
+
+A second form of the projection makes its meaning plain.  Let
+$\mathsf{N}$ be an $n \times (n-2)$ matrix whose columns span the
+combinations of bins that no straight line can produce:
+$\mathsf{N}\T \mathsf{U} = 0$, plain Euclidean orthogonality to
+$\ones$ and to $v$.  Then
+\begin{equation}
+  \mathsf{Q} - \mathsf{Q}\,\mathsf{U}
+  \bigl(\mathsf{U}\T \mathsf{Q}\,\mathsf{U}\bigr)^{-1}
+  \mathsf{U}\T \mathsf{Q}
+  \;=\;
+  \mathsf{N}
+  \bigl(\mathsf{N}\T \Cov\, \mathsf{N}\bigr)^{-1}
+  \mathsf{N}\T .
+  \label{eq:memnull}
+\end{equation}
+The proof has three steps.  Both sides annihilate $\mathsf{U}$: the
+left by construction, the right because
+$\mathsf{N}\T\mathsf{U} = 0$.  Both sides map $\Cov\mathsf{N}$ to
+$\mathsf{N}$: the right because
+$\mathsf{N}(\mathsf{N}\T\Cov\mathsf{N})^{-1}
+(\mathsf{N}\T\Cov\mathsf{N}) = \mathsf{N}$, the left because
+$\mathsf{Q}\Cov\mathsf{N} = \mathsf{N}$ and the subtracted term
+meets $\mathsf{U}\T\mathsf{N} = 0$.  And the columns of
+$\Cov\mathsf{N}$ and of $\mathsf{U}$ together span the whole space:
+if $\Cov\mathsf{N}x + \mathsf{U}y = 0$, multiplying by
+$\mathsf{N}\T$ gives $\mathsf{N}\T\Cov\mathsf{N}\,x = 0$, so
+$x = 0$ (the middle matrix is positive definite), and then $y = 0$
+($\mathsf{U}$ has full column rank).  Two matrices that agree on a
+spanning set are equal.
+
+The meaning: since
+$\delta\T \Prec_{\rm mem}\,\delta =
+(\mathsf{N}\T\delta)\T (\mathsf{N}\T \Cov\,\mathsf{N})^{-1}
+(\mathsf{N}\T\delta)$, the prior reads off the combinations
+$\mathsf{N}\T\delta$ that no line can make and charges each by the
+inverse of its own prior covariance.  The same identity with the
+single column $\mathsf{U} = \ones$ gives the kernel-model projection
+of Eq.~\eqref{eq:projdef}; there $\mathsf{N}$ spans the zero-sum
+combinations, the differences between bins.
+
+\subsection{Worked examples}
+
+One or two bins are fully free.  For $n = 2$ the matrix $\mathsf{U}$
+is square and invertible (two distinct redshifts), so
+$(\mathsf{U}\T\mathsf{Q}\mathsf{U})^{-1} =
+\mathsf{U}^{-1}\Cov\,(\mathsf{U}\T)^{-1}$ and the subtracted term
+collapses to $\mathsf{Q}$: the projection vanishes.  For $n = 1$
+nothing is orthogonal to both columns, so $\mathsf{N}$ has no
+columns and the null-space form is the zero matrix: a line fixes a
+single value trivially.
+
+Three evenly spaced bins show what survives.  With spacing $\Delta$
+and $r = e^{-\Delta/L}$, the centered redshifts are
+$v = (-\Delta, 0, \Delta)\T$, and the only direction orthogonal to
+$\ones$ and $v$ is the discrete curvature, the second difference
+$\mathsf{N} = (1, -2, 1)\T$.  Its prior variance expands to
+\begin{equation}
+  \mathsf{N}\T \Cov\, \mathsf{N}
+  \;=\;
+  \sigma_b^2\,\bigl(6 - 8r + 2r^2\bigr)
+  \;=\;
+  2\,\sigma_b^2\,(1 - r)(3 - r)
+  \label{eq:memcurvvar}
+\end{equation}
+(the diagonal contributes $1 + 4 + 1 = 6$, the two nearest-neighbor
+pairs $-8r$, and the outer pair $+2r^2$), so the penalty is
+\begin{equation}
+  \delta\T \Prec_{\rm mem}\,\delta
+  \;=\;
+  \frac{\bigl(\delta_1 - 2\delta_2 + \delta_3\bigr)^2}
+       {2\,\sigma_b^2\,(1 - r)(3 - r)} .
+  \label{eq:memcurv}
+\end{equation}
+The memory model charges only the curvature; it is blind to any
+straight-line drift.  The kernel model's three-bin case
+(Appendix~\ref{sec:kernel}) charges the two neighbor differences
+instead, so it taxes a drift as heavily as a zigzag of the same
+step size.
+
+\subsection{The universal-kriging predictor}
+
+Predict bin $k+1$ from the first $k$ bins, $k \geq 2$, with flat
+priors on $\theta$.  Write $\Cov_k$ for the past kernel block,
+$\mathsf{U}_k$ for the past rows of $\mathsf{U}$,
+$u_{k+1} = (1, v_{k+1})\T$ for the next row, and $c$ for the vector
+of kernel covariances between bin $k+1$ and the past.  Given
+$\theta$, the ordinary Gaussian conditional is
+\begin{equation}
+  \mathrm{E}\bigl[\delta_{k+1} \mid \delta_{1..k}, \theta\bigr]
+  \;=\;
+  u_{k+1}\T\theta
+  \;+\;
+  c\T \Cov_k^{-1}
+  \bigl(\delta_{1..k} - \mathsf{U}_k\,\theta\bigr).
+  \label{eq:memcond}
+\end{equation}
+With a flat prior, the posterior of $\theta$ given the past is
+centered on the generalized-least-squares fit $\hat{\theta}$ of
+Eq.~\eqref{eq:memnormal} applied to the past block.
+Equation~\eqref{eq:memcond} is linear in $\theta$, so averaging over
+the posterior replaces $\theta$ by $\hat{\theta}$.
+
+For the exponential kernel the weights collapse.  Correlations
+multiply along the chain (Eq.~\eqref{eq:factorize}), so every entry
+of $c$ is $r_k$ times the corresponding entry of $\Cov_k$'s last
+column, and
+\begin{equation}
+  c\T \Cov_k^{-1} \;=\; r_k\, e_k\T ,
+  \label{eq:memlastcol}
+\end{equation}
+with $e_k$ the $k$-th unit vector (one in the last past slot, zero
+elsewhere).  Substituting both results into Eq.~\eqref{eq:memcond}
+gives Eq.~\eqref{eq:memkriging}: the fitted line evaluated at the
+new bin, plus one Markov step from the last residual.
+
+\subsection{The finite-slope correlation}
+
+With a Gaussian slope of variance $\tau^2$ and the amplitude held in
+$B_g$, the deviations have the covariance of Eq.~\eqref{eq:memcov},
+so $\mathrm{Var}(\delta_i) = \tau^2 v_i^2 + \sigma_b^2$ and
+$\mathrm{Cov}(\delta_i, \delta_j) = \tau^2 v_i v_j +
+\sigma_b^2 e^{-|z_i - z_j|/L}$.  For separations much larger than
+$L$ the kernel term is exponentially small, and dropping it gives
+the correlation coefficient of Eq.~\eqref{eq:memrho}.  When
+$\tau |v_i|$ and $\tau |v_j|$ both exceed $\sigma_b$, the
+$\sigma_b^2$ terms in the denominators become negligible and the
+coefficient tends to $v_i v_j / |v_i v_j| = \pm 1$: plus one for
+bins on the same side of the group center, minus one for opposite
+sides.
+
 \section{The bias continuity equation, step by step}
 \label{app:continuity}
 
@@ -1257,14 +2014,14 @@ $\bar\rho_m(t)$ the mean density; the galaxy number density $n_g$
 defines the galaxy-count overdensity $\delta_g$ the same way.
 Conservation of mass and of galaxy number gives each field a
 continuity equation.  In comoving coordinates, keeping only terms
-linear in the fluctuations (the product $\delta\,\mathbf{v}$ is
-second order and dropped),
+linear in the fluctuations (the convective term
+$\mathbf{v} \cdot \nabla \delta$ is second order and dropped),
 \begin{equation}
-  \frac{d \delta_m}{dt}
+  \frac{\partial \delta_m}{\partial t}
   \;=\;
   -\,\frac{1}{a}\,\nabla \cdot \mathbf{v}_m,
   \qquad
-  \frac{d \delta_g}{dt}
+  \frac{\partial \delta_g}{\partial t}
   \;=\;
   -\,\frac{1}{a}\,\nabla \cdot \mathbf{v}_g,
   \label{eq:continuity}
@@ -1284,7 +2041,7 @@ velocity field.
 With equal right-hand sides, subtracting the two equations of
 Eq.~\eqref{eq:continuity} leaves
 \begin{equation}
-  \frac{d}{dt}\bigl(\delta_g - \delta_m\bigr) \;=\; 0
+  \frac{\partial}{\partial t}\bigl(\delta_g - \delta_m\bigr) \;=\; 0
   \quad\Longrightarrow\quad
   \delta_g(z) - \delta_m(z)
   \;=\;
@@ -1327,26 +2084,28 @@ Tegmark and Peebles drop the assumption that $\delta_g$ is
 proportional to $\delta_m$ point by point.  They describe the pair of
 fields by three numbers: the matter fluctuation amplitude $\sigma$,
 the bias $b$ (the ratio of the galaxy to the matter fluctuation
-amplitude) and the correlation coefficient $r$ between the two
-fields; $r < 1$ is stochastic bias, galaxies tracing the matter
-imperfectly.  The same continuity argument evolves all three (their
+amplitude) and the correlation coefficient $\rho_{gm}$ between the
+two fields; $\rho_{gm} < 1$ is stochastic bias, the galaxy field
+tracing the matter imperfectly.  (The subscript keeps it apart from
+the neighbor correlation $r$ of Eq.~\eqref{eq:rdef}.)  The same continuity argument evolves all three (their
 section ``After the galaxy formation epoch''): with $D$ normalized to
 one today and the subscript zero marking today,
 \begin{equation}
   b_0 =
-  \left[(1 - D)^2 + 2 D (1 - D)\, b\, r + D^2 b^2\right]^{1/2},
+  \left[(1 - D)^2 + 2 D (1 - D)\, b\, \rho_{gm}
+  + D^2 b^2\right]^{1/2},
   \qquad
-  r_0 = \frac{(1 - D) + D\, b\, r}{b_0},
+  \rho_{gm,0} = \frac{(1 - D) + D\, b\, \rho_{gm}}{b_0},
   \label{eq:tpevol}
 \end{equation}
-where $b$ and $r$ are the values at the epoch whose growth factor is
-$D$.
+where $b$ and $\rho_{gm}$ are the values at the epoch whose growth
+factor is $D$.
 
-Both $b_0$ and $r_0$ approach one as clustering grows, whatever
+Both $b_0$ and $\rho_{gm,0}$ approach one as clustering grows, whatever
 their initial values: the matter-sourced part of the galaxy field
 grows with $D$ while the frozen part does not, so the field is
 progressively dominated by the piece that traces the matter.
-Perfect correlation is a fixed point: for $r = 1$,
+Perfect correlation is a fixed point: for $\rho_{gm} = 1$,
 Eq.~\eqref{eq:tpevol} collapses to $b_0 - 1 = (b - 1)\,D$, which is
 Eq.~\eqref{eq:fry} again.  The conserved population of this note is
 the perfectly correlated special case of their model.
@@ -1438,7 +2197,7 @@ $z = 0.83$ (measured plus derived).
     $0.41$--$0.50$ & $1.89 \pm 0.03$ & $-0.4\% \pm 1.6\%$ \\
     $0.50$--$0.61$ & $2.04 \pm 0.02$ & $+2.3\% \pm 1.0\%$ \\
     $0.61$--$0.72$ & $2.07 \pm 0.03$ & $-1.6\% \pm 1.4\%$ \\
-    $0.75$--$0.83$ & $2.24 \pm 0.08$ & $+0.4\% \pm 3.4\%$ \\
+    $0.75$--$0.83$ & $2.24^{+0.07}_{-0.08}$ & $+0.4\% \pm 3.4\%$ \\
     $0.84$--$0.93$ & $2.48 \pm 0.15$ & $+6.4\% \pm 6.4\%$ \\
     \hline
   \end{tabular}
@@ -1462,6 +2221,16 @@ DESI fiber; $98.9\%$ of observed targets yield confident redshifts.
 Implication: inside LRG1 and LRG2 the selection gives the threshold
 no room to jump (measured); past $z \approx 0.8$ the fixed flux
 limit drives the LRG3 drift of Section~\ref{sec:evidence} (derived).
+The chain of that derivation: a fixed flux limit raises the
+luminosity threshold with the distance modulus, by $0.27$ magnitudes
+per $\Delta z = 0.1$ at $z \approx 1$; the Zehavi slope below is
+$0.5$--$1.0$ in bias per magnitude near LRG luminosities; their
+product, $0.13$--$0.27$ in bias, is $6$--$11\%$ of $b \approx 2.4$.
+The caveat is stronger than for BGS: the threshold-bias fit is an
+$r$-band relation measured at $z < 0.25$, applied here to a $z$-band
+fiber-magnitude selection at $z \approx 0.8$--$1.1$, outside its
+calibrated range, so the drift's direction and order of magnitude
+are what the argument establishes.
 
 \paragraph{White et al. \cite{White2022} and Sailer et al.
 \cite{Sailer2024}.}
@@ -1528,8 +2297,8 @@ $z > 1.5$, and the catastrophic-failure fraction rises over
 $1.3 < z < 1.6$.  Implication: these windows, each
 $\Delta z \approx 0.001$--$0.01$ wide, are the one short-separation
 selection mechanism found in any tracer; their bias amplitude is
-assumed, of order $1$--$2\%$, bounded by the weak dependence of ELG
-bias on [OII] flux.
+assumed, of order $1$--$2\%$, a judgment from the weak dependence of
+ELG bias on [OII] flux rather than a measured bound.
 
 \paragraph{Rocher et al. \cite{Rocher2023}.}
 What was measured: the HOD of the DESI One-Percent ELG sample.
@@ -1586,8 +2355,32 @@ by Monte Carlo ($10^5$ draws); the worked example of
 Section~\ref{sec:jump}; the closed-form bias evolution of
 Eq.~\eqref{eq:fry} against a direct integration of the continuity
 equation; and the tilt and neighbor-change tables of
-Section~\ref{sec:physical}.  Each check
+Section~\ref{sec:physical}.  For the memory model of
+Section~\ref{sec:memory} it checks, in the same way: the annihilation
+$\Prec_{\rm mem}\mathsf{U} = 0$ with rank $n - 2$ on uneven
+redshifts; the $1/W^2$ approach of the Woodbury inverse of
+Eq.~\eqref{eq:woodbury} to the projection; the null-space identity
+of Eq.~\eqref{eq:memnull}; the three-bin curvature penalty with its
+closed-form variance $2\sigma_b^2(1-r)(3-r)$; the vanishing of the
+projection for one and two bins; the universal-kriging predictor of
+Eq.~\eqref{eq:memkriging} against a direct Gaussian conditional; the
+end-to-end correlation of Eq.~\eqref{eq:memrho} tending to $\pm 1$;
+the two straight-line fits of Section~\ref{sec:memphysics}, the
+conserved-population table and the BGS flux-limit drift; and the
+LRG3 magnitude-limit rate, $0.27$ magnitudes per $\Delta z = 0.1$ at
+$z \approx 1$ with its $6$--$11\%$ bias drift.  Each check
 prints a PASS or FAIL line with its measured deviation.
+
+Every figure of the note lives in its own folder under
+\texttt{plots/}, named after the figure.  The folder holds the
+figure's data (\texttt{data.json}), one Python script that draws it,
+and the PDF the note includes, so each figure redraws from its
+folder alone and a plot can be adjusted for the paper without
+rerunning the forecast.  The script
+\texttt{plots/make\_theory\_data.py} writes the theory data, from
+the same flat $\Lambda$CDM growth factor and project fiducial
+amplitudes as the checks above; the notebook
+\texttt{EXAMPLE\_EVALUATE\_FISHER.ipynb} exports the FoM data.
 
 
 \begin{thebibliography}{99}
@@ -1699,6 +2492,18 @@ arXiv:2306.06319.
 E. Saraivanov, H. Rubira, V. Miranda and T. Eifler,
 ``Towards the Two-Loop EFTofLSS in Galaxy Lensing Surveys'',
 2026, arXiv:2603.13031.
+
+\bibitem{DeRoseChen2025}
+J. DeRose and S. Chen,
+``The Lensing Counter Narrative: An Effective Description of
+Small-Scale Clustering in Weak Lensing Power Spectra'',
+2025, arXiv:2510.18981.
+
+\bibitem{DESCSRD2018}
+The LSST Dark Energy Science Collaboration,
+``The LSST Dark Energy Science Collaboration (DESC) Science
+Requirements Document'',
+2018, arXiv:1809.01669.
 
 \end{thebibliography}
 
