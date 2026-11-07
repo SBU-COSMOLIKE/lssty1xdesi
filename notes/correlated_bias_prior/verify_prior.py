@@ -11,7 +11,11 @@ Schur complement obtained by marginalizing a flat-prior group amplitude,
 the variance of the jump between two bins (by Monte Carlo), the
 decorrelation and variance of the neighbor-prediction leftover used by
 the appendix's chain factorization (from the kernel matrix, no
-sampling), and the numbers of the worked example in the note.
+sampling), and the numbers of the worked example in the note.  The
+note's section on physical values of L and sigma_b adds three more
+checks: the conserved-population bias law b(z) - 1 = (b_c - 1) D_c/D(z)
+against a direct integration of the continuity equation, the
+conserved-population deviation table, and the neighbor rms table.
 
 Run with the cocoa environment:
 
@@ -403,6 +407,184 @@ def check_worked_example():
                   passed, detail)
 
 
+def growth_solution(omega_matter):
+    """Linear growth factor D of matter fluctuations in flat LCDM.
+
+    Solves the growth equation in x = ln a with a fourth-order
+    Runge-Kutta integrator,
+
+        D'' + (2 + dlnH/dx) D' - (3/2) Omega_m(a) D = 0,
+
+    starting at a = 10^-3 with the matter-era solution D = a (so
+    D' = D), and normalizing D(a = 1) = 1.  Returns the ln a grid, D on
+    that grid, and dD/d ln a in the same normalization.
+    """
+    number_of_steps = 20000
+    ln_a_grid = np.linspace(np.log(1.0e-3), 0.0, number_of_steps + 1)
+    step = ln_a_grid[1] - ln_a_grid[0]
+
+    def growth_derivatives(ln_a, state):
+        scale_factor = np.exp(ln_a)
+        hubble_sq = omega_matter*scale_factor**-3 + (1.0 - omega_matter)
+        omega_m_of_a = omega_matter*scale_factor**-3/hubble_sq
+        dlnH_dlna = -1.5*omega_matter*scale_factor**-3/hubble_sq
+        growth, growth_rate = state
+        acceleration = (-(2.0 + dlnH_dlna)*growth_rate
+                        + 1.5*omega_m_of_a*growth)
+        return np.array([growth_rate, acceleration])
+
+    state = np.array([np.exp(ln_a_grid[0]), np.exp(ln_a_grid[0])])
+    states = [state.copy()]
+    for index in range(number_of_steps):
+        ln_a = ln_a_grid[index]
+        slope_1 = growth_derivatives(ln_a, state)
+        slope_2 = growth_derivatives(ln_a + step/2.0,
+                                     state + step/2.0*slope_1)
+        slope_3 = growth_derivatives(ln_a + step/2.0,
+                                     state + step/2.0*slope_2)
+        slope_4 = growth_derivatives(ln_a + step, state + step*slope_3)
+        state = state + step/6.0*(slope_1 + 2.0*slope_2
+                                  + 2.0*slope_3 + slope_4)
+        states.append(state.copy())
+
+    states = np.array(states)
+    normalization = states[-1, 0]
+    return ln_a_grid, states[:, 0]/normalization, states[:, 1]/normalization
+
+
+def growth_at_redshift(redshifts, ln_a_grid, growth_grid):
+    """Interpolate the normalized growth factor at the given redshifts."""
+    ln_a_requested = -np.log1p(np.atleast_1d(redshifts))
+    return np.interp(ln_a_requested, ln_a_grid, growth_grid)
+
+
+def check_bias_continuity():
+    """b(z) - 1 = (b_c - 1) D_c/D(z) from integrating the continuity law.
+
+    For a conserved population, d delta_g/d ln a = d delta_m/d ln a.
+    This check integrates that statement numerically: delta_m = D/D_c
+    (normalized to one at the reference a_c), delta_g starts at b_c at
+    a_c, and the increment of delta_g is the cumulative trapezoid of
+    d delta_m/d ln a.  The resulting b = delta_g/delta_m must match the
+    closed form at every redshift.
+    """
+    omega_matter = 0.3
+    reference_redshift = 0.5
+    reference_bias = 2.2
+
+    ln_a_grid, growth_grid, growth_rate_grid = growth_solution(omega_matter)
+    growth_reference = growth_at_redshift(reference_redshift,
+                                          ln_a_grid, growth_grid)[0]
+
+    # Cumulative trapezoid of d delta_m/d ln a along the grid (a
+    # vectorized prefix sum; each entry adds one trapezoid panel).
+    step = ln_a_grid[1] - ln_a_grid[0]
+    panel_areas = 0.5*step*(growth_rate_grid[1:] + growth_rate_grid[:-1])
+    integral_grid = np.concatenate([[0.0], np.cumsum(panel_areas)])
+
+    ln_a_reference = -np.log1p(reference_redshift)
+    integral_reference = np.interp(ln_a_reference, ln_a_grid, integral_grid)
+
+    delta_matter = growth_grid/growth_reference
+    delta_galaxy = (reference_bias
+                    + (integral_grid - integral_reference)/growth_reference)
+
+    worst_deviation = 0.0
+    for redshift in [0.0, 0.1, 0.3, 0.7, 1.0]:
+        ln_a_requested = -np.log1p(redshift)
+        bias_integrated = (np.interp(ln_a_requested, ln_a_grid, delta_galaxy)
+                           / np.interp(ln_a_requested, ln_a_grid,
+                                       delta_matter))
+        growth_here = growth_at_redshift(redshift, ln_a_grid, growth_grid)[0]
+        bias_closed_form = (1.0 + (reference_bias - 1.0)
+                            * growth_reference/growth_here)
+        deviation = abs(bias_integrated - bias_closed_form)/bias_closed_form
+        worst_deviation = max(worst_deviation, deviation)
+
+    return report("continuity equation: b(z) - 1 = (b_c - 1) D_c/D(z)",
+                  worst_deviation < 1.0e-6,
+                  f"worst relative deviation {worst_deviation:.3e}")
+
+
+def check_conserved_deviation_table():
+    """The note's conserved-population table, recomputed from scratch.
+
+    delta(z) = (D(z)/D(z_c) - 1)/b_c with z_c at the group midpoint and
+    b_c = B/D(z_c), for the three groups quoted in the note.  The table
+    rounds to one decimal in percent, so the comparison allows 0.06
+    (percentage points, and the same margin on b_c).
+    """
+    omega_matter = 0.3
+    ln_a_grid, growth_grid, _ = growth_solution(omega_matter)
+
+    # Group name, amplitude B, z range, midpoint, then the quoted
+    # numbers: b_c, delta at the low and high ends (percent), and the
+    # change across one Delta z = 0.05 step at the midpoint (percent).
+    groups = [
+        ("BGS",  1.34, 0.10, 0.40, 0.25, 1.5, +5.3, -4.9, 1.7),
+        ("LRG1", 1.70, 0.40, 0.60, 0.50, 2.2, +2.3, -2.2, 1.1),
+        ("LRG3", 1.70, 0.80, 1.10, 0.95, 2.7, +2.6, -2.3, 0.8),
+    ]
+    tolerance = 0.06
+
+    worst_deviation = 0.0
+    for (name, amplitude, z_low, z_high, z_mid,
+         quoted_bias, quoted_low, quoted_high, quoted_step) in groups:
+        growth_mid = growth_at_redshift(z_mid, ln_a_grid, growth_grid)[0]
+        bias_mid = amplitude/growth_mid
+
+        growth_low = growth_at_redshift(z_low, ln_a_grid, growth_grid)[0]
+        growth_high = growth_at_redshift(z_high, ln_a_grid, growth_grid)[0]
+        delta_low = 100.0*(growth_low/growth_mid - 1.0)/bias_mid
+        delta_high = 100.0*(growth_high/growth_mid - 1.0)/bias_mid
+
+        growth_minus = growth_at_redshift(z_mid - 0.025,
+                                          ln_a_grid, growth_grid)[0]
+        growth_plus = growth_at_redshift(z_mid + 0.025,
+                                         ln_a_grid, growth_grid)[0]
+        step_percent = 100.0*abs(growth_minus - growth_plus)/growth_mid/bias_mid
+
+        for computed, quoted in [(bias_mid, quoted_bias),
+                                 (delta_low, quoted_low),
+                                 (delta_high, quoted_high),
+                                 (step_percent, quoted_step)]:
+            worst_deviation = max(worst_deviation, abs(computed - quoted))
+
+    return report("conserved-population deviation table",
+                  worst_deviation < tolerance,
+                  f"worst |computed - quoted| {worst_deviation:.3f}")
+
+
+def check_neighbor_rms_table():
+    """The note's neighbor rms table, sigma_b sqrt(2(1 - exp(-dz/L))).
+
+    Rows: the baseline (3%, L = 0.05), the plausible-region corners
+    (1%, 0.1) and (5%, 0.02), and the two larger spreads (10%, 0.05)
+    and (20%, 0.02).  Quoted values round to one decimal in percent,
+    so the comparison allows 0.06 percentage points.
+    """
+    # (sigma_b, L, quoted percent over dz = 0.02, over dz = 0.05)
+    rows = [
+        (0.03, 0.05, 2.4, 3.4),
+        (0.01, 0.10, 0.6, 0.9),
+        (0.05, 0.02, 5.6, 6.8),
+        (0.10, 0.05, 8.1, 11.2),
+        (0.20, 0.02, 22.5, 27.1),
+    ]
+    tolerance = 0.06
+
+    worst_deviation = 0.0
+    for sigma_b, correlation_length, quoted_002, quoted_005 in rows:
+        for separation, quoted in [(0.02, quoted_002), (0.05, quoted_005)]:
+            rms_change = 100.0*sigma_b*np.sqrt(
+                2.0*(1.0 - np.exp(-separation/correlation_length)))
+            worst_deviation = max(worst_deviation, abs(rms_change - quoted))
+
+    return report("neighbor rms table",
+                  worst_deviation < tolerance,
+                  f"worst |computed - quoted| {worst_deviation:.3f}")
+
+
 def main():
     rng = np.random.default_rng(RANDOM_SEED)
 
@@ -428,6 +610,9 @@ def main():
                                               correlation_length))
     results.append(check_jump_variance_monte_carlo(rng))
     results.append(check_worked_example())
+    results.append(check_bias_continuity())
+    results.append(check_conserved_deviation_table())
+    results.append(check_neighbor_rms_table())
 
     number_failed = results.count(False)
     if number_failed == 0:
