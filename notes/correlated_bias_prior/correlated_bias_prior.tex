@@ -1,0 +1,831 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% The ones vector (1, 1, ..., 1)^T appears throughout; give it one symbol.
+\newcommand{\ones}{\mathbf{1}} % the vector of ones, (1, ..., 1)^T
+\newcommand{\Cov}{\mathsf{C}}
+\newcommand{\Prec}{\mathsf{P}}
+\newcommand{\T}{^{\mathsf{T}}}
+
+\title{A correlated prior on galaxy bias across thin redshift bins}
+\date{November 2026}
+\author{}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE A correlated prior on galaxy bias\\[0.3em] across thin redshift bins\par}
+  \vspace{1em}
+  {\large November 2026\par}
+\end{center}
+\vspace{1em}
+
+\section{Introduction: why an intermediate bias model}
+\label{sec:intro}
+
+A Fisher forecast of galaxy clustering in thin redshift bins must decide
+how to parametrize the galaxy bias of each bin.  The bins belong to a few
+broad groups --- the DESI tracer samples and their chunks, such as BGS,
+LRG1, LRG2, LRG3, ELG1 and ELG2 --- and within one group the galaxies are
+selected the same way, so their biases are expected to be similar but not
+identical.
+
+The default model ties all bins of a group to a single amplitude.  If
+$D(z)$ is the linear growth factor, normalized to $D(0) = 1$, the tied
+model sets
+\begin{equation}
+  b_i \;=\; \frac{B_g}{D(z_i)},
+  \label{eq:tied}
+\end{equation}
+where $b_i$ is the linear bias of bin $i$, $z_i$ is the bin's redshift,
+and $B_g$ is one free amplitude per group $g$.  The $1/D$ evolution keeps
+the clustering amplitude $b(z)\,D(z)$ of the group constant: galaxies
+that stopped merging and simply follow the flow of matter ("passive
+evolution") behave this way.
+
+The opposite extreme frees one bias per bin, with flat priors and no
+connection between neighbors ("independent").  The dark-energy figure of
+merit of the forecast depends on which extreme is chosen, and the
+question is how much of it rests on the tying itself.  To answer that,
+this note builds the intermediate model: bins may deviate from the
+group's trend, but neighboring bins must deviate \emph{together}.
+
+The model multiplies the tied bias by a fractional deviation
+$\delta_i$,
+\begin{equation}
+  b_i \;=\; \frac{B_g}{D(z_i)}\,\bigl(1 + \delta_i\bigr),
+  \label{eq:model}
+\end{equation}
+with $B_g$ still free (flat prior).  The deviations receive a Gaussian
+prior that is correlated inside a group,
+\begin{equation}
+  \bigl\langle \delta_i\,\delta_j \bigr\rangle
+  \;=\; \sigma_b^2\,
+  \exp\!\left(-\,\frac{|z_i - z_j|}{L}\right),
+  \label{eq:priorkernel}
+\end{equation}
+and zero across groups.  Here $\sigma_b$ is the prior standard deviation
+of a single bin's fractional deviation, and $L$ is the correlation
+length in redshift: bins much closer than $L$ deviate almost as one,
+bins much farther apart deviate independently.
+
+In the Fisher matrix the convenient parameters are the per-bin
+amplitudes
+\begin{equation}
+  \beta_i \;\equiv\; B_g\,\bigl(1 + \delta_i\bigr),
+  \qquad \text{fiducial } \beta_i = B_g,
+  \label{eq:beta}
+\end{equation}
+so that $b_i = \beta_i / D(z_i)$.  Since $\beta_i - B_g = B_g\,\delta_i$,
+the prior covariance of the $\beta_i$ within one group is
+\begin{equation}
+  \Cov \;=\; s^2\,\mathsf{R},
+  \qquad
+  s \;=\; \sigma_b\,B_g,
+  \qquad
+  \mathsf{R}_{ij} \;=\; \exp\!\left(-\,\frac{|z_i - z_j|}{L}\right).
+  \label{eq:covdef}
+\end{equation}
+The spread $s$ carries the units of a bias amplitude; the correlation
+matrix $\mathsf{R}$ is dimensionless, with ones on the diagonal.
+
+One subtlety drives most of this note.  A plain Gaussian prior with
+covariance $\Cov$ would also penalize moving \emph{all} $\beta_i$ of a
+group up or down together --- but that uniform move is exactly the free
+amplitude $B_g$, which the tied model never constrains.  Adding the
+plain prior would therefore make the comparison against the tied model
+unfair.  The repair is to remove the uniform direction from the prior by
+a projection, and Sections~\ref{sec:twobins}--\ref{sec:general} build
+that projection from the ground up.
+
+\section{Two bins first}
+\label{sec:twobins}
+
+Everything essential already happens with two bins.  Call their
+amplitudes $\beta_1$ and $\beta_2$, with common fiducial value $B$,
+prior spread $s$ per bin, and correlation coefficient $r$ between the
+two deviations.  The prior covariance and its inverse are
+\begin{equation}
+  \Cov \;=\; s^2
+  \begin{pmatrix} 1 & r \\ r & 1 \end{pmatrix},
+  \qquad
+  \Cov^{-1} \;=\; \frac{1}{s^2\,(1 - r^2)}
+  \begin{pmatrix} 1 & -r \\ -r & 1 \end{pmatrix}.
+  \label{eq:twobinC}
+\end{equation}
+(The inverse is checked by multiplying: the off-diagonal of
+$\Cov\,\Cov^{-1}$ is $r - r = 0$ and the diagonal is
+$(1 - r^2)/(1 - r^2) = 1$.)
+
+The correlation coefficient follows from the covariance kernel of
+Eq.~\eqref{eq:priorkernel}.  By definition,
+\begin{equation}
+  r \;=\;
+  \frac{\langle \delta_1 \delta_2 \rangle}
+       {\sqrt{\langle \delta_1^2 \rangle\,\langle \delta_2^2 \rangle}}
+  \;=\;
+  \frac{\sigma_b^2\, e^{-\Delta z / L}}{\sigma_b^2}
+  \;=\; e^{-\Delta z / L},
+  \label{eq:rdef}
+\end{equation}
+with $\Delta z = |z_1 - z_2|$ the bin separation.  The amplitude
+$\sigma_b$ cancels: the correlation is set by the separation and $L$
+alone.
+
+Now examine the prior penalty
+$\chi^2_{\rm prior} = \Delta\beta\T\, \Cov^{-1} \Delta\beta$, where
+$\Delta\beta = (\beta_1 - B,\ \beta_2 - B)\T$ is the displacement from
+the fiducial.  Two kinds of move matter.
+
+\paragraph{A uniform shift.}
+Take $\Delta\beta = a\,(1, 1)\T$: both bins move up by the same amount
+$a$.  Working out the quadratic form with Eq.~\eqref{eq:twobinC},
+\begin{equation}
+  \Delta\beta\T \Cov^{-1} \Delta\beta
+  \;=\;
+  \frac{a^2}{s^2 (1 - r^2)}\,
+  \bigl[\,(1 - r) + (1 - r)\,\bigr]
+  \;=\;
+  \frac{2 a^2}{s^2\,(1 + r)}
+  \;\neq\; 0 .
+  \label{eq:shiftpenalty}
+\end{equation}
+The plain prior charges for a uniform shift.  But a uniform shift of
+all $\beta_i$ is a change of $B_g$ --- a direction the tied model leaves
+completely free.  If the intermediate model kept this penalty, it would
+constrain $B_g$ and the comparison between the models would be unfair.
+
+\paragraph{A shape change.}
+Take $\Delta\beta = a\,(1, -1)\T$: the bins move apart.  The same
+algebra gives
+\begin{equation}
+  \Delta\beta\T \Cov^{-1} \Delta\beta
+  \;=\;
+  \frac{2 a^2}{s^2\,(1 - r)} .
+  \label{eq:shapepenalty}
+\end{equation}
+This is the penalty the prior is \emph{meant} to apply: it grows
+without bound as $r \to 1$, where the two bins are forced to track each
+other, and it relaxes to the independent value $2a^2/s^2$ as
+$r \to 0$.
+
+A number makes the contrast concrete.  At $r = 0.670$ (the worked value
+of Section~\ref{sec:jump}), the shape change costs
+$2a^2/(0.330\,s^2) = 6.1\,a^2/s^2$ while the uniform shift costs
+$2a^2/(1.670\,s^2) = 1.2\,a^2/s^2$.  The correlated prior already
+charges five times more for the shape change than for the uniform
+shift; the projection below takes the uniform-shift charge all the way
+to zero.
+
+\paragraph{The projected precision.}
+The repair for the uniform shift is to subtract its contribution from
+the inverse covariance.  Define, with $\ones = (1,1)\T$ the ones
+vector,
+\begin{equation}
+  \Prec \;=\; \Cov^{-1}
+  \;-\;
+  \frac{\Cov^{-1}\ones\,\ones\T \Cov^{-1}}{\ones\T \Cov^{-1} \ones}.
+  \label{eq:projdef}
+\end{equation}
+Section~\ref{sec:threeviews} explains where this formula comes from;
+here, simply compute it.  Because the two rows of $\Cov^{-1}$ have the
+same sum, $\Cov^{-1}\ones = \bigl[s^2 (1+r)\bigr]^{-1} (1,1)\T$ and
+$\ones\T \Cov^{-1} \ones = 2 / \bigl[s^2 (1+r)\bigr]$.  Substituting
+into Eq.~\eqref{eq:projdef} and simplifying each entry,
+\begin{equation}
+  \Prec \;=\;
+  \frac{1}{2 s^2 (1 - r)}
+  \begin{pmatrix} 1 & -1 \\ -1 & 1 \end{pmatrix},
+  \qquad
+  \Delta\beta\T \Prec\, \Delta\beta
+  \;=\;
+  \frac{(\beta_1 - \beta_2)^2}{2 s^2 (1 - r)} .
+  \label{eq:twobinP}
+\end{equation}
+The projected prior charges only for the \emph{difference} of the two
+amplitudes.  A uniform shift, $\beta_1 = \beta_2$, is now free, as in
+the tied model; a shape change keeps exactly the penalty of
+Eq.~\eqref{eq:shapepenalty}.
+
+The denominator is not an arbitrary constant.  With
+$\mathrm{Var}(\beta_i) = s^2$ and
+$\mathrm{Cov}(\beta_1, \beta_2) = s^2 r$,
+\begin{equation}
+  \mathrm{Var}(\beta_1 - \beta_2)
+  \;=\; s^2 + s^2 - 2 s^2 r
+  \;=\; 2 s^2 (1 - r):
+  \label{eq:jumpvar2}
+\end{equation}
+the projected penalty is the squared jump between the bins divided by
+the prior variance of that jump.  The whole construction reduces to one
+sentence: \emph{the prior constrains the jump, not the level.}
+
+\section{Correlation, wandering, and the jump between neighbors}
+\label{sec:jump}
+
+The kernel of Eq.~\eqref{eq:priorkernel} has two parameters, and they
+control two different things.  The diagonal gives the wander of a single
+bin,
+\begin{equation}
+  \mathrm{Var}(\delta_i) \;=\; \sigma_b^2 ,
+  \label{eq:wander}
+\end{equation}
+so $\sigma_b$ sets how far any one bin may drift from the group's
+passive-evolution trend.  The jump between two bins separated by
+$\Delta z$ follows as in Eq.~\eqref{eq:jumpvar2}:
+\begin{equation}
+  \mathrm{Var}(\delta_i - \delta_j)
+  \;=\;
+  2\,\sigma_b^2\left(1 - e^{-\Delta z / L}\right).
+  \label{eq:jumpvar}
+\end{equation}
+For separations much smaller than the correlation length,
+$\Delta z \ll L$, the exponential expands as
+$e^{-x} \approx 1 - x$, and
+\begin{equation}
+  \mathrm{Var}(\delta_i - \delta_j)
+  \;\approx\;
+  \frac{2\,\sigma_b^2\,\Delta z}{L},
+  \qquad
+  \text{rms jump}
+  \;\approx\;
+  \sigma_b \sqrt{\frac{2\,\Delta z}{L}} .
+  \label{eq:jumptaylor}
+\end{equation}
+So $L$ sets the correlation between bins, $\sigma_b$ sets the wander of
+each bin, and \emph{together} they set the jump a thin bin may take
+relative to its neighbor.
+
+The combination that controls small separations is the roughness
+\begin{equation}
+  \kappa \;\equiv\; \frac{\sigma_b}{\sqrt{L}},
+  \qquad
+  \mathrm{Var}(\delta_i - \delta_j) \;\approx\; 2\,\kappa^2\,\Delta z .
+  \label{eq:roughness}
+\end{equation}
+The second form is the signature of diffusion: the variance of the
+increment grows linearly with the separation, exactly as the distance
+walked by a random walker grows linearly in time.  On scales well below
+$L$ the deviation curve $\delta(z)$ therefore looks like a random walk
+with diffusion coefficient $\kappa^2$; only on scales beyond $L$ does
+the finite wander $\sigma_b$ pull it back toward zero.
+
+\paragraph{Worked example.}
+Take neighboring thin bins with $\Delta z = 0.02$ and the baseline
+correlation length $L = 0.05$.  Then $\Delta z / L = 0.4$ and
+\begin{equation}
+  r \;=\; e^{-0.4} \;=\; 0.670 .
+  \label{eq:workedr}
+\end{equation}
+The exact rms jump from Eq.~\eqref{eq:jumpvar} is
+$\sigma_b \sqrt{2\,(1 - 0.670)} = 0.81\,\sigma_b$: for
+$\sigma_b = 10\%$ the neighboring bins may differ by $8.1\%$ (one
+sigma), and for $\sigma_b = 1\%$ by $0.81\%$.  The Taylor form of
+Eq.~\eqref{eq:jumptaylor} gives instead
+$\sigma_b \sqrt{0.8} = 0.89\,\sigma_b$, an $8.9\%$ jump.  The
+approximation overestimates because $\Delta z / L = 0.4$ is not
+actually small: the expansion replaces $1 - e^{-x}$ by $x$, and
+$x$ exceeds $1 - e^{-x}$ already at second order ($x^2/2$), by about
+ten percent here.
+
+\section{Why the projection ``sees'' the uniform shift: three views}
+\label{sec:threeviews}
+
+Equation~\eqref{eq:projdef} subtracts from $\Cov^{-1}$ a matrix built
+out of the single vector $v = \Cov^{-1}\ones$: the subtracted piece is
+$v\,v\T$ divided by the number $\ones\T \Cov^{-1} \ones$.  A matrix
+built from one vector acts along one direction only, so the subtraction
+removes the prior's information about exactly one direction --- the
+uniform shift --- and leaves everything else alone.  This section
+derives the formula three times, each derivation adding its own
+intuition.  Throughout, a group has $n$ bins; $\Delta\beta$ and $\ones$
+are vectors with $n$ entries.
+
+\subsection{View (a): subtracting the best-fitting uniform shift}
+\label{sec:viewa}
+
+Ask the following question: given a displacement $\Delta\beta$, how much
+of it can be explained as a pure change of the group amplitude?  A
+change of $B_g$ by $c$ moves every $\beta_i$ by $c$, so the candidate
+explanation is $c\,\ones$, and the unexplained part should be judged by
+the prior metric.  Minimize over the scalar $c$ the quadratic form
+\begin{equation}
+  \chi^2(c)
+  \;=\;
+  \bigl(\Delta\beta - c\,\ones\bigr)\T
+  \Cov^{-1}
+  \bigl(\Delta\beta - c\,\ones\bigr).
+  \label{eq:chi2c}
+\end{equation}
+Differentiating with respect to $c$ (the two cross terms are equal
+because $\Cov^{-1}$ is symmetric),
+\begin{equation}
+  \frac{d\chi^2}{dc}
+  \;=\;
+  -2\,\ones\T \Cov^{-1} \bigl(\Delta\beta - c\,\ones\bigr)
+  \;=\; 0,
+  \qquad
+  \frac{d^2\chi^2}{dc^2}
+  \;=\;
+  2\,\ones\T \Cov^{-1} \ones \;>\; 0,
+  \label{eq:focs}
+\end{equation}
+where the second derivative is positive because $\Cov^{-1}$ is positive
+definite, so the solution of the first equation is the minimum of
+$\chi^2(c)$.  That solution is
+\begin{equation}
+  a \;=\;
+  \frac{\ones\T \Cov^{-1} \Delta\beta}{\ones\T \Cov^{-1} \ones} .
+  \label{eq:besta}
+\end{equation}
+For a diagonal $\Cov$ with variances $s_i^2$ this reduces to
+$a = \sum_i \Delta\beta_i / s_i^2 \big/ \sum_i 1/s_i^2$, the familiar
+inverse-variance weighted mean; Eq.~\eqref{eq:besta} is its
+generalization to correlated errors --- generalized least squares for a
+constant.
+
+Keep the dimensions straight: $\Delta\beta$, $\ones$ and the residual
+$w = \Delta\beta - a\,\ones$ are vectors with $n$ entries; $a$ is a
+single number.  The residuals $w$ satisfy one linear constraint
+(Eq.~\eqref{eq:ortho} below), so they span $n - 1$ dimensions: one
+direction of the $n$-dimensional displacement space has been handed to
+the amplitude, and $n - 1$ directions of genuine shape freedom remain.
+
+\subsection{View (b): a Pythagorean split of the penalty}
+\label{sec:viewb}
+
+Write the displacement as the best uniform shift plus a residual,
+\begin{equation}
+  \Delta\beta \;=\; a\,\ones + w .
+  \label{eq:split}
+\end{equation}
+The first-order condition of Eq.~\eqref{eq:focs} says precisely that
+\begin{equation}
+  \ones\T \Cov^{-1} w \;=\; 0:
+  \label{eq:ortho}
+\end{equation}
+the residual is orthogonal to the uniform direction \emph{in the
+$\Cov^{-1}$ metric}.  (With correlated errors, "orthogonal" must be
+measured with the same matrix that measures lengths.)  Substituting the
+split into the full penalty, the cross term is
+$2 a\,\ones\T \Cov^{-1} w = 0$, and
+\begin{equation}
+  \Delta\beta\T \Cov^{-1} \Delta\beta
+  \;=\;
+  a^2\, \ones\T \Cov^{-1} \ones
+  \;+\;
+  w\T \Cov^{-1} w .
+  \label{eq:pythagoras}
+\end{equation}
+This is the Pythagorean theorem in the prior metric: the squared length
+of the displacement is the squared length of its uniform piece plus the
+squared length of its shape piece.
+
+Now compare with the projection.  Inserting Eq.~\eqref{eq:besta} into
+the subtracted term of Eq.~\eqref{eq:projdef} shows that the subtraction
+removes exactly $a^2\,\ones\T \Cov^{-1} \ones$, the uniform piece.
+What remains is
+\begin{equation}
+  \Delta\beta\T \Prec\, \Delta\beta
+  \;=\;
+  w\T \Cov^{-1} w .
+  \label{eq:Pisw}
+\end{equation}
+Two consequences follow immediately.  First, a pure uniform shift has
+$w = 0$, so its penalty vanishes --- equivalently $\Prec\,\ones = 0$:
+the projected matrix sends the uniform direction to zero and charges
+nothing for it.  Second, a pure shape change --- a displacement that
+already satisfies Eq.~\eqref{eq:ortho} --- has $a = 0$ and keeps its
+original penalty untouched.  The projection removes one direction and
+alters nothing else.
+
+\subsection{View (c): marginalizing a flat-prior amplitude}
+\label{sec:viewc}
+
+The third view explains why the projection, rather than some other
+uniform-shift repair, is the \emph{correct} prior.  Model the group
+amplitudes as
+\begin{equation}
+  \beta \;=\; B\,\ones + \varepsilon,
+  \qquad
+  \varepsilon \sim \mathcal{N}(0, \Cov),
+  \label{eq:genmodel}
+\end{equation}
+with a flat prior on the scalar $B$.  This is literally the
+intermediate model of Eq.~\eqref{eq:model}, linearized around the
+fiducial.  The prior density of $\beta$ is obtained by integrating $B$
+out:
+\begin{equation}
+  p(\beta) \;\propto\;
+  \int dB\,
+  \exp\!\left[
+    -\tfrac{1}{2}
+    \bigl(\beta - B\,\ones\bigr)\T \Cov^{-1} \bigl(\beta - B\,\ones\bigr)
+  \right].
+  \label{eq:marg}
+\end{equation}
+The exponent is quadratic in $B$.  Writing
+$S = \ones\T \Cov^{-1} \ones$ and completing the square,
+\begin{equation}
+  \bigl(\beta - B\ones\bigr)\T \Cov^{-1} \bigl(\beta - B\ones\bigr)
+  \;=\;
+  S\,\bigl(B - B_*\bigr)^2
+  \;+\;
+  \beta\T \Cov^{-1} \beta
+  \;-\;
+  \frac{\bigl(\ones\T \Cov^{-1} \beta\bigr)^2}{S},
+  \qquad
+  B_* = \frac{\ones\T \Cov^{-1} \beta}{S} .
+  \label{eq:complsq}
+\end{equation}
+The $B$ integral is a Gaussian centered on $B_*$ with width
+$1/\sqrt{S}$; it contributes only a $\beta$-independent constant
+$\sqrt{2\pi / S}$.  What survives in the exponent is
+\begin{equation}
+  p(\beta) \;\propto\;
+  \exp\!\left[-\tfrac{1}{2}\, \beta\T \Prec\, \beta\right],
+  \qquad
+  \Prec \;=\; \Cov^{-1}
+  - \frac{\Cov^{-1}\ones\,\ones\T \Cov^{-1}}{\ones\T \Cov^{-1} \ones},
+  \label{eq:margresult}
+\end{equation}
+exactly the projection of Eq.~\eqref{eq:projdef}.
+
+The same computation has a standard matrix name.  Expanding the
+exponent of Eq.~\eqref{eq:marg} in the joint variables $(\beta, B)$
+gives a Gaussian with the $(n+1) \times (n+1)$ block precision
+\begin{equation}
+  \mathsf{F}_{(\beta, B)}
+  \;=\;
+  \begin{pmatrix}
+    \Cov^{-1} & -\,\Cov^{-1}\ones \\[0.4ex]
+    -\,\ones\T \Cov^{-1} & \ones\T \Cov^{-1} \ones
+  \end{pmatrix}.
+  \label{eq:jointprec}
+\end{equation}
+Removing a parameter from a precision matrix is not just deleting its
+row and column: the remaining block must also be corrected downward by
+whatever the removed parameter could absorb.  The corrected block,
+$\Prec = \mathsf{F}_{\beta\beta}
+- \mathsf{F}_{\beta B}\, \mathsf{F}_{BB}^{-1}\, \mathsf{F}_{B\beta}$,
+is called the \emph{Schur complement} over $B$, and it reproduces
+Eq.~\eqref{eq:projdef} term by term.  So $\Prec$ is not a trick --- it
+is precisely the statement "\emph{$B_g$ is sampled with a flat prior
+and marginalized}", folded into one matrix.
+
+Note also that $B_*$ in Eq.~\eqref{eq:complsq} is the same
+generalized-least-squares mean as $a$ in Eq.~\eqref{eq:besta}: the
+marginalization integrates over all amplitudes, and the best-fitting
+one dominates the integral.
+
+\subsection{Checking views (b) and (c) on the two-bin case}
+\label{sec:check2}
+
+For $n = 2$ the rows of $\Cov^{-1}$ in Eq.~\eqref{eq:twobinC} have
+equal sums, so Eq.~\eqref{eq:besta} gives the plain mean,
+$a = (\Delta\beta_1 + \Delta\beta_2)/2$, and the residual is the
+antisymmetric half-difference,
+$w = \tfrac{1}{2}(\Delta\beta_1 - \Delta\beta_2)\,(1, -1)\T$.  Its
+penalty, using the shape-change result of Eq.~\eqref{eq:shapepenalty}
+with $a \to \tfrac{1}{2}(\Delta\beta_1 - \Delta\beta_2)$, is
+\begin{equation}
+  w\T \Cov^{-1} w
+  \;=\;
+  \frac{2}{s^2 (1-r)}
+  \left(\frac{\Delta\beta_1 - \Delta\beta_2}{2}\right)^{\!2}
+  \;=\;
+  \frac{(\Delta\beta_1 - \Delta\beta_2)^2}{2 s^2 (1 - r)},
+  \label{eq:check2}
+\end{equation}
+which is the direct two-bin computation of Eq.~\eqref{eq:twobinP}.
+Views (a), (b) and (c) all land on the same matrix.
+
+\section{Generalization to many bins and several groups}
+\label{sec:general}
+
+\subsection{Three bins: total correlation versus direct links}
+\label{sec:kernel}
+
+A group now has $n$ bins at redshifts $z_1 < z_2 < \dots < z_n$,
+unevenly spaced in general, with the prior covariance of
+Eq.~\eqref{eq:covdef},
+\begin{equation}
+  \Cov_{ij} \;=\; s^2 \exp\!\left(-\,\frac{|z_i - z_j|}{L}\right).
+  \label{eq:nbinC}
+\end{equation}
+This matrix is positive definite for any set of distinct redshifts
+(all its eigenvalues are positive), so the prior is a proper
+probability distribution and $\Cov^{-1}$ exists.
+
+The structure of $\Cov^{-1}$ is best seen on three evenly spaced bins.
+With neighbor correlation $r = e^{-\Delta z / L}$, the outer pair sits
+two steps apart and carries $e^{-2\Delta z / L} = r^2$, so
+\begin{equation}
+  \Cov \;=\; s^2
+  \begin{pmatrix} 1 & r & r^2 \\ r & 1 & r \\ r^2 & r & 1 \end{pmatrix},
+  \qquad
+  \Cov^{-1} \;=\; \frac{1}{s^2\,(1 - r^2)}
+  \begin{pmatrix} 1 & -r & 0 \\ -r & 1 + r^2 & -r \\ 0 & -r & 1
+  \end{pmatrix}.
+  \label{eq:threebin}
+\end{equation}
+One multiplication confirms the surprising entry.  The $(1,3)$ entry of
+$\Cov^{-1}\Cov$ must be zero (it is an off-diagonal entry of the
+identity matrix), and indeed row 1 of $\Cov^{-1}$ times column 3 of
+$\Cov$ gives, dropping the prefactors,
+\begin{equation}
+  1 \cdot r^2 \;+\; (-r) \cdot r \;+\; 0 \cdot 1
+  \;=\; r^2 - r^2 \;=\; 0 .
+  \label{eq:rowcheck}
+\end{equation}
+
+Here is the point that looks paradoxical at first.  Bins 1 and 3
+\emph{are} correlated --- $\Cov$ contains $r^2$ --- yet their entry in
+$\Cov^{-1}$ is exactly zero.  The two matrices answer different
+questions.  $\Cov$ gives the \emph{total} correlation: what $\delta_1$
+tells you about $\delta_3$ when nothing else is known.  $\Cov^{-1}$
+gives the \emph{direct} correlation: what $\delta_1$ still tells you
+about $\delta_3$ once $\delta_2$ is already known --- and that is
+nothing.  All of the 1--3 correlation travels through bin 2.
+
+Think of a chain of people passing a message.  The first person's
+message reaches far down the chain, but the links are only between
+neighbors: nobody talks past the person standing next to them.
+
+The exponential kernel is special in making this exact, because its
+correlations multiply along the chain:
+\begin{equation}
+  e^{-(z_3 - z_1)/L}
+  \;=\;
+  e^{-(z_3 - z_2)/L}\; e^{-(z_2 - z_1)/L} .
+  \label{eq:factorize}
+\end{equation}
+The long-distance correlation is the product of the step correlations,
+so the middle bin already carries everything the outer bins share.  A
+Gaussian kernel $e^{-\Delta z^2 / L^2}$ does not factorize this way ---
+the squared separations do not add up along the chain,
+$(z_3 - z_1)^2 \neq (z_3 - z_2)^2 + (z_2 - z_1)^2$ --- and its inverse
+is dense.
+
+The same structure shows directly in the penalty.  For $n$ evenly
+spaced bins, the quadratic form of the deviations $\delta_i$ (whose
+covariance is $\sigma_b^2 \mathsf{R}$) regroups into a sum over
+neighbor links,
+\begin{equation}
+  \delta\T \bigl(\sigma_b^2 \mathsf{R}\bigr)^{-1} \delta
+  \;=\;
+  \frac{\delta_1^2}{\sigma_b^2}
+  \;+\;
+  \sum_{k=1}^{n-1}
+  \frac{\bigl(\delta_{k+1} - r\,\delta_k\bigr)^2}
+       {\sigma_b^2\,(1 - r^2)} .
+  \label{eq:chainsum}
+\end{equation}
+Each term compares one bin with $r$ times the bin before it: every bin
+is pulled only by its neighbor, and the long-range correlation comes
+from chaining the pulls.  (Expanding the squares and collecting terms
+reproduces Eq.~\eqref{eq:threebin} for $n = 3$; Appendix~\ref{app:chain}
+does it for general, uneven spacing.)  This is the precise sense of
+"correlation only between adjacent bins": \emph{directly}, only
+neighbors talk; \emph{in total}, the influence propagates down the
+whole chain.  Probability theory calls this neighbors-only structure
+the Markov property.
+
+\subsection{The tridiagonal inverse for $n$ bins}
+\label{sec:tridiag}
+
+A matrix whose nonzero entries sit only on the diagonal and the two
+neighboring off-diagonals is called \emph{tridiagonal}.  The three-bin
+inverse of Eq.~\eqref{eq:threebin} is the smallest interesting example,
+and the pattern grows unchanged.  For $n$ evenly spaced bins, where
+every adjacent pair has the same correlation $r = e^{-\Delta z / L}$
+and $\Cov_{ij} = s^2\, r^{|i - j|}$,
+\begin{equation}
+  \Cov^{-1} \;=\;
+  \frac{1}{s^2\,(1 - r^2)}
+  \begin{pmatrix}
+    1      & -r     &        &        &        \\
+    -r     & 1+r^2  & -r     &        &        \\
+           & -r     & \ddots & \ddots &        \\
+           &        & \ddots & 1+r^2  & -r     \\
+           &        &        & -r     & 1
+  \end{pmatrix},
+  \label{eq:ar1}
+\end{equation}
+with diagonal $(1,\ 1+r^2,\ \dots,\ 1+r^2,\ 1)$, off-diagonal entries
+$-r$, blanks zero, and the overall factor $1/\bigl[s^2(1-r^2)\bigr]$.
+The entries read off the chain sum of Eq.~\eqref{eq:chainsum}.  An
+off-diagonal entry is the link between that pair of neighbors.  An
+interior bin touches two links --- one to the bin on its left, one to
+the bin on its right --- and the two pulls together contribute
+$1 + r^2$; the first and last bins touch only one link each, hence the
+plain $1$ in the corners.
+
+With uneven spacing, each adjacent pair has its own step and therefore
+its own correlation,
+\begin{equation}
+  r_k \;=\; \exp\!\left(-\,\frac{z_{k+1} - z_k}{L}\right),
+  \qquad k = 1, \dots, n-1 ,
+  \label{eq:rk}
+\end{equation}
+and the inverse keeps the same shape with per-pair entries:
+\begin{equation}
+  s^2\,\bigl(\Cov^{-1}\bigr)_{kk} =
+  \begin{cases}
+    \dfrac{1}{1 - r_1^2}, & k = 1,\\[2.2ex]
+    \dfrac{1}{1 - r_{k-1}^2} + \dfrac{r_k^2}{1 - r_k^2}, & 1 < k < n,\\[2.2ex]
+    \dfrac{1}{1 - r_{n-1}^2}, & k = n,
+  \end{cases}
+  \qquad
+  s^2\,\bigl(\Cov^{-1}\bigr)_{k, k+1} = \frac{-\,r_k}{1 - r_k^2}.
+  \label{eq:uneven}
+\end{equation}
+In words: the off-diagonal entry is the neighbor link of pair $k$,
+stronger when the bins are closer ($r_k$ nearer one); the diagonal
+entry of bin $k$ collects the links touching that bin, one term from
+the pair on its left and one from the pair on its right; the first and
+last bins carry one link only.  Setting all $r_k = r$ turns the
+interior diagonal into
+$1/(1-r^2) + r^2/(1-r^2) = (1+r^2)/(1-r^2)$ and recovers
+Eq.~\eqref{eq:ar1}.  Appendix~\ref{app:chain} derives
+Eq.~\eqref{eq:uneven} from the chain of neighbor links; the companion
+script \texttt{verify\_prior.py} checks the three-bin, even and uneven
+forms numerically.
+
+\subsection{The projection, group by group}
+\label{sec:projgroups}
+
+Each group receives the projected precision of Eq.~\eqref{eq:projdef},
+built from its own $\Cov$.  The properties derived in
+Section~\ref{sec:threeviews} carry over verbatim to $n$ bins.
+$\Prec\,\ones = 0$: a uniform shift of the whole group costs nothing.
+$\Prec$ is positive semidefinite, which simply means no displacement is
+\emph{rewarded}: every move either costs $\chi^2$ or is free.  And of
+the $n$ directions a group can move in, exactly one (the uniform shift)
+is free while the other $n - 1$ are charged --- in matrix language,
+$\Prec$ has rank $n - 1$.
+
+Several groups combine trivially.  The prior of
+Eq.~\eqref{eq:priorkernel} is zero across groups, so the full prior
+covariance is block-diagonal, one block per group; and each group has
+its own free amplitude $B_g$, so each block is projected separately.
+The total prior precision is the block-diagonal matrix of the per-group
+projections.
+
+\subsection{The two limits}
+\label{sec:limits}
+
+The intermediate model contains both extremes.
+
+As $L \to \infty$, every $r_k \to 1$, so the jump variance
+$2\sigma_b^2(1 - r_k)$ of every adjacent pair goes to zero: the prior
+forces all deviations of a group to be equal.  The only freedom left is
+their common value --- a uniform shift, exactly the direction the
+projection leaves free.  This is the tied model, with one free $B_g$
+per group, \emph{whatever} the value of $\sigma_b$.
+
+As $\sigma_b \to \infty$ at fixed $L$, the overall scale of $\Cov$
+diverges, so $\Cov^{-1} \to 0$ and with it $\Prec \to 0$: the prior
+penalty vanishes and every bin's amplitude is free --- the independent
+model with flat priors.
+
+Between the limits, $L$ and $\sigma_b$ interpolate continuously, which
+is what makes the model useful: the figure of merit can be traced as a
+function of how much bin-to-bin freedom the bias is granted.
+
+\section{How the prior enters the Fisher matrix}
+\label{sec:fisher}
+
+A Gaussian prior adds its precision to the Fisher matrix:
+\begin{equation}
+  F \;=\; F_{\rm data} \;+\; F_{\rm priors},
+  \label{eq:fisher}
+\end{equation}
+where $F_{\rm data}$ is the usual data Fisher matrix and
+$F_{\rm priors}$ holds one block per prior.  The projected precision
+$\Prec$ of each group is added to the rows and columns of that group's
+bin amplitudes $\beta_i$.  All other parameters --- the cosmological
+parameters, and the velocity dispersions with their own independent
+Gaussian priors --- are unchanged: $\Prec$ has no entries outside the
+bias block.
+
+One practical consequence deserves a highlight.  Bins that lost all
+their band powers to the scale cut carry no data, so their rows of
+$F_{\rm data}$ are zero.  In the independent model such a parameter is
+completely unconstrained and must be dropped from the matrix before
+inversion.  With the correlated prior it stays: $\Prec$ ties the empty
+bin to its neighbors, which do carry data, so the matrix remains
+invertible and the empty bin simply follows the chain.
+
+\paragraph{Choice of the hyperparameters.}
+The forecast scans
+\begin{equation}
+  L \in \{0.02,\ 0.05,\ 0.1,\ 0.2\}
+  \quad\text{(in redshift)},
+  \qquad
+  \sigma_b \in \{1\%,\ 5\%,\ 10\%,\ 20\%\},
+  \label{eq:scan}
+\end{equation}
+with baseline $L = 0.05$ and $\sigma_b = 10\%$, and the plausible
+region $L = 0.02$--$0.1$, $\sigma_b = 5$--$20\%$.  The upper end of $L$
+is physical, not numerical: a sample's flux limit and color cuts change
+which galaxies enter the sample as redshift grows, and that change of
+galaxy mix happens over $\Delta z \sim 0.1$.  Bias deviations should
+therefore not be assumed coherent over separations much beyond that, so
+$L \lesssim 0.1$.
+
+\paragraph{Numerical verification.}
+The companion script \texttt{verify\_prior.py}, in this folder, checks
+every identity used above: the two-bin closed forms of
+Eqs.~\eqref{eq:twobinC} and \eqref{eq:twobinP}; the three-bin inverse
+of Eq.~\eqref{eq:threebin}, including its exactly zero $(1,3)$ entry;
+the null direction, positive semidefiniteness and rank $n-1$ of $\Prec$
+on uneven redshifts; the tridiagonal inverses of Eqs.~\eqref{eq:ar1}
+and \eqref{eq:uneven}; the Pythagorean identity of Eq.~\eqref{eq:Pisw}
+on random displacements; the equality of $\Prec$ with the Schur
+complement of the joint $(\beta, B)$ precision of
+Eq.~\eqref{eq:jointprec}; the jump variance of Eq.~\eqref{eq:jumpvar}
+by Monte Carlo ($10^5$ draws); and the worked example of
+Section~\ref{sec:jump}.  Each check prints a PASS or FAIL line with its
+measured deviation.
+
+\section*{Summary}
+
+The intermediate bias model frees one amplitude $B_g$ per tracer group
+and lets each bin deviate fractionally from the group's
+passive-evolution trend $B_g / D(z)$, with deviations correlated over a
+redshift length $L$ and an overall wander $\sigma_b$.  In the Fisher
+matrix this becomes one projected precision $\Prec$ per group, added to
+the bin-amplitude block: $\Prec$ charges for differences between
+neighboring amplitudes but never for a uniform shift of the group,
+links only neighboring bins directly (the inverse covariance is
+tridiagonal, even though the correlation itself reaches far), and
+reduces to the tied model as
+$L \to \infty$ and to independent flat-prior biases as
+$\sigma_b \to \infty$.
+
+\appendix
+
+\section{The tridiagonal inverse from the chain of links}
+\label{app:chain}
+
+Because correlations multiply along the chain
+(Eq.~\eqref{eq:factorize}), the prior can be built one bin at a time:
+the joint density of the deviations factorizes into neighbor
+conditionals,
+\begin{equation}
+  p(\delta_1, \dots, \delta_n)
+  \;=\;
+  p(\delta_1)\, p(\delta_2 \mid \delta_1) \cdots
+  p(\delta_n \mid \delta_{n-1}),
+  \label{eq:chainfactor}
+\end{equation}
+where each conditional is Gaussian with
+\begin{equation}
+  \bigl\langle \delta_{k+1} \mid \delta_k \bigr\rangle
+  \;=\; r_k\,\delta_k,
+  \qquad
+  \mathrm{Var}\bigl(\delta_{k+1} \mid \delta_k\bigr)
+  \;=\; \sigma_b^2\,\bigl(1 - r_k^2\bigr).
+  \label{eq:conditional}
+\end{equation}
+These are the unique choices that reproduce the kernel: the marginal
+variance comes out
+$r_k^2 \sigma_b^2 + (1 - r_k^2)\sigma_b^2 = \sigma_b^2$, the neighbor
+covariance comes out
+$\langle \delta_{k+1}\delta_k \rangle = r_k\,\sigma_b^2$, and
+correlations with farther bins follow by multiplying the steps.
+
+Taking $-2 \ln p$ of Eq.~\eqref{eq:chainfactor} gives the penalty as
+the chain sum --- the uneven-spacing version of
+Eq.~\eqref{eq:chainsum}:
+\begin{equation}
+  \delta\T \bigl(\sigma_b^2 \mathsf{R}\bigr)^{-1} \delta
+  \;=\;
+  \frac{\delta_1^2}{\sigma_b^2}
+  \;+\;
+  \sum_{k=1}^{n-1}
+  \frac{\bigl(\delta_{k+1} - r_k\,\delta_k\bigr)^2}
+       {\sigma_b^2\,\bigl(1 - r_k^2\bigr)} .
+  \label{eq:chainsumuneven}
+\end{equation}
+Expanding each square and collecting the coefficient of every product
+$\delta_i \delta_j$ reads off the precision matrix entry by entry.
+$\delta_1^2$ appears twice: in the first term (coefficient $1$) and in
+the $k = 1$ link as the predictor (coefficient $r_1^2/(1 - r_1^2)$);
+the two add up to $1/(1 - r_1^2)$.  An interior $\delta_k^2$ appears in
+the $k-1$ link as the predicted bin ($1/(1 - r_{k-1}^2)$) and in the
+$k$ link as the predictor ($r_k^2/(1 - r_k^2)$).  The last bin is only
+ever predicted: $1/(1 - r_{n-1}^2)$.  Each product
+$\delta_k \delta_{k+1}$ appears in its own link only, with coefficient
+$-2 r_k/(1 - r_k^2)$, i.e.\ a symmetric matrix entry
+$-r_k/(1 - r_k^2)$.  No product of non-neighbors ever appears, so the
+matrix is tridiagonal by construction.  This is Eq.~\eqref{eq:uneven}
+in units of $\sigma_b^2$; replacing $\delta$ by
+$\Delta\beta = B_g\,\delta$ and $\sigma_b$ by $s = \sigma_b B_g$ gives
+the same matrix for the bin amplitudes.
+
+\end{document}
