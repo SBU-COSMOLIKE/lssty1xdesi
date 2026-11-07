@@ -24,6 +24,235 @@
 \end{center}
 \vspace{1em}
 
+\section{Summary}
+\label{sec:summary}
+
+\paragraph{The problem.}
+The forecast measures DESI galaxy clustering alone: the angular band
+powers $C_\ell^{gg}$ of thin redshift bins, computed without the
+Limber approximation, with the Fourier scale cut at
+$k_{\rm max} = 0.075\,h/{\rm Mpc}$ and a linear bias model.  The bins
+belong to six tracer groups, BGS, LRG1, LRG2, LRG3, ELG1 and ELG2,
+and four bin layouts are compared: bins of equal comoving width
+$\Delta d_{\rm com} = 62$~Mpc, and bins of fixed redshift width
+$\Delta z = 0.02$, $0.05$ and $0.2$.  The figure of merit is
+${\rm FoM}(w_0, w_a) = [\det \mathrm{Cov}(w_0, w_a)]^{-1/2}$, the
+inverse area of the error ellipse of the dark-energy equation-of-state
+parameters $w_0$ and $w_a$.
+
+The default model ties all bins of a group to one amplitude:
+$b_i = B_g / D(z_i)$, where $b_i$ is the linear bias of bin $i$,
+$D(z)$ is the linear growth factor normalized to $D(0) = 1$, and
+$B_g$ is one free amplitude per group $g$.  This tying is what makes
+thin bins powerful, and it fails in both directions at once.  It is
+too rigid: known physics moves each bin away from the group trend at
+the percent level.  And it is inaccurate: a drift the model cannot
+express does not average away, it displaces the fitted cosmology.
+Fitting data that carry the gentlest drift physics supplies, the slow
+debiasing of a conserved galaxy population, with the tied model
+shifts $(w_0, w_a)$ by 11 to 21 times the model's own error ellipse,
+depending on the layout (Appendix~\ref{app:bias}).  The opposite
+extreme, one free bias per bin, is accurate by construction but
+spends part of the data measuring 76 biases.
+
+\paragraph{The model.}
+Every intermediate case in this note is one model.  The bias of bin
+$i$ in group $g$ is
+\begin{equation}
+  b_{1,i} \;=\; \frac{B_g}{D(z_i)}\,\bigl(1 + \delta_i\bigr),
+  \qquad
+  \delta_i \;=\; s_g\,(z_i - \bar{z}_g) + \varepsilon_i ,
+  \label{eq:summodel}
+\end{equation}
+with a correlated Gaussian prior on the residuals within a group,
+\begin{equation}
+  \bigl\langle \varepsilon_i\,\varepsilon_j \bigr\rangle
+  \;=\; \sigma_g^2\,
+  \exp\!\left(-\,\frac{|z_i - z_j|}{L}\right),
+  \label{eq:sumkernel}
+\end{equation}
+and zero across groups.  Here $z_i$ is the bin redshift, $\bar{z}_g$
+is the mean redshift of the group's bins, $B_g$ and $s_g$ are a free
+amplitude and a free tilt per group (flat priors), $\delta_i$ is the
+fractional deviation from the group trend, $\varepsilon_i$ is the
+residual around the group's straight line, $\sigma_g$ is the prior
+width of one bin's residual in group $g$, and $L$ is the correlation
+length in redshift: bins much closer than $L$ share their residual,
+bins much farther apart do not.  The shape $B_g/D$ is the
+constant-clustering-amplitude trend measured for DESI-like luminous
+red galaxies \cite{Zhou2021}; it is not the evolution of a conserved
+population, whose bias obeys $b - 1 \propto 1/D$ \cite{Fry1996}, and
+that difference is one reason the tilt must be free.  In the Fisher
+matrix the prior becomes one projected precision block per group that
+charges only the residual shape, never the level or the line;
+Appendices~\ref{sec:twobins}--\ref{app:memory} derive the projection.
+
+\paragraph{The ladder.}
+The paper reports four nested assumptions, from rigid to free.
+\begin{itemize}
+  \item \textbf{Tied}: $b_i = B_g/D(z_i)$, one free amplitude per
+    group and nothing else.  The upper limit of the FoM.
+  \item \textbf{Baseline}: the model of Eq.~\eqref{eq:summodel} with
+    $\sigma_g = 3\%$ for BGS, $\sigma_g = 1\%$ for the other five
+    groups, and $L = 0.2$.  Each number has a stated physical source.
+    The BGS width is sized to the curvature of its flux-limit drift:
+    the $r < 19.5$ magnitude limit turns into a luminosity threshold
+    that rises with redshift and drags the bias up by about $22\%$
+    across the group, and a straight line removes all of that except
+    a $2.4\%$ rms curvature, which is what $\sigma_g$ must hold
+    (Appendix~\ref{app:bgsflux}).  The $1\%$ of the other groups is a
+    stated hedge for selection curvature not modeled in this note,
+    about ten times the residual a conserved population leaves after
+    its line (rms at most $0.16\%$ across the groups,
+    Appendix~\ref{sec:memphysics}).
+    $L = 0.2$ is comparable to the group spans, so the residual is
+    smooth across a group.
+  \item \textbf{Pessimistic}: the same model with $\sigma_g = 3\%$ in
+    every group and $L = 0.05$: local selection features in every
+    group, as large as the largest known curvature, on the scale over
+    which the 4000~\AA\ break crosses a filter edge
+    ($\Delta z \approx 0.03$--$0.05$).  The selection discussion of
+    Appendix~\ref{sec:selection} finds that mechanism but no
+    measurement of its amplitude, so this rung grants it the largest
+    measured size everywhere.
+  \item \textbf{Independent}: one free bias per bin, flat priors.
+    The lower limit.
+\end{itemize}
+
+\paragraph{Why a ladder and not one prior.}
+A prior is plausible if the bias histories that physics gives us look
+like ordinary draws from it.  That test is necessary, not sufficient,
+and it needs trusted histories; this note has a few derived drift
+laws and no mock catalogs.  So the paper does not defend a single
+choice.  It reports a reasonable case and a pessimistic case, and
+shows how the figure of merit depends on the assumption, inside two
+absolute limits.  A referee who rejects the baseline moves down one
+rung; nothing needs retracting.
+
+\paragraph{The cost of freedom.}
+Figure~\ref{fig:baselineladder} and Table~\ref{tab:ladder} give the
+FoM of every rung on every layout.  On the thin layouts the baseline
+keeps roughly half of the tied FoM and stays above the LSST Y1 3x2pt
+reference of $17.26$ on the $\Delta d_{\rm com} = 62$~Mpc layout.
+The pessimistic prior costs another third to half.  On
+$\Delta z = 0.2$ every group holds one or two bins, so the free
+amplitude and tilt already free every bin and the three lower rungs
+coincide.  The absolute values inherit a known mismatch between the
+data vector's biases and the covariance's, which inflates every
+layout's FoM by a factor of about $2.4$--$3.2$
+(Appendix~\ref{sec:results}); the comparison between rungs on a fixed
+layout holds the data vector and covariance fixed and changes only
+the prior.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.88\linewidth]{plots/baseline_ladder/baseline_ladder.pdf}
+  \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone at
+    $k_{\rm max} = 0.075\,h/{\rm Mpc}$ on the four rungs of the
+    linear-bias ladder, one line per bin layout.  The rungs: tied,
+    $b_i = B_g/D(z_i)$ with one free amplitude per group; baseline,
+    the model of Eq.~\eqref{eq:summodel}, a free amplitude and tilt
+    per group plus a correlated residual with $\sigma_g = 3\%$ for
+    BGS, $1\%$ for the other groups and $L = 0.2$; pessimistic, the
+    same model with $\sigma_g = 3\%$ in every group and $L = 0.05$;
+    independent, one free bias per bin.  The dashed line is the LSST
+    Y1 3x2pt reference at $17.26$.  On $\Delta z = 0.2$ the free
+    amplitude and tilt already free every one- and two-bin group, so
+    the three lower rungs coincide at $0.515$.}
+  \label{fig:baselineladder}
+\end{figure}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lcccc}
+    \hline
+    Layout & tied & baseline & pessimistic & independent \\
+    \hline
+    $\Delta d_{\rm com} = 62$~Mpc & $32.94$ & $18.19$ & $11.45$ & $10.69$ \\
+    $\Delta z = 0.02$ & $19.93$ & $12.47$ & $7.41$ & $4.02$ \\
+    $\Delta z = 0.05$ & $8.29$ & $1.96$ & $1.33$ & $1.23$ \\
+    $\Delta z = 0.2$  & $1.91$ & $0.515$ & $0.515$ & $0.515$ \\
+    \hline
+  \end{tabular}
+  \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone at
+    $k_{\rm max} = 0.075\,h/{\rm Mpc}$ on the four rungs of the
+    ladder, per layout.  The LSST Y1 3x2pt reference is $17.26$.}
+  \label{tab:ladder}
+\end{table}
+
+\paragraph{The accuracy test.}
+Each rung is also tested for the bias it would inherit from a drift
+it cannot express.  A known drift changes the expected data vector by
+$\delta m$; fitting those data with a rung's model shifts the
+parameters by $\delta p = F^{-1} \mathsf{D}\T \mathsf{C}_d^{-1}\,
+\delta m$, the linear response of the fit, where $\mathsf{D}$ is the
+derivative matrix of the data vector, $\mathsf{C}_d$ is the data
+covariance, and $F$ is the rung's Fisher matrix including its prior.
+The shift is quoted as the displacement of $(w_0, w_a)$ in units of
+that rung's own marginalized error ellipse, against a threshold of
+one third of the ellipse.  The tied model is excluded on accuracy:
+the conserved-population drift, the gentlest one physics supplies,
+biases it by $11$--$21$ ellipse units.  The baseline and the
+pessimistic rung pass everywhere; the largest shift of either is the
+BGS flux limit on the $\Delta z = 0.05$ layout, about $0.3$, where
+the group holds only six bins.  Appendix~\ref{app:bias} derives the
+formula, lists every number and draws the figure of bias.
+
+\paragraph{What the two priors look like.}
+Figures~\ref{fig:baselinedraws} and \ref{fig:pessimisticdraws} draw
+both priors next to the known drifts.  Under the baseline the
+neighbor residual rms at $\Delta z = 0.02$ is $0.44\%$ ($1.31\%$ for
+BGS), the draws are smooth, and the known drifts look like ordinary
+members of the family; the curvature the BGS line leaves costs a
+$\chi^2$ per degree of freedom of about $0.8$ under the residual
+prior on the $\Delta d_{\rm com} = 62$~Mpc bins.  Under the
+pessimistic prior the neighbor rms is $2.44\%$ in every group: the
+histories keep their lines but gain local features nobody has
+measured, which is the point of that rung.
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=0.74\linewidth]{plots/baseline_draws/baseline_draws.pdf}
+  \caption{The baseline prior next to the known drifts, group by
+    group, on the $\Delta z = 0.02$ bins.  Thick dashed: the
+    conserved-population drift.  Thick dash-dot, on BGS: the
+    $r < 19.5$ flux-limit drift.  Thin curves with dots: four draws
+    of the deviation $\delta(z)$ from the baseline prior
+    ($\sigma_g$ in each panel title, $L = 0.2$), each with its tilt
+    set to the known drift's own straight line, so draw and drift
+    share a line and differ by the residual $\varepsilon$.  The
+    neighbor residual rms is $0.44\%$ at $\Delta z = 0.02$ ($1.31\%$
+    for BGS).}
+  \label{fig:baselinedraws}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=0.74\linewidth]{plots/pessimistic_draws/pessimistic_draws.pdf}
+  \caption{The pessimistic prior in the format of
+    Figure~\ref{fig:baselinedraws}: $\sigma_g = 3\%$ in every group
+    and $L = 0.05$, drawn around the known drifts' lines.  The
+    neighbor residual rms is $2.44\%$ at $\Delta z = 0.02$.  The
+    histories keep the drift lines but add local selection features
+    of the size and length this rung assumes.}
+  \label{fig:pessimisticdraws}
+\end{figure}
+
+\paragraph{Higher-order bias.}
+The companion note on higher-order bias builds the quadratic bias
+$b_{2,i}$ and the tidal bias $b_{s^2,i}$ of each bin on the per-bin
+linear biases of Eq.~\eqref{eq:summodel}, through calibrated
+relations plus one free offset per group, so the higher-order sector
+drifts with the linear one.  At $k_{\rm max} = 0.075\,h/{\rm Mpc}$
+that sector adds the parameters of the two-page model summary: the
+offsets $\Delta_{2,g}$ and $\Delta_{s,g}$, one counterterm amplitude
+$\alpha_0$ and one shot-noise deviation ${\rm SN}_0$ per group, each
+with its stated Gaussian prior.
+
+\clearpage
+
+\appendix
+
 \section{Introduction: why an intermediate bias model}
 \label{sec:intro}
 
@@ -46,12 +275,12 @@ and $B_g$ is one free amplitude per group $g$.  The $1/D$ evolution keeps
 the clustering amplitude $b(z)\,D(z)$ of the group constant, the
 behavior measured for DESI-like luminous red galaxies
 \cite{Zhou2021}.  It is not the law of a fixed set of galaxies that
-follow the flow of matter ("passive evolution"); Section
-\ref{sec:conserved} derives that law and the small difference between
-the two.
+follow the flow of matter (``passive evolution'');
+Appendix~\ref{sec:conserved} derives that law and the small
+difference between the two.
 
 The opposite extreme frees one bias per bin, with flat priors and no
-connection between neighbors ("independent").  The dark-energy figure of
+connection between neighbors (``independent'').  The dark-energy figure of
 merit of the forecast depends on which extreme is chosen, and the
 question is how much of it rests on the tying itself.  To answer that,
 this note builds the intermediate model: bins may deviate from the
@@ -233,7 +462,7 @@ produce?  One case of bias evolution can be solved in closed form: a
 population whose members are conserved.  This section derives that
 case, measures its deviation from the tied trend, compares the
 deviation with what the prior permits, weighs the published
-measurements, and ends at the scanned grid and its plausible region.
+measurements, and ends at the scanned grid and the range it covers.
 
 \subsection{A conserved population: the bias continuity equation}
 \label{sec:conserved}
@@ -486,7 +715,7 @@ exponential kernel this note analyzes, the measured drifts point to
 the long end of the scanned $L$ grid, and only the sky-line windows
 point to the short end.
 
-\subsection{The scan and the plausible region}
+\subsection{The scan and the scanned range}
 \label{sec:scan}
 
 The forecast scans
@@ -497,31 +726,42 @@ The forecast scans
   \sigma_b \in \{1\%,\ 3\%,\ 5\%,\ 7\%,\ 10\%\},
   \label{eq:scan}
 \end{equation}
-with baseline $L = 0.05$ and $\sigma_b = 3\%$ (a provisional choice:
-the measurements of Section~\ref{sec:evidence} can still move it), and
-the plausible region $L = 0.02$--$0.1$, $\sigma_b = 1$--$5\%$.  The upper end of $L$
-is physical, not numerical: a sample's flux limit and color cuts change
+and the figures of Appendix~\ref{sec:results} mark two of its
+elements: the kernel scan's reference point, $L = 0.05$ and
+$\sigma_b = 3\%$ (the diamond their legends label ``baseline''), and
+the scanned range $L = 0.02$--$0.1$, $\sigma_b = 1$--$5\%$ (the band
+their legends label ``plausible'').  Neither is this note's baseline.
+The stated assumptions of Section~\ref{sec:summary} set that, on the
+memory model, and the roughness analysis of
+Appendix~\ref{app:roughness} explains why a region in
+$(L, \sigma_b)$ is the wrong object to promote: for smooth deviations
+the kernel constrains only the combination $\sigma_b/\sqrt{L}$.  The
+reasoning below sized the range and stays as the record of that
+sizing.
+
+The upper end of $L$
+rests on a physical argument: a sample's flux limit and color cuts change
 which galaxies enter the sample as redshift grows, and that change of
 galaxy mix happens over $\Delta z \sim 0.1$, so bias deviations should
 not be assumed coherent over separations much beyond that:
-$L \lesssim 0.1$.
+$L \lesssim 0.1$.  (Appendix~\ref{app:roughness} weighs this argument
+against the degeneracy above.)
 
-
-In Table~\ref{tab:rms}, the baseline allows neighbor differences of
+In Table~\ref{tab:rms}, the reference point allows neighbor differences of
 $2.4\%$ over $\Delta z = 0.02$, several times the conserved drift;
-the gentlest corner of the plausible region ($\sigma_b = 1\%$,
+the gentlest corner of the scanned range ($\sigma_b = 1\%$,
 $L = 0.1$) matches that drift, and the sharpest ($\sigma_b = 5\%$,
 $L = 0.02$) allows roughly eight times it.  The rows
 $\sigma_b = 10\%$ and $20\%$ show what the conserved-population
 comparison rules out: neighbor differences of $8$--$27\%$.  Both sit
-above the plausible region, and $\sigma_b = 20\%$ is outside the
+above the scanned range, and $\sigma_b = 20\%$ is outside the
 scanned grid.
 
 Shape freedom costs dark-energy information: the Fisher matrix spends
 part of the data constraining the bin biases instead of $w_0$ and
-$w_a$; Section~\ref{sec:results} measures the cost across the scanned
+$w_a$; Appendix~\ref{sec:results} measures the cost across the scanned
 grid.  Relative to a conserved population, the figure of merit
-computed anywhere in the plausible region except its gentlest corner
+computed anywhere in the scanned range except its gentlest corner
 is pessimistic.
 
 This comparison is not a proof, because a DESI sample is not
@@ -586,7 +826,7 @@ layout, which holds the layout, the data vector and the covariance
 fixed and changes only the prior.
 
 Figure~\ref{fig:range} places every scanned $(L, \sigma_b)$ between
-its layout's two caps.  At the baseline ($\sigma_b = 3\%$,
+its layout's two caps.  At the reference point ($\sigma_b = 3\%$,
 $L = 0.05$) the four layouts give ${\rm FoM} = 11.8$, $8.05$, $2.01$
 and $0.779$, which is $0.36$, $0.40$, $0.24$ and $0.41$ of the
 respective tied values.  At $\sigma_b = 1\%$ the tied fraction spans
@@ -607,9 +847,13 @@ here.
   \includegraphics[width=\linewidth]{plots/fom_range/fom_range.pdf}
   \caption{The ${\rm FoM}(w_0, w_a)$ of each thin-bin layout: the
     tied model (black cap), independent biases (gray cap), every
-    scanned $(L, \sigma_b)$ point (dots), the plausible region
-    ($\sigma_b = 1$--$5\%$, $L = 0.02$--$0.1$; band), the baseline
-    (diamond), and the LSST Y1 3x2pt reference at $17.3$ (dashed).}
+    scanned $(L, \sigma_b)$ point (dots), the scanned range
+    ($\sigma_b = 1$--$5\%$, $L = 0.02$--$0.1$; the band the legend
+    labels ``plausible''), the kernel scan's reference point
+    (the diamond the legend labels ``baseline''), and the LSST Y1
+    3x2pt reference at $17.3$ (dashed).  The note's baseline is the
+    memory model of Section~\ref{sec:summary}, not a point of this
+    scan.}
   \label{fig:range}
 \end{figure}
 
@@ -664,30 +908,33 @@ single-variable description of the grid should be expected.
     independent fraction ${\rm FoM}_{\rm indep}/{\rm FoM}_{\rm tied}$
     dotted; marker shapes give $L$ (circle $0.02$, square $0.05$,
     triangle $0.1$, diamond $0.2$).  Markers are filled when
-    $(L, \sigma_b)$ lies inside the plausible region,
-    $\sigma_b = 1$--$5\%$ and $L = 0.02$--$0.1$, and open outside it.
-    Plausible means inside the following edges, not a probability.
+    $(L, \sigma_b)$ lies inside the scanned range,
+    $\sigma_b = 1$--$5\%$ and $L = 0.02$--$0.1$ (the legend calls
+    filled markers ``plausible''), and open outside it.  The range
+    means inside the following edges, not a probability, and the
+    stated assumptions of Section~\ref{sec:summary} supersede it as
+    a prior choice.
     The lower edge $\sigma_b = 1\%$ is derived: a conserved
     population drifts from $B/D$ by about $1\%$ per
-    $\Delta z = 0.05$ (Section~\ref{sec:tilt}), so a narrower prior
+    $\Delta z = 0.05$ (Appendix~\ref{sec:tilt}), so a narrower prior
     would be tighter than population evolution alone.  The upper
     edge $\sigma_b = 5\%$ rests on measurements: the measured LRG
     residuals around $B/D$ are at most $2.3\%$, with errors of
     $1$--$3.4\%$, at $\Delta z \approx 0.1$ spacing (\cite{Zhou2021};
-    Section~\ref{sec:evidence}); the collected measurements of
+    Appendix~\ref{sec:evidence}); the collected measurements of
     Appendix~\ref{app:literature} place the upper envelope of the
     smooth LRG and ELG deviations at about $5\%$; and the
-    neighbor-rms comparison of Section~\ref{sec:pessimistic} shows
+    neighbor-rms comparison of Appendix~\ref{sec:pessimistic} shows
     that $\sigma_b \geq 10\%$ lets neighboring bins differ by
     $8$--$27\%$, which no identified mechanism produces, so $10\%$
     and $20\%$ are excluded from the region and $10\%$ stays in the
     scan only as the edge of the grid.  The upper edge $L = 0.1$ is
-    a modeling choice: the argument of Section~\ref{sec:scan} that a
+    a modeling choice: the argument of Appendix~\ref{sec:scan} that a
     sample's flux limit and color cuts change the galaxy mix over
     $\Delta z \approx 0.1$, although the measured drifts are smooth
     and favor the long end of the $L$ grid
-    (Section~\ref{sec:drift}), the case the memory model of
-    Section~\ref{sec:memory} addresses.  The lower edge $L = 0.02$
+    (Appendix~\ref{sec:drift}), the case the memory model of
+    Appendix~\ref{sec:memory} addresses.  The lower edge $L = 0.02$
     is the thinnest bin spacing of the scanned layouts: below it,
     neighboring bins would decorrelate faster than the bins are
     spaced.}
@@ -708,12 +955,12 @@ values $10.69$, $4.016$, $1.225$ and $0.5154$ exactly.
 \label{sec:memwhy}
 
 The kernel model carries one amplitude and one length, and
-Section~\ref{sec:drift} found that the measured deviations are not
+Appendix~\ref{sec:drift} found that the measured deviations are not
 the kind it describes best.  Every deviation found, except the narrow
 sky-line windows, is a line-like drift across its group: the BGS flux
 limit drifts by $10$--$25\%$ across the group, the LRG3 magnitude
 limit by $6$--$11\%$ per $\Delta z = 0.1$, and a conserved population
-by about $1\%$ per $\Delta z = 0.05$ (Section~\ref{sec:evidence}).
+by about $1\%$ per $\Delta z = 0.05$ (Appendix~\ref{sec:evidence}).
 
 The kernel model can admit such a drift, but only at a price.  To
 pass a $20\%$ drift with $L \leq 0.1$ it needs
@@ -842,7 +1089,7 @@ and the drift of the halo-mass threshold at fixed number density all
 act like this.  The second kind is local: features of the selection
 that change bins independently and are forgotten over a short range,
 such as the sky-line windows and filter-edge crossings of
-Section~\ref{sec:selection}.  The exponential kernel knows only the
+Appendix~\ref{sec:selection}.  The exponential kernel knows only the
 second kind, so it must inflate $\sigma_b$ to admit the first.  The
 memory model gives the first kind to the tilt and the second to the
 kernel.
@@ -897,8 +1144,11 @@ redshift.  The line leaves $2.4\%$ rms and $3.3\%$ at most: the
 drift is convex, because the bias grows exponentially with the
 luminosity threshold (through the magnitude).  So for BGS the memory
 model's residual scatter must be about $2$--$3\%$, or the model
-needs a quadratic term.  The estimate is crude: no K-correction, and
-no evolution of the threshold-bias fit.
+needs a quadratic term.  Appendix~\ref{app:bgsflux} derives the
+flux-limit model step by step and lists what it leaves out: the
+threshold-bias fit frozen at $z \approx 0.1$, the missing
+K-correction and luminosity evolution, and the unmodeled fiber cut
+and BGS Faint sample.
 
 Figure~\ref{fig:theorydelta} carries both statements.  In the top
 panel every conserved deviation is a straight line, and the thin
@@ -929,11 +1179,11 @@ model, $\sigma_b$ is the departure from the group's own straight
 line: curvature plus local scatter.  The physically plausible values
 differ accordingly: about $0.1\%$ for a conserved population
 (Table~\ref{tab:linefit}), $1$--$2\%$ for the local selection
-features (Section~\ref{sec:evidence}), and $2$--$3\%$ for the BGS
+features (Appendix~\ref{sec:evidence}), and $2$--$3\%$ for the BGS
 curvature.
 
 The honest limit is unchanged: none of the measurements collected in
-Section~\ref{sec:evidence} resolves bias below
+Appendix~\ref{sec:evidence} resolves bias below
 $\Delta z \approx 0.1$.  The memory
 model rests on the same evidence as the kernel model; it encodes
 that evidence in a form closer to the physics.
@@ -1029,7 +1279,7 @@ the same four layouts and the same ${\rm FoM}(w_0, w_a)$ of the DESI
 clustering band powers alone at
 $k_{\rm max} = 0.075\,h/{\rm Mpc}$, with $\sigma_b$ and $L$ now
 describing the residuals around each group's free line.  The caveat
-of Section~\ref{sec:results} applies unchanged: these results are
+of Appendix~\ref{sec:results} applies unchanged: these results are
 preliminary, linear bias only.
 
 \begin{table}[ht]
@@ -1092,7 +1342,7 @@ that matters.
 \end{figure}
 
 The comparison that matters pairs each model with the $\sigma_b$ it
-needs to describe the physics of Sections~\ref{sec:physical} and
+needs to describe the physics of Appendices~\ref{sec:physical} and
 \ref{sec:memphysics}: about $10\%$ for the kernel model to admit the
 measured drifts, and about $1\%$ (a conserved, LRG-like population)
 to $3\%$ (the BGS curvature) for the memory model.  At $L = 0.05$,
@@ -1113,7 +1363,7 @@ $\Delta d_{\rm com} = 62$~Mpc layout responds at $\sigma_b = 1\%$
 construction: every cell equals the independent value $0.5154$,
 because each of its groups holds one or two bins, which the free
 amplitude and tilt free completely
-(Section~\ref{sec:memcharge}).
+(Appendix~\ref{sec:memcharge}).
 
 \begin{figure}[htbp]
   \centering
@@ -1129,7 +1379,7 @@ The scan reaches its limits numerically.  At $\sigma_b = 1000\%$ the
 memory model lands on the independent values exactly ($10.69$,
 $4.016$, $1.225$, $0.5154$), and at $\sigma_b \to 0$ on the
 tied-plus-free-tilt values of Table~\ref{tab:memside}, as
-Section~\ref{sec:memlimits} says it must.
+Appendix~\ref{sec:memlimits} says it must.
 
 \subsection{The limits}
 \label{sec:memlimits}
@@ -1143,7 +1393,8 @@ independent.  Between the endpoints, $\sigma_b$ and $L$ keep the
 same meanings as before, now applied to the wiggles around each
 group's line.
 
-\section*{Summary}
+\subsection{The two models in one paragraph}
+\label{sec:memrecap}
 
 The intermediate bias model frees one amplitude $B_g$ per tracer group
 and lets each bin deviate fractionally from the group's
@@ -1164,7 +1415,241 @@ $\sigma_b$ each model needs to admit the measured drifts (about
 $1$--$3\%$ with a tilt, about $10\%$ without), the memory model
 keeps more of the figure of merit on the thinnest layouts.
 
-\appendix
+\section{The accuracy test: the figure of bias}
+\label{app:bias}
+
+The ladder of Section~\ref{sec:summary} orders the models by how much
+information they keep.  This appendix orders them by the other
+quantity that matters: the bias each model inherits from a drift it
+cannot express.  The result is the accuracy statement the summary
+quotes, and the reason the tied model is excluded rather than merely
+optimistic.
+
+\subsection{The shift formula}
+\label{sec:biasformula}
+
+Let $m$ be the expected data vector (the band powers), $\mathsf{C}_d$
+its covariance, $\mathsf{D}$ the matrix of derivatives of $m$ with
+respect to the parameters, and
+$F = \mathsf{D}\T \mathsf{C}_d^{-1} \mathsf{D} + F_{\rm priors}$ the
+Fisher matrix of one rung, priors included
+(Appendix~\ref{sec:fisher}).  Now let the true biases carry a known
+drift the rung's model may not be able to express: the data vector
+moves by $\delta m$.  To first order in $\delta m$, the maximum of
+the posterior moves by
+\begin{equation}
+  \delta p \;=\; F^{-1} \mathsf{D}\T \mathsf{C}_d^{-1}\, \delta m ,
+  \label{eq:fisherbias}
+\end{equation}
+the linear response of the fit.  The derivation is one line: the
+score (the gradient of the log posterior) at the old maximum becomes
+$\mathsf{D}\T \mathsf{C}_d^{-1} \delta m$ instead of zero, and the
+curvature that converts a score into a parameter displacement is
+$F$.
+
+The quoted number compresses $\delta p$ into the plane that matters.
+With $\mathsf{C}_w$ the rung's marginalized $2 \times 2$ covariance
+of $(w_0, w_a)$ and $\delta w$ the $(w_0, w_a)$ entries of
+$\delta p$, the shift is
+\begin{equation}
+  \Delta_w \;=\; \sqrt{\delta w\T\, \mathsf{C}_w^{-1}\, \delta w} :
+  \label{eq:shiftw}
+\end{equation}
+the displacement of the dark-energy ellipse in units of its own size.
+$\Delta_w = 1$ means the fitted $(w_0, w_a)$ sits on the one-sigma
+contour of the unshifted forecast.  The threshold drawn in the
+figures is $\Delta_w = 1/3$, a shift that widens the effective error
+by a few percent.  Both the ellipse and the response use the same
+rung's $F$: a rigid model is punished twice, because it absorbs
+little of the drift and its ellipse is small.
+
+The drift enters through the bin biases.  With $\beta_i$ the bin
+amplitudes of Eq.~\eqref{eq:beta} and $\delta_i$ the drift's
+fractional deviations, the data move by
+$\delta m = \sum_i (\partial m / \partial \beta_i)\, B_g\, \delta_i$,
+with each group's mean deviation removed because $B_g$ is free.  For
+the tied rung the response is evaluated in the tied parameter basis;
+for the independent rung the bias derivatives span the drift exactly,
+so the cosmology shift vanishes: the free biases absorb the drift,
+and the accuracy of that rung is bought entirely with the information
+the ladder shows it giving up.
+
+\subsection{The drift laws}
+\label{sec:driftlaws}
+
+Two known drifts are injected, the two derived in this note.  The
+conserved-population drift applies to every group: the deviation of
+Eq.~\eqref{eq:tilt}, anchored at the group's mean redshift.  It is
+the gentlest drift physics supplies, nearly a straight line of a few
+percent across each group.  The BGS flux-limit drift applies to BGS
+alone: the convex deviation of Appendix~\ref{app:bgsflux}, a $22\%$
+span whose best line leaves a $2.4\%$ rms curvature.  Both come from
+the same scripts as the theory figures; only the shape of each drift
+matters, because the free amplitudes remove the level.
+
+\subsection{The figure of bias}
+\label{sec:biasresults}
+
+Table~\ref{tab:ladderbias} lists the shift $\Delta_w$ of every rung
+under both drifts, and Figure~\ref{fig:ladderbias} draws it.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{llcccc}
+    \hline
+    Drift & Layout & tied & baseline & pessimistic & independent \\
+    \hline
+    conserved population & $\Delta d_{\rm com} = 62$~Mpc &
+    $17.4$ & $0.027$ & $0.003$ & $0$ \\
+    (every group) & $\Delta z = 0.02$ &
+    $12.4$ & $0.038$ & $0.005$ & $0$ \\
+    & $\Delta z = 0.05$ & $21.5$ & $0.097$ & $0.008$ & $0$ \\
+    & $\Delta z = 0.2$  & $10.9$ & $0$ & $0$ & $0$ \\
+    \hline
+    BGS flux limit & $\Delta d_{\rm com} = 62$~Mpc &
+    $0.13$ & $0.0014$ & $0.0013$ & $0$ \\
+    ($r < 19.5$) & $\Delta z = 0.02$ &
+    $1.15$ & $0.022$ & $0.024$ & $0$ \\
+    & $\Delta z = 0.05$ & $2.79$ & $0.27$ & $0.29$ & $0$ \\
+    & $\Delta z = 0.2$  & $1.39$ & $0$ & $0$ & $0$ \\
+    \hline
+  \end{tabular}
+  \caption{The $(w_0, w_a)$ shift $\Delta_w$ of
+    Eq.~\eqref{eq:shiftw}, in units of each rung's own marginalized
+    ellipse, when the data carry one of the two known drifts.  On
+    $\Delta z = 0.2$ the baseline and pessimistic rungs equal the
+    independent model (every group has one or two bins), so their
+    shifts are zero.}
+  \label{tab:ladderbias}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/ladder_bias/ladder_bias.pdf}
+  \caption{The figure of bias: the $(w_0, w_a)$ shift $\Delta_w$ of
+    each rung of the ladder, in units of that rung's own marginalized
+    error ellipse, on a logarithmic axis.  Solid lines with filled
+    circles: the conserved-population drift, applied to every group.
+    Dotted lines with open squares: the BGS $r < 19.5$ flux-limit
+    drift.  Colors distinguish the four layouts.  The dashed
+    horizontal line is the threshold of one third of the ellipse.
+    Shifts below $10^{-3}$ are drawn at $10^{-3}$; the independent
+    rung is exactly zero.}
+  \label{fig:ladderbias}
+\end{figure}
+
+Three statements carry the table.  First, the tied model is excluded
+on accuracy.  The conserved population, the gentlest drift, biases it
+by $10.9$ to $21.5$ ellipse units; its flux-limit column is smaller
+only because that drift moves one group out of six.  A model whose
+central value sits more than ten of its own sigmas from the truth
+under the mildest input is not a conservative choice, it is a wrong
+one, and this is independent of the ladder's information argument.
+
+Second, the baseline and the pessimistic rung pass everywhere, most
+of the table by two or more orders of magnitude.  The largest entry
+of either is the BGS flux limit on $\Delta z = 0.05$, about $0.3$:
+that layout resolves BGS into only six bins, so the convex residual
+is sampled coarsely and the prior has less room to absorb it between
+the free line and the data.  The conserved-drift rows also show the
+expected ordering: the pessimistic prior, being wider, absorbs the
+drift's curvature more completely than the baseline.
+
+Third, the test is one-sided.  Passing it proves a rung can express
+the drifts this note knows about; it cannot certify the drifts
+nobody has measured.  That is what the pessimistic rung is for, and
+why the ladder ends at the independent model, whose shift is zero
+for every drift expressible through the bin biases.
+
+\section{The roughness scan}
+\label{app:roughness}
+
+\subsection{One number controls smooth deviations}
+\label{sec:roughnessdef}
+
+For deviations that change slowly from bin to bin, the exponential
+kernel of Eq.~\eqref{eq:priorkernel} does not constrain $\sigma_b$
+and $L$ separately.  The jump variance of Eq.~\eqref{eq:jumptaylor}
+depends on them only through $\sigma_b^2/L$, so a scan in two
+parameters hides a one-parameter family: doubling $L$ while
+multiplying $\sigma_b$ by $\sqrt{2}$ admits the same smooth drift.
+The combination this appendix uses is the roughness
+\begin{equation}
+  x \;\equiv\; \sigma_b\,\sqrt{\frac{0.1}{L}}
+  \;=\;
+  \sigma_b\,\sqrt{\frac{2 \times 0.05}{L}} ,
+  \label{eq:roughx}
+\end{equation}
+the small-separation rms change of the deviation between two bins
+$\Delta z = 0.05$ apart, a rescaling of the $\kappa$ of
+Eq.~\eqref{eq:roughness} into an rms with a definite separation.
+
+The roughness corrects a statement made in
+Appendix~\ref{sec:physical}.  The argument there reads a short $L$
+as unphysical because no selection mechanism decorrelates neighboring
+bins that fast.  That was too strong: $L = 0.05$ with the matching
+$\sigma_b$ admits the real smooth drifts perfectly well, since only
+$x$ matters for them.  What a short $L$ also admits is jagged
+histories nobody has observed, and what it cannot do is admit a large
+drift and forbid the jagged histories at the same time.  The scan
+below makes that trade visible.
+
+\subsection{The scan}
+\label{sec:roughnessscan}
+
+Figure~\ref{fig:biasroughness} scans both models against $x$ on a
+logarithmic axis, with one width $\sigma_b$ for every group, at every
+correlation length $L$ in $\{0.05,\ 0.1,\ 0.2,\ 0.5,\ 1\}$.
+The top row is the fraction of the tied FoM kept;
+the bottom row is the conserved-drift shift $\Delta_w$ of
+Appendix~\ref{app:bias}.  The left column is the exponential kernel
+alone (a free amplitude per group); the right column is the memory
+model (a free amplitude and tilt per group).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/bias_roughness/bias_roughness.pdf}
+  \caption{Both models against the roughness
+    $x = \sigma_b \sqrt{0.1/L}$, the rms change of the bias deviation
+    between bins $\Delta z = 0.05$ apart, with one $\sigma_b$ for
+    every group and every $L \in \{0.05, 0.1, 0.2, 0.5, 1\}$ (line
+    styles).  Left: the exponential kernel (free amplitude per
+    group).  Right: the memory model (free amplitude and tilt per
+    group).  Top: the fraction of the tied FoM kept, with each
+    layout's independent fraction dotted.  Bottom: the
+    conserved-drift shift $\Delta_w$ in units of each model's own
+    $(w_0, w_a)$ ellipse, with the $\sigma/3$ threshold dashed;
+    values below $10^{-3}$ are drawn at $10^{-3}$.  The vertical
+    marks are the stated assumptions: baseline $x = 0.71\%$ (the
+    non-BGS groups), baseline BGS $x = 2.1\%$, and pessimistic
+    $x = 4.2\%$.}
+  \label{fig:biasroughness}
+\end{figure}
+
+The memory curves collapse in $L$: at fixed $x$, every $L$ gives
+nearly the same FoM fraction and the same drift shift, because the
+free tilt owns the whole-group freedom and the residual kernel acts
+only through its small-separation behavior, which is $x$.  For the
+memory model the roughness is the model, and the stated assumptions
+are three marks on one axis: baseline $x = 0.71\%$ for the non-BGS
+groups, baseline $x = 2.1\%$ for BGS, pessimistic $x = 4.2\%$.
+
+The kernel curves spread in $L$.  At fixed $x$ a longer $L$ carries
+a larger wander $\sigma_b = x\,\sqrt{L/0.1}$, so the bias may drift
+coherently across the whole group, a freedom the roughness does not
+measure.  The spread is the two-parameter nature of the kernel made
+visible, and it is why Appendix~\ref{sec:results} finds no collapse
+onto a single curve.
+
+The bottom row states the accuracy trade.  The kernel needs a
+roughness of about $3$--$10\%$, depending on layout and $L$, before
+the conserved-drift shift falls under the threshold: it must buy
+accuracy with bin-to-bin scatter that no measurement supports.  The
+memory model sits under the threshold everywhere except the
+tilt-only limit ($x \to 0$) on $\Delta z = 0.05$, which reaches
+$0.46$: one straight line per group absorbs the conserved drift to a
+third of the ellipse or better once any residual freedom at all is
+granted.
 
 \section{The projected precision for two bins}
 \label{sec:twobins}
@@ -1223,7 +1708,7 @@ other, and it relaxes to the independent value $2a^2/s^2$ as
 $r \to 0$.
 
 A number makes the contrast concrete.  At $r = 0.670$ (the worked value
-of Section~\ref{sec:jump}), the shape change costs
+of Appendix~\ref{sec:jump}), the shape change costs
 $2a^2/(0.330\,s^2) = 6.1\,a^2/s^2$ while the uniform shift costs
 $2a^2/(1.670\,s^2) = 1.2\,a^2/s^2$.  The correlated prior already
 charges five times more for the shape change than for the uniform
@@ -1343,7 +1828,7 @@ The first-order condition of Eq.~\eqref{eq:focs} says precisely that
   \label{eq:ortho}
 \end{equation}
 the residual is orthogonal to the uniform direction \emph{in the
-$\Cov^{-1}$ metric}.  (With correlated errors, "orthogonal" must be
+$\Cov^{-1}$ metric}.  (With correlated errors, ``orthogonal'' must be
 measured with the same matrix that measures lengths.)  Substituting the
 split into the full penalty, the cross term is
 $2 a\,\ones\T \Cov^{-1} w = 0$, and
@@ -1448,8 +1933,8 @@ $\Prec = \mathsf{F}_{\beta\beta}
 - \mathsf{F}_{\beta B}\, \mathsf{F}_{BB}^{-1}\, \mathsf{F}_{B\beta}$,
 is called the \emph{Schur complement} over $B$, and it reproduces
 Eq.~\eqref{eq:projdef} term by term.  So $\Prec$ is not a trick: it
-is precisely the statement "\emph{$B_g$ is sampled with a flat prior
-and marginalized}", folded into one matrix.
+is precisely the statement ``\emph{$B_g$ is sampled with a flat prior
+and marginalized}'', folded into one matrix.
 
 Note also that $B_*$ in Eq.~\eqref{eq:complsq} is the same
 generalized-least-squares mean as $a$ in Eq.~\eqref{eq:besta}: the
@@ -1564,7 +2049,7 @@ is pulled only by its neighbor, and the long-range correlation comes
 from chaining the pulls.  (Expanding the squares and collecting terms
 reproduces Eq.~\eqref{eq:threebin} for $n = 3$; Appendix~\ref{app:chain}
 does it for general, uneven spacing.)  This is the precise sense of
-"correlation only between adjacent bins": \emph{directly}, only
+``correlation only between adjacent bins'': \emph{directly}, only
 neighbors talk; \emph{in total}, the influence propagates down the
 whole chain.  Probability theory calls this neighbors-only structure
 the Markov property.
@@ -1695,7 +2180,7 @@ where each conditional is Gaussian with
   \label{eq:conditional}
 \end{equation}
 Here $r_k = e^{-(z_{k+1} - z_k)/L}$ is, as in
-Sections~\ref{sec:jump} and \ref{sec:tridiag}, the correlation
+Appendices~\ref{sec:jump} and \ref{sec:tridiag}, the correlation
 coefficient of the adjacent bins $k$ and $k+1$: the kernel of
 Eq.~\eqref{eq:priorkernel} gives
 $\mathrm{Cov}(\delta_k, \delta_{k+1}) = \sigma_b^2\, r_k$ and
@@ -2113,7 +2598,7 @@ the perfectly correlated special case of their model.
 Each assumption fails in a specific way for a DESI sample.
 Membership is not conserved: the flux limit and color cuts admit and
 remove galaxies as redshift grows (the threshold drift and
-color-selection features of Section~\ref{sec:selection}), mergers
+color-selection features of Appendix~\ref{sec:selection}), mergers
 turn two members into one, and an ELG belongs to the sample only
 during its star-forming phase.  The no-velocity-bias and
 linear-theory assumptions hold well on the scales this forecast
@@ -2124,11 +2609,233 @@ Eq.~\eqref{eq:continuity} numerically, with $\delta_m$ from the
 linear growth equation, and recovers the closed form of
 Eq.~\eqref{eq:fry} to a relative accuracy of $2 \times 10^{-9}$.
 
+\section{The BGS flux-limit bias model, step by step}
+\label{app:bgsflux}
+
+Appendix~\ref{sec:memphysics} quotes a BGS bias drift driven by the
+survey's flux limit: a $22.3\%$ span of the deviation, a convex
+shape, and a $2.4\%$ rms residual around the best straight line.
+This appendix derives that model in four steps, tabulates every
+intermediate quantity, explains the shape, and then lists what the
+model leaves out.  The model lives in the function
+\texttt{bgs\_flux\_limit\_bias} of
+\texttt{plots/make\_theory\_data.py}, and the script of
+Appendix~\ref{app:verify} checks the numbers below.
+
+\subsection{The four steps}
+\label{sec:bgssteps}
+
+\paragraph{Step 1: the flux limit becomes a luminosity threshold.}
+BGS Bright keeps every galaxy brighter than apparent magnitude
+$r = 19.5$ (measured limit, \cite{Hahn2023}).  Apparent magnitude
+$m$ and absolute magnitude $M$ are related by
+$m = M + 25 + 5\log_{10}[d_L/(h^{-1}\,{\rm Mpc})] + K(z)$, where
+$d_L$ is the luminosity distance, $h$ is the Hubble constant in
+units of $100$ km/s/Mpc, and $K(z)$ is the K-correction: the
+magnitude shift that accounts for a fixed filter sampling a
+redshifted spectrum \cite{BlantonRoweis2007}.  The model sets
+$K = 0$.  The faintest absolute magnitude that passes the cut at
+redshift $z$ is then
+\begin{equation}
+  M_{\rm lim}(z) - 5\log_{10} h
+  \;=\;
+  19.5 - 25 - 5\log_{10} \frac{d_L(z)}{h^{-1}\,{\rm Mpc}},
+  \qquad
+  d_L(z) \;=\; (1+z)\,\chi(z),
+  \label{eq:bgsmlim}
+\end{equation}
+with $\chi(z)$ the comoving distance of flat $\Lambda$CDM with
+$\Omega_m = 0.3$, the background of the whole note.  Every magnitude
+in this appendix carries the $M - 5\log_{10} h$ convention, the
+convention of the $M_*$ in step 3.  Brighter means more negative:
+between the first and last $\Delta z = 0.05$ bin centers the
+threshold brightens by $2.68$ magnitudes
+(Table~\ref{tab:bgsflux}).
+
+\paragraph{Step 2: the sample at each redshift is a
+luminosity-threshold sample.}
+At redshift $z$ the model sample holds every galaxy brighter than
+the threshold, $M < M_{\rm lim}(z)$.  Each thin bin is therefore a
+luminosity-threshold sample, and the threshold brightens with
+distance: the one selection function $r < 19.5$ turns into a
+different threshold sample in every bin.
+
+\paragraph{Step 3: the threshold sets the bias through the Zehavi
+et al. fit.}
+Zehavi et al. \cite{Zehavi2011} measured the large-scale bias of
+luminosity-threshold samples in the SDSS main sample at $z < 0.25$
+(effective redshift about $0.1$) and fit it with
+\begin{equation}
+  b(>L)
+  \;=\;
+  1.06 + 0.21\,(L/L_*)^{1.12},
+  \qquad
+  L/L_* \;=\; 10^{-0.4\,(M_{\rm lim} - M_*)},
+  \label{eq:bgszehavi}
+\end{equation}
+where $L$ is the threshold luminosity of the sample, and $L_*$ and
+$M_* - 5\log_{10} h = -20.44$ are the characteristic luminosity and
+magnitude of the SDSS $r$-band luminosity function
+\cite{Blanton2003}.  Appendix~\ref{app:literature} summarizes the
+measurement itself.  The model applies the fit at every redshift of
+the group, without evolution; it also reads the published left side
+$b\,(\sigma_8/0.8)$ as $b$, with $\sigma_8$ the rms matter
+fluctuation in spheres of $8\,{\rm Mpc}/h$.
+
+\paragraph{Step 4: the deviation from the tied shape.}
+The deviation $\delta$ of Eq.~\eqref{eq:model} compares this bias
+with the tied shape $B_g/D(z)$, where $D$ is the linear growth
+factor of Appendix~\ref{sec:intro}.  Because the group amplitude
+$B_g$ is free, only the shape of $b(z)$ matters, and the model fixes
+the amplitude $B$ by making the mean deviation over the group's bin
+centers vanish:
+\begin{equation}
+  \delta(z_i)
+  \;=\;
+  \frac{b(z_i)\,D(z_i)}{B} - 1,
+  \qquad
+  B \;=\; \frac{1}{n}\sum_{j=1}^{n} b(z_j)\,D(z_j),
+  \label{eq:bgsdelta}
+\end{equation}
+with $z_1, \dots, z_n$ the bin centers of the group.
+
+Table~\ref{tab:bgsflux} evaluates the chain at the
+$\Delta z = 0.05$ bin centers of the BGS group, the same evaluation
+points as Table~\ref{tab:linefit}, Figure~\ref{fig:theorydelta} and
+the numbers of Appendix~\ref{sec:memphysics}: the threshold runs from
+$-18.56$ to $-21.24$, the bias from $1.09$ to $1.54$, and the
+deviation spans $22.3\%$.  On a coarser grid the endpoint values
+move; at $z = 0.11$ and $z = 0.39$, for example, the bias runs from
+$1.08$ to $1.59$.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{ccccccc}
+    \hline
+    $z$ & $d_L$ [$h^{-1}$ Mpc] & $M_{\rm lim} - 5\log_{10} h$ &
+    $L/L_*$ & $b$ & $D$ & $\delta$ \\
+    \hline
+    $0.125$ & $410$  & $-18.56$ & $0.18$ & $1.09$ & $0.937$ & $-8.0\%$ \\
+    $0.175$ & $591$  & $-19.36$ & $0.37$ & $1.13$ & $0.913$ & $-7.2\%$ \\
+    $0.225$ & $783$  & $-19.97$ & $0.65$ & $1.19$ & $0.890$ & $-4.7\%$ \\
+    $0.275$ & $984$  & $-20.46$ & $1.02$ & $1.27$ & $0.867$ & $-0.4\%$ \\
+    $0.325$ & $1192$ & $-20.88$ & $1.50$ & $1.39$ & $0.845$ & $+5.9\%$ \\
+    $0.375$ & $1409$ & $-21.24$ & $2.10$ & $1.54$ & $0.824$ & $+14.4\%$ \\
+    \hline
+  \end{tabular}
+  \caption{The BGS flux-limit chain at the $\Delta z = 0.05$ bin
+    centers: the luminosity distance $d_L$
+    (Eq.~\eqref{eq:bgsmlim}), the threshold magnitude
+    $M_{\rm lim}$, the threshold luminosity $L/L_*$ and bias $b$
+    (Eq.~\eqref{eq:bgszehavi}), the growth factor $D$, and the
+    deviation $\delta$ from the tied shape
+    (Eq.~\eqref{eq:bgsdelta}).}
+  \label{tab:bgsflux}
+\end{table}
+
+\subsection{Why the drift is convex}
+\label{sec:bgsconvex}
+
+The two factors of $b\,D$ change at very different rates: across the
+bin centers of Table~\ref{tab:bgsflux} the bias rises by $41\%$
+while $D$ falls by $12\%$, so the deviation inherits the shape of
+the bias curve.  That curve is flat at low redshift and steep at
+high redshift for one reason: the luminosity ratio is exponential in
+the threshold magnitude, $L/L_* = 10^{-0.4\,(M_{\rm lim} - M_*)}$.
+Below $L_*$ the term $0.21\,(L/L_*)^{1.12}$ is small against the
+constant $1.06$ ($0.03$ at the first bin center), so the bias stays
+near the faint-end floor of the fit.  The threshold crosses $L_*$
+near $z = 0.27$, and past the crossing the same term dominates the
+growth of $b$ and rises exponentially with the threshold magnitude
+($0.48$ at the last center).  A curve that is flat on one side of a
+crossing and exponential on the other is convex across the group.
+
+A straight line through a convex curve leaves a U-shaped residual.
+Quantitatively, the deviation at the six centers is almost exactly a
+parabola: adding a quadratic term cuts the residual from $2.4\%$ to
+$0.1\%$ rms.  The fitted quadratic coefficient is $3.8$ per unit
+redshift squared, and a pure parabola with that coefficient, sampled
+at the six centers with its best line removed, leaves residuals of
+$+3.2\%$ at the ends and $-2.6\%$ in the middle, rms $2.4\%$:
+the measured residuals $(+3.1, -0.5, -2.5, -2.6, -0.8, +3.3)\%$ of
+Figure~\ref{fig:theorydelta} are this U shape.  The $2.4\%$ rms of
+Appendix~\ref{sec:memphysics} is therefore the curvature of the
+drift, the one part of it a free tilt cannot absorb.
+
+\subsection{What the model leaves out}
+\label{sec:bgsomissions}
+
+Each omission below states the direction in which it pushes the
+drift.  None of them changes the qualitative shape: a smooth,
+monotonic, convex rise of the bias toward the far edge of the group.
+
+\paragraph{The threshold-bias relation is frozen at $z \approx 0.1$.}
+Equation~\eqref{eq:bgszehavi} is a fit to clustering at
+$z \lesssim 0.25$, applied here up to $z = 0.4$.  Two neglected
+evolutions pull in opposite directions.  First, the bias at fixed
+luminosity grows with redshift: for a conserved population the
+continuity equation of Appendix~\ref{app:continuity} gives
+$b - 1 \propto 1/D$ (Eq.~\eqref{eq:fry}), so a threshold sample at
+$z = 0.4$ is more biased than the $z \approx 0.1$ calibration
+reports.  This steepens the drift.  Second, galaxies were brighter
+in the past: Blanton et al. \cite{Blanton2003} measure the
+luminosity evolution of the SDSS $r$-band luminosity function as a
+brightening of $M_*$ by $Q \approx 1$--$2$ magnitudes per unit
+redshift.  A fixed threshold therefore sits lower relative to
+$L_*(z)$ at high redshift, which lowers $L/L_*$ and the bias there.
+This flattens the drift.  The flattening is a fraction of the
+effect, not all of it: $Q\,(z - 0.1)$ reaches $0.3$--$0.6$
+magnitudes at the last bin center, against the $2.68$ magnitudes the
+threshold itself brightens across the group.
+
+\paragraph{No K-correction.}
+The model drops the $K(z)$ of step 1.  Two pieces are dropped with
+it.  The bandpass-shift part alone, the special case of observing a
+spectrum flat in wavelength through its own filter, is
+$2.5\log_{10}(1+z)$, which is $0.37$ magnitudes at $z = 0.4$
+\cite{BlantonRoweis2007}; a red spectrum, falling toward the blue,
+makes the $r$-band correction larger still.  In addition, the $M_*$
+of step 3 is measured in the $r$ band shifted to $z = 0.1$
+\cite{Blanton2003}, while Eq.~\eqref{eq:bgsmlim} produces an
+observed-band magnitude; the K-correction is exactly the bridge
+between the two bands, and the model omits the bridge.  A positive
+$K$ makes the true threshold brighter at high redshift than
+Eq.~\eqref{eq:bgsmlim} says, so the true $L/L_*$ and bias are higher
+there: the omission steepens the drift.
+
+\paragraph{Only $r < 19.5$ is modeled.}
+BGS Bright also imposes a fiber-magnitude cut for redshift success,
+and BGS Faint, the color-selected extension at
+$19.5 < r < 20.175$, is absent from the model \cite{Hahn2023}.  A
+sample that includes BGS Faint has a limit $0.675$ magnitudes
+fainter at every redshift, which lowers $L/L_*$ and the bias
+everywhere and moves the $L_*$ crossing to higher redshift: a
+flatter drift.  The fiber cut and the color selection change the
+galaxy mix in a way the threshold fit of
+Eq.~\eqref{eq:bgszehavi} cannot follow, and this model assigns them
+no direction.
+
+\paragraph{Scope.}
+The model is an order-of-magnitude estimate.  Its reliable content
+is the shape of the drift (smooth, monotonic, convex) and its size
+to a factor of order unity, and that is the content this note uses:
+Appendix~\ref{sec:memphysics} sizes the memory model's residual
+scatter for BGS from the $2$--$3\%$ curvature.  It is not a
+prediction of the measured DESI BGS bias.  The upgrade path replaces
+Eq.~\eqref{eq:bgszehavi} with DESI's own measurement: the
+One-Percent Survey analysis of Prada et al. \cite{Prada2023} fits
+the BGS clustering as a function of absolute magnitude and redshift
+with abundance matching, and reports the dependence of the
+large-scale bias on absolute magnitude; that relation, plus the
+measured K-corrections and luminosity evolution above
+\cite{BlantonRoweis2007, Blanton2003}, would replace steps 1 and 3
+with calibrated inputs.
+
 \section{What the literature says, paper by paper}
 \label{app:literature}
 
 This appendix summarizes each measurement behind
-Section~\ref{sec:evidence}, for a reader who has not read the papers.
+Appendix~\ref{sec:evidence}, for a reader who has not read the papers.
 The tags are those of that section: measured, derived, assumed.
 
 \subsection{Passive-evolution tests of massive red galaxies}
@@ -2220,7 +2927,7 @@ where $z_{\rm fiber}$ is the $z$-band magnitude expected within one
 DESI fiber; $98.9\%$ of observed targets yield confident redshifts.
 Implication: inside LRG1 and LRG2 the selection gives the threshold
 no room to jump (measured); past $z \approx 0.8$ the fixed flux
-limit drives the LRG3 drift of Section~\ref{sec:evidence} (derived).
+limit drives the LRG3 drift of Appendix~\ref{sec:evidence} (derived).
 The chain of that derivation: a fixed flux limit raises the
 luminosity threshold with the distance modulus, by $0.27$ magnitudes
 per $\Delta z = 0.1$ at $z \approx 1$; the Zehavi slope below is
@@ -2260,7 +2967,9 @@ $M_r < -21.0$ to $2.16 \pm 0.05$ at $M_r < -22.0$, a slope of
 $0.5$--$1.0$ in bias per magnitude of threshold near LRG
 luminosities.  Implication: this relation converts a
 selection-threshold drift into a bias drift; the LRG3 and BGS drifts
-of Section~\ref{sec:evidence} are derived through it.
+of Appendix~\ref{sec:evidence} are derived through it, and
+Appendix~\ref{app:bgsflux} spells out the BGS conversion step by
+step.
 
 \subsection{The bright galaxy survey}
 
@@ -2273,7 +2982,7 @@ broad range of galaxies; BGS Faint adds $19.5 < r < 20.175$ with a
 color selection.  Implication: the fixed $r < 19.5$ limit raises the
 luminosity threshold with redshift, which drives the derived
 $10$--$25\%$ bias drift across the BGS group (measured limit,
-derived drift).
+derived drift; the derivation is Appendix~\ref{app:bgsflux}).
 
 \paragraph{Sailer et al. \cite{Sailer2025}.}
 What was measured: the growth of matter fluctuations at
@@ -2352,11 +3061,11 @@ Eq.~\eqref{eq:jointprec}; the decorrelation and variance of the
 neighbor-prediction leftover of Appendix~\ref{app:chain}; the jump
 variance of Eq.~\eqref{eq:jumpvar}
 by Monte Carlo ($10^5$ draws); the worked example of
-Section~\ref{sec:jump}; the closed-form bias evolution of
+Appendix~\ref{sec:jump}; the closed-form bias evolution of
 Eq.~\eqref{eq:fry} against a direct integration of the continuity
 equation; and the tilt and neighbor-change tables of
-Section~\ref{sec:physical}.  For the memory model of
-Section~\ref{sec:memory} it checks, in the same way: the annihilation
+Appendix~\ref{sec:physical}.  For the memory model of
+Appendix~\ref{sec:memory} it checks, in the same way: the annihilation
 $\Prec_{\rm mem}\mathsf{U} = 0$ with rank $n - 2$ on uneven
 redshifts; the $1/W^2$ approach of the Woodbury inverse of
 Eq.~\eqref{eq:woodbury} to the projection; the null-space identity
@@ -2365,7 +3074,7 @@ closed-form variance $2\sigma_b^2(1-r)(3-r)$; the vanishing of the
 projection for one and two bins; the universal-kriging predictor of
 Eq.~\eqref{eq:memkriging} against a direct Gaussian conditional; the
 end-to-end correlation of Eq.~\eqref{eq:memrho} tending to $\pm 1$;
-the two straight-line fits of Section~\ref{sec:memphysics}, the
+the two straight-line fits of Appendix~\ref{sec:memphysics}, the
 conserved-population table and the BGS flux-limit drift; and the
 LRG3 magnitude-limit rate, $0.27$ magnitudes per $\Delta z = 0.1$ at
 $z \approx 1$ with its $6$--$11\%$ bias drift.  Each check
@@ -2467,12 +3176,32 @@ Dependence on Color and Luminosity'',
 2011, ApJ, 736, 59,
 arXiv:1005.2413.
 
+\bibitem{Blanton2003}
+M. R. Blanton et al.,
+``The Galaxy Luminosity Function and Luminosity Density at Redshift
+$z = 0.1$'',
+2003, ApJ, 592, 819,
+arXiv:astro-ph/0210215.
+
+\bibitem{BlantonRoweis2007}
+M. R. Blanton and S. Roweis,
+``K-corrections and Filter Transformations in the Ultraviolet,
+Optical, and Near-Infrared'',
+2007, AJ, 133, 734,
+arXiv:astro-ph/0606170.
+
 \bibitem{Hahn2023}
 C. Hahn et al.,
 ``The DESI Bright Galaxy Survey: Final Target Selection, Design, and
 Validation'',
 2023, AJ, 165, 253,
 arXiv:2208.08512.
+
+\bibitem{Prada2023}
+F. Prada et al.,
+``The DESI One-Percent Survey: Modelling the clustering and halo
+occupation of all four DESI tracers with Uchuu'',
+2023, arXiv:2306.06315.
 
 \bibitem{Raichoor2023}
 A. Raichoor et al.,

@@ -11,6 +11,10 @@ its plot folder as data.json:
   theory_draws/data.json  random draws of the BGS deviations (Delta z = 0.02
                           bins) from the exponential-kernel prior and from
                           the memory prior, and the flux-limit drift.
+  baseline_draws/data.json, pessimistic_draws/data.json
+                          per group, the known drifts and random histories
+                          of the note's baseline and pessimistic memory
+                          priors that share the drift's straight line.
 
 Flat LCDM with Omega_m = 0.3; the fiducial amplitudes of the project's
 params files. Each folder's plot_<name>.py redraws its figure from data.json
@@ -40,6 +44,16 @@ KERNEL_PRIOR = {'sigma_b': 0.10, 'L': 0.05}
 MEMORY_PRIOR = {'sigma_b': 0.02, 'L': 0.05, 'slope_width': 0.6}
 NUMBER_OF_DRAWS = 5
 RANDOM_SEED = 20261107
+# The note's two stated assumptions on the residual around each group's free
+# line (the memory model): one width sigma_b per group and one correlation
+# length L. Keep them equal to BIAS_ASSUMPTIONS of EXAMPLE_EVALUATE_FISHER.ipynb.
+STATED_PRIORS = {
+    'baseline': {'L': 0.2, 'sigma_b': {'BGS': 0.03, 'LRG1': 0.01, 'LRG2': 0.01,
+                                       'LRG3': 0.01, 'ELG1': 0.01, 'ELG2': 0.01}},
+    'pessimistic': {'L': 0.05, 'sigma_b': {'BGS': 0.03, 'LRG1': 0.03, 'LRG2': 0.03,
+                                          'LRG3': 0.03, 'ELG1': 0.03, 'ELG2': 0.03}},
+}
+STATED_PRIOR_DRAWS = 4
 PLOTS = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -204,10 +218,60 @@ def theory_draws():
         'kernel_draws': kernel_draws, 'memory_draws': memory_draws})
 
 
+def stated_prior_draws(case):
+    '''Per group at Delta z = 0.02 centers: the known drift laws, the best
+    straight line through the reference law (the BGS flux limit for BGS, the
+    conserved population otherwise), and random histories of one stated
+    prior: that line plus a residual drawn from the exponential kernel at the
+    group's sigma_b and L, with the residual's own best line removed (the
+    amplitude and tilt are free in the model, so only the residual carries
+    the prior).
+
+    Arguments:
+      case = a key of STATED_PRIORS.
+    '''
+    prior = STATED_PRIORS[case]
+    rng = np.random.default_rng(RANDOM_SEED)
+    groups = []
+    for name, (z0, z1, amplitude) in GROUPS.items():
+        z = np.arange(z0 + DRAW_BIN_WIDTH/2.0, z1, DRAW_BIN_WIDTH)
+        z_center = 0.5*(z0 + z1)
+        b_center = amplitude/growth(z_center)[0]
+        laws = {'conserved': deviation_from_tied(z, conserved_bias(z, z_center, b_center))}
+        if name == 'BGS':
+            laws['flux_limit'] = deviation_from_tied(z, bgs_flux_limit_bias(z))
+        reference = 'flux_limit' if name == 'BGS' else 'conserved'
+        line, residual = line_fit(z, laws[reference])
+        sigma = prior['sigma_b'][name]
+        cov = sigma**2*np.exp(-np.abs(z[:, None] - z[None, :])/prior['L'])
+        draws = []
+        for _ in range(STATED_PRIOR_DRAWS):
+            _, draw_residual = line_fit(z, rng.multivariate_normal(np.zeros(len(z)), cov))
+            draws.append((line + draw_residual).tolist())
+        groups.append({'name': name, 'z': z.tolist(),
+                       'laws': {k: v.tolist() for k, v in laws.items()},
+                       'reference_law': reference, 'line': line.tolist(),
+                       'residual_rms': float(np.std(residual)),
+                       'neighbor_rms_prior': float(sigma*np.sqrt(
+                           2.0*(1.0 - np.exp(-DRAW_BIN_WIDTH/prior['L'])))),
+                       'draws': draws})
+    write(case + '_draws', {
+        'about': ('per DESI group at Delta z = 0.02 bin centers: the known drift laws '
+                  '(fractional deviation from B_g/D with zero mean), the best straight line '
+                  'through the reference law, and random histories of the ' + case +
+                  ' memory prior: that line plus a residual drawn from the exponential kernel '
+                  'at the group width sigma_b and L, with its own best line removed; '
+                  'neighbor_rms_prior = the prior rms change between adjacent bins'),
+        'case': case, 'prior': prior, 'random_seed': RANDOM_SEED,
+        'bin_width': DRAW_BIN_WIDTH, 'groups': groups})
+
+
 def main():
     theory_bz()
     theory_delta()
     theory_draws()
+    stated_prior_draws('baseline')
+    stated_prior_draws('pessimistic')
 
 
 if __name__ == '__main__':

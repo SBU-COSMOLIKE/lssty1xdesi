@@ -1,0 +1,148 @@
+{
+ "about": "FoM(w0, wa) of DESI C_gg alone at k_max per layout on the rungs of the linear-bias ladder, and the shift of (w0, wa) that each known bias drift causes on each rung, in units of the rung's marginalized error ellipse (sqrt of dchi2 in the w0-wa plane, linear response). Written by EXAMPLE_EVALUATE_FISHER.ipynb.",
+ "kmax_h_per_Mpc": 0.075,
+ "lsst_y1_3x2pt_fom": 17.26,
+ "shift_threshold": 0.3333333333333333,
+ "rungs": [
+  {
+   "key": "tied",
+   "label": "tied",
+   "assumption": "b = B_g/D(z) in every bin of a group"
+  },
+  {
+   "key": "baseline",
+   "label": "baseline",
+   "assumption": "free amplitude and tilt per group plus a smooth residual"
+  },
+  {
+   "key": "pessimistic",
+   "label": "pessimistic",
+   "assumption": "free amplitude and tilt per group plus local features"
+  },
+  {
+   "key": "independent",
+   "label": "independent",
+   "assumption": "one free bias per bin"
+  }
+ ],
+ "priors": {
+  "baseline": {
+   "model": "memory",
+   "L": 0.2,
+   "sigma_b": {
+    "BGS": 0.03,
+    "LRG1": 0.01,
+    "LRG2": 0.01,
+    "LRG3": 0.01,
+    "ELG1": 0.01,
+    "ELG2": 0.01
+   }
+  },
+  "pessimistic": {
+   "model": "memory",
+   "L": 0.05,
+   "sigma_b": {
+    "BGS": 0.03,
+    "LRG1": 0.03,
+    "LRG2": 0.03,
+    "LRG3": 0.03,
+    "ELG1": 0.03,
+    "ELG2": 0.03
+   }
+  }
+ },
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "color": "C0",
+   "fom": {
+    "tied": 32.940051620599505,
+    "baseline": 18.19132400819079,
+    "pessimistic": 11.445679955858031,
+    "independent": 10.694141090115169
+   },
+   "shift_conserved": {
+    "tied": 17.441112389851586,
+    "baseline": 0.026989896536765253,
+    "pessimistic": 0.0026963091002157207,
+    "independent": 1.9292807413046036e-12
+   },
+   "shift_flux_limit": {
+    "tied": 0.1284046567288808,
+    "baseline": 0.0013746373996419696,
+    "pessimistic": 0.0012868710336648246,
+    "independent": 4.7204257204387866e-15
+   }
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "color": "C3",
+   "fom": {
+    "tied": 19.92996350975134,
+    "baseline": 12.468831498079867,
+    "pessimistic": 7.413301558984482,
+    "independent": 4.0163934116315625
+   },
+   "shift_conserved": {
+    "tied": 12.355395999506321,
+    "baseline": 0.03774285889600503,
+    "pessimistic": 0.004865015713190084,
+    "independent": 3.594018046824595e-12
+   },
+   "shift_flux_limit": {
+    "tied": 1.1511499328718136,
+    "baseline": 0.022189218737983483,
+    "pessimistic": 0.023587186340063553,
+    "independent": 3.639699215780796e-15
+   }
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "color": "C2",
+   "fom": {
+    "tied": 8.287727216646188,
+    "baseline": 1.9576081522434492,
+    "pessimistic": 1.3290844753385616,
+    "independent": 1.225015947517183
+   },
+   "shift_conserved": {
+    "tied": 21.479034797810222,
+    "baseline": 0.09676176795872383,
+    "pessimistic": 0.007548396546940255,
+    "independent": 1.3781050446187653e-12
+   },
+   "shift_flux_limit": {
+    "tied": 2.788572050789546,
+    "baseline": 0.27478827292972413,
+    "pessimistic": 0.2915643542341986,
+    "independent": 1.7411490118465138e-13
+   }
+  },
+  {
+   "name": "Delta z = 0.2",
+   "label": "$\\Delta z = 0.2$",
+   "color": "C1",
+   "fom": {
+    "tied": 1.9078276369089597,
+    "baseline": 0.515381470203161,
+    "pessimistic": 0.515381470203161,
+    "independent": 0.515381470203161
+   },
+   "shift_conserved": {
+    "tied": 10.854410515595559,
+    "baseline": 6.284191270557158e-13,
+    "pessimistic": 6.284191270557158e-13,
+    "independent": 6.284191270557158e-13
+   },
+   "shift_flux_limit": {
+    "tied": 1.3898452703798387,
+    "baseline": 3.13354037933764e-14,
+    "pessimistic": 3.13354037933764e-14,
+    "independent": 3.13354037933764e-14
+   }
+  }
+ ]
+}

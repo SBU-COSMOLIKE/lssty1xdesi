@@ -1,0 +1,233 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\hMpc}{\,h\,\mathrm{Mpc}^{-1}}
+\newcommand{\kmax}{k_{\mathrm{max}}}
+\emergencystretch=2em
+
+\AtBeginDocument{%
+\setlength{\abovedisplayskip}{5pt}%
+\setlength{\belowdisplayskip}{5pt}%
+\setlength{\abovedisplayshortskip}{3pt}%
+\setlength{\belowdisplayshortskip}{3pt}}
+
+% Compact section titles and float spacing, so the summary fits two pages.
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {-2.0ex \@plus -0.5ex \@minus -0.2ex}%
+  {1.0ex \@plus .2ex}%
+  {\normalfont\large\bfseries}}
+\makeatother
+\setlength{\textfloatsep}{8pt}
+\setlength{\intextsep}{8pt}
+\usepackage[font=small]{caption}
+
+\begin{document}
+
+\begin{center}
+{\LARGE The galaxy-bias parameter model of the lssty1xdesi
+forecast\par}
+\vspace{0.4em}
+{\large A summary for collaborators --- November 2026\par}
+\end{center}
+\vspace{0.3em}
+
+\section{Setting}
+
+The lssty1xdesi forecast combines LSST Y1 3x2pt with DESI spectroscopic
+clustering, measured as angular power spectra $C_\ell^{gg}$ in 76 thin
+redshift bins of equal comoving width, $\Delta d_{\rm com} = 62$\,Mpc.
+The bins belong to six tracer groups, called chunks: BGS, LRG1--3 and
+ELG1--2.  The shipped model carries one linear-bias amplitude per
+chunk, $b_1(z) = B_g/D(z)$, where $b_1$ is the Eulerian linear bias,
+$B_g$ is the free amplitude of chunk $g$, and $D(z)$ is the linear
+growth factor normalized to $D(0) = 1$; seven Fingers-of-God velocity
+dispersions $\sigma_v$ smear each bin's redshift distribution.  This
+summary describes the planned replacement: two one-loop bias models
+built from the same bias operators, differing in what is free.
+\textbf{Model A applies at $\kmax = 0.075\hMpc$}, the Fourier cut
+matched to the radial resolution of the thin bins.  \textbf{Model B
+applies at $\kmax \simeq 0.18\hMpc$}, the shipped scale mask.  Each
+model has a baseline and a pessimistic prior choice;
+Table~\ref{tab:budget} counts the parameters.  The seven cosmological
+parameters and the seven $\sigma_v$ are unchanged and not counted.
+
+\section{Linear bias: per bin, but not free per bin}
+
+The linear bias of thin bin $i$ in chunk $g$ is
+\begin{equation}
+b_{1,i} = \frac{B_g\,(1 + \delta_i)}{D(z_i)} , \qquad
+\delta_i = s_g\,(z_i - \bar{z}_g) + \varepsilon_i ,
+\label{eq:linear}
+\end{equation}
+where $z_i$ is the bin redshift, $\bar{z}_g$ the mean redshift of the
+chunk's bins, $\delta_i$ the fractional deviation from the chunk trend
+$B_g/D$, $s_g$ a tilt, and $\varepsilon_i$ the residual around the
+tilted line.  The amplitude $B_g$ and the tilt
+$s_g$ are free with flat priors, one each per chunk: 12 parameters.
+The residuals carry a correlated Gaussian prior within a chunk,
+\begin{equation}
+\bigl\langle \varepsilon_i\,\varepsilon_j \bigr\rangle
+ = \sigma_g^2\,\exp\!\left(-\,\frac{|z_i - z_j|}{L}\right) ,
+\label{eq:kernel}
+\end{equation}
+and zero across chunks; $\sigma_g$ is the per-bin prior width and $L$
+is the correlation length in redshift.  The baseline sets
+$\sigma_g = 3\%$ for BGS, sized to its flux-limit curvature,
+$\sigma_g = 1\%$ for the other chunks, and $L = 0.2$.  The pessimistic choice sets $\sigma_g = 3\%$ for every
+chunk and $L = 0.05$: local selection features on the scale of the
+4000\,\AA\ break crossing a filter edge, $\Delta z \approx
+0.03$--$0.05$.
+
+The tilt is free because even a conserved galaxy population departs
+from $B_g/D$ by about $1\%$ per $\Delta z = 0.05$ through the bias
+continuity equation \cite{Fry1996}, and a flux limit adds a larger
+smooth drift.  The shape $B_g/D$ is not passive evolution: it keeps
+the clustering amplitude $b_1(z)\,D(z)$ constant, while a conserved
+population obeys $b_1 - 1 \propto 1/D$.
+
+\section{Higher-order bias inherits the linear drift}
+
+The quadratic bias $b_{2,i}$ and the tidal bias $b_{s^2,i}$ of bin $i$
+follow the per-bin linear bias through calibrated relations, plus one
+free offset per chunk:
+\begin{equation}
+b_{2,i} = b_2^{\rm fit}(b_{1,i}) + \Delta_{2,g} , \qquad
+b_{s^2,i} = -\frac{4}{7}\,(b_{1,i} - 1) + \Delta_{s,g} ,
+\label{eq:higher}
+\end{equation}
+with the separate-universe fit of Lazeyras et al.~\cite{Lazeyras2016},
+\begin{equation}
+b_2^{\rm fit}(b_1) = 0.412 - 2.143\,b_1 + 0.929\,b_1^2
+ + 0.008\,b_1^3 ,
+\label{eq:lazeyras}
+\end{equation}
+and the co-evolution relation for $b_{s^2}$ \cite{Saito2014}, both in
+the CCL/FAST-PT normalization (the quadratic and tidal operators each
+carry a factor $1/2$ in the galaxy overdensity).  The trends take the
+full $b_{1,i}$ of Eq.~\eqref{eq:linear}, deviations included, so the
+higher-order sector drifts with the linear one.  The third-order bias
+$b_{3\rm nl}$ is fixed.  The pessimistic variant adds a free tilt per
+chunk to each offset, $\Delta_g \to \Delta_g + t_g\,(z_i - \bar{z}_g)$,
+with $t_g$ the offset tilt.
+
+\section{Counterterms and stochastic terms}
+
+The one-loop galaxy power spectrum in redshift space is, compactly,
+\begin{equation}
+P_{gg}(k,\mu) = P^{\rm PT}_{gg}(k,\mu)
+ + \left(\alpha_0 + \alpha_2\,\mu^2\right) k^2\,P_{\rm lin}(k)
+ + {\rm SN}_0 + {\rm SN}_2\,k^2\mu^2 ,
+\label{eq:pgg}
+\end{equation}
+where $k$ is the comoving wavenumber, $\mu$ the cosine between the
+wavevector and the line of sight, $P_{\rm lin}$ the linear matter
+power spectrum, $\alpha_0$ and $\alpha_2$ counterterm amplitudes, and
+${\rm SN}_0$ and ${\rm SN}_2$ stochastic amplitudes.
+$P^{\rm PT}_{gg}$ is the one-loop spectrum of biased tracers: its
+tree level is the Kaiser spectrum $(b_1 + f\mu^2)^2 P_{\rm lin}$, with
+$f = d\ln D/d\ln a$ the linear growth rate, and its $b_1^2$ part
+carries the halofit nonlinear matter power.  \textbf{Model A} keeps
+the real-space one-loop terms, linear Kaiser redshift-space
+distortions, the $\sigma_v$ damping, one $\alpha_0$ and one
+${\rm SN}_0$ per chunk.  \textbf{Model B} adds the radial counterterm
+$\alpha_2\,\mu^2 k^2 P_{\rm lin}$, the stochastic term
+${\rm SN}_2\,k^2\mu^2$, and the one-loop redshift-space terms.
+
+In the pessimistic cases $\alpha_0$ and $\alpha_2$ also receive a tilt
+per chunk, because the counterterm scale follows the host-halo
+population.  ${\rm SN}_0$ and
+${\rm SN}_2$ do not: the Poisson part $1/\bar{n}(z)$, with $\bar{n}$
+the tracer number density, is known per bin and sits in the
+covariance, so the sampled amplitudes are deviations from Poisson.
+The priors are Gaussian, centered on zero.  Model A: width $1.0$ on
+$\Delta_{2,g}$, $0.5$ on $\Delta_{s,g}$,
+$0.5/\kmax^2 \simeq 89\,h^{-2}{\rm Mpc}^2$ on $\alpha_0$ (a $50\%$
+correction to the linear spectrum at the cut), and twice the Poisson
+power on ${\rm SN}_0$.  Model B: widths of order $2$ and $1$ on the
+offsets (the calibrations demoted to prior centers), the DESI DR1
+width $12.5\,h^{-2}{\rm Mpc}^2$ on $\alpha_0$ and $\alpha_2$, twice
+the Poisson power on ${\rm SN}_0$, and the DESI DR1 width on
+${\rm SN}_2$ \cite{DESI2024V}.
+
+\section{The parameter budget}
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lcccc}
+\toprule
+ & A baseline & A pessimistic & B baseline & B pessimistic \\
+\midrule
+scale cut $\kmax$ [$h$/Mpc] & 0.075 & 0.075 & $\approx$0.18 & $\approx$0.18 \\
+linear bias, tilt per chunk (new) & 6 & 6 & 6 & 6 \\
+linear bias, per-bin residuals held by the prior & 64 (smooth) & 64 (rough) & 64 (smooth) & 64 (rough) \\
+$b_2$, $b_{s^2}$ offsets & 12 & 24 (+tilt) & 12 & 24 (+tilt) \\
+$\alpha_0$ & 6 & 12 (+tilt) & 6 & 12 (+tilt) \\
+$\alpha_2$ & --- & --- & 6 & 12 (+tilt) \\
+${\rm SN}_0$ & 6 & 6 & 6 & 6 \\
+${\rm SN}_2$ & --- & --- & 6 & 6 \\
+\midrule
+new parameters & 94 & 112 & 106 & 130 \\
+bias-sector parameters without a tight prior, & & & & \\
+\quad total including the 6 existing amplitudes & 36 & 54 & 48 & 72 \\
+\bottomrule
+\end{tabular}
+\caption{The bias-sector parameter budget of the four configurations.
+The 64 residuals are the 76 per-bin deviations minus the free
+amplitude and tilt directions of the six chunks; ``smooth'' and
+``rough'' name the baseline and pessimistic kernels of
+Eq.~\eqref{eq:kernel}.  The last row counts the 6 existing amplitudes
+$B_g$, so it is not a subset of the ``new'' row.}
+\label{tab:budget}
+\end{table}
+
+For reference, the DESI DR1 full-shape
+analysis uses seven nuisance parameters per tracer chunk, 42 in total
+at $\kmax = 0.2\hMpc$ \cite{DESI2024V,DESI2024VII}, so model B
+baseline is that budget plus one $b_1$ tilt per chunk.  Model B needs
+code before it can run: one-loop bias in the adjacent-bin non-Limber
+cross spectra, and one-loop redshift-space templates.
+
+\footnotesize
+\begin{thebibliography}{9}
+\setlength{\itemsep}{1pt}
+
+\bibitem{Fry1996}
+J. N. Fry,
+``The Evolution of Bias'',
+1996, ApJ, 461, L65.
+
+\bibitem{Lazeyras2016}
+T.~Lazeyras, C.~Wagner, T.~Baldauf and F.~Schmidt,
+\emph{Precision measurement of the local bias of dark matter halos},
+arXiv:1511.01096.
+
+\bibitem{Saito2014}
+S.~Saito, T.~Baldauf, Z.~Vlah, U.~Seljak, T.~Okumura and
+P.~McDonald,
+\emph{Understanding higher-order nonlocal halo bias at large scales by
+combining the power spectrum with the bispectrum},
+arXiv:1405.1447.
+
+\bibitem{DESI2024V}
+DESI Collaboration,
+\emph{DESI 2024 V: Full-shape galaxy clustering from galaxies and
+quasars},
+arXiv:2411.12021.
+
+\bibitem{DESI2024VII}
+DESI Collaboration,
+\emph{DESI 2024 VII: Cosmological constraints from the full-shape
+modeling of clustering measurements},
+arXiv:2411.12022.
+
+\end{thebibliography}
+
+\end{document}
