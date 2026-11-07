@@ -59,14 +59,16 @@ optimistic at low redshift (BGS).
 
 ## 3. The thin-bin FoM: physical ratio, inflated normalization
 
-Measured FoM(w0, wa), DESI C_gg alone, h = 0.02 (2026-11-06):
+Measured FoM(w0, wa), DESI C_gg alone, h = 0.02 (2026-11-06);
+Delta d_com = 62 Mpc names the 76-bin layout of equal
+comoving width, d_com the comoving distance:
 
 | layout | FoM |
 |---|---:|
 | Delta z 0.2 (10 bins) | 5.67 |
 | Delta z 0.05 (36 bins) | 32.0 |
 | Delta z 0.02 (90 bins) | 125.6 |
-| DR3 (76 bins) | 135.2 |
+| Delta d_com = 62 Mpc (76 bins) | 135.2 |
 
 Decomposition from the cached derivatives (same layout order):
 
@@ -96,7 +98,8 @@ Di Dio et al. 2014, arXiv:1308.6186; Camera et al. 2018,
 arXiv:1803.10773): many thin bins recover the 3D P(k, mu) information
 and saturate when Delta chi ~ 0.6-0.8 lambda_min. The information is
 bounded by the 3D Fisher of the same survey at the same cuts, so it
-does not grow without limit as Delta z -> 0. DR3 (76 bins, FoM 135)
+does not grow without limit as Delta z -> 0. Delta d_com = 62 Mpc
+(76 bins, FoM 135)
 against Delta z 0.02 (90 bins, FoM 126) shows the plateau.
 
 ### Why the absolute FoM is inflated

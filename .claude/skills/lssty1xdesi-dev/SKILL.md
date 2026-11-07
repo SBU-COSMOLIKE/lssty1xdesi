@@ -1,13 +1,15 @@
 ---
 name: lssty1xdesi-dev
-description: Development on the lssty1xdesi project - DESI DR3 thin-bin spectroscopic clustering (76 comoving bins) cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebook (EXAMPLE_EVALUATE_FISHER.ipynb). Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, or the dndz FoG convolution. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
+description: Development on the lssty1xdesi project - DESI thin-bin spectroscopic angular clustering - the Delta d_com = 62 Mpc layout, 76 bins of equal comoving width, from a DESI DR3-like source forecast - cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebook (EXAMPLE_EVALUATE_FISHER.ipynb). Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, or the dndz FoG convolution. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
 ---
 
 # lssty1xdesi: the thin-bin extreme
 
-This project forecasts DESI DR3 spectroscopic galaxy clustering cross
-LSST Y1 cosmic shear. The galaxy sample is sliced into 76 thin
-comoving bins of about 62.3 Mpc (mean redshifts 0.108 to 1.549; BGS
+This project forecasts DESI spectroscopic galaxy clustering cross
+LSST Y1 cosmic shear: angular C_ell in thin bins, not a 3D
+power-spectrum analysis. The galaxy sample is sliced into 76 thin
+bins of equal comoving width, about 62.3 Mpc - the Delta d_com = 62 Mpc
+layout, d_com the comoving distance (mean redshifts 0.108 to 1.549; BGS
 bins 0-17, LRG 18-48, ELG 49-75, named by
 `data/lssty1xdesi_desi_dr3_bins.txt`). The data vector is Fourier
 band powers, 53 bands of width Delta ell = 10 over ell = 15 to 544:
@@ -72,7 +74,8 @@ effectively dyadic; 3 buys the same grid as 4). Non-nested
 ceil-scaling was replaced because consecutive doublings measured
 delta chi2 = 1.3, 1.1 of pure node-placement difference.
 
-The DR3 and Delta z = 0.02 references use the combined factor 64
+The Delta d_com = 62 Mpc and Delta z = 0.02 references use
+the combined factor 64
 (NL_Nchi = 32,705) as `accuracyboost: 2` with
 `nonlimber_accuracyboost: 32`. The log spacing makes the
 HIGHEST-redshift thin bins the narrowest in ln(chi), and their
@@ -81,15 +84,17 @@ that threshold the z = 1.32 ELG bin (bin 68) carries a coherent
 +0.18 sigma broadband amplitude bias across all its bands
 (delta chi2 = 1.9 with its crosses), constant from 16 to 32, gone at
 64. This is a cliff, not smooth convergence - do not infer safety at
-intermediate factors from a two-point scan. Factor 64 vs 128 on DR3:
+intermediate factors from a two-point scan. Factor 64 vs 128 on
+Delta d_com = 62 Mpc:
 0.0033 at accuracyboost 1, 0.0045 at 2.
 
 The global accuracyboost (cosmolike's tables: the a grid, the P(k) z
 nodes, the ell and n(z) sampling) is 2 on all four layouts; CAMB's
 own AccuracyBoost stays at the examples' 1.05. Against accuracyboost
-5 (DR3 / Delta z = 0.02, 2026-11-05, patched CAMB halofit):
+5 (Delta d_com = 62 Mpc / Delta z = 0.02, 2026-11-05,
+patched CAMB halofit):
 
-| accuracyboost, combined chi-grid factor | DR3 | dz 0.02 | DR3 evaluation |
+| accuracyboost, combined chi-grid factor | Delta d_com = 62 Mpc | dz 0.02 | Delta d_com = 62 Mpc evaluation |
 |---|---:|---:|---:|
 | 1, 64 | 0.133 | 0.101 | 12.7 s |
 | 1, 512 | 0.129 | 0.096 | - |
@@ -114,7 +119,8 @@ the Delta z = 0.02 case inherits it), so CAMB's P(k) table reaches
 kmax_boltzmann x accuracyboost = 40/Mpc at the reference boost 2. The
 range protects the prior corners, not the fiducial: at a low-Omega_m
 point (Omega_m 0.237, w0 -2.39, w0 + wa -2.87, H0 78.6) a 10/Mpc
-table moved chi2 by 2.09 (DR3) and 2.06 (Delta z = 0.02) through the
+table moved chi2 by 2.09 (Delta d_com = 62 Mpc) and
+2.06 (Delta z = 0.02) through the
 extrapolated high-k tail; 40/Mpc brings that to 0.12 and 0.10. The
 Delta z = 0.05 and 0.2 layouts carry 20 for the same reason.
 
@@ -214,7 +220,8 @@ dr1_dz0p05, dr1_dz0p02: 10, 36 and 90 lens bins, built by
 scripts/make_desi_dz_case.py) have no supplied covariance. Their
 likelihood covariance files hold the **Gaussian term only** of the
 project's own forecast (compute_covariance.py with `case:` in the
-covariance yaml), the convention of the comoving DR3 sacc. The CLI
+covariance yaml), the convention of the comoving
+Delta d_com = 62 Mpc sacc. The CLI
 also computes SSC and cNG and keeps them in the archive
 (covariance/production_covariance_<case>.npz).
 
@@ -386,7 +393,7 @@ each from a failure it prevents:
 
   | layout | FKEM, cap 550 | Limber | Delta chi2 |
   |---|---|---|---|
-  | DR3 | 0.32 (w_a) / 0.64 (Omega_b) | tens of sigma | 64.2 / 1.86e4 |
+  | Delta d_com = 62 Mpc | 0.32 (w_a) / 0.64 (Omega_b) | tens of sigma | 64.2 / 1.86e4 |
   | Delta z = 0.02 | 0.47 (w_a) / 0.85 (Omega_b) | 43 (Omega_m) alone | 80.7 / 3.67e4 |
   | Delta z = 0.05 | 0.06 / 0.18 | tens of sigma | 4.47 / 3483 |
   | Delta z = 0.2 | 0.006 / 0.013 | 5.6 (n_s) / 2.1 (w_a) | 0.115 / 332 |
@@ -410,7 +417,7 @@ CCL term-by-term check and the arXiv citations - lives in
   survives a free bias per bin, an autos-only vector, a
   self-consistent covariance and an ell <= 100 cut, and it saturates
   near Delta chi ~ 0.6-0.8 lambda_min (Asorey et al. 1207.6487),
-  where the DR3 layout already sits.
+  where the Delta d_com = 62 Mpc layout already sits.
 - **The absolute FoM (126-135, DESI C_gg alone) is inflated; the
   honest range is ~10-40.** The largest single factor, 2.4-3.2x in
   every layout, is a confirmed and still unfixed covariance bug: the
@@ -498,7 +505,7 @@ Validation (measured):
 Band powers kept (shipped mask AND UV-fraction cut, alpha = 0.05;
 each cell autos / cross pairs; k_max in h/Mpc at z = 0):
 
-| k_max | DR3 | Delta z = 0.02 | Delta z = 0.05 | Delta z = 0.2 |
+| k_max | Delta d_com = 62 Mpc | Delta z = 0.02 | Delta z = 0.05 | Delta z = 0.2 |
 |---|---|---|---|---|
 | 0.05 | 167 / 74 | 0 / 0 | 367 / 70 | 122 / 44 |
 | 0.075 | 903 / 750 | 904 / 952 | 663 / 184 | 198 / 82 |
@@ -516,7 +523,7 @@ so it is dropped without touching the cosmology; with no band
 power left at all there is no w0-wa constraint, and the FoM is
 reported as 0:
 
-| k_max | DR3 | Delta z = 0.02 | Delta z = 0.05 | Delta z = 0.2 |
+| k_max | Delta d_com = 62 Mpc | Delta z = 0.02 | Delta z = 0.05 | Delta z = 0.2 |
 |---|---:|---:|---:|---:|
 | 0.05 | 2.17 | 0 (no band left) | 1.90 | 0.73 |
 | 0.075 | 32.9 | 19.9 | 8.29 | 1.91 |
@@ -537,8 +544,8 @@ Conclusions:
 - The cross spectra of adjacent thin bins come mostly from close
   pairs across the shared edge - small radial scales - and are
   strongly UV-dominated.
-- At k_max = 0.05 h/Mpc, Delta z = 0.02 keeps nothing, and DR3
-  keeps only the bins above z ~ 0.9, where 1/D(z) raises the cut
+- At k_max = 0.05 h/Mpc, Delta z = 0.02 keeps nothing, and the
+  Delta d_com = 62 Mpc layout keeps only the bins above z ~ 0.9, where 1/D(z) raises the cut
   the most.
 - The absolute FoM values remain inflated by the covariance bias
   mismatch (2.4-3.2x, the section above); the linear-bias validity,

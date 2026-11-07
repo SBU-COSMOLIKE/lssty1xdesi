@@ -1,6 +1,6 @@
 # Table of contents <a name="table_of_contents"></a>
 
-1. [The DESI DR3 × LSST Y1 forecast](#forecast)
+1. [The DESI × LSST Y1 forecast](#forecast)
 2. [Reading path through the examples](#reading_path)
 3. [Running Cosmolike projects (Basic instructions)](#running_cosmolike_projects)
 4. [The DESI DR1 fixed-width Δz cases](#dz_cases)
@@ -13,11 +13,15 @@
 11. [Exploring notebooks](#notebooks)
 12. [Appendix: Which accuracy settings are available?](#accuracy)
 
-# The DESI DR3 × LSST Y1 forecast <a name="forecast"></a>
+# The DESI × LSST Y1 forecast <a name="forecast"></a>
 
-This project forecasts DESI DR3 spectroscopic galaxy clustering joint
-with LSST Y1 cosmic shear in Fourier band powers. The galaxy sample is
-split into 76 thin comoving lens bins of about 62.3 Mpc (BGS, LRG1-3,
+This project forecasts DESI spectroscopic galaxy clustering joint
+with LSST Y1 cosmic shear in Fourier band powers: angular
+clustering in thin tomographic bins, not a 3D power-spectrum
+analysis. The galaxy sample is split into 76 lens bins of equal
+comoving width, about 62.3 Mpc - the layout the project calls
+$`\Delta d_\mathrm{com} = 62`$ Mpc after that width, with
+$`d_\mathrm{com}`$ the comoving distance (BGS, LRG1-3,
 ELG1-2; mean redshifts 0.11 to 1.55;
 `data/lssty1xdesi_desi_dr3_bins.txt` names each bin's sample chunk and
 `data/lssty1xdesi_desi_dr3_ngal.txt` its density). The data vector
@@ -45,7 +49,8 @@ velocity dispersions (`DESI_SIGV_*`, with BGS split in two).
 `likelihood/desi_cl.py` scores the band-power vector; the `combo_*`
 variants expose the probe subsets. The survey inputs (densities,
 fiducial biases, $`f_{\rm sky} = 0.3394`$, the supplied comparison
-covariance) are ported from the source DESI DR3 × LSST Y1 forecast;
+covariance) are ported from the sacc file of the source forecast,
+a DESI DR3-like × LSST Y1 forecast;
 the [covariance guide](covariance/README.md#source_forecast) records
 the model-choice differences the comparison revealed.
 
@@ -57,7 +62,7 @@ installation that every later example uses.
 
 ```mermaid
 flowchart TB
-  A["EXAMPLE_EVALUATE1.yaml: first evaluation (DR3 comoving bins)"] --> B["EXAMPLE_EVALUATE2-4.yaml: DESI DR1 fixed-width bins"]
+  A["EXAMPLE_EVALUATE1.yaml: first evaluation (Δd_com = 62 Mpc comoving bins)"] --> B["EXAMPLE_EVALUATE2-4.yaml: DESI DR1 fixed-width bins"]
   A --> C["EXAMPLE_EVALUATE5.yaml: LSST Y1 3x2pt in band powers"]
   A --> D["EXAMPLE_MCMC1.yaml: chains"]
   A --> E["EXAMPLE_EMUL2_*: hybrid examples"]
@@ -67,8 +72,8 @@ flowchart TB
   C --> H
 ```
 
-- `EXAMPLE_EVALUATE1.yaml` evaluates the fiducial point of the DR3
-  comoving binning; a commented `bfmt` theory block shows how to turn
+- `EXAMPLE_EVALUATE1.yaml` evaluates the fiducial point of the
+  $`\Delta d_\mathrm{com} = 62`$ Mpc comoving binning; a commented `bfmt` theory block shows how to turn
   each baryonic-feedback model on
   ([baryonic feedback](#baryonic_feedback)).
 - `EXAMPLE_EVALUATE2.yaml` to `EXAMPLE_EVALUATE4.yaml` evaluate the
@@ -210,7 +215,8 @@ and
 
 # The DESI DR1 fixed-width Δz cases <a name="dz_cases"></a>
 
-The comoving DR3 layout above splits the samples into bins of fixed
+The $`\Delta d_\mathrm{com} = 62`$ Mpc layout above splits the
+samples into bins of fixed
 comoving width. The DESI DR1 forecast distributions instead split BGS,
 LRG and ELG into bins of fixed width $`\Delta z`$ in redshift. Three
 widths are set up as separate cases of the same likelihood, each with
@@ -226,9 +232,11 @@ yaml:
 
 The distributions come without bandpowers, pairs or scale cuts, so
 `scripts/make_desi_dz_case.py` builds them with the conventions of the
-DR3 sacc file. Its docstring states each rule; in short:
+$`\Delta d_\mathrm{com} = 62`$ Mpc sacc file. Its docstring states
+each rule; in short:
 
-- **bands**: the 53 DR3 bands;
+- **bands**: the 53 bands of the $`\Delta d_\mathrm{com} = 62`$ Mpc
+  sacc;
 - **cross pairs**: every two bins whose distributions overlap or
   touch;
 - **scale cuts**: an auto spectrum keeps the bands with
@@ -381,7 +389,8 @@ matter power spectra (`use_emulator: 2`). CosmoLike still computes the
 survey projections, bias, intrinsic-alignment and Fingers-of-God
 contributions, so changing n(z) or nuisance parameters does not
 require retraining a survey data-vector network. All three examples
-run `lssty1xdesi.desi_cl` on the DR3 layout:
+run `lssty1xdesi.desi_cl` on the $`\Delta d_\mathrm{com} = 62`$ Mpc
+layout:
 
 | Example | File |
 |---|---|
@@ -521,7 +530,8 @@ convergence record. Reaching `--maxfeval` is not convergence.
 # Running Fisher <a name="fisher"></a>
 
 `EXAMPLE_EVALUATE_FISHER.ipynb` forecasts the $`w_0w_a`$CDM
-constraints of three probes on every DESI layout: DR3 (76 comoving
+constraints of three probes on every DESI layout:
+$`\Delta d_\mathrm{com} = 62`$ Mpc (76 comoving
 bins) and the DR1 fixed-width binnings $`\Delta z = 0.02`$ (90 bins),
 $`\Delta z = 0.05`$ (36) and $`\Delta z = 0.2`$ (10). The probes are:
 
@@ -609,13 +619,15 @@ walls
 $`-3 \le w_0 + w_a \le -0.01`$). Measured at the step $`h = 0.02`$:
 
 - The DESI $`2\sigma`$ contours reach an amplitude ratio of 1.33 on
-  DR3, 1.36 on $`\Delta z = 0.02`$, 1.54 on $`\Delta z = 0.05`$ and
+  $`\Delta d_\mathrm{com} = 62`$ Mpc, 1.36 on $`\Delta z = 0.02`$,
+  1.54 on $`\Delta z = 0.05`$ and
   2.11 on $`\Delta z = 0.2`$, so a cut at 8 removes only prior
   volume the data already exclude while bounding the amplitude,
   and with it the numerical error, of every bin. The value 8 is
   the common cut of the cosmolike projects (lsst_y1 samples its
   lens biases under the same cut), not a tuning of this survey.
-- On DR3, $`\Delta z = 0.02`$ and $`\Delta z = 0.05`$ no DESI or
+- On $`\Delta d_\mathrm{com} = 62`$ Mpc, $`\Delta z = 0.02`$ and
+  $`\Delta z = 0.05`$ no DESI or
   combination $`2\sigma`$ contour touches a prior wall. On the wide
   $`\Delta z = 0.2`$ bins DESI alone is partly prior-bounded: its
   $`2\sigma`$ contours cross the $`w_0 = -1/3`$ wall and both
@@ -626,18 +638,20 @@ $`-3 \le w_0 + w_a \le -0.01`$). Measured at the step $`h = 0.02`$:
 
 | layout | $`\sigma(\Omega_m)`$ | $`\sigma(w_0)`$ | $`\sigma(w_a)`$ | FoM($`w_0`$, $`w_a`$) |
 |---|---|---|---|---|
-| DR3 (76 comoving bins) | 0.0100 / 0.0066 | 0.065 / 0.062 | 0.210 / 0.193 | 135 / 203 |
+| $`\Delta d_\mathrm{com} = 62`$ Mpc (76 comoving bins) | 0.0100 / 0.0066 | 0.065 / 0.062 | 0.210 / 0.193 | 135 / 203 |
 | $`\Delta z = 0.02`$ (90 bins) | 0.0104 / 0.0066 | 0.063 / 0.060 | 0.206 / 0.187 | 126 / 198 |
 | $`\Delta z = 0.05`$ (36 bins) | 0.0186 / 0.0117 | 0.138 / 0.115 | 0.437 / 0.357 | 32.0 / 72.5 |
 | $`\Delta z = 0.2`$ (10 bins) | 0.0361 / 0.0170 | 0.316 / 0.190 | 1.109 / 0.622 | 5.67 / 32.2 |
 
 The errors shrink as the binning gets finer, and the two finest
-layouts, DR3 and $`\Delta z = 0.02`$, agree to about 7%. The
+layouts, $`\Delta d_\mathrm{com} = 62`$ Mpc and $`\Delta z = 0.02`$,
+agree to about 7%. The
 $`\Delta z = 0.2`$ matrices are the main forecast's, at the overall
 accuracy boost 3 (at boost 1 that layout moves by about 1%: DESI FoM
 5.61); the other three layouts run at accuracy boost 1 with a
 combined non-Limber $`\chi`$-grid factor of 64. The notebook caches
-each matrix in `chains/` on its first run; without the cache the DR3
+each matrix in `chains/` on its first run; without the cache the
+$`\Delta d_\mathrm{com} = 62`$ Mpc
 and $`\Delta z = 0.02`$ matrices take about 45 and 65 minutes on a
 laptop with 4 threads.
 
@@ -663,7 +677,8 @@ bin at the fixed $`k = 0.1185\ \mathrm{Mpc}^{-1}`$
 ($`\approx 0.176\,h\,\mathrm{Mpc}^{-1}`$, no growth scaling).
 Inside the reach of linear bias, at
 $`k_\mathrm{max} = 0.1\,h\,\mathrm{Mpc}^{-1}`$, the DESI-alone
-FoM($`w_0`$, $`w_a`$) is 54.9 on DR3, 57.0 on $`\Delta z = 0.02`$,
+FoM($`w_0`$, $`w_a`$) is 54.9 on $`\Delta d_\mathrm{com} = 62`$ Mpc,
+57.0 on $`\Delta z = 0.02`$,
 14.2 on $`\Delta z = 0.05`$ and 3.06 on $`\Delta z = 0.2`$, against
 135 / 126 / 32.0 / 5.67 at the shipped masks; at
 $`k_\mathrm{max} = 0.05\,h\,\mathrm{Mpc}^{-1}`$ the
@@ -679,7 +694,8 @@ is therefore too small by $`D(\bar z_i)^2`$, which understates the
 variances and inflates every layout's FoM by a factor of about
 2.4-3.2: a self-consistent Gaussian covariance gives DESI clustering
 alone FoM about 2.3 ($`\Delta z = 0.2`$), 13 ($`\Delta z = 0.05`$),
-52 ($`\Delta z = 0.02`$) and 42 (DR3) instead of 5.7 / 32 / 126 /
+52 ($`\Delta z = 0.02`$) and 42 ($`\Delta d_\mathrm{com} = 62`$ Mpc)
+instead of 5.7 / 32 / 126 /
 135; the ratios between the layouts are unchanged. The fix will be
 made together with the higher-order galaxy bias model, the next
 modeling step. Until then the absolute FoM values of this section
@@ -693,7 +709,8 @@ and at the extreme corners a cut at 8 still admits - a high amplitude
 or $`\Omega_m`$ at the box edge, mostly with large neutrino masses -
 the pushed-settings $`\Delta\chi^2`$ exceeds it (measured
 2026-11-06, 50 models per layout): the worst point, an amplitude
-ratio of 6.2 at $`\Omega_m = 0.50`$, reaches 47.4 on DR3 and 37.6 on
+ratio of 6.2 at $`\Omega_m = 0.50`$, reaches 47.4 on
+$`\Delta d_\mathrm{com} = 62`$ Mpc and 37.6 on
 $`\Delta z = 0.02`$, and the worst on $`\Delta z = 0.05`$ is 12.1.
 On the thin layouts the residual is mainly cosmolike's table
 resolution (`accuracyboost`); on the wide $`\Delta z = 0.2`$ bins it
@@ -787,7 +804,7 @@ jupyter notebook --no-browser --port=8888
 
 | Notebook | Contents |
 |---|---|
-| [EXAMPLE_EVALUATE_COVARIANCE.ipynb](EXAMPLE_EVALUATE_COVARIANCE.ipynb) | The covariance terms of the DR3 layout and matrix diagnostics; needs the covariance build ([covariance guide](covariance/README.md#running)). |
+| [EXAMPLE_EVALUATE_COVARIANCE.ipynb](EXAMPLE_EVALUATE_COVARIANCE.ipynb) | The covariance terms of the $`\Delta d_\mathrm{com} = 62`$ Mpc layout and matrix diagnostics; needs the covariance build ([covariance guide](covariance/README.md#running)). |
 | [EXAMPLE_EVALUATE_FISHER.ipynb](EXAMPLE_EVALUATE_FISHER.ipynb) | Fisher forecasts of DESI clustering, LSST 3×2pt and their combination on every DESI layout, and the Fisher biases of the projection approximations ([running Fisher](#fisher)). |
 
 Choose the Python kernel from the activated Cocoa environment and
@@ -823,7 +840,7 @@ of the shipped EXAMPLEs are:
 
 | EXAMPLE | Layout | `accuracyboost` | `nonlimber_accuracyboost` | `kmax_boltzmann` |
 |---|---|---:|---:|---:|
-| `EXAMPLE_EVALUATE1.yaml` | DR3 comoving bins | 2 | 32 | 20 |
+| `EXAMPLE_EVALUATE1.yaml` | $`\Delta d_\mathrm{com} = 62`$ Mpc bins | 2 | 32 | 20 |
 | `EXAMPLE_EVALUATE2.yaml` | DR1, $`\Delta z = 0.02`$ | 2 | 32 | 20 |
 | `EXAMPLE_EVALUATE3.yaml` | DR1, $`\Delta z = 0.05`$ | 2 | 16 | 20 |
 | `EXAMPLE_EVALUATE4.yaml` | DR1, $`\Delta z = 0.2`$ | 2 | 4 | 20 |
@@ -836,7 +853,8 @@ fiducial: at a low-$`\Omega_m`$ point ($`\Omega_m = 0.237`$,
 $`w_0 = -2.39`$, $`w_0 + w_a = -2.87`$,
 $`H_0 = 78.6\ \mathrm{km\,s^{-1}\,Mpc^{-1}}`$), a table ending at
 $`10\ \mathrm{Mpc}^{-1}`$ moves the $`\chi^2`$ through that
-extrapolated tail by $`\Delta\chi^2 = 2.09`$ (DR3) and 2.06
+extrapolated tail by $`\Delta\chi^2 = 2.09`$
+($`\Delta d_\mathrm{com} = 62`$ Mpc) and 2.06
 ($`\Delta z = 0.02`$), and the $`40\ \mathrm{Mpc}^{-1}`$ table
 brings them to $`\Delta\chi^2 = 0.12`$ and 0.10.
 
