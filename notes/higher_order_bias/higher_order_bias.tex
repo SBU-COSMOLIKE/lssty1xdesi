@@ -57,11 +57,13 @@ opposite sign and several times the magnitude of the co-evolution
 expectation, which moves the loop correction by several percent of
 $P_{gg}$ at $k\simeq0.1\hMpc$, the size of the whole effect.  Second, at
 the project cut $\kmax=0.075\hMpc$ the one-loop terms are a $1$--$3\%$
-correction that a minimal model (co-evolution-centered $\btwo$ and
+correction that a minimal one-loop model (the correlated-prior note's
+per-bin linear bias, co-evolution-centered $\btwo$ and
 $\bs$, one counterterm, one stochastic amplitude per tracer chunk)
 covers; at the shipped mask near $0.18\hMpc$ the corrections reach
-$10$--$20\%$ and require the full one-loop parameter set per chunk,
-including the redshift-space pieces this project has not yet modeled.
+$10$--$20\%$, so $\btwo$ and $\bs$ must be freed per chunk with wide
+priors and the redshift-space pieces, which this project has not yet
+modeled, must enter the model.
 \end{abstract}
 
 \tableofcontents
@@ -84,14 +86,24 @@ $\bone(z) = B_g/D(z)$, where $D(z)$ is the linear growth factor
 normalized to $D(0)=1$ and $B_g$ is the chunk amplitude.  The $1/D$
 shape keeps the clustering amplitude $\bone(z) D(z)$ of a chunk
 constant; it is the constant-clustering-amplitude shape, not the
-evolution law of a conserved galaxy population.
+evolution law of a conserved galaxy population.  (The likelihood
+itself reads one bias parameter per thin bin; the shipped parameter
+files tie them to one sampled value per chunk.)  The project's
+correlated-prior note (\texttt{notes/correlated\_bias\_prior}) shows
+that this tied model is too rigid, and the recommendation of
+Section~\ref{sec:recommendation} uses that note's per-bin model,
+$b_{1,i} = B_g(1+\delta_i)/D(z_i)$ with one fractional deviation
+$\delta_i$ per bin under a correlated prior.
 
 An earlier review of the forecast (the project reference
 \texttt{references/fom\_and\_bias\_review.md}) concluded that this
 model is too rigid for the shipped scale cuts: linear bias is accurate
 only to $\kmax\simeq0.08$--$0.12\hMpc$, while the shipped masks reach
 $k\simeq0.18\hMpc$.  The missing terms are the second-order and tidal
-bias loops, the $k^2$ counterterms, and the stochastic terms.  This
+bias loops, the $k^2$ counterterms, and the stochastic terms.
+Throughout this note, higher-order bias means the bias beyond linear
+order: the quadratic $\btwo$ and tidal $\bs$ at second order and
+$\bthree$ at third, all of which enter $P_{gg}$ at one loop.  This
 note is the theoretical study that the higher-order bias
 implementation will build on.  It answers six questions: the structure
 of the one-loop galaxy power spectrum and its bias bases
@@ -749,7 +761,7 @@ $3\%$ of $P_{gg}$ for the LRG chunks and more for ELG.  Against the
 forecast's statistical power (sub-percent amplitude precision per
 chunk once all bins and bands are aggregated), none of these is
 negligible; the saving grace is that below $0.075\hMpc$ their scale
-dependence is mild, so the free per-chunk linear amplitude absorbs
+dependence is mild, so the free linear amplitudes absorb
 most of each term and the damage concentrates in the residual shape.
 That is an argument for a small extension, not for linear bias alone.
 
@@ -758,9 +770,9 @@ changes qualitatively.  The $\bone\btwo$ term alone reaches
 $7$--$17\%$ with strong scale dependence; the quadratic-quadratic
 terms reach $3$--$7\%$; the counterterm scale is $10$--$19\%$.  These
 are not absorbable by an amplitude, and their shapes differ from one
-another, so the full one-loop parameter set is required, as the DESI
-DR1 choice of $\kmax = 0.2\hMpc$ with seven nuisances per tracer
-already reflects.
+another, so the higher-order biases must be free per chunk rather
+than tied to the calibrations, as the DESI DR1 choice of
+$\kmax = 0.2\hMpc$ with seven nuisances per tracer already reflects.
 
 \section{The draft model against DESI's}
 \label{sec:comparison}
@@ -843,32 +855,52 @@ mask edge.
 
 The project's correlated-prior note
 (\texttt{notes/correlated\_bias\_prior}) models the linear bias of bin
-$i$ in group $g$ as $b_i = B_g(1+\delta_i)/D(z_i)$, with the
+$i$ in group $g$ as $b_{1,i} = B_g(1+\delta_i)/D(z_i)$, with the
 fractional deviations $\delta_i$ drawn from a Gaussian prior
 correlated across neighboring bins.  The higher-order sector should
 follow the same logic.  Co-evolution makes the trend deterministic:
-if $\bone(z) = B_g/D(z)$, then within the group
+given the per-bin linear biases $b_{1,i}$,
 \begin{equation}
-\bs(z) = -\frac{4}{7}\left(\frac{B_g}{D(z)} - 1\right)
+b_{s^2,i} = -\frac{4}{7}\left(b_{1,i} - 1\right)
  + \Delta_{s,g} , \qquad
-\btwo(z) = \btwo^{\rm fit}\!\left(\frac{B_g}{D(z)}\right)
+b_{2,i} = \btwo^{\rm fit}\!\left(b_{1,i}\right)
  + \Delta_{2,g} ,
-\label{eq:tied-evolution}
+\label{eq:perbin-evolution}
 \end{equation}
-with $\btwo^{\rm fit}$ the Lazeyras relation of
+with $b_{2,i}$ and $b_{s^2,i}$ the quadratic and tidal biases of bin
+$i$, $\btwo^{\rm fit}$ the Lazeyras relation of
 Eq.~\eqref{eq:lazeyras} and $\Delta_{2,g}$, $\Delta_{s,g}$ one free
-offset per group.  The offsets absorb the known imperfection of the
+offset per group.
+
+The trends follow the full $b_{1,i}$, deviations included, not the
+smooth group shape $B_g/D(z_i)$.  The reason is physical: a deviation
+$\delta_i$ is a real change of which halos the selection reaches in
+that bin (a flux limit, for example, keeps only the brighter galaxies,
+which sit in more massive halos), and the calibrated relations map
+halo populations at a given linear bias, so the second-order biases
+of the bin's population sit on the calibration curves at $b_{1,i}$,
+not at the group trend.  The induced shift is small but determined:
+near $\bone \simeq 2$ the Lazeyras relation has slope
+$d\btwo/d\bone \simeq 1.7$, so a deviation at the correlated prior's
+per-bin width $\sigma_b = 3\%$ moves $\btwo$ by about $0.10$, a tenth
+of the offset prior width of $1.0$ that
+Section~\ref{sec:recommendation} assigns, and the co-evolution slope
+$-4/7$ moves $\bs$ by about $0.03$ against the offset width of $0.5$.
+
+The offsets absorb the known imperfection of the
 calibrated relations (the $30\%$ spread between co-evolution and the
 excursion-set $\gamma_2$ at LRG biases, and the scatter of the
 Lazeyras fit); the deterministic part carries the within-group
-evolution, which is not small: across LRG3 the co-evolution $\bs$
+evolution, which is not small: across LRG3, at $\delta_i = 0$, the
+co-evolution $\bs$
 moves from $-0.88$ to $-1.09$, a drift comparable to the offset prior
-width itself.  Holding $\btwo$ and $\bs$ constant while $\bone$
-evolves as $B_g/D$ is internally inconsistent; freeing them per bin
+width itself.  Holding $\btwo$ and $\bs$ constant while $b_{1,i}$
+evolves across the group is internally inconsistent; freeing them per
+bin
 (152 extra parameters for 76 bins) throws away the physical
 correlation the correlated-prior note was written to keep.
 
-The parameter count under Eq.~\eqref{eq:tied-evolution} is two offsets
+The parameter count under Eq.~\eqref{eq:perbin-evolution} is two offsets
 per group, twelve in total for the six chunks, and the correlated
 prior extends naturally: the offsets of chunks of the same tracer
 (LRG1--3, ELG1--2) share selection physics, so a Gaussian prior
@@ -882,15 +914,33 @@ letting 76 independent $\btwo$ values absorb the dark-energy signal.
 \section{Recommendation}
 \label{sec:recommendation}
 
+Both models below are one-loop models.  Each carries the complete
+real-space one-loop Eulerian bias set of Eq.~\eqref{eq:pgg} ($\bone$,
+$\btwo$, $\bs$, $\bthree$), the $k^2$ counterterm $\alpha_0$ and the
+stochastic amplitude $\mathrm{SN}_0$; they differ in what is free.
+Model A ties the higher-order biases to the calibrations through the
+per-bin linear bias, with group offsets under modest priors; model B
+frees them and adds the redshift-space terms.
+
 \textbf{At $\kmax = 0.075\hMpc$} (the cut matched to the thin-bin
 radial resolution), the minimal defensible model per DESI chunk,
 called model A below, is
 \begin{itemize}
-\item $\bone(z) = B_g/D(z)$ with $B_g$ free, flat prior, as now;
-\item $\btwo(z)$ from the Lazeyras relation on $\bone(z)$ plus a free
+\item $b_{1,i} = B_g(1+\delta_i)/D(z_i)$ per thin bin, the model of
+the correlated-prior note: $B_g$ free with a flat prior per group,
+and the deviations $\delta_i$ under that note's exponential-kernel
+prior at its baseline, correlation length $L = 0.05$ in redshift and
+per-bin width $\sigma_b = 3\%$.  The baseline is provisional, because
+the note's plausible region is still under review.  For a group whose
+selection drifts across its redshift range, such as BGS with its flux
+limit, the note's memory model (a free tilt per group, with the
+kernel prior kept for the residuals around the line) is the option to
+use;
+\item $b_{2,i}$ from the Lazeyras relation on $b_{1,i}$
+(Eq.~\eqref{eq:perbin-evolution}) plus a free
 offset $\Delta_{2,g}$, Gaussian prior of width $1.0$ centered on
 zero;
-\item $\bs(z)$ from co-evolution on $\bone(z)$ plus a free offset
+\item $b_{s^2,i}$ from co-evolution on $b_{1,i}$ plus a free offset
 $\Delta_{s,g}$, Gaussian prior of width $0.5$ centered on zero (the
 width covers the co-evolution-versus-excursion-set spread at LRG
 biases);
@@ -906,17 +956,36 @@ prior of width twice the Poisson power, following DESI;
 freedom, with the implementation study measuring whether they cover
 the dropped $\mu$-dependent terms at this cut.
 \end{itemize}
-That is four new parameters per chunk (24 total) on top of the
-existing amplitudes and dispersions, against DESI DR1's seven per
-tracer at $\kmax = 0.2\hMpc$.  The reasoning: at this cut every
-correction is $1$--$3\%$ with mild scale dependence, so
+The linear sector carries one amplitude per thin bin (76 in the
+shipped layout of equal comoving bin width
+$\Delta d_{\rm com} = 62$\,Mpc), constrained by the correlated prior
+in every direction except the one flat amplitude $B_g$ per group.
+The 24 higher-order parameters (four per chunk: $\Delta_{2,g}$,
+$\Delta_{s,g}$, $\alpha_0$, $\mathrm{SN}_0$) come on top, against
+DESI DR1's seven per tracer at $\kmax = 0.2\hMpc$.  The reasoning: at
+this cut every correction is $1$--$3\%$ with mild scale dependence, so
 calibration-centered Gaussian freedom is enough, and the offsets keep
 the model honest about the calibrations without opening flat
 directions.
 
+The tied linear bias $\bone(z) = B_g/D(z)$ with no deviations, the
+shape the shipped parameter files tie to, is not a defensible
+alternative.  The correlated-prior note's section ``Which $L$ and
+$\sigma_b$ are physical'' shows that even a conserved population
+departs from that shape, by about $1\%$ per $\Delta z = 0.05$ through
+the bias continuity equation, and that selected samples drift more:
+the BGS flux limit moves the bias by about $22\%$ across its group.
+The note's ``Results'' section measures what the tying buys in the
+dark-energy figure of merit ${\rm FoM}(w_0, w_a)$, the inverse area
+of the error ellipse of the equation-of-state parameters $w_0$ and
+$w_a$: on the $\Delta d_{\rm com} = 62$\,Mpc layout the tied model
+gives $32.9$ against $11.8$ at the baseline prior, a factor of $2.8$
+resting on a rigidity the physics does not support.
+
 \textbf{At $\kmax \simeq 0.15$--$0.2\hMpc$} (the shipped mask), the
-model, called model B below, must become the full one-loop set per
-chunk: $\btwo$ and $\bs$
+model, called model B below, keeps the per-bin linear bias
+$b_{1,i}$ with the correlated prior and frees the higher-order
+sector: $\btwo$ and $\bs$
 free with the calibration relations demoted to prior centers (widths
 of order 2 and 1), $\alpha_0$ at the DESI width
 $12.5\,h^{-2}\mathrm{Mpc}^2$, an explicit radial counterterm (the
@@ -1031,7 +1100,12 @@ declared \texttt{DESI\_} parameter, so new nuisances enter it
 automatically once the likelihood reads them; $C_\ell$ is linear in
 $\btwo$, $\bs$, $b_K$ and $\mathrm{SN}_0$ at fixed $\bone$ apart from
 the quadratic $\tfrac{1}{4}\btwo^2$ and $\tfrac{1}{4}\bs^2$ terms, so
-the new derivatives are cheap.  The covariance
+the new derivatives are cheap.  With $\btwo$ and $\bs$ following
+$b_{1,i}$ through Eq.~\eqref{eq:perbin-evolution}, the derivative
+with respect to a deviation $\delta_i$ also picks up the chain
+through $\btwo$ and $\bs$: the loop terms move with
+$d\btwo/d\bone \simeq 1.7$ and $d\bs/d\bone = -4/7$ times the change
+of $b_{1,i}$.  The covariance
 (\texttt{covariances/spectra\_cov.c}) carries linear bias only, on
 top of the open mismatch that it takes the raw chunk amplitudes
 instead of $B_g/D(z)$.
@@ -1058,8 +1132,10 @@ verdict is folded into Section~\ref{sec:verdict}.
 
 \subsection{Gaps against model A}
 
-Model A (Section~\ref{sec:recommendation}: per chunk, the
-$\btwo$ and $\bs$ trends with group offsets, $\bthree$ from
+Model A (Section~\ref{sec:recommendation}: the per-bin linear bias
+$b_{1,i}$ with the correlated prior; per chunk, the
+$\btwo$ and $\bs$ trends on $b_{1,i}$ with group offsets, $\bthree$
+from
 co-evolution or zero, one $\alpha_0$, one $\mathrm{SN}_0$, the
 $\sigma_v$ groups kept) decomposes into the following work items.
 
@@ -1069,8 +1145,14 @@ $\sigma_v$ groups kept) decomposes into the following work items.
 \toprule
 need & status & change \\
 \midrule
-$\btwo(z)$ trend + offset per group & per-bin $\texttt{gb2}$ exists in
-C & likelihood only: compute per-bin values from $\bone(z)$ and a new
+per-bin linear bias with the correlated prior & the likelihood reads
+one \texttt{DESI\_B1\_}$n$ per thin bin; the shipped yamls tie them
+per group; the Fisher notebook already applies the kernel and memory
+prior precisions & a yaml grouping that samples every bin, plus a
+cobaya external prior carrying the kernel (or memory) Gaussian for
+chains (small, Python and yaml) \\
+$\btwo$ trend + offset per group & per-bin $\texttt{gb2}$ exists in
+C & likelihood only: compute per-bin values from $b_{1,i}$ and a new
 \texttt{DESI\_B2OFF} parameter per group in
 \texttt{desi\_cl.py} (small, Python) \\
 $\bs$ trend + offset & C slot exists; the interface forces
@@ -1119,10 +1201,13 @@ Model B is a research task, not an extension of model A.
 
 The recommended order:
 \begin{enumerate}
+\item yamls: a grouping that samples every \texttt{DESI\_B1\_}$n$,
+plus the cobaya external prior carrying the kernel (or memory)
+Gaussian for chains;
 \item interface: free the tidal argument (co-evolution default), add
 the $\mathrm{SN}_0$ slot, state the $b_K$-to-$\alpha_0$ mapping;
-\item likelihood: group-level trends and offsets for $\btwo$ and
-$\bs$, $\alpha_0$, $\mathrm{SN}_0$, with the priors of
+\item likelihood: the $\btwo$ and $\bs$ trends on $b_{1,i}$ with
+group offsets, $\alpha_0$, $\mathrm{SN}_0$, with the priors of
 Section~\ref{sec:recommendation};
 \item C: one-loop for the adjacent cross pairs through the separable
 $D^2(z_1)D^2(z_2)$ templates;
