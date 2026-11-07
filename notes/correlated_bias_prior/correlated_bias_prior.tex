@@ -181,22 +181,68 @@ the prior.
 \end{table}
 
 \paragraph{The accuracy test.}
-Each rung is also tested for the bias it would inherit from a drift
-it cannot express.  A known drift changes the expected data vector by
-$\delta m$; fitting those data with a rung's model shifts the
-parameters by $\delta p = F^{-1} \mathsf{D}\T \mathsf{C}_d^{-1}\,
-\delta m$, the linear response of the fit, where $\mathsf{D}$ is the
-derivative matrix of the data vector, $\mathsf{C}_d$ is the data
-covariance, and $F$ is the rung's Fisher matrix including its prior.
-The shift is quoted as the displacement of $(w_0, w_a)$ in units of
-that rung's own marginalized error ellipse, against a threshold of
-one third of the ellipse.  The tied model is excluded on accuracy:
-the conserved-population drift, the gentlest one physics supplies,
-biases it by $11$--$21$ ellipse units.  The baseline and the
-pessimistic rung pass everywhere; the largest shift of either is the
-BGS flux limit on the $\Delta z = 0.05$ layout, about $0.3$, where
-the group holds only six bins.  Appendix~\ref{app:bias} derives the
-formula, lists every number and draws the figure of bias.
+Each rung is tested against truths it may not be able to express.  A
+truth sets every bin's bias to its group's known drift (the
+$r < 19.5$ flux limit in BGS, a conserved population elsewhere) plus
+a residual drawn from the baseline or the pessimistic prior; every
+rung fits $2000$ truths per case with its bias prior centered on the
+tied shape.  Figure~\ref{fig:ladderbiasscatter} draws the figure of
+bias $\Delta_w$, the distance of the fitted $(w_0, w_a)$ from the
+truth in units of the rung's own ellipse, one panel per truth and one
+column per rung.  A point above the dashed line $\Delta_w = 1/3$ is a
+biased fit, except in the column labeled ``fit prior = truth
+scatter'', whose ellipse already covers that shift.  The verdict is
+the error inflation $\sqrt{\mathrm{E}[\chi^2_w]/2}$, where
+$\chi^2_w$ is $\Delta_w^2$ with the data noise added and
+$\mathrm{E}$ averages over truths and noise: it is $1$ when the
+ellipse covers the truth as it claims, and above $1$ it is the factor
+by which the ellipse is too small.  The tied model is wrong under
+either truth: its ellipse is $8.5$--$18$ times too small.  The
+baseline is correct ($1.00$) when nature's local bias features stay
+within its own prior, but its ellipse is $1.5$--$2.3$ times too small
+if they reach the pessimistic size; the baseline FoM rests on that
+assumption, and the pessimistic FoM is the safe statement.  The
+pessimistic rung is correct ($1.00$) or conservative ($0.87$--$0.99$)
+under both truths.  Appendix~\ref{app:bias} derives both statistics.
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=0.62\linewidth]{plots/ladder_bias_scatter/ladder_bias_scatter.pdf}
+  \small
+  \caption{The accuracy test with random truths.  In each panel the
+    true bias of bin $i$ is
+    $b_i = B_g\,(1 + \delta_i^{\rm drift} + \varepsilon_i)/D(z_i)$:
+    the drift is the $r < 19.5$ flux-limit deviation in BGS and the
+    conserved-population deviation in the other five groups; the
+    residual $\varepsilon_i$ is Gaussian with covariance
+    $\sigma_g^2\,e^{-|z_i - z_j|/L}$ inside a group, zero across
+    groups, drawn from the baseline prior ($\sigma_g = 3\%$ for BGS,
+    $1\%$ otherwise, $L = 0.2$; top) or the pessimistic prior
+    ($\sigma_g = 3\%$ everywhere, $L = 0.05$; bottom).  The $2000$
+    truths per panel are each fitted with every rung, every rung's
+    bias prior centered on the tied shape $\delta = 0$: the baseline
+    is here a model under test, not the truth.  Points: the mean
+    figure of bias $\Delta_w$, the fitted $(w_0, w_a)$ shift in
+    units of that rung's own error ellipse; bars: the
+    16th--84th percentiles; colors: the four bin
+    layouts; dashed line: the $\sigma/3$ threshold.  The axis is
+    logarithmic; shifts below $10^{-3}$ are drawn at $10^{-3}$ and
+    labeled ``zero'': the independent rung absorbs any truth
+    exactly, and on $\Delta z = 0.2$ every group holds one or two
+    bins, so the free amplitude and tilt do the same for every rung
+    below tied.  The gray columns mark the baseline and the
+    pessimistic rung; ``fit prior = truth scatter'' marks the rung
+    whose prior equals the truth's residual distribution.  There the
+    mean shift is not a bias, since that rung's ellipse already
+    covers exactly this scatter; its error inflation
+    (Table~\ref{tab:inflation}) is $1.00$.  Reading the
+    panels: the tied model fails both truths by more than an order
+    of magnitude; the baseline absorbs its own scatter (top) but
+    fails the pessimistic truth (bottom), where its ellipse is
+    $1.5$--$2.3$ times too small; the pessimistic rung passes
+    both.}
+  \label{fig:ladderbiasscatter}
+\end{figure}
 
 \paragraph{What the two priors look like.}
 Figures~\ref{fig:baselinedraws} and \ref{fig:pessimisticdraws} draw
@@ -1420,10 +1466,13 @@ keeps more of the figure of merit on the thinnest layouts.
 
 The ladder of Section~\ref{sec:summary} orders the models by how much
 information they keep.  This appendix orders them by the other
-quantity that matters: the bias each model inherits from a drift it
-cannot express.  The result is the accuracy statement the summary
-quotes, and the reason the tied model is excluded rather than merely
-optimistic.
+quantity that matters: whether each model's quoted error still covers
+the truth when the true biases carry structure the model cannot
+express.  It injects the two known drifts first, then random truths
+built on them, and ends at the error inflation, the factor by which
+each rung's $(w_0, w_a)$ ellipse is too small.  The result is the
+accuracy statement the summary quotes, and the reason the tied model
+is excluded rather than merely optimistic.
 
 \subsection{The shift formula}
 \label{sec:biasformula}
@@ -1487,11 +1536,11 @@ span whose best line leaves a $2.4\%$ rms curvature.  Both come from
 the same scripts as the theory figures; only the shape of each drift
 matters, because the free amplitudes remove the level.
 
-\subsection{The figure of bias}
+\subsection{The drift-only shifts}
 \label{sec:biasresults}
 
 Table~\ref{tab:ladderbias} lists the shift $\Delta_w$ of every rung
-under both drifts, and Figure~\ref{fig:ladderbias} draws it.
+when the data carry exactly one known drift and nothing else.
 
 \begin{table}[ht]
   \centering
@@ -1523,43 +1572,301 @@ under both drifts, and Figure~\ref{fig:ladderbias} draws it.
   \label{tab:ladderbias}
 \end{table}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth]{plots/ladder_bias/ladder_bias.pdf}
-  \caption{The figure of bias: the $(w_0, w_a)$ shift $\Delta_w$ of
-    each rung of the ladder, in units of that rung's own marginalized
-    error ellipse, on a logarithmic axis.  Solid lines with filled
-    circles: the conserved-population drift, applied to every group.
-    Dotted lines with open squares: the BGS $r < 19.5$ flux-limit
-    drift.  Colors distinguish the four layouts.  The dashed
-    horizontal line is the threshold of one third of the ellipse.
-    Shifts below $10^{-3}$ are drawn at $10^{-3}$; the independent
-    rung is exactly zero.}
-  \label{fig:ladderbias}
-\end{figure}
-
-Three statements carry the table.  First, the tied model is excluded
+Two statements carry the table.  First, the tied model is excluded
 on accuracy.  The conserved population, the gentlest drift, biases it
 by $10.9$ to $21.5$ ellipse units; its flux-limit column is smaller
 only because that drift moves one group out of six.  A model whose
 central value sits more than ten of its own sigmas from the truth
 under the mildest input is not a conservative choice, it is a wrong
 one, and this is independent of the ladder's information argument.
+Second, the baseline and the pessimistic rung absorb both known
+drifts.  The largest entry of either is the BGS flux limit on
+$\Delta z = 0.05$, about $0.3$: that layout resolves BGS into only
+six bins, so the convex residual is sampled coarsely and the prior
+has less room to absorb it between the free line and the data.
 
-Second, the baseline and the pessimistic rung pass everywhere, most
-of the table by two or more orders of magnitude.  The largest entry
-of either is the BGS flux limit on $\Delta z = 0.05$, about $0.3$:
-that layout resolves BGS into only six bins, so the convex residual
-is sampled coarsely and the prior has less room to absorb it between
-the free line and the data.  The conserved-drift rows also show the
-expected ordering: the pessimistic prior, being wider, absorbs the
-drift's curvature more completely than the baseline.
+A known drift is only half of a bias history.  The two drifts are
+the deviations this note can derive; a real sample adds residual
+structure whose shape nobody has measured.  The rest of this
+appendix makes that structure random and asks each rung the sharper
+question: does the error ellipse you quote still cover the truth?
 
-Third, the test is one-sided.  Passing it proves a rung can express
-the drifts this note knows about; it cannot certify the drifts
-nobody has measured.  That is what the pessimistic rung is for, and
-why the ladder ends at the independent model, whose shift is zero
-for every drift expressible through the bin biases.
+\subsection{Random truths}
+\label{sec:randomtruths}
+
+A random truth sets the bias of bin $i$ in group $g$ to
+\begin{equation}
+  b_i \;=\; \frac{B_g}{D(z_i)}\,
+  \bigl(1 + \delta_i^{\rm drift} + \varepsilon_i\bigr)
+  \label{eq:randomtruth}
+\end{equation}
+at the fiducial cosmology.  The drift $\delta_i^{\rm drift}$ is the
+known part: the $r < 19.5$ flux-limit deviation in BGS and the
+conserved-population deviation of Eq.~\eqref{eq:tilt} in the other
+five groups.  The residual $\varepsilon_i$ is the random part: one
+draw from the Gaussian $\mathcal{N}(0, \Sigma)$ whose covariance is
+the kernel of one of the two stated priors,
+$\Sigma_{ij} = \sigma_g^2\, e^{-|z_i - z_j|/L}$ inside a group and
+zero across groups.  Two families of $2000$ truths are drawn:
+baseline scatter ($\sigma_g = 3\%$ for BGS, $1\%$ for the other
+groups, $L = 0.2$) and pessimistic scatter ($\sigma_g = 3\%$ in
+every group, $L = 0.05$).
+
+Every truth is fitted with every rung, and every rung's bias prior
+stays centered on the tied shape $\delta = 0$.  No rung is told
+which truth it faces: the baseline rung meets truths drawn from its
+own prior (the matched case below) and truths drawn from the
+pessimistic prior, and is judged on both.
+
+The sampling costs one matrix product because the response is
+linear.  Eq.~\eqref{eq:fisherbias} is linear in $\delta m$, and
+$\delta m$ is linear in the bias deviations, so the $(w_0, w_a)$
+rows of the response collapse into one
+$2 \times n_{\rm bins}$ matrix $\mathsf{A}$ per rung and layout:
+\begin{equation}
+  \delta w \;=\; \mathsf{A}\,\delta,
+  \qquad
+  \delta_i \;=\; \delta_i^{\rm drift} + \varepsilon_i .
+  \label{eq:linearmap}
+\end{equation}
+The draws also check themselves against the closed form they must
+reproduce,
+$\mathrm{E}[\Delta_w^2] = \Delta_{\rm drift}^2
++ \mathrm{tr}(\Cov_w^{-1} \mathsf{A} \Sigma \mathsf{A}\T)$, where
+$\Delta_{\rm drift}$ is the shift of the drift alone
+(Table~\ref{tab:ladderbias}) and $\Cov_w$ is the rung's marginalized
+$(w_0, w_a)$ covariance.
+
+One caveat bounds the method.  The response is first order in
+$\delta$, and the band powers are quadratic in the bin biases, so a
+term of order $\delta^2$ is dropped: a few percent of the shift for
+the $1$--$3\%$ residuals, and perhaps $10$--$20\%$ of it for the
+$22\%$ BGS drift.  No conclusion of this appendix depends on that
+term.
+
+Figure~\ref{fig:ladderbiasscatter}, in the summary
+(Section~\ref{sec:summary}), draws the result; its caption is
+written to stand alone.  The one subtlety is the matched rung, the
+gray column labeled ``fit prior = truth scatter''.  Where the fit's
+prior equals the truth's scatter, the average shift is not a bias.
+That rung's ellipse is wider than the tied model's precisely because
+it marginalizes over the scatter the truth now actually has: the
+fitted $(w_0, w_a)$ moves from draw to draw, and the ellipse was
+built to cover those moves.  A correctly specified model therefore
+shows a nonzero average shift just by being correct, and the mean of
+$\Delta_w$ on the matched rung measures the share of the ellipse the
+bias scatter occupies, not an error of the model.  Deciding whether
+the quoted ellipse is honest needs the statistic of the next
+subsection.
+
+\subsection{The error inflation}
+\label{sec:inflation}
+
+A rung is correctly specified when its quoted ellipse covers the
+truth with the stated probability.  The statistic that tests exactly
+that is the squared distance $\chi^2_w$ of the fitted $(w_0, w_a)$
+from the truth in units of the rung's ellipse, with every source of
+displacement counted: the drift, the bias scatter, and the data
+noise.  Over the truths and the noise its expectation is
+\begin{equation}
+  \mathrm{E}[\chi^2_w]
+  \;=\;
+  \Delta_{\rm drift}^2
+  \;+\;
+  \mathrm{tr}\!\left(\Cov_w^{-1} \mathsf{A}\,\Sigma\,\mathsf{A}\T\right)
+  \;+\;
+  \mathrm{tr}\!\left(\Cov_w^{-1} \mathsf{N}_w\right),
+  \label{eq:chi2w}
+\end{equation}
+where $\mathsf{N}_w$ is the share of $\Cov_w$ contributed by the
+data noise and by the Gaussian priors on the per-group velocity
+dispersions $\sigma_v$, the only priors besides the bias prior.  The
+quoted number is the error inflation
+\begin{equation}
+  \sqrt{\mathrm{E}[\chi^2_w]\,/\,2} .
+  \label{eq:inflation}
+\end{equation}
+
+For each fitted rung, $\mathrm{E}[\chi^2_w]$ is the expected squared
+distance between the fitted $(w_0, w_a)$ and the truth, in units of
+the ellipse $\Cov_w$ that the rung reports.  Eq.~\eqref{eq:chi2w}
+splits it into three sources, in order: the drift squared, the
+scatter the prior did not absorb, and the noise.
+
+The drift term $\Delta_{\rm drift}^2$ is the squared shift from the
+known drift alone, the same for every truth.  The scatter term
+carries the truth's residual $\varepsilon$ into $(w_0, w_a)$ through
+the response matrix $\mathsf{A}$ of Eq.~\eqref{eq:linearmap}: it is
+the part of the scatter that the rung's bias parameters, held back by
+their prior, did not follow.  The noise term counts the data noise
+and the $\sigma_v$ priors.
+
+An honest ellipse gives exactly $2$, the number of parameters.
+Suppose the rung is correctly specified: no drift remains, and the
+fitted $(w_0, w_a)$ scatters around the truth with covariance exactly
+$\Cov_w$.  The expected squared distance is then
+$\mathrm{tr}(\Cov_w^{-1}\Cov_w)$, the trace of the $2 \times 2$
+identity matrix, so $\mathrm{E}[\chi^2_w] = 2$: one unit for $w_0$
+and one for $w_a$.  A larger value means the fit lands, on average,
+farther from the truth than the reported ellipse allows.
+
+The error inflation of Eq.~\eqref{eq:inflation} turns that excess
+into a length.  Growing both axes of the ellipse by a factor $f$
+replaces $\Cov_w$ by $f^2\,\Cov_w$ and divides $\chi^2_w$ by $f^2$, so
+$f = \sqrt{\mathrm{E}[\chi^2_w]/2}$ is the growth that brings the
+expectation back to $2$.  The inflation is the factor by which the
+axes of the reported ellipse would have to grow to cover the truth as
+often as the ellipse claims: $1$ for an honest ellipse, above $1$ for
+an ellipse that is too small, below $1$ for a conservative one.
+
+The factor matches the average squared distance.  It matches the
+coverage exactly when the real scatter of the fitted $(w_0, w_a)$ has
+the shape and orientation of the reported ellipse.
+
+\paragraph{Worked case: the baseline fit of a pessimistic truth.}
+The baseline prior states that each group's residual $\varepsilon$
+around its free line (the free amplitude $B_g$ and tilt $s_g$ of
+Eq.~\eqref{eq:summodel}) is small and smooth.  Its width, the rms
+$\sigma_g$ of one bin's residual, is $1\%$ ($3\%$ for BGS), and its
+correlation length $L = 0.2$ keeps the residual coherent over
+$\Delta z \approx 0.2$.  The pessimistic truth has residuals of
+$\sigma_g = 3\%$ with $L = 0.05$ in every group: $3\%$ wiggles that
+change over $\Delta z \approx 0.05$.
+
+The baseline prior charges a large penalty for bin biases that follow
+such wiggles, so the fit lets the biases follow them only in part.
+The band powers still carry the rest of each wiggle, and the fit
+moves the cosmological parameters, $(w_0, w_a)$ among them, to absorb
+what the biases do not.
+
+The push on $(w_0, w_a)$ is not one fixed offset.  The drift part
+alone is $\Delta_{\rm drift} = 0.03$ on the
+$\Delta d_{\rm com} = 62$~Mpc layout.  The rest comes from the
+residual and changes from truth to truth: over the $2000$ truths the
+shift $\Delta_w$ of Eq.~\eqref{eq:shiftw}, in units of the baseline
+ellipse, lies between $0.7$ and $4.0$ for the central $68\%$ (the
+16th to 84th percentiles).  The observed universe is one draw: one of
+these displacements, reported with the baseline ellipse.
+
+Adding the noise term, Eq.~\eqref{eq:chi2w} gives
+$\mathrm{E}[\chi^2_w] = 10.4$ on $\Delta d_{\rm com} = 62$~Mpc, an
+inflation of $\sqrt{10.4/2} = 2.28$ (Table~\ref{tab:inflationcase}).
+The real scatter of the best-fit $(w_0, w_a)$ around the truth is
+about $2.3$ times wider per axis than the reported ellipse.  The
+contour the baseline reports as one sigma is the $0.44\sigma$ contour
+of the real scatter ($1/2.28 = 0.44$).
+
+The figure of merit follows the same factor.
+${\rm FoM}(w_0, w_a) = [\det \Cov_w]^{-1/2}$ is proportional to the
+inverse area of the ellipse; growing both axes by $f$ multiplies the
+area by $f^2$, so the FoM scales as $1/f^2$.  The baseline FoM of
+$18.19$ on $\Delta d_{\rm com} = 62$~Mpc (Table~\ref{tab:ladder}),
+whose ellipse axes are $2.28$ times too small, corresponds to
+$18.19/2.28^2 \approx 3.5$.
+
+That value is not a number to quote: it rescales an ellipse whose
+center and shape still come from a prior narrower and smoother than
+the truth's scatter.  If the pessimistic truth is possible, the fit
+to report is the pessimistic rung: its inflation on the same truth is
+$1.00$, and its FoM is $11.45$.
+
+The opposite mismatch errs on the conservative side.  A truth with
+baseline scatter, fitted with the pessimistic rung, gives an
+inflation of $0.87$ to $0.99$ on the $\Delta d_{\rm com} = 62$~Mpc,
+$\Delta z = 0.02$ and $\Delta z = 0.05$ layouts
+(Table~\ref{tab:inflation}).  The real scatter is then narrower than
+the reported ellipse, which is at most $15\%$ wider per axis than
+needed ($1/0.866 = 1.15$).
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lcc}
+    \hline
+    Layout & $\mathrm{E}[\chi^2_w]$ &
+    error inflation $\sqrt{\mathrm{E}[\chi^2_w]/2}$ \\
+    \hline
+    $\Delta d_{\rm com} = 62$~Mpc & $10.4$ & $2.28$ \\
+    $\Delta z = 0.02$ & $4.66$ & $1.53$ \\
+    $\Delta z = 0.05$ & $9.15$ & $2.14$ \\
+    $\Delta z = 0.2$  & $2.00$ & $1.00$ \\
+    \hline
+  \end{tabular}
+  \caption{The worked case: the baseline rung fitted to truths that
+    carry the known drifts plus residual scatter drawn from the
+    pessimistic prior ($\sigma_g = 3\%$ in every group, $L = 0.05$).
+    $\mathrm{E}[\chi^2_w]$ is the expected squared distance of
+    Eq.~\eqref{eq:chi2w} between the fitted $(w_0, w_a)$ and the
+    truth, in units of the baseline ellipse, with the data noise and
+    the $\sigma_v$ priors included; an honest ellipse gives $2$.  The
+    error inflation of Eq.~\eqref{eq:inflation} is the factor by
+    which the ellipse axes would have to grow to cover the truth as
+    often as claimed.  On $\Delta z = 0.2$ each group has one or two
+    bins, so the free amplitude and tilt absorb every bias deviation
+    and the inflation is $1.00$.}
+  \label{tab:inflationcase}
+\end{table}
+
+The matched case lands on $1$ by an identity, not by tuning.  The
+matched rung's bias prior is the projected precision $\Prec$ of
+Appendix~\ref{app:memory}, built from the same kernel covariance
+$\Sigma$ the truth's scatter uses, and every projection of that form
+obeys $\Prec\,\Sigma\,\Prec = \Prec$.  That identity makes the
+scatter term and the noise term of Eq.~\eqref{eq:chi2w} sum to
+exactly $2$: the widening the prior adds to the ellipse equals the
+error the scatter inflicts, and the rest of the ellipse is the noise
+the data carry anyway.  The matched inflation is then
+$\sqrt{1 + \Delta_{\rm drift}^2/2} \approx 1$, because the matched
+rungs absorb the known drifts to $\Delta_{\rm drift} \lesssim 0.3$
+(Table~\ref{tab:ladderbias}).
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{llcccc}
+    \hline
+    Truth scatter & Layout & tied & baseline & pessimistic &
+    independent \\
+    \hline
+    baseline & $\Delta d_{\rm com} = 62$~Mpc &
+    $12.5$ & $1.00$ & $0.971$ & $1.00$ \\
+    & $\Delta z = 0.02$ & $8.54$ & $1.00$ & $0.866$ & $1.00$ \\
+    & $\Delta z = 0.05$ & $16.9$ & $1.01$ & $0.994$ & $1.00$ \\
+    & $\Delta z = 0.2$  & $8.82$ & $1.00$ & $1.00$ & $1.00$ \\
+    \hline
+    pessimistic & $\Delta d_{\rm com} = 62$~Mpc &
+    $13.3$ & $2.28$ & $1.00$ & $1.00$ \\
+    & $\Delta z = 0.02$ & $8.89$ & $1.53$ & $1.00$ & $1.00$ \\
+    & $\Delta z = 0.05$ & $17.6$ & $2.14$ & $1.02$ & $1.00$ \\
+    & $\Delta z = 0.2$  & $9.96$ & $1.00$ & $1.00$ & $1.00$ \\
+    \hline
+  \end{tabular}
+  \caption{The error inflation $\sqrt{\mathrm{E}[\chi^2_w]/2}$ of
+    Eq.~\eqref{eq:inflation}: the factor by which each rung's quoted
+    $(w_0, w_a)$ ellipse is too small when the truth carries the
+    known drifts plus residual scatter drawn from the named prior.
+    An entry of $1.00$ means the ellipse covers the truth as it
+    claims; an entry below $1$ means the ellipse is conservative.
+    On $\Delta z = 0.2$ every group holds one or two bins, so the
+    three lower rungs absorb any truth and sit at $1.00$.}
+  \label{tab:inflation}
+\end{table}
+
+Three statements carry Table~\ref{tab:inflation}.  First, the tied
+model is wrong under any truth: its ellipse is $8.5$--$18$ times too
+small, the coverage form of the exclusion of
+Appendix~\ref{sec:biasresults}.  Second, the baseline is correct
+exactly when nature's local bias features are no larger than its own
+prior allows: $1.00$--$1.01$ under its own scatter, but $1.5$--$2.3$
+times too small under the pessimistic truth.  The baseline FoM of
+Table~\ref{tab:ladder} therefore rests on that assumption, and the
+pessimistic FoM is the safe statement.  Third, the pessimistic rung
+is correct ($1.00$--$1.02$) or conservative ($0.87$--$0.99$) under
+both truths: a prior wider than the truth wastes information, which
+the ladder prices, but never understates the error.  One
+qualification remains: scatter larger or rougher than the
+pessimistic prior would indict the pessimistic rung in the same way,
+and against that the ladder ends at the independent model, whose
+inflation is $1.00$ for every truth expressible through the bin
+biases.
 
 \section{The roughness scan}
 \label{app:roughness}
