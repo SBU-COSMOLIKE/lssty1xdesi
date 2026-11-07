@@ -4,12 +4,14 @@ This script verifies, one by one, the identities derived in the companion
 note ``correlated_bias_prior.tex``: the two-bin inverse covariance and
 projected precision, the three-bin inverse with its exactly zero
 (1, 3) entry, the properties of the projected precision P for a
-general exponential (Ornstein--Uhlenbeck) kernel on unevenly spaced
+general exponential kernel on unevenly spaced
 redshifts, the tridiagonal form of the inverse covariance, the
 Pythagorean split of the prior penalty, the equivalence of P with the
 Schur complement obtained by marginalizing a flat-prior group amplitude,
-the variance of the jump between two bins (by Monte Carlo), and the
-numbers of the worked example in the note.
+the variance of the jump between two bins (by Monte Carlo), the
+decorrelation and variance of the neighbor-prediction leftover used by
+the appendix's chain factorization (from the kernel matrix, no
+sampling), and the numbers of the worked example in the note.
 
 Run with the cocoa environment:
 
@@ -77,8 +79,8 @@ def projected_precision(covariance):
 def tridiagonal_precision_uneven(redshifts, spread, correlation_length):
     """Analytic inverse of the exponential kernel on uneven redshifts.
 
-    The Markov factorization of the Ornstein--Uhlenbeck process gives,
-    with r_k = exp(-(z_{k+1} - z_k)/L) for each adjacent pair, the
+    The chain factorization of the exponential kernel gives, with
+    r_k = exp(-(z_{k+1} - z_k)/L) for each adjacent pair, the
     tridiagonal precision (in units of 1/spread^2):
 
         Q_11 = 1/(1 - r_1^2),     Q_nn = 1/(1 - r_{n-1}^2),
@@ -312,6 +314,47 @@ def check_schur_complement(redshifts, spread, correlation_length):
                   f"max deviation {deviation:.3e}")
 
 
+def check_conditional_leftover(redshifts, sigma_b, correlation_length):
+    """The leftover e = delta_{k+1} - r_k delta_k decorrelates the past.
+
+    The appendix writes each bin as its neighbor's prediction plus a
+    leftover.  Two facts make the chain factorization work, and both
+    are plain covariance algebra on the kernel matrix (no sampling):
+
+        Cov(e, delta_j) = 0 for every j <= k   (the past adds nothing),
+        Var(e) = sigma_b^2 (1 - r_k^2)         (the new scatter).
+    """
+    kernel = exponential_covariance(redshifts, sigma_b, correlation_length)
+    neighbor_correlation = np.exp(-np.diff(redshifts) / correlation_length)
+    number_of_bins = len(redshifts)
+
+    worst_covariance = 0.0
+    worst_variance_deviation = 0.0
+    for k in range(number_of_bins - 1):
+        # Covariance of the leftover with every bin up to and including
+        # bin k, read straight from the kernel rows of bins k+1 and k.
+        for j in range(k + 1):
+            leftover_covariance = (kernel[k + 1, j]
+                                   - neighbor_correlation[k] * kernel[k, j])
+            worst_covariance = max(worst_covariance,
+                                   abs(leftover_covariance) / sigma_b**2)
+
+        leftover_variance = (kernel[k + 1, k + 1]
+                             - 2.0 * neighbor_correlation[k] * kernel[k + 1, k]
+                             + neighbor_correlation[k]**2 * kernel[k, k])
+        expected_variance = sigma_b**2 * (1.0 - neighbor_correlation[k]**2)
+        variance_deviation = abs(leftover_variance - expected_variance)
+        worst_variance_deviation = max(worst_variance_deviation,
+                                       variance_deviation / sigma_b**2)
+
+    passed = (worst_covariance < ALGEBRA_TOLERANCE
+              and worst_variance_deviation < ALGEBRA_TOLERANCE)
+    detail = (f"worst |Cov(e, delta_j)|/sigma_b^2 {worst_covariance:.3e}, "
+              f"worst variance deviation {worst_variance_deviation:.3e}")
+    return report("leftover e = delta_(k+1) - r_k delta_k: Cov(e, past) = 0 "
+                  "and Var(e) = sigma_b^2 (1 - r_k^2)", passed, detail)
+
+
 def check_jump_variance_monte_carlo(rng):
     """Var(delta_i - delta_j) = 2 sigma_b^2 (1 - exp(-dz/L)) by sampling."""
     sigma_b = 0.10
@@ -381,6 +424,8 @@ def main():
                                            correlation_length, rng))
     results.append(check_schur_complement(uneven_redshifts, spread,
                                           correlation_length))
+    results.append(check_conditional_leftover(uneven_redshifts, spread,
+                                              correlation_length))
     results.append(check_jump_variance_monte_carlo(rng))
     results.append(check_worked_example())
 
