@@ -213,6 +213,13 @@ class ModelFisher:
         if not np.isfinite(loglike):
             raise RuntimeError(f"{self.likelihood_name}: the likelihood "
                                f"failed at {point}")
+        # a likelihood that adds terms to the compiled-interface vector
+        # (desi_cl's model A stochastic term) keeps its full vector in
+        # last_datavector; the others are the interface vector itself
+        like = self.model.likelihood[self.likelihood_name]
+        stored = getattr(like, "last_datavector", None)
+        if stored is not None:
+            return np.array(stored, dtype=np.float64)
         return np.array(self._getter(), dtype=np.float64)
 
     def ddv(self, index=0, h=H_DEFAULT, CV=None, AccuracyBoost=1.0):

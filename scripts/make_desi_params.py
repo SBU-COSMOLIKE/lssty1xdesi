@@ -40,6 +40,13 @@ With --case <name> (a fixed-width Delta z case of
 scripts/make_desi_dz_case.py, e.g. dr1_dz0p02) it writes instead the
 single fragment likelihood/params_desi_<name>.yaml - the project
 default model on that case's bin table.
+
+With --model-a (alone or with --case) it writes the model A fragments
+of the higher-order bias note instead: params_desi[_<case>]_model_a.yaml
+(one offset per chunk for b2, bs2, alpha_0 and SN0, the tilts fixed at
+zero) and params_desi[_<case>]_model_a_pessimistic.yaml (the b2, bs2 and
+alpha_0 tilts free). The desi_cl*_model_a likelihoods read them next to
+the linear fragment.
 """
 import argparse
 import os
@@ -182,6 +189,91 @@ def emit_blocks(out, prefix, groups, values, prior, scale, latex_of):
             out.write(f"    value: 'lambda {leader}: {leader}'\n")
 
 
+# Model A (notes/higher_order_bias, its recommendation section): the
+# analysis cut, and the Gaussian prior widths of the per-chunk offsets,
+# all centered on zero. alpha_0 follows the DESI rule rescaled to this
+# cut - a 50% correction to the linear spectrum at k_max - and SN0 is in
+# units of the bin's Poisson power (twice the Poisson power).
+MODEL_A_KMAX = 0.075  # h/Mpc
+MODEL_A_FAMILIES = (
+    # (per-bin prefix, tilt prefix or None, Gaussian width, latex symbol)
+    ("DESI_DB2", "DESI_TB2", 1.0, "\\Delta_{2}"),
+    ("DESI_DBS", "DESI_TBS", 0.5, "\\Delta_{s}"),
+    ("DESI_A0", "DESI_TA0", 0.5/MODEL_A_KMAX**2, "\\alpha_{0}"),
+    ("DESI_SN0", None, 2.0, "s_{0}"),
+)
+# the flat range of a free tilt (pessimistic variant), per unit redshift
+MODEL_A_TILT_RANGE = {"DESI_TB2": 50.0, "DESI_TBS": 50.0,
+                      "DESI_TA0": 5000.0}
+
+
+def emit_model_a(out, chunks, zbars, pessimistic):
+    """Write the model A parameters of one bin table.
+
+    Each chunk g has one sampled offset per family (DESI_DB2_<g>,
+    DESI_DBS_<g>, DESI_A0_<g>, DESI_SN0_<g>) and, for the first three, a
+    tilt in redshift (DESI_TB2_<g>, ...): fixed at zero in the baseline
+    variant, free in the pessimistic one. Every bin n of the chunk takes
+    its per-bin value from them,
+
+        DESI_DB2_<n> = DESI_DB2_<g> + DESI_TB2_<g> (z_n - zbar_g),
+
+    with z_n the bin's mean redshift and zbar_g the mean of the chunk's
+    bin redshifts; the stochastic amplitudes never tilt (the Poisson
+    part is known per bin and sits in the covariance).
+
+    Arguments:
+      out         = the open output file.
+      chunks      = per-bin chunk name, in bin order.
+      zbars       = per-bin mean redshift, in bin order.
+      pessimistic = True frees the tilts.
+    """
+    groups = list(dict.fromkeys(chunks))
+    zbar_of = {g: float(np.mean([z for c, z in zip(chunks, zbars)
+                                 if c == g])) for g in groups}
+    for prefix, tilt, width, symbol in MODEL_A_FAMILIES:
+        for g in groups:
+            out.write(f"  {prefix}_{g}: # offset of chunk {g}\n")
+            out.write("    prior:\n")
+            out.write("      dist: norm\n")
+            out.write("      loc: 0.0\n")
+            out.write(f"      scale: {width:.6g}\n")
+            out.write("    ref:\n")
+            out.write("      dist: norm\n")
+            out.write("      loc: 0.0\n")
+            out.write(f"      scale: {0.1*width:.6g}\n")
+            out.write(f"    proposal: {0.1*width:.6g}\n")
+            out.write(f"    latex: {symbol}^{{\\mathrm{{{g}}}}}\n")
+            if tilt is None:
+                continue
+            if pessimistic:
+                span = MODEL_A_TILT_RANGE[tilt]
+                out.write(f"  {tilt}_{g}: # tilt of chunk {g} [per unit z]\n")
+                out.write("    prior:\n")
+                out.write(f"      min: {-span:g}\n")
+                out.write(f"      max: {span:g}\n")
+                out.write("    ref:\n")
+                out.write("      dist: norm\n")
+                out.write("      loc: 0.0\n")
+                out.write(f"      scale: {0.1*width:.6g}\n")
+                out.write(f"    proposal: {0.1*width:.6g}\n")
+                out.write(f"    latex: t_{{{symbol}}}^{{\\mathrm{{{g}}}}}\n")
+            else:
+                out.write(f"  {tilt}_{g}: # tilt of chunk {g}, fixed "
+                          "(baseline)\n")
+                out.write("    value: 0.0\n")
+        for n, (g, z) in enumerate(zip(chunks, zbars), start=1):
+            leader = f"{prefix}_{g}"
+            if tilt is None:
+                out.write(f"  {prefix}_{n}: # chunk {g}\n")
+                out.write(f"    value: 'lambda {leader}: {leader}'\n")
+            else:
+                t = f"{tilt}_{g}"
+                out.write(f"  {prefix}_{n}: # chunk {g}\n")
+                out.write(f"    value: 'lambda {leader}, {t}: {leader} + "
+                          f"{t}*({float(z) - zbar_of[g]:+.8f})'\n")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Write the per-bin DESI nuisance-parameter fragments.")
@@ -189,6 +281,11 @@ def main():
         "--case", default=None,
         help="a Delta z case (e.g. dr1_dz0p02): write only its "
              "params_desi_<case>.yaml from its bin table")
+    parser.add_argument(
+        "--model-a", action="store_true",
+        help="write the model A fragments instead: "
+             "params_desi[_<case>]_model_a.yaml (offsets per chunk, "
+             "tilts fixed) and ..._model_a_pessimistic.yaml (tilts free)")
     args = parser.parse_args()
     bin_table = BIN_TABLE
     models = MODELS
@@ -202,6 +299,27 @@ def main():
     samples = [s for s, c in table]
     chunks = [c for s, c in table]
     zbars = np.loadtxt(bin_table, usecols=4, ndmin=1)
+
+    if args.model_a:
+        stem = ("params_desi" if args.case is None
+                else f"params_desi_{args.case}")
+        for suffix, pessimistic in (("_model_a", False),
+                                    ("_model_a_pessimistic", True)):
+            path = os.path.join(OUT_DIR, f"{stem}{suffix}.yaml")
+            with open(path, "w") as out:
+                out.write("# Generated by scripts/make_desi_params.py "
+                          "--model-a: the model A parameters of "
+                          "notes/higher_order_bias")
+                out.write(" (pessimistic variant: free tilts).\n"
+                          if pessimistic else
+                          " (baseline: one offset per chunk).\n")
+                out.write("# Units: DESI_A0 in h^-2 Mpc^2, DESI_SN0 in "
+                          "units of each bin's Poisson power; the\n"
+                          "# per-bin values are tied to the chunk "
+                          "parameters (see emit_model_a).\n")
+                emit_model_a(out, chunks, zbars, pessimistic)
+            print(f"wrote {path}")
+        return 0
 
     for fname, model in models.items():
         bias_groups = [group_key(s, c, model["bias_groups"])

@@ -554,6 +554,18 @@ PYBIND11_MODULE(cosmolike_lssty1xdesi_interface, m)
       py::arg("BK").none(false)
     );
 
+  m.def("set_nuisance_bias_tidal",
+      &cosmolike_interface::set_nuisance_bias_fastpt_tidal,
+      "Set nuisance bias parameters with the tidal bias BS2 given per bin "
+      "(set_nuisance_bias derives it from B1 by co-evolution instead)",
+      py::arg("B1").none(false),
+      py::arg("B2").none(false),
+      py::arg("BS2").none(false),
+      py::arg("B_MAG").none(false),
+      py::arg("B3nl").none(false),
+      py::arg("BK").none(false)
+    );
+
   m.def("set_nuisance_shear_calib",
       &cosmolike_interface::set_nuisance_shear_calib,
       "Set nuisance shear calibration amplitudes",

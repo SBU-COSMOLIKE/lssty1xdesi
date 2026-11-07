@@ -1,0 +1,9 @@
+# desi_cl with the model A bias of notes/higher_order_bias; every
+# option not set here is desi_cl.yaml's.
+higher_order_bias: 1
+# model A hands cosmolike every bias per bin, with b3 = 0
+bias_model: [0,0,0,0,0,0]
+# the linear per-bin fragment and the model A one (offsets per chunk,
+# tilts fixed at zero); for the pessimistic variant name
+# params_desi_model_a_pessimistic instead
+params: !defaults [params_desi, params_desi_model_a]

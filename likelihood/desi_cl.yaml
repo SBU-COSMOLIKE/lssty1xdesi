@@ -88,6 +88,14 @@ IA_code: 1
 # per-bin amplitudes arrive from desi_cl.py (chunk amplitude over the
 # growth at the bin mean), so every term keeps the free-amplitude code
 bias_model: [0,0,0,1,0,0]
+# HIGHER-ORDER BIAS: 0 = linear bias only (the default); 1 = model A of
+# notes/higher_order_bias: one-loop real-space bias b2 and bs2 tied to
+# each bin's b1 plus offsets, the k^2 counterterm alpha_0 and a
+# stochastic amplitude SN0, all per bin (DESI_DB2_<n>, DESI_DBS_<n>,
+# DESI_A0_<n>, DESI_SN0_<n>; see desi_cl.py). Model A needs
+# bias_model: [0,0,0,0,0,0] (every bias per bin, b3 = 0); the
+# desi_cl*_model_a likelihoods set both
+higher_order_bias: 0
 add_baryons_on_dv: False
 which_bsims_add_on_dv: "antilles-2"
 use_baryon_pca: False
