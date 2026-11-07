@@ -169,33 +169,31 @@ term by term against CCL's EulerianPTCalculator source
   terms - RSD enters only through the linear Kaiser window plus the
   n(z) FoG convolution, with no mu-dependent counterterms. The draft
   defers these.
-- **The tidal-bias values look off by convention - needs
-  verification, not an established error.** The draft's table (BGS
-  b1 1.375, b2 -1.087, b_s +1.423; LRG b_s ~ +0.86 to +1.03; ELG2
-  b_s +0.64) has b_s positive and large. In the CCL/FAST-PT
-  normalization (delta_g contains (1/2) b_s s^2), the co-evolution
-  expectation is b_s = -(4/7)(b1 - 1): about -0.21 for BGS, -0.26
-  for LRG1, +0.17 for ELG2. A sign or normalization mismatch in
-  converting DESI's full-shape best fits (velocileptors, Lagrangian
-  basis) to CCL's Eulerian b_s is likely: Lagrangian to Eulerian is
-  b_s^E = b_s^L - (2/7) b1^L in the delta_g-contains-b_s-s^2
-  normalization, and a factor of 2 more in CCL's (1/2) b_s s^2. The
-  b2 values are plausible (the Lazeyras et al. fit gives about -0.76
-  at b1 = 1.375).
-- **Paper-pipeline mismatch.** The draft describes one constant bias
-  set per DESI chunk; the cosmolike pipeline uses
-  b_i = DESI_B1 / D(zbar_i), one amplitude per group evolving as
-  1/D(z). The two models must be stated consistently.
+- **The tidal-bias column is not an Eulerian b_s** (settled in
+  notes/higher_order_bias/higher_order_bias.tex, section "The draft
+  paper's bias table: the tidal-bias verdict"). The draft's table
+  holds the DESI DR1 sampling combinations (1 + b_1^L) sigma_8(z_eff),
+  b_2^L sigma_8^2 and b_s^L sigma_8^2 (L for the Lagrangian basis),
+  inserted raw as CCL's Eulerian (b1, b2, b_s). Evidence: the linear
+  column divided by sigma_8(z_eff) matches the project's
+  B_g/D(z_eff) to 1-5% for LRG1-3 and ELG2; the empty ELG1 row is the
+  chunk DESI DR1 excluded from full shape. The BGS linear entry is
+  27% above the project's value, pending a read of the public DESI
+  DR1 chains. The note gives the conversion recipe, but forecast
+  fiducials come from the calibrations (co-evolution
+  b_s = -(4/7)(b1 - 1), the Lazeyras b2(b1) fit); DESI posteriors set
+  prior widths only, because the converted chain values
+  (b_s ~ +4 to +6) are prior- and degeneracy-dominated.
+- **The linear-bias model the paper must state** is the per-bin bias
+  b_{1,i} = B_g (1 + delta_i)/D(z_i) of the correlated-prior note
+  (the skill's ladder section), not one constant set per chunk; the
+  shipped yamls' tied b_i = DESI_B1/D(zbar_i) is the ladder's tied
+  rung.
 
-## 5. Requirements for implementing higher-order bias
+## 5. Higher-order bias
 
-- The b2, b_s (or b_G2), b3nl, counterterm and stochastic parameters
-  per tracer chunk, with priors.
-- One-loop templates: cosmolike already has C-FAST-PT bias templates
-  used by the real-space 3x2pt projects (bias_model
-  [b1, b2, bs2, b3, bmag]). The DESI low-rank non-Limber engine
-  projects the full P_g through a per-bin SVD of sqrt(P_g), so it
-  can carry the one-loop galaxy power.
-- A covariance consistent with the extended model.
-- EFT-grade scale cuts (Sec. 2).
-- The matching Fisher nuisance set.
+The requirements of this review became models A and B of
+notes/higher_order_bias/higher_order_bias.tex (sections
+"Recommendation" and "Implementation in CoCoA"), summarized in the
+skill's section "Higher-order bias: models A and B" with its
+parameter budget and order of work.
