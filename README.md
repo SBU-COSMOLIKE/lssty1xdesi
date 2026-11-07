@@ -545,7 +545,10 @@ figure of merit of DESI alone and of the combination, the Fisher
 biases of the DESI projection approximations (FKEM with the cap at
 550, Limber), the amplitude cut and the prior walls against the
 forecast, the figure of merit against the non-Limber UV-fraction
-scale cuts, and the $`w_0`$ - $`w_a`$ ellipses.
+scale cuts, the cost of bias freedom on DESI clustering alone at
+$`k_\mathrm{max} = 0.075\,h\,\mathrm{Mpc}^{-1}`$ (biases tied per
+group against one independent bias per bin and a correlated prior
+within each group), and the $`w_0`$ - $`w_a`$ ellipses.
 
 Every probe uses one area, 12,300 deg², and is marginalized over all
 of its nuisance parameters. On the $`\Delta z = 0.2`$ binning the
@@ -683,6 +686,21 @@ FoM($`w_0`$, $`w_a`$) is 54.9 on $`\Delta d_\mathrm{com} = 62`$ Mpc,
 135 / 126 / 32.0 / 5.67 at the shipped masks; at
 $`k_\mathrm{max} = 0.05\,h\,\mathrm{Mpc}^{-1}`$ the
 $`\Delta z = 0.02`$ layout keeps no band at all.
+
+Freeing one bias per bin instead of one amplitude per group divides
+the DESI-alone figure of merit at
+$`k_\mathrm{max} = 0.075\,h\,\mathrm{Mpc}^{-1}`$ by 3 to 7,
+depending on the layout; the correlated prior
+$`b_i = B_g\,(1 + \delta_i)/D(\bar z_i)`$, with
+$`\langle\delta_i\delta_j\rangle = \sigma_b^2\,e^{-|\bar z_i - \bar z_j|/L}`$
+within a group ($`\sigma_b`$ the fluctuation amplitude, $`L`$ the
+correlation length in redshift) and the group amplitude $`B_g`$
+free, perturbs the constant-clustering-amplitude shape
+$`B_g/D(\bar z_i)`$ bin by bin. These results are preliminary
+(linear bias only); the derivation, the physics behind the plausible
+$`L`$ and $`\sigma_b`$, and the result figures are in [the
+correlated-bias-prior
+note](notes/correlated_bias_prior/correlated_bias_prior.pdf).
 
 **Known limitation - the covariance bias mismatch.** The DESI
 covariance files are computed with each bin's linear bias set to its
