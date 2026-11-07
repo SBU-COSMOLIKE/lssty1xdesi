@@ -149,7 +149,11 @@ the prior.
   \includegraphics[width=0.88\linewidth]{plots/baseline_ladder/baseline_ladder.pdf}
   \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone at
     $k_{\rm max} = 0.075\,h/{\rm Mpc}$ on the four rungs of the
-    linear-bias ladder, one line per bin layout.  The rungs: tied,
+    linear-bias ladder, one line per bin layout.  $k_{\rm max}$ is
+    quoted at $z = 0$: each bin is cut by the ultraviolet-fraction
+    criterion at $k_{\rm max}/D(\bar{z}_i)$ ($\alpha = 0.05$,
+    $\bar{z}_i$ the bin's mean redshift) within the shipped mask.
+    The rungs: tied,
     $b_i = B_g/D(z_i)$ with one free amplitude per group; baseline,
     the model of Eq.~\eqref{eq:summodel}, a free amplitude and tilt
     per group plus a correlated residual with $\sigma_g = 3\%$ for
@@ -176,7 +180,10 @@ the prior.
   \end{tabular}
   \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone at
     $k_{\rm max} = 0.075\,h/{\rm Mpc}$ on the four rungs of the
-    ladder, per layout.  The LSST Y1 3x2pt reference is $17.26$.}
+    ladder, per layout.  $k_{\rm max}$ is quoted at $z = 0$: each bin
+    is cut by the ultraviolet-fraction criterion at
+    $k_{\rm max}/D(\bar{z}_i)$ ($\alpha = 0.05$) within the shipped
+    mask.  The LSST Y1 3x2pt reference is $17.26$.}
   \label{tab:ladder}
 \end{table}
 
@@ -204,6 +211,9 @@ if they reach the pessimistic size; the baseline FoM rests on that
 assumption, and the pessimistic FoM is the safe statement.  The
 pessimistic rung is correct ($1.00$) or conservative ($0.87$--$0.99$)
 under both truths.  Appendix~\ref{app:bias} derives both statistics.
+Scored for the matter density $\Omega_m$ and the primordial amplitude
+$A_s$, the truths give the same verdict
+(Appendix~\ref{sec:inflationomas}).
 
 \begin{figure}[p]
   \centering
@@ -294,6 +304,28 @@ that sector adds the parameters of the two-page model summary: the
 offsets $\Delta_{2,g}$ and $\Delta_{s,g}$, one counterterm amplitude
 $\alpha_0$ and one shot-noise deviation ${\rm SN}_0$ per group, each
 with its stated Gaussian prior.
+
+\paragraph{Limits.}
+The ladder assumes linear bias.  A linear-bias fit to a one-loop
+truth at the same cut is already biased: the truth is model A of
+\texttt{notes/higher\_order\_bias}, with the quadratic bias $b_2$ on
+its calibration $b_2(b_1)$ and the tidal bias $b_{s^2}$ on
+co-evolution.  On the $\Delta d_{\rm com} = 62$~Mpc layout the fit
+moves $\Omega_m$ by $2.0$--$2.4\sigma$, $(w_0, w_a)$ by
+$0.7$--$1.1\sigma$ and $A_s$ by $0.9$--$1.2\sigma$ on every rung, in
+units of the rung's own marginalized errors.  The rerun with the
+exact projection of the one-loop white-noise constant reproduces
+these numbers, and the companion note
+\texttt{notes/linear\_bias\_kmax} gives the full scan over
+$k_{\rm max} = 0.05$--$0.25\,h/{\rm Mpc}$.  Only
+$k_{\rm max} = 0.05\,h/{\rm Mpc}$ keeps every shift below $\sigma/3$,
+and only on the $\Delta d_{\rm com} = 62$~Mpc layout on every rung;
+on $\Delta z = 0.05$ it passes only for the tied and baseline rungs
+and only for the truth on the calibrations; on $\Delta z = 0.02$ that
+cut keeps no band at all, and on $\Delta z = 0.2$ it already fails.
+The forecast with the one-loop model is
+\texttt{notes/correlated\_bias\_prior\_v2} (this note under model A).
+This note's FoMs are the linear-bias reference, not a final forecast.
 
 \clearpage
 
@@ -1867,6 +1899,86 @@ pessimistic prior would indict the pessimistic rung in the same way,
 and against that the ladder ends at the independent model, whose
 inflation is $1.00$ for every truth expressible through the bin
 biases.
+
+\subsection{The same test for $\Omega_m$ and $A_s$}
+\label{sec:inflationomas}
+
+The statistics above score the dark-energy pair $(w_0, w_a)$.  The
+same known drifts and the same $2000$ random truths per case, drawn
+with the same random seed, are scored here for the matter density
+$\Omega_m$ and the primordial scalar amplitude $A_s$, each in units of
+its own marginalized error $\sigma_p$.  For one parameter $p$ the
+squared distance of the fit from the truth is
+$\chi^2_p = (\hat{p} - p_{\rm true})^2/\sigma_p^2$, with $\hat{p}$ the
+fitted value; an honest error bar gives $\mathrm{E}[\chi^2_p] = 1$, so
+the error inflation is $\sqrt{\mathrm{E}[\chi^2_p]}$: $1$ for an honest
+error bar, above $1$ the factor by which the bar is too small.  For a
+matched case the identity $\Prec\,\Sigma\,\Prec = \Prec$ makes the
+scatter and noise terms sum to exactly $1$, so the inflation is
+$\sqrt{1 + \Delta_{{\rm drift},p}^2}$ and departs from $1$ only through
+the known drift.  As a check that the truths are the same, the matched
+cases reproduce the $(w_0, w_a)$ inflation of
+Table~\ref{tab:inflation}, within $0.019$ of $1$.
+
+The known drifts alone, scored this way, repeat the pattern of
+Table~\ref{tab:ladderbias}.  The conserved-population drift moves the
+tied rung by $3.99$, $5.21$, $11.7$ and $6.42\,\sigma$ in $\Omega_m$
+and by $3.79$, $9.90$, $5.82$ and $0.58\,\sigma$ in $A_s$, in the
+layout order $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$,
+$0.05$, $0.2$.  The baseline and pessimistic rungs stay at or below
+$0.29\,\sigma$; the largest entries are the BGS flux limit on
+$\Delta z = 0.05$, at $0.26$--$0.28\,\sigma$ in $\Omega_m$.
+Table~\ref{tab:inflationomas} gives the error inflation with random
+truths.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{llcc}
+    \hline
+    Truth scatter & Fit rung & $\Omega_m$ & $A_s$ \\
+    \hline
+    baseline & tied &
+    $4.17$ / $4.46$ / $14.0$ / $8.15$ &
+    $3.93$ / $9.48$ / $4.84$ / $1.25$ \\
+    & baseline &
+    $1$ / $1$ / $1$ / $1$ & $1$ / $1$ / $1$ / $1$ \\
+    & pessimistic &
+    $0.96$ / $0.87$ / $0.99$ / $1.00$ &
+    $0.98$ / $0.94$ / $0.99$ / $1.00$ \\
+    \hline
+    pessimistic & tied &
+    $5.87$ / $5.18$ / $14.5$ / $8.96$ &
+    $4.61$ / $9.76$ / $5.39$ / $2.93$ \\
+    & baseline &
+    $2.09$ / $1.29$ / $2.75$ / $1.00$ &
+    $1.62$ / $1.16$ / $1.96$ / $1.00$ \\
+    & pessimistic &
+    $1.00$ / $1.00$ / $1.04$ / $1.00$ &
+    $1.00$ / $1.00$ / $1.02$ / $1.00$ \\
+    \hline
+  \end{tabular}
+  \caption{The error inflation $\sqrt{\mathrm{E}[\chi^2_p]}$ of
+    $\Omega_m$ and $A_s$, each in units of its own marginalized
+    error, when the truth carries the known drifts plus residual
+    scatter drawn from the named prior.  An entry of $1$ means the
+    error bar covers the truth as it claims.  Each cell lists the
+    layouts $\Delta d_{\rm com} = 62$~Mpc / $\Delta z = 0.02$ /
+    $\Delta z = 0.05$ / $\Delta z = 0.2$.  The truths are those of
+    Table~\ref{tab:inflation}.  The independent rung absorbs every
+    such truth exactly and is omitted.}
+  \label{tab:inflationomas}
+\end{table}
+
+The $(w_0, w_a)$ verdict holds for $\Omega_m$ and $A_s$.  The tied rung
+is excluded.  The baseline is honest under its own scatter, but its
+$\Omega_m$ error bar is up to $2.75$ times too small if local
+features reach the pessimistic size.  The pessimistic rung is honest.
+On some layouts $\Omega_m$ and $A_s$ react more strongly than
+$(w_0, w_a)$ (the baseline rung under pessimistic scatter on
+$\Delta z = 0.05$: $2.75$ in $\Omega_m$ against $2.14$), because a bias
+error moves the clustering amplitude $b_i^2 A_s D^2(z_i)$, which $A_s$
+scales directly and $\Omega_m$ moves through the growth factor.
 
 \section{The roughness scan}
 \label{app:roughness}
