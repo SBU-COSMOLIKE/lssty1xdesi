@@ -111,6 +111,15 @@ C_OVER_H0 = C_KMS/100.0
 # a surface density per arcmin^2 times this is per steradian
 ARCMIN2_PER_SR = (180.0*60.0/np.pi)**2
 
+# The unit of the line-of-sight stochastic power SN_2 k^2 mu^2 (model B),
+# in (Mpc/h)^2 before the Poisson factor: f_sat sigma_v^2, the satellite
+# fraction times the squared velocity dispersion of the satellites in
+# distance units, the DESI DR1 scaling of SN_2 (Maus et al.,
+# arXiv:2404.07312, their stochastic-prior table). That table gives LRG
+# (f_sat = 0.1, sigma_v = 7.8 Mpc/h) and ELG (0.1, 2.9 Mpc/h) and has no
+# BGS row; BGS takes the LRG values, the larger unit and so the wider prior.
+SN2_UNIT = {"bgs": 0.1*7.8**2, "lrg": 0.1*7.8**2, "elg": 0.1*2.9**2}
+
 
 def lazeyras_b2(b1):
   """The separate-universe b2(b1) fit of Lazeyras et al. (arXiv:1511.01096).
@@ -373,11 +382,13 @@ class desi_cl(_cosmolike_prototype_base):
     bk = alpha0/(2.0*b1*C_OVER_H0**2)
     return b2, bs2, bk
 
-  def stochastic_templates(self):
-    """The derivative of the theory vector with respect to every DESI_SN0_<n>.
+  def stochastic_templates(self, order=0):
+    """The derivative of the theory vector with respect to every DESI_SN0_<n>
+    (order = 0) or DESI_SN2_<n> (order = 2).
 
-    The stochastic power of bin i is s0_i P_Pois,i (s0_i = DESI_SN0_i),
-    constant in k, so it projects exactly to an ell-independent
+    Order 0. The stochastic power of bin i is s0_i P_Pois,i
+    (s0_i = DESI_SN0_i), constant in k, so it projects exactly to an
+    ell-independent
         C^ij = P_ij K_ij,   K_ij = integral dchi W_i W_j / chi^2
              = integral dz n_i(z) n_j(z) (dz/dchi) / chi^2,
     with n the normalized Fingers-of-God-convolved distributions of the
@@ -390,10 +401,28 @@ class desi_cl(_cosmolike_prototype_base):
     the raw histogram it must give the angular shot noise 1/n_2D,i, so
     P_Pois,i = 1/(n_2D,i K_ii^raw).
 
+    Order 2. The line-of-sight stochastic power s2_i U_i k^2 mu^2
+    (s2_i = DESI_SN2_i, U_i = f_sat sigma_v^2 P_Pois,i of the bin's
+    sample, see SN2_UNIT) is the power of a field that is the radial
+    derivative of white noise: k^2 mu^2 = k_par^2 is the Fourier image of
+    the second radial derivative. Integrating by parts moves the
+    derivative onto the kernel, so it projects exactly, like order 0,
+    with each kernel replaced by its radial derivative:
+        C^ij = U_ij K2_ij,   K2_ij = integral dchi W_i'(chi) W_j'(chi) / chi^2,
+    with W_i(chi) = n_i(z) dz/dchi and W_i' = dW_i/dchi. The sharp edges
+    of a thin bin, smoothed only by the Fingers-of-God convolution, set
+    its size; adjacent bins of one sample get a cross term, negative where
+    one kernel falls as the other rises.
+
+    Arguments:
+      order = 0 for SN0, 2 for SN2.
+
     Returns:
       float64 array [data-vector length, lens_ntomo], zero on masked
-      entries: column i is d(theory)/d(DESI_SN0_i).
+      entries: column i is d(theory)/d(DESI_SN0_i) or d(theory)/d(DESI_SN2_i).
     """
+    if order not in (0, 2):
+      raise LoggedError(self.log, "stochastic order %s: 0 or 2", order)
     if self.desi_lens_nz_fog is None:
       raise LoggedError(
           self.log, "stochastic_templates needs an evaluated point (the "
@@ -430,14 +459,30 @@ class desi_cl(_cosmolike_prototype_base):
 
     n_fog = normalized(self.desi_lens_nz_fog)
     n_raw = normalized(self.lens_nz)
-    k_fog = np.trapz(n_fog**2*weight[:, None], z, axis=0)
     k_raw = np.trapz(n_raw**2*weight[:, None], z, axis=0)
     p_pois = 1.0/(self.desi_ngal_sr*k_raw)
+
+    if order == 0:
+      # the projected profiles are the kernels themselves
+      profile, measure, unit = n_fog, weight, p_pois
+    else:
+      # W_i(chi) = n_i(z) dz/dchi and its radial derivative
+      # dW_i/dchi = (dW_i/dz)/(dchi/dz); np.gradient takes second-order
+      # centered differences on the uniform z grid
+      kernel = np.zeros_like(n_fog)
+      kernel[live] = n_fog[live]/dchidz[live, None]
+      profile = np.gradient(kernel, z, axis=0)
+      profile[live] /= dchidz[live, None]
+      # integral dchi f / chi^2 = integral dz (dchi/dz) f / chi^2
+      measure = np.zeros_like(z)
+      measure[live] = dchidz[live]/chi[live]**2
+      unit = p_pois*np.array([SN2_UNIT[str(s)] for s in self.desi_sample])
+    k_auto = np.trapz(profile**2*measure[:, None], z, axis=0)
 
     templates = np.zeros((layout["n"], ntomo))
     for i in range(ntomo):
       rows = layout["gg"] + ncl*i + np.arange(ncl)
-      templates[rows, i] = p_pois[i]*k_fog[i]
+      templates[rows, i] = unit[i]*k_auto[i]
     if self.gg_cross_pairs is not None:
       for m, (i, j) in enumerate(np.asarray(self.gg_cross_pairs, dtype=int)):
         if self.desi_sample[i] != self.desi_sample[j]:
@@ -445,10 +490,10 @@ class desi_cl(_cosmolike_prototype_base):
           # cross noise is zero, and a non-Poisson cross stochasticity
           # would be a parameter of its own, not either sample's s0
           continue
-        k_ij = np.trapz(n_fog[:, i]*n_fog[:, j]*weight, z)
+        k_ij = np.trapz(profile[:, i]*profile[:, j]*measure, z)
         rows = layout["ggx"] + ncl*m + np.arange(ncl)
-        templates[rows, i] += 0.5*p_pois[i]*k_ij
-        templates[rows, j] += 0.5*p_pois[j]*k_ij
+        templates[rows, i] += 0.5*unit[i]*k_ij
+        templates[rows, j] += 0.5*unit[j]*k_ij
     templates[~layout["mask"]] = 0.0
     return templates
 
