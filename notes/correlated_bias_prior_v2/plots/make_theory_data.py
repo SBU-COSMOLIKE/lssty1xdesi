@@ -11,8 +11,7 @@ its plot folder as data.json:
   theory_draws/data.json  random draws of the BGS deviations (Delta z = 0.02
                           bins) from the exponential-kernel prior and from
                           the memory prior, and the flux-limit drift.
-  baseline_draws/data.json, pessimistic_draws/data.json
-                          per group, the known drifts and random histories
+  prior_draws/data.json   per group, the known drifts and random histories
                           of the note's baseline and pessimistic memory
                           priors that share the drift's straight line.
 
@@ -219,7 +218,7 @@ def theory_draws():
 
 
 def stated_prior_draws(case):
-    '''Per group at Delta z = 0.02 centers: the known drift laws, the best
+    '''Return, per group at Delta z = 0.02 centers: the known drift laws, the best
     straight line through the reference law (the BGS flux limit for BGS, the
     conserved population otherwise), and random histories of one stated
     prior: that line plus a residual drawn from the exponential kernel at the
@@ -229,6 +228,10 @@ def stated_prior_draws(case):
 
     Arguments:
       case = a key of STATED_PRIORS.
+
+    Returns:
+      list of one dict per group; each prior has its own generator started
+      at RANDOM_SEED, so a prior's draws do not depend on the other's.
     '''
     prior = STATED_PRIORS[case]
     rng = np.random.default_rng(RANDOM_SEED)
@@ -255,23 +258,37 @@ def stated_prior_draws(case):
                        'neighbor_rms_prior': float(sigma*np.sqrt(
                            2.0*(1.0 - np.exp(-DRAW_BIN_WIDTH/prior['L'])))),
                        'draws': draws})
-    write(case + '_draws', {
+    return groups
+
+
+def prior_draws():
+    '''Write prior_draws/data.json: per group, the known drift laws and the
+    random histories of both stated priors (baseline and pessimistic).'''
+    by_case = {case: stated_prior_draws(case) for case in ('baseline', 'pessimistic')}
+    groups = []
+    for i, group in enumerate(by_case['baseline']):
+        merged = {k: v for k, v in group.items() if k not in ('draws', 'neighbor_rms_prior')}
+        merged['draws'] = {case: by_case[case][i]['draws'] for case in by_case}
+        merged['neighbor_rms_prior'] = {case: by_case[case][i]['neighbor_rms_prior']
+                                        for case in by_case}
+        groups.append(merged)
+    write('prior_draws', {
         'about': ('per DESI group at Delta z = 0.02 bin centers: the known drift laws '
                   '(fractional deviation from B_g/D with zero mean), the best straight line '
-                  'through the reference law, and random histories of the ' + case +
-                  ' memory prior: that line plus a residual drawn from the exponential kernel '
-                  'at the group width sigma_b and L, with its own best line removed; '
-                  'neighbor_rms_prior = the prior rms change between adjacent bins'),
-        'case': case, 'prior': prior, 'random_seed': RANDOM_SEED,
-        'bin_width': DRAW_BIN_WIDTH, 'groups': groups})
+                  'through the reference law, and random histories of the baseline and '
+                  'pessimistic memory priors: that line plus a residual drawn from the '
+                  'exponential kernel at the group width sigma_b and L, with its own best '
+                  'line removed; neighbor_rms_prior = the prior rms change between '
+                  'adjacent bins'),
+        'priors': {case: STATED_PRIORS[case] for case in by_case},
+        'random_seed': RANDOM_SEED, 'bin_width': DRAW_BIN_WIDTH, 'groups': groups})
 
 
 def main():
     theory_bz()
     theory_delta()
     theory_draws()
-    stated_prior_draws('baseline')
-    stated_prior_draws('pessimistic')
+    prior_draws()
 
 
 if __name__ == '__main__':

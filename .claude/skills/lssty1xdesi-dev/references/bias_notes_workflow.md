@@ -108,8 +108,8 @@ much bias freedom costs".
 
 BIAS_ASSUMPTIONS of all three notebooks must equal STATED_PRIORS of
 `notes/correlated_bias_prior_v2/plots/make_theory_data.py`, which
-draws the baseline and pessimistic histories (baseline_draws,
-pessimistic_draws).
+draws the baseline and pessimistic histories (one figure,
+prior_draws: a row per prior, a column per group).
 
 ### Why these cells are fast
 
@@ -161,7 +161,7 @@ The folders of `notes/correlated_bias_prior_v2/plots/`:
 | goodness_of_fit | model A export cell | sqrt(<chi^2>/n_dof) of (w0, wa), Omega_m and A_s under pessimistic scatter (Summary, the accuracy test) |
 | drift_shifts | model A export cell | the shifts of the two known drifts (appendix) |
 | calibration_drift | model A export cell | the shifts of the calibration drift (appendix) |
-| baseline_draws, pessimistic_draws | make_theory_data.stated_prior_draws | draws of the baseline and pessimistic priors |
+| prior_draws | make_theory_data.stated_prior_draws | draws of the baseline and pessimistic priors |
 | theory_bz, theory_delta, theory_draws | make_theory_data.py | the drift laws and prior draws of the derivation appendices |
 
 `plots/make_theory_data.py` sits in the same folder. The folders of

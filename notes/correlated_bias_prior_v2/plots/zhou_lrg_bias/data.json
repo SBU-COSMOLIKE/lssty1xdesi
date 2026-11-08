@@ -1,0 +1,43 @@
+{
+ "about": "The large-scale bias of DESI-like luminous red galaxies in photometric-redshift bins, measured by Zhou et al. 2021 (MNRAS 501, 3309; arXiv:2001.06018) from projected correlation functions with a halo-occupation fit. Transcribed by hand for notes/correlated_bias_prior_v2 (the section on what the measurements say); plot_zhou_lrg_bias.py derives the residual around the constant clustering amplitude b = B/D(z) from these inputs.",
+ "source": "Zhou et al. 2021, arXiv:2001.06018",
+ "omega_matter": 0.3,
+ "clustering_amplitude_B": 1.5,
+ "bins": [
+  {
+   "z_lo": 0.41,
+   "z_hi": 0.5,
+   "b": 1.89,
+   "b_err_up": 0.03,
+   "b_err_down": 0.03
+  },
+  {
+   "z_lo": 0.5,
+   "z_hi": 0.61,
+   "b": 2.04,
+   "b_err_up": 0.02,
+   "b_err_down": 0.02
+  },
+  {
+   "z_lo": 0.61,
+   "z_hi": 0.72,
+   "b": 2.07,
+   "b_err_up": 0.03,
+   "b_err_down": 0.03
+  },
+  {
+   "z_lo": 0.75,
+   "z_hi": 0.83,
+   "b": 2.24,
+   "b_err_up": 0.07,
+   "b_err_down": 0.08
+  },
+  {
+   "z_lo": 0.84,
+   "z_hi": 0.93,
+   "b": 2.48,
+   "b_err_up": 0.15,
+   "b_err_down": 0.15
+  }
+ ]
+}

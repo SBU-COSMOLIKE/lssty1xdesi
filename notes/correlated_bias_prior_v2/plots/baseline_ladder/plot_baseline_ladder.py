@@ -6,11 +6,13 @@ baseline (solid) and model A pessimistic (dashed), one color per layout.
 The growth-tied prior is not drawn: the accuracy test shows it biases the
 cosmology by many sigma, so its FoM means nothing (data.json keeps it).
 
-  baseline_ladder.pdf       - FoM(w0, wa), with the LSST Y1 3x2pt reference
+  baseline_ladder.pdf       - FoM(w0, wa)
   baseline_ladder_om_as.pdf - FoM(Omega_m, 10^9 A_s)
 
 Each is one column of a two-column paper and stands alone (the LaTeX can
-set them side by side). data.json is written by
+set them side by side). The LSST Y1 3x2pt reference of each figure of merit
+is drawn as a line when it is within reach of the DESI points, and is
+otherwise quoted as a text comment inside the panel. data.json is written by
 EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb; it also holds the v1 linear-bias
 and the exact-calibration FoMs of (w0, wa), which these figures do not draw.
 Run from any folder: python plot_baseline_ladder.py
@@ -23,6 +25,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
+from matplotlib.transforms import Bbox
 
 # Figure style of the whole notebook: the shared plotting functions never change
 # rcParams, so these lines set every font, tick and grid default.
@@ -52,16 +55,23 @@ STYLES = {
     'A pessimistic': {'ls': '--', 'lw': 1.3, 'marker': 'D', 'ms': 4.0,
                       'label': 'model A pessimistic'},
 }
-# the LSST Y1 reference is dotted, so it never reads as a dashed model line
-LSST_STYLE = {'color': '0.35', 'ls': ':', 'lw': 1.3}
+# the LSST Y1 reference: a gray line with long dashes, distinct from the
+# dashed model A pessimistic lines
+LSST_STYLE = {'color': '0.5', 'ls': (0, (7, 3)), 'lw': 1.2}
+# a reference more than this factor above the highest DESI point is not
+# drawn: the axis would be stretched for one line, so a text comment inside
+# the panel quotes it instead
+LSST_OFF_SCALE = 1.5
 # the names the figures print for the linear-bias priors (the data keys
 # keep the notebook's names)
 DISPLAY = {'tied': 'growth-tied', 'baseline': 'baseline',
            'pessimistic': 'pessimistic', 'independent': 'free'}
-# one figure per figure of merit: data.json field, y label, output name
-FIGURES = [('fom', r'FoM$(w_0, w_a)$, DESI $C_\ell^{gg}$ alone', 'baseline_ladder'),
+# one figure per figure of merit: data.json field, y label, the data.json
+# key of its LSST Y1 3x2pt reference, output name
+FIGURES = [('fom', r'FoM$(w_0, w_a)$, DESI $C_\ell^{gg}$ alone', 'lsst_y1_3x2pt_fom',
+            'baseline_ladder'),
            ('fom_om_as', r'FoM$(\Omega_\mathrm{m}, 10^9 A_\mathrm{s})$, DESI $C_\ell^{gg}$ alone',
-            'baseline_ladder_om_as')]
+            'lsst_y1_3x2pt_fom_om_as', 'baseline_ladder_om_as')]
 
 with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
@@ -70,7 +80,6 @@ with open(os.path.join(HERE, 'data.json')) as f:
 rungs = [r['key'] for r in data['rungs'] if r['key'] != 'tied']
 x = np.arange(len(rungs))
 layouts = data['layouts']
-lsst = data['lsst_y1_3x2pt_fom']
 # k_max is the z = 0 value of the per-bin cut at k_max/D(z) (the caption
 # explains the UV-fraction criterion and the shipped mask)
 KMAX_TEXT = (rf'$k_\mathrm{{max}} = {data["kmax_h_per_Mpc"]:g}\,h\,\mathrm{{Mpc}}^{{-1}}$'
@@ -95,7 +104,7 @@ def line_points(ax):
     return np.vstack(pts)
 
 
-for field, ylabel, name in FIGURES:
+for field, ylabel, lsst_key, name in FIGURES:
     fig, ax = plt.subplots(figsize=(3.5, 2.7))
     for lay in layouts:
         for variant, st in STYLES.items():
@@ -103,10 +112,14 @@ for field, ylabel, name in FIGURES:
             ax.plot(x, y, color=lay['color'], ls=st['ls'], lw=st['lw'], marker=st['marker'],
                     ms=st['ms'])
     top = max(lay[field][v][k] for lay in layouts for v in STYLES for k in rungs)
-    with_lsst = field == 'fom'
-    if with_lsst:
+    lsst = data.get(lsst_key)
+    lsst_text = None
+    if lsst is not None and lsst <= LSST_OFF_SCALE*top:
         ax.axhline(lsst, **LSST_STYLE)
         top = max(top, lsst)
+    elif lsst is not None:
+        # far above every DESI point: quoted inside the panel instead
+        lsst_text = f'LSST Y1 3x2pt: {lsst:.0f}'
     ax.set_xlim(-0.35, x[-1] + 0.35)
     ax.set_xticks(x)
     ax.set_xticklabels([DISPLAY[k] for k in rungs], fontsize=9.5)
@@ -123,21 +136,35 @@ for field, ylabel, name in FIGURES:
         borderpad=0.2, title=KMAX_TEXT, title_fontsize=8)
     ax.add_artist(layout_legend)
     # the line styles above the panel, the same in both figures so their
-    # panels line up side by side (the caption names the dotted LSST Y1
-    # 3x2pt reference)
+    # panels line up side by side
     style_handles = [Line2D([], [], color='0.25', ls=st['ls'], lw=st['lw'], marker=st['marker'],
                             ms=st['ms'], label=st['label']) for st in STYLES.values()]
     ax.legend(handles=style_handles, loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=2,
               frameon=False, fontsize=8.5, handlelength=2.4, columnspacing=1.0,
               handletextpad=0.5)
 
-    # The legend inside the panel must never sit on the data. The y axis
-    # gets the least headroom at which it clears every line (the LSST
-    # reference included), so the axis is not stretched more than needed.
+    # the off-scale LSST Y1 value, as a comment just under the layout legend
+    note = None
+    if lsst_text is not None:
+        note = ax.text(0.0, 0.0, lsst_text, fontsize=8, color='0.35', ha='right', va='top')
+
+    # The legend (and the comment) inside the panel must never sit on the
+    # data. The y axis gets the least headroom at which they clear every
+    # line (a drawn LSST reference included), so the axis is not stretched
+    # more than needed.
     for headroom in np.arange(1.12, 2.02, 0.02):
         ax.set_ylim(0.0, top*headroom)
         fig.canvas.draw()
-        box = layout_legend.get_window_extent(fig.canvas.get_renderer()).expanded(1.03, 1.05)
+        renderer = fig.canvas.get_renderer()
+        box = layout_legend.get_window_extent(renderer)
+        if note is not None:
+            # right-aligned with the legend, just below it (axes coordinates)
+            corner = ax.transAxes.inverted().transform((box.x1, box.y0))
+            note.set_transform(ax.transAxes)
+            note.set_position((corner[0] - 0.01, corner[1] - 0.01))
+            fig.canvas.draw()
+            box = Bbox.union([box, note.get_window_extent(renderer)])
+        box = box.expanded(1.03, 1.05)
         pts = line_points(ax)
         if not np.any((pts[:, 0] > box.x0) & (pts[:, 0] < box.x1)
                       & (pts[:, 1] > box.y0) & (pts[:, 1] < box.y1)):

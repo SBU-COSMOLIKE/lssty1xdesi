@@ -1,32 +1,25 @@
 % appendix_math.tex: the mathematics and method appendices of
 % correlated_bias_prior_v2.tex.  The parent note inputs this file after
 % \appendix, so it has no preamble and its \section commands are
-% appendix sections.  The text comes from the retired linear-bias note
-% (notes/correlated_bias_prior) and keeps that note's labels.  The
-% memory model itself (sec:memory and its subsections) lives in
-% appendix_physics.tex, next to the theory figures; the references to
-% it below resolve through that file.
+% appendix sections.  The memory model itself (sec:memory and its
+% subsections) lives in appendix_physics.tex, next to the theory
+% figures; the references to it below resolve through that file.
 %
 % The macros are defined here only when the parent has not defined
 % them already.
 \providecommand{\ones}{\mathbf{1}}  % the vector of ones, (1, ..., 1)^T
 \providecommand{\Prec}{\mathsf{P}}  % a projected prior precision
-\providecommand{\Cov}{\mathsf{C}}
+\providecommand{\Cov}{\mathsf{C}}   % the prior covariance of the bin biases
 \providecommand{\T}{^{\mathsf{T}}}
 \providecommand{\bstwo}{b_{s^2}}
 
-\section{The accuracy test: the figure of bias}
+\section{The accuracy test}
 \label{app:bias}
 
-The ladder of Section~\ref{sec:summary} orders the linear-bias priors
-by how much information they keep.  The accuracy test orders them by
-the other quantity that matters: whether each fit's quoted error
-still covers the truth when the true biases carry structure the prior
-cannot express.  This appendix gives the method: the shift of a fit
-under a known drift, the two drift laws, the random truths built on
-them, and the test statistic $\sqrt{\langle \chi^2 \rangle/n_{\rm dof}}$
-of Eq.~\eqref{eq:gof}.  The results under model A are in the Summary
-and in Appendix~\ref{app:tables}.
+This appendix gives the method of Section~\ref{sec:accuracy}: the shift
+of a fit under a known drift, the two drift laws, the random truths
+built on them, and the statistic $\chidof$ of Eq.~\eqref{eq:gof}, whose
+value is written $\eta$.
 
 \subsection{The shift formula}
 \label{sec:biasformula}
@@ -35,371 +28,248 @@ Let $m$ be the expected data vector (the band powers), $\mathsf{C}_d$
 its covariance, $\mathsf{D}$ the matrix of derivatives of $m$ with
 respect to the parameters (sans-serif, not the growth factor $D$), and
 $F = \mathsf{D}\T \mathsf{C}_d^{-1} \mathsf{D} + F_{\rm priors}$ the
-Fisher matrix of one fit, its priors included
-(Appendix~\ref{sec:fisher}).  Under model A the parameters also
-include the variant's higher-order biases, counterterms and
-stochastic amplitudes, marginalized like the cosmology
-(Appendix~\ref{sec:variants}).  Now let the true biases carry a known
-drift the fit may not be able to express: the data vector moves by
-$\delta m$.  To first order in $\delta m$, the maximum of the
-posterior moves by
+Fisher matrix of one fit, its priors included (Appendix~\ref{sec:fisher});
+under model A the parameters include the variant's higher-order
+parameters, marginalized like the cosmology.  If the true biases carry
+a drift the fit may not express, the data vector moves by $\delta m$,
+and to first order the maximum of the posterior moves by
 \begin{equation}
-  \delta p \;=\; F^{-1} \mathsf{D}\T \mathsf{C}_d^{-1}\, \delta m ,
+  \delta p \;=\; F^{-1} \mathsf{D}\T \mathsf{C}_d^{-1}\, \delta m .
   \label{eq:fisherbias}
 \end{equation}
-the linear response of the fit.  The derivation is one line: the
-score (the gradient of the log posterior) at the old maximum becomes
+The derivation is one line: the score (the gradient of the log
+posterior) at the old maximum becomes
 $\mathsf{D}\T \mathsf{C}_d^{-1} \delta m$ instead of zero, and the
-curvature that converts a score into a parameter displacement is
-$F$.
-
-The quoted number compresses $\delta p$ into the plane that matters.
-With $\mathsf{C}_w$ the fit's marginalized $2 \times 2$ covariance
-of $(w_0, w_a)$ and $\delta w$ the $(w_0, w_a)$ entries of
-$\delta p$, the shift is
+curvature that converts a score into a displacement is $F$.  With
+$\mathsf{C}_w$ the fit's marginalized $2 \times 2$ covariance of
+$(w_0, w_a)$ and $\delta w$ the $(w_0, w_a)$ entries of $\delta p$, the
+shift is
 \begin{equation}
-  \Delta_w \;=\; \sqrt{\delta w\T\, \mathsf{C}_w^{-1}\, \delta w} :
+  \Delta_w \;=\; \sqrt{\delta w\T\, \mathsf{C}_w^{-1}\, \delta w} ,
   \label{eq:shiftw}
 \end{equation}
-the displacement of the dark-energy ellipse in units of its own size.
-$\Delta_w = 1$ means the fitted $(w_0, w_a)$ sits on the one-sigma
-contour of the unshifted forecast.  The threshold drawn in the
-figures is $\Delta_w = 1/3$, a shift that widens the effective error
-by a few percent.  Both the ellipse and the response use the same
-fit's $F$: a rigid model is punished twice, because it absorbs
-little of the drift and its ellipse is small.
+the displacement of the dark-energy ellipse in units of its own size;
+$\Omega_m$ and $A_s$ shifts are $|\delta p|/\sigma_p$.  The threshold
+drawn in the figures is $1/3$, a shift that widens the effective error
+by a few percent.  Both the ellipse and the response use the same fit's
+$F$, so a rigid model is punished twice: it absorbs little of the drift,
+and its ellipse is small.
 
-The drift enters through the bin biases.  With $\beta_i$ the bin
-amplitudes of Eq.~\eqref{eq:beta} and $\delta_i$ the drift's
-fractional deviations, the data move by
-$\delta m = \sum_i (\partial m / \partial \beta_i)\, B_g\, \delta_i$,
-with each group's mean deviation removed because $B_g$ is free.
-Under model A the column $\partial m/\partial \beta_i$ is the
-chain-rule column of Eq.~\eqref{eq:chain} divided by $D(z_i)$, so a
-drift of $b_1$ drags $b_2$ and $\bstwo$ along through their
-calibrations (Appendix~\ref{sec:ladderimpl}).  For the growth-tied
-prior the response is evaluated in the growth-tied parameter basis;
-for the free prior the bias derivatives span the drift exactly,
-so the cosmology shift vanishes: the free biases absorb the drift,
-and the accuracy of that prior is bought entirely with the information
-the ladder shows it giving up.
+The drift enters through the bin biases: with $\beta_i$ the amplitudes
+of Eq.~\eqref{eq:beta} and $\delta_i$ the drift's fractional deviations,
+$\delta m = \sum_i (\partial m / \partial \beta_i)\, B_g\, \delta_i$.
+Under model A the column $\partial m/\partial \beta_i$ is the chain-rule
+column of Eq.~\eqref{eq:chain} divided by $D(\bar{z}_i)$, so a drift of
+$b_1$ drags $b_2$ and $\bstwo$ along through their calibrations.  For
+the growth-tied prior the response is evaluated in its own parameter
+basis; for the free prior the bias derivatives span the drift exactly,
+so the cosmology shift vanishes, and the accuracy of that prior is
+bought entirely with the information it gives up.
 
 \subsection{The drift laws}
 \label{sec:driftlaws}
 
-Two known drifts are injected, the two derived in these appendices.
-The conserved-population drift applies to every group: the deviation
-of Eq.~\eqref{eq:tilt}, anchored at the group's mean redshift.  It is
-the gentlest drift physics supplies, nearly a straight line of a few
-percent across each group.  The BGS flux-limit drift applies to BGS
-alone: the convex deviation of Appendix~\ref{app:bgsflux}, a $22\%$
-span whose best line leaves a $2.4\%$ rms curvature.  Both come from
-\texttt{plots/make\_theory\_data.py}, the script behind the theory
-figures; only the shape of each drift matters, because the free
-amplitudes remove the level.  Appendix~\ref{sec:tabdrifts} gives the
-shift of each drift alone under model A.
-
-A known drift is only half of a bias history.  The two drifts are
-the deviations these appendices can derive; a real sample adds
-residual structure whose shape nobody has measured.  The rest of this
-appendix makes that structure random and asks each prior the sharper
-question: does the error ellipse you quote still cover the truth?
+Two known drifts are injected.  The conserved-population drift applies
+to every group: the deviation of Eq.~\eqref{eq:tilt}, anchored at the
+group's mean redshift, nearly a straight line of a few percent across
+each group.  The BGS flux-limit drift applies to BGS alone: the convex
+deviation of Appendix~\ref{app:bgsflux}, a $22\%$ span whose best line
+leaves a $2.4\%$ rms curvature.  Both come from
+\texttt{plots/make\_theory\_data.py}; only their shapes matter, because
+the free amplitudes remove the level.
 
 \subsection{Random truths}
 \label{sec:randomtruths}
 
 A random truth sets the bias of bin $i$ in group $g$ to
 \begin{equation}
-  b_i \;=\; \frac{B_g}{D(z_i)}\,
+  b_i \;=\; \frac{B_g}{D(\bar{z}_i)}\,
   \bigl(1 + \delta_i^{\rm drift} + \varepsilon_i\bigr)
   \label{eq:randomtruth}
 \end{equation}
 at the fiducial cosmology.  The drift $\delta_i^{\rm drift}$ is the
-known part: the $r < 19.5$ flux-limit deviation in BGS and the
-conserved-population deviation of Eq.~\eqref{eq:tilt} in the other
-five groups.  The residual $\varepsilon_i$ is the random part: one
-draw from the Gaussian $\mathcal{N}(0, \Sigma)$ whose covariance is
-the kernel of one of the two stated priors,
-$\Sigma_{ij} = \sigma_g^2\, e^{-|z_i - z_j|/L}$ inside a group and
-zero across groups.  Two families of $2000$ truths are drawn:
-baseline scatter ($\sigma_g = 3\%$ for BGS, $1\%$ for the other
-groups, $L = 0.2$) and pessimistic scatter ($\sigma_g = 3\%$ in
-every group, $L = 0.05$).  Under model A the truth's $b_2$ and
-$\bstwo$ follow its $b_1$ through Eq.~\eqref{eq:calibrations}.
+known part: the flux limit in BGS and the conserved population in the
+other five groups.  The residual $\varepsilon_i$ is one draw from the
+Gaussian $\mathcal{N}(0, \Sigma)$ whose covariance is the kernel of one
+of the two stated priors, $\Sigma_{ij} = \sigma_g^2\,
+e^{-|\bar{z}_i - \bar{z}_j|/L}$ inside a group and zero across groups.
+Two families of $2000$ truths are drawn, baseline and pessimistic
+scatter, and every truth is fitted under every prior, each centered on
+the growth-tied shape $\delta = 0$.  No fit is told which truth it
+faces: the baseline prior meets truths drawn from its own prior and
+truths drawn from the pessimistic prior, and is judged on both.
 
-Every truth is fitted under every prior, each centered on the
-growth-tied shape $\delta = 0$.  No fit is told which truth it
-faces: the baseline prior meets truths drawn from its
-own prior (the matched case below) and truths drawn from the
-pessimistic prior, and is judged on both.
-
-The sampling costs one matrix product because the response is
-linear.  Eq.~\eqref{eq:fisherbias} is linear in $\delta m$, and
-$\delta m$ is linear in the bias deviations, so the $(w_0, w_a)$
-rows of the response collapse into one
-$2 \times n_{\rm bins}$ matrix $\mathsf{A}$ per prior, layout and
-higher-order variant, with $n_{\rm bins}$ the number of bins of the
-layout:
+Because Eq.~\eqref{eq:fisherbias} is linear in $\delta m$, and
+$\delta m$ is linear in the bias deviations, the $(w_0, w_a)$ rows of
+the response collapse into one $2 \times n_{\rm bins}$ matrix
+$\mathsf{A}$ per prior, layout and variant, with $n_{\rm bins}$ the
+number of bins of the layout:
 \begin{equation}
   \delta w \;=\; \mathsf{A}\,\delta,
   \qquad
-  \delta_i \;=\; \delta_i^{\rm drift} + \varepsilon_i .
+  \delta_i \;=\; \delta_i^{\rm drift} + \varepsilon_i ,
   \label{eq:linearmap}
 \end{equation}
-The draws also check themselves against the closed form they must
-reproduce,
+so the $2000$ truths cost one matrix product.  The draws check
+themselves against the closed form
 $\langle \Delta_w^2 \rangle = \Delta_{\rm drift}^2
-+ \mathrm{tr}(\Cov_w^{-1} \mathsf{A} \Sigma \mathsf{A}\T)$, where
-$\langle\cdot\rangle$ averages over the truths, $\Delta_{\rm drift}$
-is the shift of the drift alone and $\Cov_w$ is the fit's
-marginalized $(w_0, w_a)$ covariance.
++ \mathrm{tr}(\mathsf{C}_w^{-1} \mathsf{A} \Sigma \mathsf{A}\T)$, with
+$\Delta_{\rm drift}$ the shift of the drift alone.  The response is
+first order in $\delta$, while the band powers are quadratic in the
+bin biases: the dropped term is a few percent of the shift for the
+$1$--$3\%$ residuals and perhaps $10$--$20\%$ for the $22\%$ BGS drift.
 
-One caveat bounds the method.  The response is first order in
-$\delta$, and the band powers are quadratic in the bin biases, so a
-term of order $\delta^2$ is dropped: a few percent of the shift for
-the $1$--$3\%$ residuals, and perhaps $10$--$20\%$ of it for the
-$22\%$ BGS drift.  Appendix~\ref{app:limits} lists it among the
-limitations.
-
-Figure~\ref{fig:scatter}, in the Summary, draws the result under
-model A.  The one subtlety is the matched prior: the baseline prior
-in its top panel and the pessimistic prior in its middle panel.
-Where the fit's prior equals the truth's scatter, the average shift
-is not a bias.  That fit's ellipse is wider than the growth-tied
-model's precisely because it marginalizes over the scatter the truth
-now actually has: the fitted $(w_0, w_a)$ moves from draw to draw,
-and the ellipse was built to cover those moves.  A correctly
-specified model therefore shows a nonzero average shift just by being
-correct, and the mean of $\Delta_w$ under the matched prior measures
-the share of the ellipse the bias scatter occupies, not an error of
-the model.  Deciding whether the quoted ellipse is honest needs the
-statistic of the next subsection.
+Where the fit's prior equals the truth's scatter (the matched case),
+the average shift is not a bias.  That fit's ellipse is wider than the
+growth-tied one precisely because it marginalizes over the scatter the
+truth now has: the fitted $(w_0, w_a)$ moves from draw to draw, and the
+ellipse was built to cover those moves.  Whether an ellipse is honest
+is decided by the statistic of the next subsection.
 
 \subsection{The test statistic}
 \label{sec:inflation}
 
-The question the statistic answers is this: does the fit's quoted
-error bar honestly cover where the fit actually lands?  A fit is
-correctly specified when its quoted ellipse covers the truth with the
-stated probability.  The statistic that tests exactly that is the
-squared distance of the fitted $(w_0, w_a)$, written $\hat{w}$, from
-the truth $w_{\rm true}$ in units of the fit's ellipse,
-$\chi^2_w = (\hat{w} - w_{\rm true})\T \Cov_w^{-1}
-(\hat{w} - w_{\rm true})$, with every source of displacement counted:
-the drift, the bias scatter, and the data noise.  Averaged over the
-bias history (the known drift plus a random residual) and the data
-noise, written $\langle\cdot\rangle$ as in Eq.~\eqref{eq:gof}, it is
+A fit is correctly specified when its quoted ellipse covers the truth
+with the stated probability.  The squared distance of the fitted
+$(w_0, w_a)$, written $\hat{w}$, from the truth $w_{\rm true}$ in units
+of the ellipse is
+$\chi^2_w = (\hat{w} - w_{\rm true})\T \mathsf{C}_w^{-1}
+(\hat{w} - w_{\rm true})$.  Averaged over the bias history and the data
+noise,
 \begin{equation}
   \langle \chi^2_w \rangle
   \;=\;
   \Delta_{\rm drift}^2
   \;+\;
-  \mathrm{tr}\!\left(\Cov_w^{-1} \mathsf{A}\,\Sigma\,\mathsf{A}\T\right)
+  \mathrm{tr}\!\left(\mathsf{C}_w^{-1} \mathsf{A}\,\Sigma\,\mathsf{A}\T\right)
   \;+\;
-  \mathrm{tr}\!\left(\Cov_w^{-1} \mathsf{N}_w\right),
+  \mathrm{tr}\!\left(\mathsf{C}_w^{-1} \mathsf{C}_w^{\rm noise}\right):
   \label{eq:chi2w}
 \end{equation}
-where $\mathsf{N}_w$ is the share of $\Cov_w$ contributed by the
-data noise and by the Gaussian priors other than the bias prior: the
-priors on the per-group velocity dispersions $\sigma_v$ and, under
-model A, those on the higher-order parameters.  The cross terms
-average to zero, because the residual and the noise have zero mean.
-Eq.~\eqref{eq:chi2w} is evaluated in closed form, not by sampling:
-it is the exact average over infinitely many universes, each with its
-own noise realization and its own bias history.  The $2000$ residual
-draws of Appendix~\ref{sec:randomtruths} only draw the 16th--84th
-percentile bands of Figure~\ref{fig:scatter}, and those draws carry
-no data noise.  The quoted number is
+the drift squared, the scatter that the fit's bias parameters, held
+back by their prior, did not follow, and the noise.  Here
+$\mathsf{C}_w^{\rm noise}$ is the share of $\mathsf{C}_w$ contributed by
+the data noise and by the Gaussian priors other than the bias prior
+(the velocity dispersions and the higher-order parameters); the cross
+terms average to zero.  Eq.~\eqref{eq:chi2w} is evaluated in closed
+form: it is the exact average over infinitely many universes, each with
+its own noise realization and bias history.  The $2000$ draws only make
+the percentile bars of Figure~\ref{fig:scatter}, and they carry no
+noise.  The quoted value is $\eta = \sqrt{\langle \chi^2_w \rangle/2}$.
+
+An honest ellipse gives $\langle \chi^2_w \rangle = 2$: if the fitted
+$(w_0, w_a)$ scatters around the truth with covariance exactly
+$\mathsf{C}_w$, the expected squared distance is
+$\mathrm{tr}(\mathsf{C}_w^{-1}\mathsf{C}_w) = 2$, one unit per
+parameter.  Growing both axes of the ellipse by $\eta$ divides
+$\chi^2_w$ by $\eta^2$ and brings the average back to $2$; this matches
+the coverage exactly when the real scatter of $\hat{w}$ has the shape
+and orientation of the ellipse.
+
+\paragraph{Coverage of one parameter.}
+For one parameter $p$, in units of its marginalized error $\sigma_p$,
+the same three terms read
 \begin{equation}
-  \sqrt{\langle \chi^2_w \rangle\,/\,2} ,
-  \label{eq:inflation}
-\end{equation}
-the case $n_{\rm dof} = 2$ of $\sqrt{\langle \chi^2 \rangle/n_{\rm dof}}$
-in Eq.~\eqref{eq:gof}; the case $n_{\rm dof} = 1$, for $\Omega_m$ or
-$A_s$, is Appendix~\ref{sec:inflationomas}.
-
-Eq.~\eqref{eq:chi2w} splits $\langle \chi^2_w \rangle$ into three
-sources, in order: the drift squared, the scatter the prior did not
-absorb, and the noise.  The drift term $\Delta_{\rm drift}^2$ is the
-squared shift from the known drift alone, the same for every truth.
-The scatter term carries the truth's residual $\varepsilon$ into
-$(w_0, w_a)$ through the response matrix $\mathsf{A}$ of
-Eq.~\eqref{eq:linearmap}: it is the part of the scatter that the
-fit's bias parameters, held back by their prior, did not follow.  The
-noise term counts the data noise and the other Gaussian priors.
-
-An honest ellipse gives exactly $2$, the number of parameters.
-Suppose the fit is correctly specified: no drift remains, and the
-fitted $(w_0, w_a)$ scatters around the truth with covariance exactly
-$\Cov_w$.  The expected squared distance is then
-$\mathrm{tr}(\Cov_w^{-1}\Cov_w)$, the trace of the $2 \times 2$
-identity matrix, so $\langle \chi^2_w \rangle = 2$: one unit for
-$w_0$ and one for $w_a$.  A larger value means the fit lands, on
-average, farther from the truth than the reported ellipse allows.
-
-Eq.~\eqref{eq:inflation} turns that excess into a length.  Growing
-both axes of the ellipse by a factor $f$ replaces $\Cov_w$ by
-$f^2\,\Cov_w$ and divides $\chi^2_w$ by $f^2$, so
-$f = \sqrt{\langle \chi^2_w \rangle/2}$ is the growth that brings the
-average back to $2$.  It is the factor by which the axes of the
-reported ellipse would have to grow to cover the truth as often as
-the ellipse claims: $1$ for an honest ellipse, above $1$ for an
-ellipse that is too small, below $1$ for a conservative one.  The
-factor matches the average squared distance.  It matches the
-coverage exactly when the real scatter of the fitted $(w_0, w_a)$ has
-the shape and orientation of the reported ellipse.
-
-\paragraph{What the statistic says about coverage.}
-An honest error bar has a frequentist meaning.  Draw many universes,
-each with its own noise realization from the data covariance
-$\mathsf{C}_d$ and its own bias history (the known drift plus one
-Gaussian residual from the truth's prior), and fit each one.  If the
-error bar is honest, the fit's $1\sigma$ interval covers the truth in
-$68.3\%$ of them.
-
-For one parameter $p$ the link to the statistic is exact.  In units
-of the fit's marginalized error $\sigma_p$, the closed-form average
-has the three terms of Eq.~\eqref{eq:chi2w},
-\begin{equation}
-  \langle \chi^2_p \rangle \;=\; \mu^2 \;+\; a\T \Sigma\, a \;+\; \nu ,
+  \langle \chi^2_p \rangle \;=\; \mu^2 \;+\; \mathsf{A}_p\T \Sigma\, \mathsf{A}_p \;+\; \nu ,
   \label{eq:chi2p}
 \end{equation}
-with $\mu$ the shift of the known drift alone, $a$ the row of the
-response that carries the fractional bias deviations into $p$ (the
-analog of $\mathsf{A}$ in Eq.~\eqref{eq:linearmap}) divided by
-$\sigma_p$, $\Sigma$ the covariance of the truth's residual, and
-$\nu$ the noise term: the $(p, p)$ entry of $F^{-1}F_0F^{-1}$ divided
-by $\sigma_p^2$, where
-$F_0 = \mathsf{D}\T\mathsf{C}_d^{-1}\mathsf{D} + F_{\rm other}$
-holds the data covariance and the Gaussian priors other than the bias
-prior.
+with $\mu$ the shift of the known drift alone, $\mathsf{A}_p$ the row
+of the response that carries the bias deviations into $p$, divided by
+$\sigma_p$, and $\nu$ the noise term: the $(p, p)$ entry of
+$F^{-1}F_0F^{-1}$ over $\sigma_p^2$, where
+$F_0 = \mathsf{D}\T\mathsf{C}_d^{-1}\mathsf{D} + F_{\rm other}$ holds the
+data and the Gaussian priors other than the bias prior.  The bias prior
+adds a positive semidefinite precision, $F \succeq F_0$, so
+$F^{-1}F_0F^{-1} \preceq F^{-1}FF^{-1} = F^{-1}$, whose $(p,p)$ entry is
+$\sigma_p^2$: $\nu \le 1$ (with $X \preceq Y$ meaning
+$x\T X x \le x\T Y x$ for every $x$).  The rms displacement beyond the
+noise, $(\mu^2 + \mathsf{A}_p\T\Sigma\mathsf{A}_p)^{1/2}$, is therefore
+at least $(\eta^2 - 1)^{1/2}$, with $\eta = \langle \chi^2_p \rangle^{1/2}$.
 
-Because the response is linear and both the noise and the residual
-are Gaussian, the pull $\zeta = (\hat{p} - p_{\rm true})/\sigma_p$ is
+Because the response is linear and both the noise and the residual are
+Gaussian, the pull $\zeta = (\hat{p} - p_{\rm true})/\sigma_p$ is
 exactly Gaussian, with mean $\mu$ and variance
-$v = \langle \chi^2_p \rangle - \mu^2$.  The $1\sigma$ bar covers the
-truth when $|\zeta| < 1$, which happens in a fraction
+$V = \langle \chi^2_p \rangle - \mu^2$.  The $1\sigma$ bar covers the
+truth when $|\zeta| < 1$, in a fraction
 \begin{equation}
   P(|\zeta| < 1) \;=\;
-  \Phi\!\left(\frac{1 - \mu}{\sqrt{v}}\right)
-  - \Phi\!\left(\frac{-1 - \mu}{\sqrt{v}}\right)
+  \Phi\!\left(\frac{1 - \mu}{\sqrt{V}}\right)
+  - \Phi\!\left(\frac{-1 - \mu}{\sqrt{V}}\right)
   \label{eq:coverage}
 \end{equation}
 of the universes, with
 $\Phi(x) = \tfrac{1}{2}\bigl[1 + {\rm erf}(x/\sqrt{2})\bigr]$ the
-cumulative distribution of a unit Gaussian.  Honest means $\mu = 0$
-and $v = 1$: then $\langle \chi^2_p \rangle = 1$ and the coverage is
-$2\Phi(1) - 1 = 68.3\%$.
-
-When the prior absorbs the known drift ($\mu \approx 0$), the
-coverage depends on the statistic $s = \sqrt{\langle \chi^2_p \rangle}$
-alone,
+cumulative distribution of a unit Gaussian.  When the prior absorbs the
+known drift ($\mu \approx 0$) the coverage depends on $\eta$ alone,
 \begin{equation}
-  P(|\zeta| < 1) \;=\; 2\,\Phi(1/s) - 1 :
+  P(|\zeta| < 1) \;=\; 2\,\Phi(1/\eta) - 1 :
   \label{eq:quickcoverage}
 \end{equation}
-$68\%$ at $s = 1$, $56\%$ at $1.3$, $50\%$ at $1.5$, $43\%$ at $1.75$,
-$38\%$ at $2$ and $31\%$ at $2.5$.  For $s \geq 1$, $\mu = 0$ is the
-most generous split of $\langle \chi^2_p \rangle$ between drift and
-variance, so otherwise Eq.~\eqref{eq:quickcoverage} is an upper
-bound.  For the baseline, pessimistic and free priors, which absorb
-the known drifts ($\mu \leq 0.3$), it is exact to $0.1\%$.  For the
-growth-tied prior the drift dominates, and only
-Eq.~\eqref{eq:coverage} is right.
+$68\%$ at $\eta = 1$, $56\%$ at $1.3$, $50\%$ at $1.5$, $38\%$ at $2$
+and $31\%$ at $2.5$.  For $\eta \geq 1$, $\mu = 0$ is the most generous
+split of $\langle \chi^2_p \rangle$ between drift and variance, so
+otherwise Eq.~\eqref{eq:quickcoverage} is an upper bound.  For the
+baseline, pessimistic and free priors ($\mu \leq 0.33$) it is exact to
+$0.1\%$; for the growth-tied prior only Eq.~\eqref{eq:coverage} is
+right.
 
-Under the pessimistic scatter and model A baseline, the fraction of
-universes whose $1\sigma$ bar covers the truth is, on
-$\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$ and $0.2$,
-$44$, $56$, $29$ and $68\%$ in $\Omega_m$ and $47$, $62$, $42$ and
-$68\%$ in $A_s$ for the baseline prior; $66$--$68\%$ for the
-pessimistic prior; and $68.3\%$ for the free prior.  For the
-growth-tied prior it is $3$, $12$, $6$ and $3\%$ in $\Omega_m$, where
-Eq.~\eqref{eq:quickcoverage} would give $8$, $17$, $13$ and $13\%$.
-For $(w_0, w_a)$ the same logic holds with the ellipse
-$\chi^2_w < 2.30$, which contains $68.3\%$ of a two-dimensional
-Gaussian; its exact coverage depends on how the excess of
-$\langle \chi^2_w \rangle$ splits between the two directions, so only
-the statistic is quoted there.
+Under the pessimistic scatter and model A baseline, the bar covers the
+truth, on $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$ and
+$0.2$, in $56$, $63$, $40$ and $68\%$ of universes for $\Omega_m$ and
+$57$, $65$, $54$ and $68\%$ for $A_s$ under the baseline prior;
+$66$--$68\%$ under the pessimistic prior; and $68.3\%$ under the free
+prior.  Under the growth-tied prior it is $21$, $39$, $5$ and $7\%$ for
+$\Omega_m$, where Eq.~\eqref{eq:quickcoverage} would give $24$, $39$,
+$19$ and $22\%$.  For $(w_0, w_a)$ the ellipse $\chi^2_w < 2.30$
+contains $68.3\%$ of a two-dimensional Gaussian, but the exact coverage
+depends on how the excess of $\langle \chi^2_w \rangle$ splits between
+the two directions, so only $\eta$ is quoted.
 
-\paragraph{Worked case: the baseline-prior fit of a pessimistic truth.}
-The baseline prior states that each group's residual $\varepsilon$
-around its free line (the free amplitude $B_g$ and tilt $s_g$ of
-Eq.~\eqref{eq:summodel}) is small and smooth.  Its width, the rms
-$\sigma_g$ of one bin's residual, is $1\%$ ($3\%$ for BGS), and its
-correlation length $L = 0.2$ keeps the residual coherent over
-$\Delta z \approx 0.2$.  The pessimistic truth has residuals of
-$\sigma_g = 3\%$ with $L = 0.05$ in every group: $3\%$ wiggles that
-change over $\Delta z \approx 0.05$.
-
-The baseline prior charges a large penalty for bin biases that follow
-such wiggles, so the fit lets the biases follow them only in part.
-The band powers still carry the rest of each wiggle, and the fit
-moves the cosmological parameters, $(w_0, w_a)$ among them, to absorb
-what the biases do not.
-
-The push on $(w_0, w_a)$ is not one fixed offset.  The drift part is
-the same for every truth; the rest comes from the residual and
-changes from truth to truth, so over the $2000$ truths the shift
-$\Delta_w$ of Eq.~\eqref{eq:shiftw}, in units of the baseline-prior
-ellipse, spreads over a range: the 16th--84th percentile bars of
-Figure~\ref{fig:scatter}.  The observed universe is one draw: one of
-these displacements, reported with the baseline-prior ellipse.
-
-Adding the noise term, Eq.~\eqref{eq:chi2w} gives
-$\langle \chi^2_w \rangle$, and Eq.~\eqref{eq:inflation} gives the
-factor $f$, which Figure~\ref{fig:gof} draws for this case under
-model A.  To read a value, take $f = 2$ for illustration: the real
-scatter of the best-fit $(w_0, w_a)$ around the truth is then twice
-as wide per axis as the reported ellipse, and the contour the
-baseline prior reports as one sigma is the $0.5\sigma$ contour of the
-real scatter.
-
-The figure of merit follows the same factor.
-${\rm FoM}(w_0, w_a) = [\det \Cov_w]^{-1/2}$ is proportional to the
-inverse area of the ellipse; growing both axes by $f$ multiplies the
-area by $f^2$, so the FoM scales as $1/f^2$: at $f = 2$ the quoted
-FoM is four times too large.  The rescaled FoM is not a number to
-quote: it rescales an ellipse whose center and shape still come from a
-prior narrower and smoother than the truth's scatter.  If the
+\paragraph{The baseline prior against a pessimistic truth.}
+The baseline prior states that each group's residual around its free
+line is small and smooth ($\sigma_g = 1\%$, $3\%$ for BGS, coherent
+over $\Delta z \approx 0.2$); the pessimistic truth has $3\%$ wiggles
+that change over $\Delta z \approx 0.05$.  The prior charges a large
+penalty for bin biases that follow such wiggles, so the biases follow
+them only in part, and the fit moves the cosmological parameters to
+absorb the rest of each wiggle.  The push changes from truth to truth,
+so over the $2000$ truths $\Delta_w$ spreads over the percentile bars of
+Figure~\ref{fig:scatter}, and the observed universe is one of these
+displacements, reported with the baseline-prior ellipse.  At $\eta = 2$,
+for example, the real scatter of the best-fit $(w_0, w_a)$ is twice as
+wide per axis as the reported ellipse.  The FoM, proportional to the
+inverse area, would then be four times too large; the rescaled FoM is
+still not a number to quote, because the ellipse's center and shape
+come from a prior narrower and smoother than the truth.  If the
 pessimistic truth is possible, the fit to report is the pessimistic
-prior, which is matched to that truth.
-
-The opposite mismatch errs on the conservative side.  A truth with
-baseline scatter, fitted with the pessimistic prior, gives $f$ below
-$1$ (the Summary gives the model A values): the real scatter is then
-narrower than the reported ellipse.
+prior.  The opposite mismatch, a baseline truth fitted with the
+pessimistic prior, gives $\eta$ below $1$: a conservative ellipse.
 
 \paragraph{The matched case.}
-The matched case lands on $1$ by an identity, not by tuning.  Collect
-all parameters in $\theta$, with every prior centered on the fiducial
-$\theta_{\rm fid}$, and let $\Delta\theta$ be the truth's departure
-from it: zero in the cosmology and in every parameter that carries
-another Gaussian prior, $B_g\,\delta_i$ in the amplitude $\beta_i$ of
-bin $i$.  With $n$ the data noise, of covariance $\mathsf{C}_d$, the
-linear response of Eq.~\eqref{eq:fisherbias} puts the fit at
-$\hat{\theta} = \theta_{\rm fid}
-+ F^{-1}\mathsf{D}\T\mathsf{C}_d^{-1}(\mathsf{D}\,\Delta\theta + n)$.
-Write
-$F = \mathsf{D}\T\mathsf{C}_d^{-1}\mathsf{D} + F_{\rm bias}
+The matched case lands on $1$ by an identity.  Collect all parameters
+in $\theta$, with every prior centered on the fiducial
+$\theta_{\rm fid}$, and let $\Delta\theta$ be the truth's departure from
+it: zero in the cosmology and in every parameter with another Gaussian
+prior, $B_g\,\delta_i$ in the amplitude $\beta_i$.  With $\mathbf{n}_d$
+the data noise, of covariance $\mathsf{C}_d$, the linear response puts
+the fit at $\hat{\theta} = \theta_{\rm fid}
++ F^{-1}\mathsf{D}\T\mathsf{C}_d^{-1}(\mathsf{D}\,\Delta\theta + \mathbf{n}_d)$.
+Write $F = \mathsf{D}\T\mathsf{C}_d^{-1}\mathsf{D} + F_{\rm bias}
 + F_{\rm other}$, with $F_{\rm bias}$ the bias prior's precision (the
-projected precision of Eq.~\eqref{eq:memproj} in the amplitude block)
-and $F_{\rm other}$ the other Gaussian priors.  Since
+projection of Eq.~\eqref{eq:memproj} in the amplitude block).  Since
 $F_{\rm other}\,\Delta\theta = 0$, the fit's error is
 \begin{equation}
   \hat{\theta} - \theta_{\rm true}
   \;=\;
-  F^{-1}\bigl(\mathsf{D}\T\mathsf{C}_d^{-1} n
+  F^{-1}\bigl(\mathsf{D}\T\mathsf{C}_d^{-1} \mathbf{n}_d
   \;-\; F_{\rm bias}\,\Delta\theta\bigr) :
   \label{eq:fiterror}
 \end{equation}
-the noise, plus the part of the truth's departure that the bias
-prior held back.  Treating each other Gaussian prior as one more
-independent measurement, the noise part has covariance
-$F^{-1}(\mathsf{D}\T\mathsf{C}_d^{-1}\mathsf{D} + F_{\rm other})F^{-1}$.
-
-In the matched case the fit's projected precision $\Prec_{\rm mem}$ is
-built from the same kernel covariance $\Sigma$ that the truth's
-scatter uses (taken in the units of the bin amplitudes, a factor
+the noise, plus the part of the truth's departure that the bias prior
+held back.  Treating each other Gaussian prior as one more independent
+measurement, the noise part has covariance $F^{-1}F_0F^{-1}$.  In the
+matched case $\Prec_{\rm mem}$ is built from the same kernel $\Sigma$
+as the truth's scatter (in the units of the bin amplitudes, a factor
 $B_g^2$ per group), and every projection of that form obeys
 \begin{equation}
   \Prec_{\rm mem}\,\Sigma\,\Prec_{\rm mem} \;=\; \Prec_{\rm mem} .
@@ -408,343 +278,150 @@ $B_g^2$ per group), and every projection of that form obeys
 The proof takes one line: with $\mathsf{Q} = \Sigma^{-1}$ and
 $\mathsf{M} = (\mathsf{U}\T\mathsf{Q}\mathsf{U})^{-1}$,
 $\Sigma\,\Prec_{\rm mem} = \mathsf{I} - \mathsf{U}\mathsf{M}\mathsf{U}\T\mathsf{Q}$,
-and $\Prec_{\rm mem}\mathsf{U} = 0$ removes the second term.  So the
-scatter part of Eq.~\eqref{eq:fiterror} has covariance
+and $\Prec_{\rm mem}\mathsf{U} = 0$ removes the second term.  The
+scatter part of Eq.~\eqref{eq:fiterror} then has covariance
 $F^{-1}F_{\rm bias}F^{-1}$, the two covariances add up to
-$F^{-1}F\,F^{-1} = F^{-1}$, and their $(w_0, w_a)$ block is $\Cov_w$
-itself: the scatter and noise terms of Eq.~\eqref{eq:chi2w} sum to
-$\mathrm{tr}(\Cov_w^{-1}\Cov_w) = 2$.  The widening the prior adds to
-the ellipse equals the error the scatter inflicts, and the rest of the
-ellipse is the noise the data carry anyway.  The matched value of
-Eq.~\eqref{eq:inflation} is then $\sqrt{1 + \Delta_{\rm drift}^2/2}$,
-which departs from $1$ only through the known drift; under model A the
-matched priors absorb both drifts below $\sigma/3$
-(Appendix~\ref{sec:tabdrifts}), so it stays within $3\%$ of $1$.
-Appendix~\ref{app:checks} verifies the identity numerically.
+$F^{-1}FF^{-1} = F^{-1}$, and the scatter and noise terms of
+Eq.~\eqref{eq:chi2w} sum to exactly $2$.  The widening the prior adds to
+the ellipse equals the error the scatter inflicts.  The matched value
+is $\eta = (1 + \Delta_{\rm drift}^2/2)^{1/2}$ for $(w_0, w_a)$ and
+$(1 + \Delta_{{\rm drift},p}^2)^{1/2}$ for one parameter, so it departs
+from $1$ only through the known drift: under model A it stays within
+$3\%$ of $1$ for $(w_0, w_a)$, while a single parameter reaches $1.05$
+($\Omega_m$ on $\Delta z = 0.05$, where the BGS flux limit is absorbed
+least well).  Appendix~\ref{app:checks} verifies the identity
+numerically.
 
 \paragraph{When a fit is conservative.}
-The same algebra gives a sufficient condition for an error bar that is
-not too small.  Write $\Prec_{\rm mem}$ in its null-space form,
-Eq.~\eqref{eq:memnull}, with the fit's kernel $\Sigma_{\rm fit}$, and
-let $\Sigma_{\rm true}$ be the truth's.  If the truth's scatter is no
-larger than the fit's prior in every combination the prior charges,
+Write $\Prec_{\rm mem}$ in its null-space form, Eq.~\eqref{eq:memnull},
+with the fit's kernel $\Sigma_{\rm fit}$, and let $\Sigma_{\rm true}$ be
+the truth's.  If the truth's scatter is no larger than the fit's prior
+in every combination the prior charges,
 $\mathsf{N}\T\Sigma_{\rm true}\mathsf{N} \preceq
-\mathsf{N}\T\Sigma_{\rm fit}\mathsf{N}$ (where $X \preceq Y$ means
-$x\T X x \le x\T Y x$ for every vector $x$), then
+\mathsf{N}\T\Sigma_{\rm fit}\mathsf{N}$, then
 $\Prec_{\rm mem}\Sigma_{\rm true}\Prec_{\rm mem} \preceq \Prec_{\rm mem}$,
 the error covariance is at most $F^{-1}$, and
-$\sqrt{\langle \chi^2_w \rangle/2} \le \sqrt{1 + \Delta_{\rm drift}^2/2}$:
-a prior wider than the truth wastes information, which the ladder
-prices, but does not understate the error.  Whether a given pair of
-kernels meets the condition depends on the kernels and the bins; the
-Summary measures the model A cases directly.  Scatter larger or
-rougher than the pessimistic prior would make the pessimistic prior's
-error bar too small in the same way as the worked case, and against
-that the ladder ends at the free prior: with $F_{\rm bias} = 0$,
-Eq.~\eqref{eq:fiterror} leaves only the noise, so
-$\sqrt{\langle \chi^2_w \rangle/2} = 1$ for every truth expressible
-through the bin biases.
+$\eta \le (1 + \Delta_{\rm drift}^2/2)^{1/2}$: a prior wider than the
+truth wastes information but does not understate the error.  Scatter
+larger or rougher than the pessimistic prior would make the
+pessimistic prior's error bar too small in the same way as above; the
+ladder ends at the free prior, for which $F_{\rm bias} = 0$ leaves only
+the noise in Eq.~\eqref{eq:fiterror}, so $\eta = 1$ for every truth
+expressible through the bin biases.
 
 \subsection{The same test for $\Omega_m$ and $A_s$}
 \label{sec:inflationomas}
 
-The statistics above score the dark-energy pair $(w_0, w_a)$.  The
-same known drifts and the same residual priors are scored for the
-matter density
-$\Omega_m$ and the primordial scalar amplitude $A_s$, each in units of
-its own marginalized error $\sigma_p$.  For one parameter $p$ the
-squared distance of the fit from the truth is
-$\chi^2_p = (\hat{p} - p_{\rm true})^2/\sigma_p^2$, with $\hat{p}$ the
-fitted value; an honest error bar gives
-$\langle \chi^2_p \rangle = 1$, so the statistic is
-$\sqrt{\langle \chi^2_p \rangle}$, the case $n_{\rm dof} = 1$ of
-Eq.~\eqref{eq:gof}: $1$ for an honest error bar, above $1$ the factor
-by which the bar is too small, and Eq.~\eqref{eq:coverage} converts it
-into the fraction of universes whose bar covers the truth.  For a
-matched case the identity of
-Eq.~\eqref{eq:matched} makes the scatter and noise terms sum to
-exactly $1$, because the $(p, p)$ entry of $F^{-1}$ is $\sigma_p^2$;
-the statistic is then $\sqrt{1 + \Delta_{{\rm drift},p}^2}$, with
-$\Delta_{{\rm drift},p} = |\delta p|/\sigma_p$ the shift of the drift
-alone, and departs from $1$ only through the known drift.
-
-$\Omega_m$ and $A_s$ can react more strongly to a bias error than
-$(w_0, w_a)$, because a bias error moves the clustering amplitude
-$b_i^2 A_s D^2(z_i)$ of bin $i$, which $A_s$ scales directly and
-$\Omega_m$ moves through the growth factor.  The Summary gives the
-model A values (Figure~\ref{fig:gof}).
-
-\section{The roughness scan}
-\label{app:roughness}
-
-Scans of the bias prior are best read against one number, the
-roughness of the deviation between neighboring bins.
-
-\subsection{One number controls smooth deviations}
-\label{sec:roughnessdef}
-
-For deviations that change slowly from bin to bin, the exponential
-kernel of Eq.~\eqref{eq:priorkernel} does not constrain $\sigma_b$
-and $L$ separately.  The jump variance of Eq.~\eqref{eq:jumptaylor},
-$\mathrm{Var}(\delta_i - \delta_j) \approx 2\,\sigma_b^2\,\Delta z/L$
-for separations $\Delta z \ll L$, depends on them only through
-$\sigma_b^2/L$, so a scan in two parameters hides a one-parameter
-family: doubling $L$ while multiplying $\sigma_b$ by $\sqrt{2}$ admits
-the same smooth drift.  The combination these appendices use is the
-roughness
-\begin{equation}
-  x \;\equiv\; \sigma_b\,\sqrt{\frac{0.1}{L}}
-  \;=\;
-  \sigma_b\,\sqrt{\frac{2 \times 0.05}{L}} ,
-  \label{eq:roughx}
-\end{equation}
-the small-separation rms change of the deviation between two bins
-$\Delta z = 0.05$ apart, a rescaling of the roughness
-$\kappa = \sigma_b/\sqrt{L}$ of Eq.~\eqref{eq:roughness} into an rms
-with a definite separation.  The stated priors sit at three values:
-the baseline prior at $x = 0.71\%$ for the non-BGS groups
-($\sigma_b = 1\%$, $L = 0.2$) and $x = 2.1\%$ for BGS ($3\%$,
-$L = 0.2$), the pessimistic prior at $x = 4.2\%$ ($3\%$, $L = 0.05$).
-
-The roughness corrects a statement made in
-Appendix~\ref{sec:physical}.  The argument there reads a short $L$
-as unphysical because no selection mechanism decorrelates neighboring
-bins that fast.  That was too strong: $L = 0.05$ with the matching
-$\sigma_b$ admits the real smooth drifts perfectly well, since only
-$x$ matters for them.  What a short $L$ also admits is jagged
-histories nobody has observed, and what it cannot do is admit a large
-drift and forbid the jagged histories at the same time.
+The same drifts and residuals are scored for $\Omega_m$ and $A_s$, each
+in units of its own marginalized error, with
+$\chi^2_p = (\hat{p} - p_{\rm true})^2/\sigma_p^2$ and
+$\eta = \langle \chi^2_p \rangle^{1/2}$, the case $n_{\rm dof} = 1$ of
+Eq.~\eqref{eq:gof}; Eq.~\eqref{eq:coverage} converts it into coverage.
+These two can react more strongly to a bias error than $(w_0, w_a)$,
+because a bias error moves the clustering amplitude
+$b_i^2 A_s D^2(\bar{z}_i)$ of bin $i$, which $A_s$ scales directly and
+$\Omega_m$ moves through the growth factor.
 
 \section{The projected precision for two bins}
 \label{sec:twobins}
 
 Everything essential already happens with two bins.  Call their
 amplitudes $\beta_1$ and $\beta_2$, with common fiducial value $B$,
-prior spread $s$ per bin, and correlation coefficient $r$ between the
-two deviations.  The prior covariance and its inverse are
+prior spread $\sigma_\beta$ per bin, and correlation coefficient $r$
+between the two deviations.  The prior covariance and its inverse are
 \begin{equation}
-  \Cov \;=\; s^2
+  \Cov \;=\; \sigma_\beta^2
   \begin{pmatrix} 1 & r \\ r & 1 \end{pmatrix},
   \qquad
-  \Cov^{-1} \;=\; \frac{1}{s^2\,(1 - r^2)}
-  \begin{pmatrix} 1 & -r \\ -r & 1 \end{pmatrix}.
+  \Cov^{-1} \;=\; \frac{1}{\sigma_\beta^2\,(1 - r^2)}
+  \begin{pmatrix} 1 & -r \\ -r & 1 \end{pmatrix}
   \label{eq:twobinC}
 \end{equation}
-(The inverse is checked by multiplying: the off-diagonal of
-$\Cov\,\Cov^{-1}$ is $r - r = 0$ and the diagonal is
-$(1 - r^2)/(1 - r^2) = 1$.)
-
-Now examine the prior penalty
-$\chi^2_{\rm prior} = \Delta\beta\T\, \Cov^{-1} \Delta\beta$, where
-$\Delta\beta = (\beta_1 - B,\ \beta_2 - B)\T$ is the displacement from
-the fiducial.  Two kinds of move matter.
+(the off-diagonal of $\Cov\,\Cov^{-1}$ is $r - r = 0$ and the diagonal
+$(1 - r^2)/(1 - r^2) = 1$).  The prior penalty of a displacement
+$\Delta\beta = (\beta_1 - B,\ \beta_2 - B)\T$ is
+$\Delta\beta\T\, \Cov^{-1} \Delta\beta$, and two kinds of move matter.
 
 \paragraph{A uniform shift.}
-Take $\Delta\beta = a\,(1, 1)\T$: both bins move up by the same amount
-$a$.  Working out the quadratic form with Eq.~\eqref{eq:twobinC},
+For $\Delta\beta = c\,(1, 1)\T$, both bins up by $c$,
 \begin{equation}
   \Delta\beta\T \Cov^{-1} \Delta\beta
   \;=\;
-  \frac{a^2}{s^2 (1 - r^2)}\,
-  \bigl[\,(1 - r) + (1 - r)\,\bigr]
+  \frac{c^2\,\bigl[(1 - r) + (1 - r)\bigr]}{\sigma_\beta^2 (1 - r^2)}
   \;=\;
-  \frac{2 a^2}{s^2\,(1 + r)}
+  \frac{2 c^2}{\sigma_\beta^2\,(1 + r)}
   \;\neq\; 0 .
   \label{eq:shiftpenalty}
 \end{equation}
-The plain prior charges for a uniform shift.  But a uniform shift of
-all $\beta_i$ is a change of $B_g$, a direction the growth-tied model
-leaves completely free.  If the intermediate model kept this penalty,
-it would constrain $B_g$ and the comparison between the models would
-be unfair.
+The plain prior charges for a uniform shift, but a uniform shift is a
+change of $B_g$, which the growth-tied model leaves free; keeping the
+penalty would constrain $B_g$ and make the comparison unfair.
 
 \paragraph{A shape change.}
-Take $\Delta\beta = a\,(1, -1)\T$: the bins move apart.  The same
-algebra gives
+For $\Delta\beta = d\,(1, -1)\T$, the bins moving apart,
 \begin{equation}
   \Delta\beta\T \Cov^{-1} \Delta\beta
   \;=\;
-  \frac{2 a^2}{s^2\,(1 - r)} .
+  \frac{2 d^2}{\sigma_\beta^2\,(1 - r)} .
   \label{eq:shapepenalty}
 \end{equation}
-This is the penalty the prior is \emph{meant} to apply: it grows
-without bound as $r \to 1$, where the two bins are forced to track each
-other, and it relaxes to the independent value $2a^2/s^2$ as
-$r \to 0$.
-
-A number makes the contrast concrete.  At $r = 0.670$ (the worked value
-of Appendix~\ref{sec:jump}), the shape change costs
-$2a^2/(0.330\,s^2) = 6.1\,a^2/s^2$ while the uniform shift costs
-$2a^2/(1.670\,s^2) = 1.2\,a^2/s^2$.  The correlated prior already
-charges five times more for the shape change than for the uniform
-shift; the projection below takes the uniform-shift charge all the way
+This is the penalty the prior is meant to apply: it grows without bound
+as $r \to 1$, where the two bins are forced to track each other, and
+relaxes to $2d^2/\sigma_\beta^2$ as $r \to 0$.  At the worked value
+$r = 0.670$ of Appendix~\ref{sec:jump}, a shape change costs
+$6.1\,d^2/\sigma_\beta^2$ and a uniform shift of the same size
+$1.2\,c^2/\sigma_\beta^2$: the correlated prior already charges five
+times more for the shape, and the projection takes the uniform charge
 to zero.
 
 \paragraph{The projected precision.}
-The repair for the uniform shift is the projection $\Prec$ of
-Eq.~\eqref{eq:projdef}.  Appendix~\ref{sec:threeviews} explains where
-the formula comes from; here, compute it for two bins.
-Because the two rows of $\Cov^{-1}$ have the
-same sum, $\Cov^{-1}\ones = \bigl[s^2 (1+r)\bigr]^{-1} (1,1)\T$ and
-$\ones\T \Cov^{-1} \ones = 2 / \bigl[s^2 (1+r)\bigr]$.  Substituting
-into Eq.~\eqref{eq:projdef} and simplifying each entry,
+Both rows of $\Cov^{-1}$ have the same sum, so
+$\Cov^{-1}\ones = [\sigma_\beta^2 (1+r)]^{-1} (1,1)\T$ and
+$\ones\T \Cov^{-1} \ones = 2 / [\sigma_\beta^2 (1+r)]$.  Substituting
+into Eq.~\eqref{eq:projdef},
 \begin{equation}
   \Prec \;=\;
-  \frac{1}{2 s^2 (1 - r)}
+  \frac{1}{2 \sigma_\beta^2 (1 - r)}
   \begin{pmatrix} 1 & -1 \\ -1 & 1 \end{pmatrix},
   \qquad
   \Delta\beta\T \Prec\, \Delta\beta
   \;=\;
-  \frac{(\beta_1 - \beta_2)^2}{2 s^2 (1 - r)} .
+  \frac{(\beta_1 - \beta_2)^2}{2 \sigma_\beta^2 (1 - r)} .
   \label{eq:twobinP}
 \end{equation}
-The projected prior charges only for the \emph{difference} of the two
-amplitudes.  A uniform shift, $\beta_1 = \beta_2$, is now free, as in
-the growth-tied model; a shape change keeps exactly the penalty of
-Eq.~\eqref{eq:shapepenalty}.
+The projected prior charges only the difference of the two amplitudes:
+a uniform shift is free, and a shape change keeps the penalty of
+Eq.~\eqref{eq:shapepenalty}.  The denominator is the prior variance of
+the jump, $\mathrm{Var}(\beta_1 - \beta_2) = 2\sigma_\beta^2(1 - r)$,
+so the construction reduces to one sentence: \emph{the prior constrains
+the jump, not the level.}
 
-The denominator is not an arbitrary constant.  With
-$\mathrm{Var}(\beta_i) = s^2$ and
-$\mathrm{Cov}(\beta_1, \beta_2) = s^2 r$,
-\begin{equation}
-  \mathrm{Var}(\beta_1 - \beta_2)
-  \;=\; s^2 + s^2 - 2 s^2 r
-  \;=\; 2 s^2 (1 - r):
-  \label{eq:jumpvar2}
-\end{equation}
-the projected penalty is the squared jump between the bins divided by
-the prior variance of that jump.  The whole construction reduces to one
-sentence: \emph{the prior constrains the jump, not the level.}
-
-\section{Why the projection ``sees'' the uniform shift: three views}
+\section{The projection as a marginalization}
 \label{sec:threeviews}
 
 Equation~\eqref{eq:projdef} subtracts from $\Cov^{-1}$ a matrix built
-out of the single vector $v = \Cov^{-1}\ones$: the subtracted piece is
-$v\,v\T$ divided by the number $\ones\T \Cov^{-1} \ones$.  (In this
-appendix $v$ is that vector, not the centered redshifts of the memory
-model.)  A matrix built from one vector acts along one direction only,
-so the subtraction removes the prior's information about exactly one
-direction, the uniform shift, and leaves everything else alone.  This
-appendix derives the formula three times, each derivation adding its
-own intuition.  Throughout, a group has $n$ bins; $\Delta\beta$ and
-$\ones$ are vectors with $n$ entries.
+from the single vector $\Cov^{-1}\ones$, so it removes the prior's
+information about one direction, the uniform shift, and leaves
+everything else alone.  Equivalently, the projected penalty of a
+displacement $\Delta\beta$ is the plain penalty of what remains after
+subtracting the best uniform shift, the generalized-least-squares mean
+$\hat{c} = \ones\T \Cov^{-1} \Delta\beta / \ones\T \Cov^{-1} \ones$.
+The derivation below shows why this is the correct prior and not just
+one possible repair.  A group has $n$ bins throughout.
 
-\subsection{View (a): subtracting the best-fitting uniform shift}
-\label{sec:viewa}
-
-Ask the following question: given a displacement $\Delta\beta$, how much
-of it can be explained as a pure change of the group amplitude?  A
-change of $B_g$ by $c$ moves every $\beta_i$ by $c$, so the candidate
-explanation is $c\,\ones$, and the unexplained part should be judged by
-the prior metric.  Minimize over the scalar $c$ the quadratic form
-\begin{equation}
-  \chi^2(c)
-  \;=\;
-  \bigl(\Delta\beta - c\,\ones\bigr)\T
-  \Cov^{-1}
-  \bigl(\Delta\beta - c\,\ones\bigr).
-  \label{eq:chi2c}
-\end{equation}
-Differentiating with respect to $c$ (the two cross terms are equal
-because $\Cov^{-1}$ is symmetric),
-\begin{equation}
-  \frac{d\chi^2}{dc}
-  \;=\;
-  -2\,\ones\T \Cov^{-1} \bigl(\Delta\beta - c\,\ones\bigr)
-  \;=\; 0,
-  \qquad
-  \frac{d^2\chi^2}{dc^2}
-  \;=\;
-  2\,\ones\T \Cov^{-1} \ones \;>\; 0,
-  \label{eq:focs}
-\end{equation}
-where the second derivative is positive because $\Cov^{-1}$ is positive
-definite, so the solution of the first equation is the minimum of
-$\chi^2(c)$.  That solution is
-\begin{equation}
-  a \;=\;
-  \frac{\ones\T \Cov^{-1} \Delta\beta}{\ones\T \Cov^{-1} \ones} .
-  \label{eq:besta}
-\end{equation}
-For a diagonal $\Cov$ with variances $s_i^2$ this reduces to
-$a = \sum_i \Delta\beta_i / s_i^2 \big/ \sum_i 1/s_i^2$, the familiar
-inverse-variance weighted mean; Eq.~\eqref{eq:besta} is its
-generalization to correlated errors: generalized least squares for a
-constant.
-
-Keep the dimensions straight: $\Delta\beta$, $\ones$ and the residual
-$w = \Delta\beta - a\,\ones$ are vectors with $n$ entries ($w$ is a
-vector of bin amplitudes, unrelated to the dark-energy parameters); $a$
-is a single number.  The residuals $w$ satisfy one linear constraint
-(Eq.~\eqref{eq:ortho} below), so they span $n - 1$ dimensions: one
-direction of the $n$-dimensional displacement space has been handed to
-the amplitude, and $n - 1$ directions of genuine shape freedom remain.
-
-\subsection{View (b): a Pythagorean split of the penalty}
-\label{sec:viewb}
-
-Write the displacement as the best uniform shift plus a residual,
-\begin{equation}
-  \Delta\beta \;=\; a\,\ones + w .
-  \label{eq:split}
-\end{equation}
-The first-order condition of Eq.~\eqref{eq:focs} says precisely that
-\begin{equation}
-  \ones\T \Cov^{-1} w \;=\; 0:
-  \label{eq:ortho}
-\end{equation}
-the residual is orthogonal to the uniform direction \emph{in the
-$\Cov^{-1}$ metric}.  (With correlated errors, ``orthogonal'' must be
-measured with the same matrix that measures lengths.)  Substituting the
-split into the full penalty, the cross term is
-$2 a\,\ones\T \Cov^{-1} w = 0$, and
-\begin{equation}
-  \Delta\beta\T \Cov^{-1} \Delta\beta
-  \;=\;
-  a^2\, \ones\T \Cov^{-1} \ones
-  \;+\;
-  w\T \Cov^{-1} w .
-  \label{eq:pythagoras}
-\end{equation}
-This is the Pythagorean theorem in the prior metric: the squared length
-of the displacement is the squared length of its uniform piece plus the
-squared length of its shape piece.
-
-Now compare with the projection.  Inserting Eq.~\eqref{eq:besta} into
-the subtracted term of Eq.~\eqref{eq:projdef} shows that the subtraction
-removes exactly $a^2\,\ones\T \Cov^{-1} \ones$, the uniform piece.
-What remains is
-\begin{equation}
-  \Delta\beta\T \Prec\, \Delta\beta
-  \;=\;
-  w\T \Cov^{-1} w .
-  \label{eq:Pisw}
-\end{equation}
-Two consequences follow immediately.  First, a pure uniform shift has
-$w = 0$, so its penalty vanishes.  Equivalently $\Prec\,\ones = 0$:
-the projected matrix sends the uniform direction to zero and charges
-nothing for it.  Second, a pure shape change (a displacement that
-already satisfies Eq.~\eqref{eq:ortho}) has $a = 0$ and keeps its
-original penalty untouched.  The projection removes one direction and
-alters nothing else.
-
-\subsection{View (c): marginalizing a flat-prior amplitude}
+\subsection{Marginalizing a flat-prior amplitude}
 \label{sec:viewc}
 
-The third view explains why the projection, rather than some other
-uniform-shift repair, is the \emph{correct} prior.  Model the group
-amplitudes as
+Model the group amplitudes as
 \begin{equation}
   \beta \;=\; B\,\ones + \varepsilon,
   \qquad
   \varepsilon \sim \mathcal{N}(0, \Cov),
   \label{eq:genmodel}
 \end{equation}
-with a flat prior on the scalar $B$.  This is literally the
-intermediate model of Eq.~\eqref{eq:model}, linearized around the
-fiducial.  The prior density of $\beta$ is obtained by integrating $B$
-out:
+with a flat prior on the scalar $B$: the model of Eq.~\eqref{eq:model},
+linearized around the fiducial.  The prior density of $\beta$ follows
+by integrating $B$ out,
 \begin{equation}
   p(\beta) \;\propto\;
   \int dB\,
@@ -754,8 +431,8 @@ out:
   \right].
   \label{eq:marg}
 \end{equation}
-The exponent is quadratic in $B$.  Writing
-$S = \ones\T \Cov^{-1} \ones$ and completing the square,
+The exponent is quadratic in $B$.  With $S = \ones\T \Cov^{-1} \ones$,
+completing the square gives
 \begin{equation}
   \bigl(\beta - B\ones\bigr)\T \Cov^{-1} \bigl(\beta - B\ones\bigr)
   \;=\;
@@ -769,8 +446,8 @@ $S = \ones\T \Cov^{-1} \ones$ and completing the square,
   \label{eq:complsq}
 \end{equation}
 The $B$ integral is a Gaussian centered on $B_*$ with width
-$1/\sqrt{S}$; it contributes only a $\beta$-independent constant
-$\sqrt{2\pi / S}$.  What survives in the exponent is
+$1/\sqrt{S}$, and contributes only the $\beta$-independent constant
+$\sqrt{2\pi / S}$.  What survives is
 \begin{equation}
   p(\beta) \;\propto\;
   \exp\!\left[-\tfrac{1}{2}\, \beta\T \Prec\, \beta\right],
@@ -779,11 +456,13 @@ $\sqrt{2\pi / S}$.  What survives in the exponent is
   - \frac{\Cov^{-1}\ones\,\ones\T \Cov^{-1}}{\ones\T \Cov^{-1} \ones},
   \label{eq:margresult}
 \end{equation}
-exactly the projection of Eq.~\eqref{eq:projdef}.
+exactly the projection of Eq.~\eqref{eq:projdef}; $B_*$ is the same
+generalized-least-squares mean as $\hat{c}$, because the best-fitting
+amplitude dominates the integral.
 
-The same computation has a standard matrix name.  Expanding the
-exponent of Eq.~\eqref{eq:marg} in the joint variables $(\beta, B)$
-gives a Gaussian with the $(n+1) \times (n+1)$ block precision
+The same computation has a standard matrix name.  The exponent of
+Eq.~\eqref{eq:marg} is a Gaussian in the joint variables $(\beta, B)$
+with the $(n+1) \times (n+1)$ precision
 \begin{equation}
   \mathsf{F}_{(\beta, B)}
   \;=\;
@@ -794,146 +473,147 @@ gives a Gaussian with the $(n+1) \times (n+1)$ block precision
   \label{eq:jointprec}
 \end{equation}
 Removing a parameter from a precision matrix is not just deleting its
-row and column: the remaining block must also be corrected downward by
+row and column: the remaining block must be corrected downward by
 whatever the removed parameter could absorb.  The corrected block,
 $\Prec = \mathsf{F}_{\beta\beta}
-- \mathsf{F}_{\beta B}\, \mathsf{F}_{BB}^{-1}\, \mathsf{F}_{B\beta}$,
-is called the \emph{Schur complement} over $B$, and it reproduces
-Eq.~\eqref{eq:projdef} term by term.  So $\Prec$ is not a trick: it
-is precisely the statement ``\emph{$B_g$ is sampled with a flat prior
-and marginalized}'', folded into one matrix.
+- \mathsf{F}_{\beta B}\, \mathsf{F}_{BB}^{-1}\, \mathsf{F}_{B\beta}$, is
+the \emph{Schur complement} over $B$, and it reproduces
+Eq.~\eqref{eq:projdef} term by term.  So $\Prec$ is precisely the
+statement ``\emph{$B_g$ is sampled with a flat prior and
+marginalized}'', folded into one matrix.
 
-Note also that $B_*$ in Eq.~\eqref{eq:complsq} is the same
-generalized-least-squares mean as $a$ in Eq.~\eqref{eq:besta}: the
-marginalization integrates over all amplitudes, and the best-fitting
-one dominates the integral.
-
-\subsection{Checking views (b) and (c) on the two-bin case}
-\label{sec:check2}
-
-For $n = 2$ the rows of $\Cov^{-1}$ in Eq.~\eqref{eq:twobinC} have
-equal sums, so Eq.~\eqref{eq:besta} gives the plain mean,
-$a = (\Delta\beta_1 + \Delta\beta_2)/2$, and the residual is the
-antisymmetric half-difference,
-$w = \tfrac{1}{2}(\Delta\beta_1 - \Delta\beta_2)\,(1, -1)\T$.  Its
-penalty, using the shape-change result of Eq.~\eqref{eq:shapepenalty}
-with $a \to \tfrac{1}{2}(\Delta\beta_1 - \Delta\beta_2)$, is
-\begin{equation}
-  w\T \Cov^{-1} w
-  \;=\;
-  \frac{2}{s^2 (1-r)}
-  \left(\frac{\Delta\beta_1 - \Delta\beta_2}{2}\right)^{\!2}
-  \;=\;
-  \frac{(\Delta\beta_1 - \Delta\beta_2)^2}{2 s^2 (1 - r)},
-  \label{eq:check2}
-\end{equation}
-which is the direct two-bin computation of Eq.~\eqref{eq:twobinP}.
-Views (a), (b) and (c) all land on the same matrix.
-
-\section{Many bins and several groups}
+\section{Many bins: the tridiagonal inverse}
 \label{sec:general}
 
 \subsection{Three bins: total correlation versus direct links}
 \label{sec:kernel}
 
-A group now has $n$ bins at redshifts $z_1 < z_2 < \dots < z_n$,
-unevenly spaced in general, with the prior covariance of
-Eq.~\eqref{eq:covdef},
+A group has $n$ bins at redshifts $\bar{z}_1 < \dots < \bar{z}_n$,
+unevenly spaced in general, with the prior covariance
+$\Cov_{ij} = \sigma_\beta^2 \exp(-|\bar{z}_i - \bar{z}_j|/L)$ of
+Eq.~\eqref{eq:covdef}.  This matrix is positive definite for distinct
+redshifts, so $\Cov^{-1}$ exists.  Its structure shows on three evenly
+spaced bins: with neighbor correlation $r = e^{-\Delta z / L}$ the outer
+pair carries $r^2$, and
 \begin{equation}
-  \Cov_{ij} \;=\; s^2 \exp\!\left(-\,\frac{|z_i - z_j|}{L}\right).
-  \label{eq:nbinC}
-\end{equation}
-This matrix is positive definite for any set of distinct redshifts
-(all its eigenvalues are positive), so the prior is a proper
-probability distribution and $\Cov^{-1}$ exists.
-
-The structure of $\Cov^{-1}$ is best seen on three evenly spaced bins.
-With neighbor correlation $r = e^{-\Delta z / L}$, the outer pair sits
-two steps apart and carries $e^{-2\Delta z / L} = r^2$, so
-\begin{equation}
-  \Cov \;=\; s^2
+  \Cov \;=\; \sigma_\beta^2
   \begin{pmatrix} 1 & r & r^2 \\ r & 1 & r \\ r^2 & r & 1 \end{pmatrix},
   \qquad
-  \Cov^{-1} \;=\; \frac{1}{s^2\,(1 - r^2)}
+  \Cov^{-1} \;=\; \frac{1}{\sigma_\beta^2\,(1 - r^2)}
   \begin{pmatrix} 1 & -r & 0 \\ -r & 1 + r^2 & -r \\ 0 & -r & 1
   \end{pmatrix}.
   \label{eq:threebin}
 \end{equation}
-One multiplication confirms the surprising entry.  The $(1,3)$ entry of
-$\Cov^{-1}\Cov$ must be zero (it is an off-diagonal entry of the
-identity matrix), and indeed row 1 of $\Cov^{-1}$ times column 3 of
-$\Cov$ gives, dropping the prefactors,
+Row 1 of $\Cov^{-1}$ times column 3 of $\Cov$ gives, without the
+prefactors, $1 \cdot r^2 - r \cdot r + 0 \cdot 1 = 0$, as the
+off-diagonal of the identity must.  Bins 1 and 3 \emph{are} correlated
+($\Cov$ contains $r^2$), yet their entry in $\Cov^{-1}$ is zero: $\Cov$
+gives the total correlation, what $\delta_1$ says about $\delta_3$ when
+nothing else is known, while $\Cov^{-1}$ gives the direct one, what
+$\delta_1$ still says once $\delta_2$ is known, and that is nothing.
+The exponential kernel makes this exact because its correlations
+multiply along the chain,
 \begin{equation}
-  1 \cdot r^2 \;+\; (-r) \cdot r \;+\; 0 \cdot 1
-  \;=\; r^2 - r^2 \;=\; 0 .
-  \label{eq:rowcheck}
-\end{equation}
-
-Here is the point that looks paradoxical at first.  Bins 1 and 3
-\emph{are} correlated ($\Cov$ contains $r^2$), yet their entry in
-$\Cov^{-1}$ is exactly zero.  The two matrices answer different
-questions.  $\Cov$ gives the \emph{total} correlation: what $\delta_1$
-tells you about $\delta_3$ when nothing else is known.  $\Cov^{-1}$
-gives the \emph{direct} correlation: what $\delta_1$ still tells you
-about $\delta_3$ once $\delta_2$ is already known, and that is
-nothing.  All of the 1--3 correlation travels through bin 2.
-
-Think of a chain of people passing a message.  The first person's
-message reaches far down the chain, but the links are only between
-neighbors: nobody talks past the person standing next to them.
-
-The exponential kernel is special in making this exact, because its
-correlations multiply along the chain:
-\begin{equation}
-  e^{-(z_3 - z_1)/L}
+  e^{-(\bar{z}_3 - \bar{z}_1)/L}
   \;=\;
-  e^{-(z_3 - z_2)/L}\; e^{-(z_2 - z_1)/L} .
+  e^{-(\bar{z}_3 - \bar{z}_2)/L}\; e^{-(\bar{z}_2 - \bar{z}_1)/L} ,
   \label{eq:factorize}
 \end{equation}
-The long-distance correlation is the product of the step correlations,
 so the middle bin already carries everything the outer bins share.  A
 Gaussian kernel $e^{-\Delta z^2 / L^2}$ does not factorize this way,
-because the squared separations do not add up along the chain:
-$(z_3 - z_1)^2 \neq (z_3 - z_2)^2 + (z_2 - z_1)^2$.  Its inverse
-is dense.
+because squared separations do not add along the chain, and its
+inverse is dense.
 
-The same structure shows directly in the penalty.  For $n$ evenly
-spaced bins, the quadratic form of the deviations $\delta_i$ (whose
-covariance is $\sigma_b^2 \mathsf{R}$, with $\mathsf{R}$ the
-correlation matrix of Eq.~\eqref{eq:covdef}) regroups into a sum over
-neighbor links,
+\subsection{The chain of links}
+\label{app:chain}
+
+Because correlations multiply along the chain, the prior can be built
+one bin at a time: the joint density of the deviations factorizes into
+neighbor conditionals,
 \begin{equation}
-  \delta\T \bigl(\sigma_b^2 \mathsf{R}\bigr)^{-1} \delta
+  \begin{gathered}
+    p(\delta_1, \dots, \delta_n)
+    \;=\;
+    p(\delta_1)\, p(\delta_2 \mid \delta_1) \cdots
+    p(\delta_n \mid \delta_{n-1}),
+    \\
+    \bigl\langle \delta_{k+1} \mid \delta_k \bigr\rangle
+    = r_k\,\delta_k,
+    \qquad
+    \mathrm{Var}\bigl(\delta_{k+1} \mid \delta_k\bigr)
+    = \sigma_g^2\,\bigl(1 - r_k^2\bigr),
+  \end{gathered}
+  \label{eq:chainfactor}
+\end{equation}
+with $r_k = e^{-(\bar{z}_{k+1} - \bar{z}_k)/L}$ the correlation of the
+neighbors $k$ and $k+1$.  The conditional follows from the covariances
+alone.  Split $\delta_{k+1} = \lambda\,\delta_k + e$ and choose $\lambda$
+so that the leftover $e$ carries no correlation with $\delta_k$:
+$\mathrm{Cov}(e, \delta_k) = \sigma_g^2 r_k - \lambda\,\sigma_g^2 = 0$
+gives $\lambda = r_k$, and then
+$\mathrm{Var}(e) = \sigma_g^2 - 2 r_k^2 \sigma_g^2 + r_k^2 \sigma_g^2
+= \sigma_g^2 (1 - r_k^2)$.  For jointly Gaussian variables uncorrelated
+means independent, so knowing the neighbor explains the fraction
+$r_k^2$ of the bin's variance and the fraction $1 - r_k^2$ is new.
+Earlier bins add nothing: for $j \le k$,
+\begin{equation}
+  \mathrm{Cov}(e, \delta_j)
   \;=\;
-  \frac{\delta_1^2}{\sigma_b^2}
+  \sigma_g^2\, e^{-(\bar{z}_k - \bar{z}_j)/L}
+  \left[
+    e^{-(\bar{z}_{k+1} - \bar{z}_k)/L} - r_k
+  \right]
+  \;=\; 0 ,
+  \label{eq:pastfree}
+\end{equation}
+because the correlation factorizes through $\bar{z}_k$.  Taking
+$-2 \ln p$ gives the penalty as a sum over neighbor links,
+\begin{equation}
+  \delta\T \bigl(\sigma_g^2 \mathsf{R}\bigr)^{-1} \delta
+  \;=\;
+  \frac{\delta_1^2}{\sigma_g^2}
   \;+\;
   \sum_{k=1}^{n-1}
-  \frac{\bigl(\delta_{k+1} - r\,\delta_k\bigr)^2}
-       {\sigma_b^2\,(1 - r^2)} .
+  \frac{\bigl(\delta_{k+1} - r_k\,\delta_k\bigr)^2}
+       {\sigma_g^2\,\bigl(1 - r_k^2\bigr)} :
   \label{eq:chainsum}
 \end{equation}
-Each term compares one bin with $r$ times the bin before it: every bin
-is pulled only by its neighbor, and the long-range correlation comes
-from chaining the pulls.  (Expanding the squares and collecting terms
-reproduces Eq.~\eqref{eq:threebin} for $n = 3$; Appendix~\ref{app:chain}
-does it for general, uneven spacing.)  This is the precise sense of
-``correlation only between adjacent bins'': \emph{directly}, only
-neighbors talk; \emph{in total}, the influence propagates down the
-whole chain.  Probability theory calls this neighbors-only structure
-the Markov property.
+each term compares one bin with $r_k$ times the bin before it.
+\emph{Directly}, only neighbors talk; \emph{in total}, the influence
+propagates down the whole chain.  Probability theory calls this the
+Markov property.
 
-\subsection{The tridiagonal inverse for $n$ bins}
+\subsection{The tridiagonal inverse}
 \label{sec:tridiag}
 
-A matrix whose nonzero entries sit only on the diagonal and the two
-neighboring off-diagonals is called \emph{tridiagonal}.  The three-bin
-inverse of Eq.~\eqref{eq:threebin} is the smallest interesting example,
-and the pattern grows unchanged.  For $n$ evenly spaced bins, where
-every adjacent pair has the same correlation $r = e^{-\Delta z / L}$
-and $\Cov_{ij} = s^2\, r^{|i - j|}$,
+Expanding each square of Eq.~\eqref{eq:chainsum} and collecting the
+coefficient of every product $\delta_i\delta_j$ reads off the precision
+matrix.  $\delta_1^2$ appears in the first term and in the $k = 1$
+link as the predictor, $1 + r_1^2/(1 - r_1^2) = 1/(1 - r_1^2)$; an
+interior $\delta_k^2$ appears in link $k-1$ as the predicted bin and in
+link $k$ as the predictor; the last bin is only ever predicted.  Each
+product $\delta_k\delta_{k+1}$ appears in its own link only, and no
+product of non-neighbors appears.  For the amplitudes
+($\Delta\beta = B_g\,\delta$, $\sigma_\beta = \sigma_g B_g$) the inverse
+is therefore tridiagonal,
+\begin{equation}
+  \sigma_\beta^2\,\bigl(\Cov^{-1}\bigr)_{kk} =
+  \begin{cases}
+    \dfrac{1}{1 - r_1^2}, & k = 1,\\[2.2ex]
+    \dfrac{1}{1 - r_{k-1}^2} + \dfrac{r_k^2}{1 - r_k^2}, & 1 < k < n,\\[2.2ex]
+    \dfrac{1}{1 - r_{n-1}^2}, & k = n,
+  \end{cases}
+  \qquad
+  \sigma_\beta^2\,\bigl(\Cov^{-1}\bigr)_{k, k+1} = \frac{-\,r_k}{1 - r_k^2}.
+  \label{eq:uneven}
+\end{equation}
+The off-diagonal entry is the link of pair $k$, stronger when the bins
+are closer; the diagonal entry of a bin collects the links touching
+it.  For even spacing, all $r_k = r$, the interior diagonal becomes
+$(1 + r^2)/(1 - r^2)$ and
 \begin{equation}
   \Cov^{-1} \;=\;
-  \frac{1}{s^2\,(1 - r^2)}
+  \frac{1}{\sigma_\beta^2\,(1 - r^2)}
   \begin{pmatrix}
     1      & -r     &        &        &        \\
     -r     & 1+r^2  & -r     &        &        \\
@@ -943,226 +623,37 @@ and $\Cov_{ij} = s^2\, r^{|i - j|}$,
   \end{pmatrix},
   \label{eq:ar1}
 \end{equation}
-with diagonal $(1,\ 1+r^2,\ \dots,\ 1+r^2,\ 1)$, off-diagonal entries
-$-r$, blanks zero, and the overall factor $1/\bigl[s^2(1-r^2)\bigr]$.
-The entries read off the chain sum of Eq.~\eqref{eq:chainsum}.  An
-off-diagonal entry is the link between that pair of neighbors.  An
-interior bin touches two links, one to the bin on its left and one to
-the bin on its right, and the two pulls together contribute
-$1 + r^2$; the first and last bins touch only one link each, hence the
-plain $1$ in the corners.
+which for $n = 3$ is Eq.~\eqref{eq:threebin}.
 
-With uneven spacing, each adjacent pair has its own step and therefore
-its own correlation,
-\begin{equation}
-  r_k \;=\; \exp\!\left(-\,\frac{z_{k+1} - z_k}{L}\right),
-  \qquad k = 1, \dots, n-1 ,
-  \label{eq:rk}
-\end{equation}
-and the inverse keeps the same shape with per-pair entries:
-\begin{equation}
-  s^2\,\bigl(\Cov^{-1}\bigr)_{kk} =
-  \begin{cases}
-    \dfrac{1}{1 - r_1^2}, & k = 1,\\[2.2ex]
-    \dfrac{1}{1 - r_{k-1}^2} + \dfrac{r_k^2}{1 - r_k^2}, & 1 < k < n,\\[2.2ex]
-    \dfrac{1}{1 - r_{n-1}^2}, & k = n,
-  \end{cases}
-  \qquad
-  s^2\,\bigl(\Cov^{-1}\bigr)_{k, k+1} = \frac{-\,r_k}{1 - r_k^2}.
-  \label{eq:uneven}
-\end{equation}
-In words: the off-diagonal entry is the neighbor link of pair $k$,
-stronger when the bins are closer ($r_k$ nearer one); the diagonal
-entry of bin $k$ collects the links touching that bin, one term from
-the pair on its left and one from the pair on its right; the first and
-last bins carry one link only.  Setting all $r_k = r$ turns the
-interior diagonal into
-$1/(1-r^2) + r^2/(1-r^2) = (1+r^2)/(1-r^2)$ and recovers
-Eq.~\eqref{eq:ar1}.  Appendix~\ref{app:chain} derives
-Eq.~\eqref{eq:uneven} from the chain of neighbor links; the companion
-script \texttt{verify\_prior.py} checks the three-bin, even and uneven
-forms numerically.
-
-\subsection{The projection, group by group}
+\subsection{The projection, group by group, and its limits}
 \label{sec:projgroups}
 
 Each group receives the projected precision of Eq.~\eqref{eq:projdef},
-built from its own $\Cov$.  The properties derived in
-Appendix~\ref{sec:threeviews} carry over verbatim to $n$ bins.
-$\Prec\,\ones = 0$: a uniform shift of the whole group costs nothing.
-$\Prec$ is positive semidefinite, which means no displacement is
-\emph{rewarded}: every move either costs $\chi^2$ or is free.  And of
-the $n$ directions a group can move in, exactly one (the uniform shift)
-is free while the other $n - 1$ are charged: in matrix language,
-$\Prec$ has rank $n - 1$.
+built from its own $\Cov$; across groups the prior is zero, so the
+total prior precision is block diagonal.  $\Prec\,\ones = 0$, $\Prec$ is
+positive semidefinite (no displacement is rewarded), and it has rank
+$n - 1$: of the $n$ directions a group can move in, exactly the uniform
+shift is free.
 
-Several groups combine trivially.  The prior of
-Eq.~\eqref{eq:priorkernel} is zero across groups, so the full prior
-covariance is block-diagonal, one block per group; and each group has
-its own free amplitude $B_g$, so each block is projected separately.
-The total prior precision is the block-diagonal matrix of the per-group
-projections.
-
-\subsection{The two limits}
 \label{sec:limits}
-
-The intermediate model contains both extremes.
-
-As $L \to \infty$, every $r_k \to 1$, so the jump variance
-$2\sigma_b^2(1 - r_k)$ of every adjacent pair goes to zero: the prior
-forces all deviations of a group to be equal.  The only freedom left is
-their common value, a uniform shift, and that is the direction the
-projection leaves free.  This is the growth-tied model, with one free
-$B_g$ per group, \emph{whatever} the value of $\sigma_b$.
-
-As $\sigma_b \to \infty$ at fixed $L$, the overall scale of $\Cov$
-diverges, so $\Cov^{-1} \to 0$ and with it $\Prec \to 0$: the prior
-penalty vanishes and every bin's amplitude is free: the free
-model with flat priors.
-
-Between the limits, $L$ and $\sigma_b$ interpolate continuously, which
-is what makes the model useful: the figure of merit can be traced as a
-function of how much bin-to-bin freedom the bias is granted.
-
-\section{The tridiagonal inverse from the chain of links}
-\label{app:chain}
-
-Because correlations multiply along the chain
-(Eq.~\eqref{eq:factorize}), the prior can be built one bin at a time:
-the joint density of the deviations factorizes into neighbor
-conditionals,
-\begin{equation}
-  p(\delta_1, \dots, \delta_n)
-  \;=\;
-  p(\delta_1)\, p(\delta_2 \mid \delta_1) \cdots
-  p(\delta_n \mid \delta_{n-1}),
-  \label{eq:chainfactor}
-\end{equation}
-where each conditional is Gaussian with
-\begin{equation}
-  \bigl\langle \delta_{k+1} \mid \delta_k \bigr\rangle
-  \;=\; r_k\,\delta_k,
-  \qquad
-  \mathrm{Var}\bigl(\delta_{k+1} \mid \delta_k\bigr)
-  \;=\; \sigma_b^2\,\bigl(1 - r_k^2\bigr).
-  \label{eq:conditional}
-\end{equation}
-Here $r_k = e^{-(z_{k+1} - z_k)/L}$ is, as in
-Appendices~\ref{sec:jump} and \ref{sec:tridiag}, the correlation
-coefficient of the adjacent bins $k$ and $k+1$: the kernel of
-Eq.~\eqref{eq:priorkernel} gives
-$\mathrm{Cov}(\delta_k, \delta_{k+1}) = \sigma_b^2\, r_k$ and
-$\mathrm{Var}(\delta_k) = \mathrm{Var}(\delta_{k+1}) = \sigma_b^2$.
-
-The conditional mean and variance in Eq.~\eqref{eq:conditional} follow
-from nothing more than these covariances.  Split $\delta_{k+1}$ into
-the part predicted by its neighbor and a leftover $e$,
-\begin{equation}
-  \delta_{k+1} \;=\; a\,\delta_k + e ,
-  \label{eq:splitleftover}
-\end{equation}
-and choose the number $a$ so that the leftover carries no correlation
-with $\delta_k$:
-\begin{equation}
-  \mathrm{Cov}(e, \delta_k)
-  \;=\;
-  \mathrm{Cov}(\delta_{k+1}, \delta_k) - a\,\mathrm{Var}(\delta_k)
-  \;=\;
-  \sigma_b^2\, r_k - a\,\sigma_b^2
-  \;=\; 0
-  \quad\Longrightarrow\quad
-  a = r_k .
-  \label{eq:leftovera}
-\end{equation}
-The leftover's variance follows by expanding
-$e = \delta_{k+1} - r_k \delta_k$:
-\begin{equation}
-  \mathrm{Var}(e)
-  \;=\;
-  \mathrm{Var}(\delta_{k+1})
-  - 2 r_k\, \mathrm{Cov}(\delta_{k+1}, \delta_k)
-  + r_k^2\, \mathrm{Var}(\delta_k)
-  \;=\;
-  \sigma_b^2 - 2 r_k^2 \sigma_b^2 + r_k^2 \sigma_b^2
-  \;=\;
-  \sigma_b^2\,\bigl(1 - r_k^2\bigr).
-  \label{eq:leftovervar}
-\end{equation}
-For jointly Gaussian variables, uncorrelated means independent.  So
-once $\delta_k$ is known, the only randomness left in
-$\delta_{k+1} = r_k \delta_k + e$ is $e$ itself: the conditional mean
-is $r_k \delta_k$ and the conditional variance is
-$\sigma_b^2 (1 - r_k^2)$, which is Eq.~\eqref{eq:conditional}.  In one
-line: knowing the neighbor explains the fraction $r_k^2$ of the bin's
-variance, and the fraction $1 - r_k^2$ is new.
-
-The factorization of Eq.~\eqref{eq:chainfactor} needs one more fact:
-conditioning on $\delta_k$ alone must be enough: the earlier bins
-must add nothing.  This is again the multiplication of correlations
-along the chain.  For any earlier bin $j \le k$,
-\begin{equation}
-  \mathrm{Cov}(e, \delta_j)
-  \;=\;
-  \sigma_b^2
-  \left[
-    e^{-(z_{k+1} - z_j)/L} - r_k\, e^{-(z_k - z_j)/L}
-  \right]
-  \;=\;
-  \sigma_b^2\, e^{-(z_k - z_j)/L}
-  \left[
-    e^{-(z_{k+1} - z_k)/L} - r_k
-  \right]
-  \;=\; 0 ,
-  \label{eq:pastfree}
-\end{equation}
-because the first exponential factorizes through $z_k$ and the bracket
-is $r_k - r_k$.  The leftover is therefore independent of every earlier
-bin, and the chain of one-step conditionals is the complete prior.
-
-Taking $-2 \ln p$ of Eq.~\eqref{eq:chainfactor} gives the penalty as
-the chain sum, the uneven-spacing version of
-Eq.~\eqref{eq:chainsum}:
-\begin{equation}
-  \delta\T \bigl(\sigma_b^2 \mathsf{R}\bigr)^{-1} \delta
-  \;=\;
-  \frac{\delta_1^2}{\sigma_b^2}
-  \;+\;
-  \sum_{k=1}^{n-1}
-  \frac{\bigl(\delta_{k+1} - r_k\,\delta_k\bigr)^2}
-       {\sigma_b^2\,\bigl(1 - r_k^2\bigr)} .
-  \label{eq:chainsumuneven}
-\end{equation}
-Expanding each square and collecting the coefficient of every product
-$\delta_i \delta_j$ reads off the precision matrix entry by entry.
-$\delta_1^2$ appears twice: in the first term (coefficient $1$) and in
-the $k = 1$ link as the predictor (coefficient $r_1^2/(1 - r_1^2)$);
-the two add up to $1/(1 - r_1^2)$.  An interior $\delta_k^2$ appears in
-the $k-1$ link as the predicted bin ($1/(1 - r_{k-1}^2)$) and in the
-$k$ link as the predictor ($r_k^2/(1 - r_k^2)$).  The last bin is only
-ever predicted: $1/(1 - r_{n-1}^2)$.  Each product
-$\delta_k \delta_{k+1}$ appears in its own link only, with coefficient
-$-2 r_k/(1 - r_k^2)$, i.e.\ a symmetric matrix entry
-$-r_k/(1 - r_k^2)$.  No product of non-neighbors ever appears, so the
-matrix is tridiagonal by construction.  This is Eq.~\eqref{eq:uneven}
-in units of $\sigma_b^2$; replacing $\delta$ by
-$\Delta\beta = B_g\,\delta$ and $\sigma_b$ by $s = \sigma_b B_g$ gives
-the same matrix for the bin amplitudes.
+The kernel model contains both extremes.  As $L \to \infty$, every
+$r_k \to 1$, the jump variance $2\sigma_g^2(1 - r_k)$ of every
+neighbor pair vanishes, and only the uniform shift is left: the
+growth-tied model, whatever $\sigma_g$.  As $\sigma_g \to \infty$ at
+fixed $L$, $\Cov^{-1} \to 0$ and $\Prec \to 0$: the free model.
 
 \section{The memory projection, step by step}
 \label{app:memory}
 
 Throughout, a group has $n$ bins, $\Cov$ is the kernel covariance
-$\Cov_{ij} = \sigma_b^2 e^{-|z_i - z_j|/L}$ of the residuals,
-$\mathsf{Q} = \Cov^{-1}$, $\mathsf{U} = [\,\ones,\ v\,]$ is the
-$n \times 2$ design matrix of Eq.~\eqref{eq:memproj}, with $v$ the
-centered redshifts, and $\theta = (a, s_g)\T$ collects a line's level
-and slope.  (For the bin amplitudes $\beta$, every covariance carries
-a factor $B_g^2$ that cancels in each identity below.)
+$\Cov_{ij} = \sigma_g^2 e^{-|\bar{z}_i - \bar{z}_j|/L}$ of the
+residuals, $\mathsf{Q} = \Cov^{-1}$, $\mathsf{U} = [\,\ones,\ v\,]$ is the
+$n \times 2$ design matrix of Eq.~\eqref{eq:memproj} with $v$ the
+centered redshifts, and $\theta = (c, s_g)\T$ collects a line's level
+and slope.  (For the bin amplitudes every covariance carries a factor
+$B_g^2$ that cancels in each identity below.)
 
 \subsection{The line fit, the split, and the marginalization}
-
-The three views of Appendix~\ref{sec:threeviews} generalize from the
-single column $\ones$ to $\mathsf{U}$ without change of structure.
 
 Minimizing the penalty of a displacement $\delta$ over the line,
 $\chi^2(\theta) = (\delta - \mathsf{U}\theta)\T \mathsf{Q}\,
@@ -1173,17 +664,14 @@ generalized least-squares fit,
   \;=\;
   \mathsf{U}\T \mathsf{Q}\,\delta ,
   \qquad
-  \hat{\theta} = (\hat{a}, \hat{s}_g)\T ,
+  \hat{\theta} = (\hat{c}, \hat{s}_g)\T ,
   \label{eq:memnormal}
 \end{equation}
-with $\mathsf{U}\T\mathsf{Q}\mathsf{U}$ a $2 \times 2$ matrix,
-positive definite whenever the group has at least two distinct
-redshifts (then $\ones$ and $v$ are linearly independent and
-$\mathsf{U}$ has full column rank).
-
-Writing $\delta = \mathsf{U}\hat{\theta} + w$, the normal equations
-say $\mathsf{U}\T \mathsf{Q}\, w = 0$: the residual is orthogonal to
-both columns in the $\mathsf{Q}$ metric.  The cross terms then
+with $\mathsf{U}\T\mathsf{Q}\mathsf{U}$ positive definite whenever the
+group has two distinct redshifts.  Writing
+$\delta = \mathsf{U}\hat{\theta} + \delta_\perp$, the normal equations
+say $\mathsf{U}\T \mathsf{Q}\, \delta_\perp = 0$: the residual is
+orthogonal to both columns in the $\mathsf{Q}$ metric.  The cross terms
 vanish and the penalty splits,
 \begin{equation}
   \delta\T \mathsf{Q}\,\delta
@@ -1191,26 +679,26 @@ vanish and the penalty splits,
   \hat{\theta}\T
   \bigl(\mathsf{U}\T \mathsf{Q}\,\mathsf{U}\bigr)\hat{\theta}
   \;+\;
-  w\T \mathsf{Q}\, w ,
+  \delta_\perp\T \mathsf{Q}\, \delta_\perp ,
   \qquad
   \delta\T \Prec_{\rm mem}\,\delta
   \;=\;
-  w\T \mathsf{Q}\, w :
+  \delta_\perp\T \mathsf{Q}\, \delta_\perp :
   \label{eq:memsplit}
 \end{equation}
-the projection keeps the residual's penalty and discards the
-line's.  A pure line has $w = 0$, so
-$\Prec_{\rm mem}\mathsf{U} = 0$; the residuals obey two linear
-constraints, so $\Prec_{\rm mem}$ has rank $n - 2$; and
-$w\T \mathsf{Q}\, w \geq 0$ makes it positive semidefinite.
+the projection keeps the residual's penalty and discards the line's.
+A pure line has $\delta_\perp = 0$, so $\Prec_{\rm mem}\mathsf{U} = 0$;
+the residuals obey two linear constraints, so $\Prec_{\rm mem}$ has rank
+$n - 2$; and $\delta_\perp\T \mathsf{Q}\, \delta_\perp \geq 0$ makes it
+positive semidefinite.
 
-Marginalization gives the same matrix.  With
+Marginalization gives the same matrix, as for the single column
+$\ones$ of Appendix~\ref{sec:threeviews}.  With
 $\delta \sim \mathcal{N}(\mathsf{U}\theta, \Cov)$ and
-$\theta \sim \mathcal{N}(0, \Lambda)$,
-$\Lambda = \mathrm{diag}(W^2, \tau^2)$ the prior variances of the
-level and the slope, the marginal covariance of $\delta$ is
-$\Cov + \mathsf{U}\Lambda\mathsf{U}\T$, and the Woodbury identity
-inverts it:
+$\theta \sim \mathcal{N}(0, \Lambda)$, $\Lambda = \mathrm{diag}(W^2,
+\tau^2)$ the prior variances of the level and the slope, the marginal
+covariance of $\delta$ is $\Cov + \mathsf{U}\Lambda\mathsf{U}\T$, and the
+Woodbury identity inverts it:
 \begin{equation}
   \bigl(\Cov + \mathsf{U}\Lambda\mathsf{U}\T\bigr)^{-1}
   \;=\;
@@ -1219,20 +707,16 @@ inverts it:
   \mathsf{U}\T \mathsf{Q} .
   \label{eq:woodbury}
 \end{equation}
-As the prior widths grow, $\Lambda^{-1} \to 0$ and the right-hand
-side becomes $\Prec_{\rm mem}$.  The deviation falls
-inverse-quadratically in the widths: expanding the middle inverse,
-the leading correction carries $\Lambda^{-1}$, so the deviation falls
-as $1/W^2$, a factor of one hundred per decade of $W$.  The script of
-Appendix~\ref{app:verify} verifies the fall.
+As the prior widths grow, $\Lambda^{-1} \to 0$ and the right-hand side
+becomes $\Prec_{\rm mem}$; the leading correction carries
+$\Lambda^{-1}$, so the deviation falls as $1/W^2$.
 
 \subsection{The null-space form}
 
-A second form of the projection makes its meaning plain.  Let
-$\mathsf{N}$ be an $n \times (n-2)$ matrix whose columns span the
+Let $\mathsf{N}$ be an $n \times (n-2)$ matrix whose columns span the
 combinations of bins that no straight line can produce:
-$\mathsf{N}\T \mathsf{U} = 0$, plain Euclidean orthogonality to
-$\ones$ and to $v$.  Then
+$\mathsf{N}\T \mathsf{U} = 0$, plain Euclidean orthogonality to $\ones$
+and to $v$.  Then
 \begin{equation}
   \mathsf{Q} - \mathsf{Q}\,\mathsf{U}
   \bigl(\mathsf{U}\T \mathsf{Q}\,\mathsf{U}\bigr)^{-1}
@@ -1243,193 +727,124 @@ $\ones$ and to $v$.  Then
   \mathsf{N}\T .
   \label{eq:memnull}
 \end{equation}
-The proof has three steps.  Both sides annihilate $\mathsf{U}$: the
-left by construction, the right because
-$\mathsf{N}\T\mathsf{U} = 0$.  Both sides map $\Cov\mathsf{N}$ to
-$\mathsf{N}$: the right because
+Both sides annihilate $\mathsf{U}$: the left by construction, the right
+because $\mathsf{N}\T\mathsf{U} = 0$.  Both sides map $\Cov\mathsf{N}$
+to $\mathsf{N}$: the right because
 $\mathsf{N}(\mathsf{N}\T\Cov\mathsf{N})^{-1}
 (\mathsf{N}\T\Cov\mathsf{N}) = \mathsf{N}$, the left because
-$\mathsf{Q}\Cov\mathsf{N} = \mathsf{N}$ and the subtracted term
-meets $\mathsf{U}\T\mathsf{N} = 0$.  And the columns of
-$\Cov\mathsf{N}$ and of $\mathsf{U}$ together span the whole space:
-if $\Cov\mathsf{N}x + \mathsf{U}y = 0$, multiplying by
-$\mathsf{N}\T$ gives $\mathsf{N}\T\Cov\mathsf{N}\,x = 0$, so
-$x = 0$ (the middle matrix is positive definite), and then $y = 0$
-($\mathsf{U}$ has full column rank).  Two matrices that agree on a
-spanning set are equal.
-
-The meaning: since
-$\delta\T \Prec_{\rm mem}\,\delta =
-(\mathsf{N}\T\delta)\T (\mathsf{N}\T \Cov\,\mathsf{N})^{-1}
-(\mathsf{N}\T\delta)$, the prior reads off the combinations
-$\mathsf{N}\T\delta$ that no line can make and charges each by the
-inverse of its own prior covariance.  The same identity with the
-single column $\mathsf{U} = \ones$ gives the kernel-model projection
-of Eq.~\eqref{eq:projdef}; there $\mathsf{N}$ spans the zero-sum
-combinations, the differences between bins.
+$\mathsf{Q}\Cov\mathsf{N} = \mathsf{N}$ and the subtracted term meets
+$\mathsf{U}\T\mathsf{N} = 0$.  And the columns of $\Cov\mathsf{N}$ and
+of $\mathsf{U}$ together span the whole space: if
+$\Cov\mathsf{N}x + \mathsf{U}y = 0$, multiplying by $\mathsf{N}\T$ gives
+$\mathsf{N}\T\Cov\mathsf{N}\,x = 0$, so $x = 0$, and then $y = 0$.  Two
+matrices that agree on a spanning set are equal.  The prior therefore
+reads off the combinations $\mathsf{N}\T\delta$ that no line can make
+and charges each by the inverse of its own prior covariance.  With the
+single column $\mathsf{U} = \ones$ the same identity gives the kernel
+projection of Eq.~\eqref{eq:projdef}, with $\mathsf{N}$ spanning the
+differences between bins.
 
 \subsection{Worked examples}
 
-One or two bins are fully free.  For $n = 2$ the matrix $\mathsf{U}$
-is square and invertible (two distinct redshifts), so
-$(\mathsf{U}\T\mathsf{Q}\mathsf{U})^{-1} =
-\mathsf{U}^{-1}\Cov\,(\mathsf{U}\T)^{-1}$ and the subtracted term
-collapses to $\mathsf{Q}$: the projection vanishes.  For $n = 1$
-nothing is orthogonal to both columns, so $\mathsf{N}$ has no
-columns and the null-space form is the zero matrix: a line fixes a
-single value trivially.
-
-Three evenly spaced bins show what survives.  With spacing $\Delta$
-and $r = e^{-\Delta/L}$, the centered redshifts are
-$v = (-\Delta, 0, \Delta)\T$, and the only direction orthogonal to
-$\ones$ and $v$ is the discrete curvature, the second difference
-$\mathsf{N} = (1, -2, 1)\T$.  Its prior variance expands to
-\begin{equation}
-  \mathsf{N}\T \Cov\, \mathsf{N}
-  \;=\;
-  \sigma_b^2\,\bigl(6 - 8r + 2r^2\bigr)
-  \;=\;
-  2\,\sigma_b^2\,(1 - r)(3 - r)
-  \label{eq:memcurvvar}
-\end{equation}
-(the diagonal contributes $1 + 4 + 1 = 6$, the two nearest-neighbor
-pairs $-8r$, and the outer pair $+2r^2$), so the penalty is
+One or two bins are fully free.  For $n = 2$ the matrix $\mathsf{U}$ is
+square and invertible, so the subtracted term collapses to $\mathsf{Q}$
+and the projection vanishes; for $n = 1$, $\mathsf{N}$ has no columns.
+Three evenly spaced bins show what survives.  With spacing $\Delta$ and
+$r = e^{-\Delta/L}$, $v = (-\Delta, 0, \Delta)\T$, and the only direction
+orthogonal to $\ones$ and $v$ is the discrete curvature
+$\mathsf{N} = (1, -2, 1)\T$, whose prior variance is
+$\mathsf{N}\T \Cov\, \mathsf{N} = \sigma_g^2(6 - 8r + 2r^2) =
+2\sigma_g^2(1 - r)(3 - r)$ (the diagonal gives $1 + 4 + 1$, the two
+neighbor pairs $-8r$, the outer pair $+2r^2$).  The penalty is
 \begin{equation}
   \delta\T \Prec_{\rm mem}\,\delta
   \;=\;
   \frac{\bigl(\delta_1 - 2\delta_2 + \delta_3\bigr)^2}
-       {2\,\sigma_b^2\,(1 - r)(3 - r)} .
+       {2\,\sigma_g^2\,(1 - r)(3 - r)} :
   \label{eq:memcurv}
 \end{equation}
-The memory model charges only the curvature; it is blind to any
-straight-line drift.  The kernel model's three-bin case
-(Appendix~\ref{sec:kernel}) charges the two neighbor differences
-instead, so it taxes a drift as heavily as a zigzag of the same
-step size.
+the memory model charges only the curvature and is blind to any
+straight-line drift, where the kernel model of
+Eq.~\eqref{eq:threebin} charges the two neighbor differences and so
+taxes a drift as heavily as a zigzag of the same step.
 
 \subsection{The universal-kriging predictor}
 
-Predict bin $k+1$ from the first $k$ bins, $k \geq 2$, with flat
-priors on $\theta$.  Write $\Cov_k$ for the past kernel block,
-$\mathsf{U}_k$ for the past rows of $\mathsf{U}$,
-$u_{k+1} = (1, v_{k+1})\T$ for the next row, and $c$ for the vector
-of kernel covariances between bin $k+1$ and the past.  Given
-$\theta$, the ordinary Gaussian conditional is
+Predict bin $k+1$ from the first $k \geq 2$ bins, with flat priors on
+$\theta$.  Write $\Cov_k$ for the past kernel block, $\mathsf{U}_k$ for
+the past rows of $\mathsf{U}$, $u_{k+1} = (1, v_{k+1})\T$ for the next
+row, and $\gamma$ for the vector of kernel covariances between bin $k+1$
+and the past.  Given $\theta$, the Gaussian conditional is
 \begin{equation}
   \mathrm{E}\bigl[\delta_{k+1} \mid \delta_{1..k}, \theta\bigr]
   \;=\;
   u_{k+1}\T\theta
   \;+\;
-  c\T \Cov_k^{-1}
+  \gamma\T \Cov_k^{-1}
   \bigl(\delta_{1..k} - \mathsf{U}_k\,\theta\bigr).
   \label{eq:memcond}
 \end{equation}
-With a flat prior, the posterior of $\theta$ given the past is
-centered on the generalized-least-squares fit $\hat{\theta}$ of
-Eq.~\eqref{eq:memnormal} applied to the past block.
-Equation~\eqref{eq:memcond} is linear in $\theta$, so averaging over
-the posterior replaces $\theta$ by $\hat{\theta}$.
-
-For the exponential kernel the weights collapse.  Correlations
-multiply along the chain (Eq.~\eqref{eq:factorize}), so every entry
-of $c$ is $r_k$ times the corresponding entry of $\Cov_k$'s last
-column, and
-\begin{equation}
-  c\T \Cov_k^{-1} \;=\; r_k\, e_k\T ,
-  \label{eq:memlastcol}
-\end{equation}
-with $e_k$ the $k$-th unit vector (one in the last past slot, zero
-elsewhere).  Substituting both results into Eq.~\eqref{eq:memcond}
-gives Eq.~\eqref{eq:memkriging}: the fitted line evaluated at the
-new bin, plus one Markov step from the last residual.
+With a flat prior the posterior of $\theta$ is centered on the fit
+$\hat{\theta}$ of Eq.~\eqref{eq:memnormal} applied to the past block,
+and Eq.~\eqref{eq:memcond} is linear in $\theta$, so averaging replaces
+$\theta$ by $\hat{\theta}$.  For the exponential kernel the weights
+collapse: by Eq.~\eqref{eq:factorize} every entry of $\gamma$ is $r_k$
+times the corresponding entry of $\Cov_k$'s last column, so
+$\gamma\T \Cov_k^{-1} = r_k\, e_k\T$, with $e_k$ the $k$-th unit vector.
+Substituting gives Eq.~\eqref{eq:memkriging}: the fitted line at the
+new bin plus one Markov step from the last residual.
 
 \subsection{The finite-slope correlation}
 
-With a Gaussian slope of variance $\tau^2$ and the amplitude held in
-$B_g$, the deviations have the covariance of Eq.~\eqref{eq:memcov},
-so $\mathrm{Var}(\delta_i) = \tau^2 v_i^2 + \sigma_b^2$ and
-$\mathrm{Cov}(\delta_i, \delta_j) = \tau^2 v_i v_j +
-\sigma_b^2 e^{-|z_i - z_j|/L}$.  For separations much larger than
-$L$ the kernel term is exponentially small, and dropping it gives
-the correlation coefficient of Eq.~\eqref{eq:memrho}.  When
-$\tau |v_i|$ and $\tau |v_j|$ both exceed $\sigma_b$, the
-$\sigma_b^2$ terms in the denominators become negligible and the
-coefficient tends to $v_i v_j / |v_i v_j| = \pm 1$: plus one for
-bins on the same side of the group center, minus one for opposite
-sides.
+With a Gaussian slope of variance $\tau^2$ and the level held in $B_g$,
+the deviations have the covariance of Eq.~\eqref{eq:memcov}, so
+$\mathrm{Var}(\delta_i) = \tau^2 v_i^2 + \sigma_g^2$.  For separations
+much larger than $L$ the kernel term is exponentially small, and
+dropping it gives the correlation of Eq.~\eqref{eq:memrho}.  When
+$\tau |v_i|$ and $\tau |v_j|$ both exceed $\sigma_g$, the $\sigma_g^2$
+terms become negligible and the coefficient tends to
+$v_i v_j / |v_i v_j| = \pm 1$.
 
 \section{How the prior enters the Fisher matrix}
 \label{sec:fisher}
 
-A Gaussian prior adds its precision to the Fisher matrix:
+A Gaussian prior adds its precision to the Fisher matrix,
 \begin{equation}
   F \;=\; F_{\rm data} \;+\; F_{\rm priors},
   \label{eq:fisher}
 \end{equation}
-where $F_{\rm data}$ is the usual data Fisher matrix and
-$F_{\rm priors}$ holds one block per prior.  The projected precision
-of each group, $\Prec_{\rm mem}$ of Eq.~\eqref{eq:memproj} for the
-baseline and pessimistic priors, is added to the rows and columns of
-that group's bin amplitudes $\beta_i$.  All other parameters (the
-cosmological parameters, the velocity dispersions with their own
-independent Gaussian priors, and the higher-order parameters of
-model A with theirs) are unchanged: the bias prior has no entries
-outside the bias block.  The growth-tied prior is not a block of this
-kind; it sums each group's amplitude columns into one
-(Appendix~\ref{sec:ladderimpl}).
+with $F_{\rm priors}$ holding one block per prior.  The projected
+precision of each group, $\Prec_{\rm mem}$ of Eq.~\eqref{eq:memproj}
+for the baseline and pessimistic priors, is added to the rows and
+columns of that group's amplitudes $\beta_i$; all other parameters are
+unchanged.  The growth-tied prior is not a block of this kind: it sums
+each group's amplitude columns into one (Appendix~\ref{sec:ladderimpl}).
 
-One consequence matters in practice.  Bins that lost all
-their band powers to the scale cut carry no data, so their rows of
-$F_{\rm data}$ are zero.  In the free model such a parameter is
-completely unconstrained and must be dropped from the matrix before
-inversion.  With the correlated prior it stays: the prior ties the
-empty bin to its neighbors, which do carry data, so the empty bin
-follows the chain, and the matrix stays invertible as long as the
-group's data fix its free level and tilt.  Appendix~\ref{app:checks}
-describes the pseudo-inverse that guards the one system where a
-direction carries no information.
+Bins that lost all their band powers to the scale cut have zero rows in
+$F_{\rm data}$.  In the free model such a parameter is unconstrained and
+must be dropped before inversion.  With the correlated prior it stays:
+the prior ties the empty bin to its neighbors, so the matrix stays
+invertible as long as the group's data fix its free level and tilt.
+Appendix~\ref{app:checks} describes the pseudo-inverse that guards the
+one system where a direction carries no information.
 
 \section{Numerical verification}
 \label{app:verify}
 
 The companion script \texttt{verify\_prior.py}, in this folder, checks
-every identity used in these appendices, $23$ checks in all, each
-printing one PASS or FAIL line with its measured deviation.  For the
-kernel model: the two-bin closed forms of Eqs.~\eqref{eq:twobinC} and
-\eqref{eq:twobinP}; the three-bin inverse of Eq.~\eqref{eq:threebin},
-including its exactly zero $(1,3)$ entry; the null direction, positive
-semidefiniteness and rank $n-1$ of $\Prec$ on uneven redshifts; the
-tridiagonal inverses of Eqs.~\eqref{eq:ar1} and \eqref{eq:uneven}; the
-Pythagorean identity of Eq.~\eqref{eq:Pisw} on random displacements;
-the equality of $\Prec$ with the Schur complement of the joint
-$(\beta, B)$ precision of Eq.~\eqref{eq:jointprec}; the decorrelation
-and variance of the neighbor-prediction leftover of
-Appendix~\ref{app:chain}; the jump variance of Eq.~\eqref{eq:jumpvar}
-by Monte Carlo ($10^5$ draws); and the worked example of
-Appendix~\ref{sec:jump} ($r = 0.670$, a jump of $8.1\%$ at
-$\sigma_b = 10\%$, $8.9\%$ in the Taylor form).  For the physics of
-Appendix~\ref{sec:physical}: the closed-form bias evolution of
-Eq.~\eqref{eq:fry} against a direct integration of the continuity
-equation, the conserved-population deviations and the neighbor rms
-values.  For the memory model of Appendix~\ref{sec:memory}: the
-annihilation $\Prec_{\rm mem}\mathsf{U} = 0$ with rank $n - 2$ on
-uneven redshifts; the $1/W^2$ approach of the Woodbury inverse of
-Eq.~\eqref{eq:woodbury} to the projection; the null-space identity
-of Eq.~\eqref{eq:memnull}; the three-bin curvature penalty with its
-closed-form variance $2\sigma_b^2(1-r)(3-r)$; the vanishing of the
-projection for one and two bins; the universal-kriging predictor of
-Eq.~\eqref{eq:memkriging} against a direct Gaussian conditional; the
-end-to-end correlation of Eq.~\eqref{eq:memrho} tending to $\pm 1$;
-the straight-line fits of Appendix~\ref{sec:memphysics}, to the
-conserved-population drift of every group and to the BGS flux-limit
-drift; and the LRG3
-magnitude-limit rate, $0.27$ magnitudes per $\Delta z = 0.1$ at
-$z \approx 1$ with its $6$--$11\%$ bias drift.  Run in this folder
-with the cocoa Python, the script prints $23$ PASS lines.
-
-The theory figures (the bias shapes, the drift residuals and the prior
-draws) are drawn from data written by
-\texttt{plots/make\_theory\_data.py}, from the same flat
-$\Lambda$CDM growth factor and project fiducial amplitudes as the
-checks above; each figure folder follows the convention of
-Appendix~\ref{sec:ladderimpl}.
+every identity of these appendices with the cocoa Python, $23$ checks
+that each print one PASS or FAIL line with the measured deviation: the
+two-bin, three-bin, even and uneven tridiagonal inverses and the
+projection's null direction, semidefiniteness and rank; the
+Pythagorean split and the Schur complement; the neighbor-prediction
+leftover and, by Monte Carlo, the jump variance with the worked example
+of Appendix~\ref{sec:jump}; the continuity equation against
+Eq.~\eqref{eq:fry}, the conserved deviations and the neighbor rms
+values; and for the memory model the annihilation of $\mathsf{U}$ with
+rank $n - 2$, the $1/W^2$ Woodbury limit, the null-space identity, the
+three-bin curvature penalty, the vanishing for one and two bins, the
+kriging predictor, the end-to-end correlation, the straight-line fits
+of Appendix~\ref{sec:memphysics} and the LRG3 magnitude-limit rate.  The
+theory figures are drawn from data written by
+\texttt{plots/make\_theory\_data.py}, from the same flat $\Lambda$CDM
+growth factor and fiducial amplitudes.

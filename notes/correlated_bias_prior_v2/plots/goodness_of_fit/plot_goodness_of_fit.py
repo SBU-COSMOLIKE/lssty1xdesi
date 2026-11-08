@@ -6,13 +6,13 @@ pessimistic prior.
 
 The statistic has no name: sqrt(<chi2>/n_dof), with chi2 the distance of the
 recovered parameters from the truth in units of the fit's own covariance
-((w0, wa): n_dof = 2; Omega_m or A_s: n_dof = 1) and E the average over
+((w0, wa): n_dof = 2; Omega_m or A_s: n_dof = 1) and <.> the average over
 the random truths and the data noise. It is 1 when the error bars cover
-the truth as often as they claim; above 1 it is the factor by which they
-are too small. One wide panel per scored parameter, stacked, one column
-per bin layout. data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb,
-also holds the pessimistic and independent rungs and model A pessimistic,
-which the figure leaves out (the caption quotes them).
+the truth as often as they claim; above 1 they are too small. One wide
+panel per scored parameter, stacked, one column per bin layout. data.json,
+written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, also holds the
+pessimistic and free priors and model A pessimistic, which the figure
+leaves out (the caption says so).
 Run from any folder: python plot_goodness_of_fit.py
 """
 import json
@@ -49,12 +49,49 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 VARIANT, TRUTH = 'A baseline', 'pessimistic'
 PARAM_LABELS = {'w0wa': r'$(w_0, w_a)$', 'omegam': r'$\Omega_\mathrm{m}$',
                 'As_1e9': r'$A_\mathrm{s}$'}
-# the marker of each drawn rung (the color is the layout's)
+# the marker of each drawn prior (the color is the layout's)
 RUNG_MARKERS = {'tied': {'marker': 's', 'ms': 6.0, 'label': 'growth-tied'},
                 'baseline': {'marker': 'o', 'ms': 6.0, 'label': 'baseline prior'}}
 TICK_LABELS = {'Delta d_com = 62 Mpc': '$\\Delta d_\\mathrm{com}$\n62 Mpc',
                'Delta z = 0.02': '$\\Delta z$\n0.02', 'Delta z = 0.05': '$\\Delta z$\n0.05',
                'Delta z = 0.2': '$\\Delta z$\n0.2'}
+
+
+def data_points(ax):
+    '''Display coordinates of every drawn data point of ax: the markers, and
+    points sampled densely along every line and error bar.'''
+    pts = [np.empty((0, 2))]
+    t = np.linspace(0.0, 1.0, 50)[:, None]
+    for line in ax.get_lines():
+        xy = line.get_transform().transform(
+            np.column_stack([np.asarray(v, dtype=float) for v in line.get_data()]))
+        pts.append(xy)
+        if line.get_linestyle() not in ('None', 'none', ' ', ''):
+            for a, b in zip(xy[:-1], xy[1:]):
+                pts.append(a + t*(b - a))
+    for coll in ax.collections:
+        for seg in getattr(coll, 'get_segments', lambda: [])():
+            xy = coll.get_transform().transform(np.asarray(seg, dtype=float))
+            for a, b in zip(xy[:-1], xy[1:]):
+                pts.append(a + t*(b - a))
+    pts = np.vstack(pts)
+    return pts[np.all(np.isfinite(pts), axis=1)]
+
+
+def check_clear(fig, labels):
+    '''Raise if a legend or text label touches a data point of any panel (a
+    margin of 3 points around each label counts as touching).'''
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    pad = 3.0*fig.dpi/72.0
+    pts = np.vstack([data_points(ax) for ax in fig.axes])
+    for name, artist in labels:
+        box = artist.get_window_extent(renderer)
+        hit = ((pts[:, 0] > box.x0 - pad) & (pts[:, 0] < box.x1 + pad)
+               & (pts[:, 1] > box.y0 - pad) & (pts[:, 1] < box.y1 + pad))
+        if np.any(hit):
+            raise RuntimeError(f'{name} touches the data')
+
 
 with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
@@ -73,7 +110,7 @@ for ax, p in zip(axes, params):
     ax.axhline(1.0, color='0.3', ls='--', lw=1.0)
     for i, lay in enumerate(layouts):
         fit = lay['gof'][VARIANT][TRUTH]
-        # the drop from the tied to the baseline rung
+        # the drop from the growth-tied to the baseline prior
         ax.plot([i, i], [fit['baseline'][p], fit['tied'][p]], color=lay['color'], lw=1.2,
                 alpha=0.6)
         for rung, st in RUNG_MARKERS.items():
@@ -97,8 +134,10 @@ fig.supylabel(r'$\sqrt{\langle\chi^2\rangle/n_\mathrm{dof}}$', x=-0.02,
 handles = [Line2D([], [], ls='none', marker=st['marker'], ms=st['ms'], color='0.3',
                   label=st['label']) for st in RUNG_MARKERS.values()]
 handles.append(Line2D([], [], color='0.3', ls='--', lw=1.0, label='honest error bars'))
-axes[0].legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=3,
-               frameon=False, fontsize=8.5, handlelength=1.6, columnspacing=1.0,
-               handletextpad=0.4)
+legend = axes[0].legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 1.0),
+                        ncol=3,
+                        frameon=False, fontsize=8.5, handlelength=1.6, columnspacing=1.0,
+                        handletextpad=0.4)
+check_clear(fig, [('legend', legend)])
 fig.savefig(os.path.join(HERE, 'goodness_of_fit.pdf'))
 fig.savefig(os.path.join(HERE, 'goodness_of_fit.png'), dpi=300)
