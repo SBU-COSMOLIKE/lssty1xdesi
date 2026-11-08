@@ -276,5 +276,11 @@ sampler:
       DESI_SN0_LRG3: 0.0
       DESI_SN0_ELG1: 0.0
       DESI_SN0_ELG2: 0.0
+      DESI_SN2_BGS: 0.0
+      DESI_SN2_LRG1: 0.0
+      DESI_SN2_LRG2: 0.0
+      DESI_SN2_LRG3: 0.0
+      DESI_SN2_ELG1: 0.0
+      DESI_SN2_ELG2: 0.0
 
 output: ./projects/lssty1xdesi/chains/EXAMPLE_EVALUATE_MODEL_A1

@@ -1,7 +1,9 @@
 # desi_cl_dr1_dz0p05 with the model A bias of notes/higher_order_bias; every
 # option not set here is desi_cl_dr1_dz0p05.yaml's.
+# the one-loop model; model A is its parameter fragment below
+# (alpha_2 fixed to 0)
 higher_order_bias: 1
-# model A hands cosmolike every bias per bin, with b3 = 0
+# the one-loop model hands cosmolike every bias per bin, with b3 = 0
 bias_model: [0,0,0,0,0,0]
 # the linear per-bin fragment and the model A one (offsets per chunk,
 # tilts fixed at zero); for the pessimistic variant name

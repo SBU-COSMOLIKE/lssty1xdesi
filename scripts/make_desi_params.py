@@ -43,9 +43,10 @@ default model on that case's bin table.
 
 With --model-a (alone or with --case) it writes the model A fragments
 of the higher-order bias note instead: params_desi[_<case>]_model_a.yaml
-(one offset per chunk for b2, bs2, alpha_0 and SN0, the tilts fixed at
-zero) and params_desi[_<case>]_model_a_pessimistic.yaml (the b2, bs2 and
-alpha_0 tilts free). The desi_cl*_model_a likelihoods read them next to
+(one offset per chunk for b2, bs2, alpha_0, SN0 and SN2, the tilts fixed
+at zero, and alpha_2 fixed to 0 in every bin) and
+params_desi[_<case>]_model_a_pessimistic.yaml (the b2, bs2 and alpha_0
+tilts free). The desi_cl*_model_a likelihoods read them next to
 the linear fragment.
 
 With --model-b (alone or with --case) it writes the model B fragments:
@@ -200,14 +201,24 @@ def emit_blocks(out, prefix, groups, values, prior, scale, latex_of):
 # analysis cut, and the Gaussian prior widths of the per-chunk offsets,
 # all centered on zero. alpha_0 follows the DESI rule rescaled to this
 # cut - a 50% correction to the linear spectrum at k_max - and SN0 is in
-# units of the bin's Poisson power (twice the Poisson power).
+# units of the bin's Poisson power (twice the Poisson power). SN2 takes
+# the DESI DR1 width, five units of f_sat sigma_v^2 times the Poisson
+# power (f_sat the satellite fraction, sigma_v the satellites' velocity
+# dispersion in Mpc/h; SN2_UNIT of likelihood/desi_cl.py), as in model B:
+# adjacent thin bins share an edge, so their projected SN2 terms are
+# anticorrelated, a pattern no SN0 can absorb. Model A has no radial
+# counterterm: DESI_A2 is fixed to 0 in every bin (a width of None), which
+# the one-loop likelihood reads as the term switched off.
 MODEL_A_KMAX = 0.075  # h/Mpc
 MODEL_A_FAMILIES = (
-    # (per-bin prefix, tilt prefix or None, Gaussian width, latex symbol)
+    # (per-bin prefix, tilt prefix or None, Gaussian width or None for a
+    # family fixed to 0, latex symbol)
     ("DESI_DB2", "DESI_TB2", 1.0, "\\Delta_{2}"),
     ("DESI_DBS", "DESI_TBS", 0.5, "\\Delta_{s}"),
     ("DESI_A0", "DESI_TA0", 0.5/MODEL_A_KMAX**2, "\\alpha_{0}"),
+    ("DESI_A2", None, None, "\\alpha_{2}"),
     ("DESI_SN0", None, 2.0, "s_{0}"),
+    ("DESI_SN2", None, 5.0, "s_{2}"),
 )
 # the flat range of a free tilt (pessimistic variant), per unit redshift
 MODEL_A_TILT_RANGE = {"DESI_TB2": 50.0, "DESI_TBS": 50.0,
@@ -262,7 +273,8 @@ def emit_offsets(out, chunks, zbars, pessimistic, families, tilt_range):
 
     with z_n the bin's mean redshift and zbar_g the mean of the chunk's
     bin redshifts; the stochastic amplitudes never tilt (the Poisson
-    part is known per bin and sits in the covariance).
+    part is known per bin and sits in the covariance). A family with no
+    width is not sampled: every bin's value is fixed to 0.
 
     Arguments:
       out         = the open output file.
@@ -270,8 +282,8 @@ def emit_offsets(out, chunks, zbars, pessimistic, families, tilt_range):
       zbars       = per-bin mean redshift, in bin order.
       pessimistic = True frees the tilts.
       families    = the model's (per-bin prefix, tilt prefix or None,
-                    Gaussian width, latex symbol) rows, in output order
-                    (MODEL_A_FAMILIES or MODEL_B_FAMILIES).
+                    Gaussian width or None, latex symbol) rows, in output
+                    order (MODEL_A_FAMILIES or MODEL_B_FAMILIES).
       tilt_range  = tilt prefix -> half width of the flat tilt prior,
                     per unit redshift (read only when pessimistic).
     """
@@ -279,6 +291,14 @@ def emit_offsets(out, chunks, zbars, pessimistic, families, tilt_range):
     zbar_of = {g: float(np.mean([z for c, z in zip(chunks, zbars)
                                  if c == g])) for g in groups}
     for prefix, tilt, width, symbol in families:
+        if width is None:
+            # a family the model does not have: each bin's value is a
+            # fixed 0, which cobaya passes to the likelihood unsampled
+            for n, g in enumerate(chunks, start=1):
+                out.write(f"  {prefix}_{n}: # chunk {g}, fixed (not in "
+                          "this model)\n")
+                out.write("    value: 0.0\n")
+            continue
         for g in groups:
             out.write(f"  {prefix}_{g}: # offset of chunk {g}\n")
             out.write("    prior:\n")
@@ -324,9 +344,10 @@ def emit_offsets(out, chunks, zbars, pessimistic, families, tilt_range):
 def emit_model_a(out, chunks, zbars, pessimistic):
     """Write the model A parameters of one bin table.
 
-    Model A has four families: DESI_DB2, DESI_DBS and DESI_A0, each with
-    a tilt, and DESI_SN0 (MODEL_A_FAMILIES). The offsets, tilts and
-    per-bin ties follow emit_offsets.
+    Model A has five sampled families, DESI_DB2, DESI_DBS and DESI_A0,
+    each with a tilt, and DESI_SN0 and DESI_SN2, plus DESI_A2 fixed to 0
+    in every bin (MODEL_A_FAMILIES). The offsets, tilts and per-bin ties
+    follow emit_offsets.
 
     Arguments:
       out, chunks, zbars, pessimistic = as in emit_offsets.
@@ -396,10 +417,15 @@ def main():
                 out.write(" (pessimistic variant: free tilts).\n"
                           if pessimistic else
                           " (baseline: one offset per chunk).\n")
+                out.write("# DESI_A2 (alpha_2) is fixed to 0 in every "
+                          "bin: model A has no radial counterterm.\n")
                 out.write("# Units: DESI_A0 in h^-2 Mpc^2, DESI_SN0 in "
-                          "units of each bin's Poisson power; the\n"
-                          "# per-bin values are tied to the chunk "
-                          "parameters (see emit_model_a).\n")
+                          "units of each bin's Poisson power,\n"
+                          "# DESI_SN2 in units of f_sat sigma_v^2 times "
+                          "it (f_sat the satellite fraction, sigma_v the\n"
+                          "# satellites' velocity dispersion in Mpc/h); "
+                          "the per-bin values are tied to the chunk\n"
+                          "# parameters (see emit_model_a).\n")
                 emit_model_a(out, chunks, zbars, pessimistic)
             print(f"wrote {path}")
         return 0
