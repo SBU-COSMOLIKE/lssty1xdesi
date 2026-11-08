@@ -92,9 +92,12 @@ bias_model: [0,0,0,1,0,0]
 # notes/higher_order_bias: one-loop real-space bias b2 and bs2 tied to
 # each bin's b1 plus offsets, the k^2 counterterm alpha_0 and a
 # stochastic amplitude SN0, all per bin (DESI_DB2_<n>, DESI_DBS_<n>,
-# DESI_A0_<n>, DESI_SN0_<n>; see desi_cl.py). Model A needs
+# DESI_A0_<n>, DESI_SN0_<n>; see desi_cl.py); 2 = model B: model A plus
+# the radial counterterm alpha_2 mu^2 k^2 (DESI_A2_<n>) and the
+# line-of-sight stochastic term SN2 k^2 mu^2 (DESI_SN2_<n>), with mu the
+# cosine to the line of sight. Models A and B need
 # bias_model: [0,0,0,0,0,0] (every bias per bin, b3 = 0); the
-# desi_cl*_model_a likelihoods set both
+# desi_cl*_model_a and desi_cl*_model_b likelihoods set both
 higher_order_bias: 0
 add_baryons_on_dv: False
 which_bsims_add_on_dv: "antilles-2"

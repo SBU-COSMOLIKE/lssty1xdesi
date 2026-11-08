@@ -5,13 +5,14 @@
 3. [Running Cosmolike projects (Basic instructions)](#running_cosmolike_projects)
 4. [The DESI DR1 fixed-width Δz cases](#dz_cases)
 5. [The LSST Y1 3×2pt case](#lsst_case)
-6. [Baryonic feedback on EXAMPLE_EVALUATE1](#baryonic_feedback)
-7. [Running Hybrid Cosmolike-ML emulators](#cobaya_base_code_examples_emul2)
-8. [Running Fisher](#fisher)
-9. [Unit tests](#unit_tests)
-10. [Computing covariances](#computing_covariances)
-11. [Exploring notebooks](#notebooks)
-12. [Appendix: Which accuracy settings are available?](#accuracy)
+6. [The higher-order bias models](#higher_order_bias)
+7. [Baryonic feedback on EXAMPLE_EVALUATE1](#baryonic_feedback)
+8. [Running Hybrid Cosmolike-ML emulators](#cobaya_base_code_examples_emul2)
+9. [Running Fisher](#fisher)
+10. [Unit tests](#unit_tests)
+11. [Computing covariances](#computing_covariances)
+12. [Exploring notebooks](#notebooks)
+13. [Appendix: Which accuracy settings are available?](#accuracy)
 
 # The DESI × LSST Y1 forecast <a name="forecast"></a>
 
@@ -80,6 +81,10 @@ flowchart TB
   DESI DR1 binnings of fixed width in redshift, and
   `EXAMPLE_EVALUATE5.yaml` the LSST Y1 3×2pt case
   ([Δz cases](#dz_cases), [LSST case](#lsst_case)).
+- `EXAMPLE_EVALUATE_MODEL_A1.yaml` to `EXAMPLE_EVALUATE_MODEL_A4.yaml`
+  and `EXAMPLE_EVALUATE_MODEL_B1.yaml` to `EXAMPLE_EVALUATE_MODEL_B4.yaml`
+  evaluate the four DESI layouts with the one-loop bias models A and B
+  ([higher-order bias](#higher_order_bias)).
 - `EXAMPLE_EMUL2_EVALUATE1.yaml` is the hybrid-emulator variant of the
   first example, with MCMC and Nautilus examples alongside
   ([hybrid emulators](#cobaya_base_code_examples_emul2)).
@@ -327,6 +332,93 @@ evaluated at each source bin's mean redshift.
 of the Δz builder (`--stage files`, then the covariance CLI on
 `EXAMPLE_EVALUATE_COVARIANCE5.yaml`, then `--stage covariance` and
 `--stage fiducial`).
+
+# The higher-order bias models <a name="higher_order_bias"></a>
+
+The one-loop galaxy-bias models A and B of
+[the higher-order bias note](notes/higher_order_bias/higher_order_bias.pdf)
+run on every DESI layout through the likelihood option
+`higher_order_bias` (0 is linear bias). Both keep the per-bin linear
+bias $`b_{1,i}`$ of the linear examples, with $`i`$ the lens bin.
+
+**Model A** (`higher_order_bias: 1`) gives each bin the quadratic
+bias $`b_{2,i}`$ of the Lazeyras et al. relation on $`b_{1,i}`$
+(arXiv:1511.01096) and the co-evolution tidal bias
+$`b_{s^2,i} = -\tfrac{4}{7}(b_{1,i} - 1)`$, each plus a free offset,
+and adds the counterterm $`\alpha_0 k^2 P_\mathrm{NL}`$ and a
+white-noise power $`\mathrm{SN}_0`$; the third-order bias
+$`b_{3\mathrm{nl}}`$ is 0.
+
+**Model B** (`higher_order_bias: 2`) keeps every model A term and adds:
+
+- the radial counterterm $`\alpha_2`$, in the DESI DR1 convention
+  (arXiv:2404.07312): the redshift-space galaxy power gains
+  $`(b_{1,i} + f\mu^2)\,f\alpha_2\,\mu^2 k^2 P_\mathrm{lin}`$;
+- the line-of-sight stochastic power $`\mathrm{SN}_2\,k^2\mu^2`$.
+
+Here $`k`$ is the wavenumber, $`\mu`$ the cosine between the
+wavevector and the line of sight, $`f`$ the linear growth rate, and
+$`P_\mathrm{lin}`$ and $`P_\mathrm{NL}`$ the linear and nonlinear
+matter power spectra. Model B is built
+for the shipped masks, which keep every bin up to
+$`k = 0.1185\ \mathrm{Mpc}^{-1}`$ ($`\approx 0.176\,h\,\mathrm{Mpc}^{-1}`$)
+at every redshift, and it widens the $`b_2`$ and $`b_{s^2}`$ offset
+priors to the DESI DR1 widths. The redshift-space one-loop terms of the note's model B are
+not computed (CosmoLike has no redshift-space loop templates): the
+sampled velocity dispersions and $`\alpha_2`$ stand in for them. At
+$`\alpha_2 = \mathrm{SN}_2 = 0`$ model B gives model A's data vector
+bit for bit.
+
+The likelihood reads one value per bin (`DESI_A2_<n>` and so on, with
+$`n`$ counting the bins from 1); the parameter files tie the bins of a
+sample chunk $`g`$ (BGS, LRG1-3, ELG1-2) to one sampled parameter per
+chunk. Every prior is a Gaussian centered on zero:
+
+| Parameter | Meaning | Unit | Width, model A | Width, model B |
+|---|---|---|---:|---:|
+| `DESI_DB2_<g>` | offset of $`b_2`$ from the Lazeyras relation | none | 1.0 | 2.0 |
+| `DESI_DBS_<g>` | offset of $`b_{s^2}`$ from co-evolution | none | 0.5 | 1.0 |
+| `DESI_A0_<g>` | counterterm $`\alpha_0`$ | $`h^{-2}\,\mathrm{Mpc}^2`$ | 88.9 | 16.1 |
+| `DESI_A2_<g>` | radial counterterm $`\alpha_2`$ | $`h^{-2}\,\mathrm{Mpc}^2`$ | - | 16.1 |
+| `DESI_SN0_<g>` | white noise $`\mathrm{SN}_0`$ | $`1/\bar n_i`$ | 2 | 2 |
+| `DESI_SN2_<g>` | line-of-sight noise $`\mathrm{SN}_2`$ | $`f_\mathrm{sat}\sigma_v^2/\bar n_i`$ | - | 5 |
+
+The counterterm widths follow the DESI rule, a 50% correction to the
+linear spectrum at the scale cut: $`0.5/k_\mathrm{max}^2`$, with
+$`k_\mathrm{max} = 0.075\,h\,\mathrm{Mpc}^{-1}`$ for model A and
+$`0.176\,h\,\mathrm{Mpc}^{-1}`$ for model B. In the units,
+$`\bar n_i`$ is the bin's number density (so $`1/\bar n_i`$ is its
+Poisson power), $`f_\mathrm{sat}`$ the satellite fraction and
+$`\sigma_v`$ the satellites' velocity dispersion in
+$`h^{-1}\,\mathrm{Mpc}`$: 0.1 and 7.8 for BGS and LRG, 0.1 and 2.9 for
+ELG.
+
+Each layout has one likelihood class and one example per model:
+
+| Layout | Model A example | Model B example | Model B likelihood class |
+|---|---|---|---|
+| $`\Delta d_\mathrm{com} = 62`$ Mpc | `EXAMPLE_EVALUATE_MODEL_A1.yaml` | `EXAMPLE_EVALUATE_MODEL_B1.yaml` | `desi_cl_model_b` |
+| $`\Delta z = 0.02`$ | `EXAMPLE_EVALUATE_MODEL_A2.yaml` | `EXAMPLE_EVALUATE_MODEL_B2.yaml` | `desi_cl_dr1_dz0p02_model_b` |
+| $`\Delta z = 0.05`$ | `EXAMPLE_EVALUATE_MODEL_A3.yaml` | `EXAMPLE_EVALUATE_MODEL_B3.yaml` | `desi_cl_dr1_dz0p05_model_b` |
+| $`\Delta z = 0.2`$ | `EXAMPLE_EVALUATE_MODEL_A4.yaml` | `EXAMPLE_EVALUATE_MODEL_B4.yaml` | `desi_cl_dr1_dz0p20_model_b` |
+
+The model A classes carry the same names with `_model_a`. The examples
+run like `EXAMPLE_EVALUATE1.yaml`
+([basic instructions](#running_cosmolike_projects)), with every offset
+at zero. The data vectors are the linear-bias fiducials, so these
+examples do not evaluate to $`\chi^2 \approx 0`$: the one-loop terms
+change the vector even at zero offsets.
+
+Each class reads the baseline parameter file,
+`likelihood/params_desi[_<case>]_model_b.yaml` for model B, with one
+offset per chunk. The pessimistic file (`..._model_b_pessimistic.yaml`)
+adds a free tilt in redshift per chunk to the offsets of $`b_2`$,
+$`b_{s^2}`$ and the counterterms (`DESI_TB2_<g>`, `DESI_TBS_<g>`,
+`DESI_TA0_<g>`, and in model B `DESI_TA2_<g>`); the stochastic
+amplitudes never tilt. A comment in each class yaml says how to switch.
+`scripts/make_desi_params.py` writes the files, with `--model-a` or
+`--model-b` (and `--case <name>` for a $`\Delta z`$ layout, e.g.
+`--case dr1_dz0p05`).
 
 # Baryonic feedback on EXAMPLE_EVALUATE1 <a name="baryonic_feedback"></a>
 
