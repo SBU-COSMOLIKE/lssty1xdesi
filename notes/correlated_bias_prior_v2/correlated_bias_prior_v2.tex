@@ -105,10 +105,11 @@ little even below $0.1$: with tilts it holds to $0.075$ on the thin
 layouts, where its ${\rm FoM}(w_0, w_a)$, $2.59$ and $2.70$, is small
 next to those of model B + tilts at $0.2$.  The adopted model is
 therefore model B + tilts on the pessimistic prior, at every cut.
-Beyond $0.1$ its largest shift is $0.25$--$0.34\sigma$ on every layout
-but $\Delta z = 0.2$, touching $\sigma/3$, and at $0.1$ the offsets
-truth moves $\Omega_m$ by $0.43\sigma$ on $\Delta z = 0.02$ and
-$0.05$.  It stays below LSST Y1 3x2pt in both FoMs.
+From $0.1$ on, truths at one prior width move it by $0.37$--$0.59\sigma$
+on the three thinner layouts, mostly through $\alpha_2$, and by
+$0.19$--$0.23\sigma$ on $\Delta z = 0.2$; over random bias histories
+its error bars stay honest, $\chidof \le 1.023$.  It stays below
+LSST Y1 3x2pt in both FoMs.
 Appendices~\ref{app:limits} and \ref{app:open} give the limits and the
 open issues.
 
@@ -394,7 +395,8 @@ model B relies on the sampled $\sigma_v$ and on $\alpha_2$ for them.
 \paragraph{Where the models break.}
 A fit is given a truth that carries one term at one prior width, the
 same in every bin: $\alpha_2 = \pm 12.5\aunit$, at DESI's width, for
-model A, which lacks the term; $\SNt = \pm 5$; the offsets
+model A, which lacks the term, and at model B's own width,
+$\pm 0.5/\kmax^2$; $\SNt = \pm 5$; the offsets
 $(\Delta_2, \Delta_s)$ at one prior width of the fitted model,
 $\pm(1, 0.5)$ for model A and $\pm(2, 1)$ for model B; or the
 calibration drift of Section~\ref{sec:accuracy}.  The shift of the fit
@@ -408,10 +410,12 @@ the baseline prior with models A and B, and the pessimistic prior with
 models A and B + tilts.  Each variant breaks at the same cut under the
 baseline, pessimistic and free priors.
 \begin{itemize}
-  \item Without tilts both models hold to $0.075\hMpc$ on the thin
-    layouts and only to $0.05$ on $\Delta z = 0.05$ and $0.2$.  The
-    calibration drift ends every fit but model A on $\Delta z = 0.02$,
-    which fails through $\alpha_2$; from $0.1$ on the largest shift is
+  \item Without tilts model A holds to $0.075\hMpc$ on the thin
+    layouts; model B holds only to $0.05$ on
+    $\Delta d_{\rm com} = 62$~Mpc and fails at the first fitted cut,
+    $0.075$, on $\Delta z = 0.02$, both through $\alpha_2$.  Both
+    models hold only to $0.05$ on $\Delta z = 0.05$ and $0.2$, ended by
+    the calibration drift.  From $0.1$ on the largest shift is
     $0.53$--$2.75\sigma$, and from $0.125$ on the drift sets it.
   \item The tilts absorb the calibration drift exactly.  Model A +
     tilts holds to its own cut, $0.075$, on the thin layouts, to $0.15$
@@ -419,11 +423,13 @@ baseline, pessimistic and free priors.
     wide bins barely see $\alpha_2$.  It fails through $\alpha_2$: in
     $A_s$ on $\Delta d_{\rm com} = 62$~Mpc and $\Delta z = 0.05$, in
     $(w_0, w_a)$ on $\Delta z = 0.02$.
-  \item Model B + tilts holds at every cut on $\Delta z = 0.2$ and to
-    $0.075$ on the other layouts, where the offsets truth moves
-    $\Omega_m$ by $0.35$--$0.43\sigma$ at $0.1$; beyond $0.1$ its
-    largest shift there stays at $0.25$--$0.34\sigma$, touching
-    $\sigma/3$.
+  \item Model B + tilts holds at every cut on $\Delta z = 0.2$, to
+    $0.075$ on $\Delta z = 0.02$ and $0.05$, and to $0.05$ on
+    $\Delta d_{\rm com} = 62$~Mpc, where $\alpha_2$ moves $A_s$ by
+    $0.46\sigma$ at $0.075$.  From $0.1$ on its largest shift on the
+    three thinner layouts is $0.37$--$0.59\sigma$, set mostly by
+    $\alpha_2$; without the $\alpha_2$ truth it would be
+    $0.26$--$0.43\sigma$.
 \end{itemize}
 With $\SNt$ in the fit, an $\SNt$ truth at one prior width moves no
 parameter by more than $0.3\sigma$ at any cut and sets no break.

@@ -1,0 +1,117 @@
+{
+ "about": "FoM(w0, wa) (fom) and FoM(Omega_m, 10^9 A_s) (fom_om_as), each det(marginalized 2x2 covariance)^(-1/2), of model B + tilts (notes/higher_order_bias: offsets and counterterms per group with a straight line in redshift, flat priors on the tilts, SN0 and SN2 per group) on the pessimistic linear-bias prior, DESI C_gg alone, against the scale cut k_max [h/Mpc; the z = 0 value of a per-bin cut at k_max/D(zbar_i), D the growth factor, by the UV-fraction criterion, alpha = 0.05, within the shipped mask]; null where a cut leaves no fit. Written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb. LSST Y1 3x2pt references from the lsst_y1 project.",
+ "kmax_h_per_Mpc": [
+  0.05,
+  0.075,
+  0.1,
+  0.125,
+  0.15,
+  0.175,
+  0.2
+ ],
+ "variant": "B tilts",
+ "prior": "pessimistic",
+ "prior_widths": {
+  "DB2": 2.0,
+  "DBS": 1.0,
+  "SN0": 2.0,
+  "SN2": 5.0,
+  "counterterms": "0.5/k_max^2"
+ },
+ "lsst_y1_3x2pt_fom": 17.26,
+ "lsst_y1_3x2pt_fom_om_as": 214.9,
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "color": "#0072B2",
+   "fom": [
+    0.05208662500029119,
+    1.2880985051712603,
+    2.7114820001827318,
+    4.894108439842078,
+    7.168581582778753,
+    9.673310771205449,
+    10.895231805728624
+   ],
+   "fom_om_as": [
+    0.07697121094595342,
+    3.801079579120459,
+    12.409091357072795,
+    29.03713328723292,
+    43.481138382548195,
+    60.96884450663755,
+    70.81372897658886
+   ]
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "color": "#E69F00",
+   "fom": [
+    null,
+    1.3423691563028108,
+    4.624864378066485,
+    8.332266611458222,
+    9.56541674609403,
+    11.989928735113253,
+    13.886487652600714
+   ],
+   "fom_om_as": [
+    null,
+    3.1264896367513506,
+    16.499588965525994,
+    41.00829446844567,
+    52.461855534186995,
+    69.71475665006642,
+    81.25009743395208
+   ]
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "color": "#CC79A7",
+   "fom": [
+    0.06434532151654856,
+    0.22706971176145,
+    0.6225773547577336,
+    1.5036387591941416,
+    1.8122755319322659,
+    2.513158033360672,
+    2.6393082951415736
+   ],
+   "fom_om_as": [
+    0.3792662263478288,
+    1.4430410061462884,
+    4.439947244734173,
+    12.33237266617865,
+    15.50811718555617,
+    21.867162004777153,
+    23.132471050949533
+   ]
+  },
+  {
+   "name": "Delta z = 0.2",
+   "label": "$\\Delta z = 0.2$",
+   "color": "#56B4E9",
+   "fom": [
+    0.016992602077767885,
+    0.04952301710234747,
+    0.10110342519336753,
+    0.19217389828741427,
+    0.22910920268324328,
+    0.2822915814324684,
+    0.2887380703779409
+   ],
+   "fom_om_as": [
+    0.15331763632062181,
+    0.4297136637933369,
+    0.8982974688987947,
+    1.8772330214913868,
+    2.2962824242141386,
+    2.9037448515005098,
+    2.9770607881162396
+   ]
+  }
+ ]
+}
