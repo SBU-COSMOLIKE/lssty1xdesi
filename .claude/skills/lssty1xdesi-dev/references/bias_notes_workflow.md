@@ -66,23 +66,10 @@ Rules for every note:
   write the symbol and explain it at its first use; the code key is
   `'error_inflation'`.
 
-Figure rules (with the plot-folder contract, Sec. 3):
-
-- One column or full width. Stacked panels with a thin gap and one
-  shared y range; when the columns of a grid have different natural
-  ranges, each column is divided by a stated constant so all share
-  one axis (prior_draws scales each group by a round delta_g).
-- Legends `frameon=False` and never on data. The plot script enforces
-  it with a bounding-box check: it places a legend or text in a
-  candidate corner, samples every drawn line in display coordinates,
-  and moves on when the padded box touches a line or another text
-  (`line_points` in the scripts of baseline_ladder, prior_draws,
-  fom_kmax, fom_kmax_models and model_a_break; copy it into new
-  scripts).
-- Captions are short statements, never questions, and quote no value
-  the plot shows.
-- A reference far above the data (LSST Y1 3x2pt) is quoted as text
-  inside the panel, never drawn on a stretched axis.
+Figure rules: the project skill `.claude/skills/paper-figures/SKILL.md`
+holds every figure rule (layout, palette and redundant encodings,
+legend placement enforced in code, captions, k_max on figures, tables
+turned into figures). Read it before writing or changing a figure.
 
 ## 2. The notebook cells behind the ladder
 
