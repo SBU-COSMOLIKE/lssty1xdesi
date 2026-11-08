@@ -74,21 +74,23 @@ flowchart TB
 ```
 
 - `EXAMPLE_EVALUATE1.yaml` evaluates the fiducial point of the
-  $`\Delta d_\mathrm{com} = 62`$ Mpc comoving binning; a commented `bfmt` theory block shows how to turn
-  each baryonic-feedback model on
+  $`\Delta d_\mathrm{com} = 62`$ Mpc comoving binning with the paper's
+  bias model, the one-loop model B + tilts on the pessimistic
+  linear-bias prior ([one-loop bias](#higher_order_bias)); a commented
+  `bfmt` theory block shows how to turn each baryonic-feedback model on
   ([baryonic feedback](#baryonic_feedback)).
 - `EXAMPLE_EVALUATE2.yaml` to `EXAMPLE_EVALUATE4.yaml` evaluate the
-  DESI DR1 binnings of fixed width in redshift, and
+  DESI DR1 binnings of fixed width in redshift with the same model, and
   `EXAMPLE_EVALUATE5.yaml` the LSST Y1 3×2pt case
   ([Δz cases](#dz_cases), [LSST case](#lsst_case)).
-- `EXAMPLE_EVALUATE_MODEL_B1.yaml` to `EXAMPLE_EVALUATE_MODEL_B4.yaml`
-  evaluate the four DESI layouts with the paper's bias model, the
-  one-loop model B + tilts on the pessimistic linear-bias prior
-  ([one-loop bias](#higher_order_bias)); the examples of the other
-  models (model A, model B on the growth-tied linear bias) are in
-  [exploration/](exploration/README.md).
+- [exploration/](exploration/README.md) holds the examples of the other
+  bias models: the growth-tied linear bias that generated the data
+  vectors (`EXAMPLE_EVALUATE_LINEAR1.yaml` to
+  `EXAMPLE_EVALUATE_LINEAR4.yaml`), model A, and model B on the
+  growth-tied linear bias.
 - `EXAMPLE_EMUL2_EVALUATE1.yaml` is the hybrid-emulator variant of the
-  first example, with MCMC and Nautilus examples alongside
+  linear example `exploration/EXAMPLE_EVALUATE_LINEAR1.yaml`, with MCMC
+  and Nautilus examples alongside
   ([hybrid emulators](#cobaya_base_code_examples_emul2)).
 - `EXAMPLE_EVALUATE_FISHER.ipynb` forecasts, on every DESI layout, the
   constraints of DESI clustering, LSST Y1 3×2pt and their combination,
@@ -228,8 +230,10 @@ comoving width. The DESI DR1 forecast distributions instead split BGS,
 LRG and ELG into bins of fixed width $`\Delta z`$ in redshift. Three
 widths are set up as separate cases of the same likelihood, each with
 its own data files (`data/lssty1xdesi_desi_dr1_dz0pXX*`), likelihood
-class (`likelihood/desi_cl_dr1_dz0pXX.py`), parameter file and EXAMPLE
-yaml:
+class (`likelihood/desi_cl_dr1_dz0pXX.py`, and
+`likelihood/desi_cl_dr1_dz0pXX_model_b.py` for the paper's model),
+parameter files and EXAMPLE yaml (the paper's model; the linear one is
+`exploration/EXAMPLE_EVALUATE_LINEAR<N>.yaml`, with the same number):
 
 | Case | $`\Delta z`$ | Lens bins | Cross pairs | Entries | Unmasked | `accuracyboost` | `nonlimber_accuracyboost` | EXAMPLE |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
@@ -300,8 +304,9 @@ python ./projects/lssty1xdesi/scripts/make_desi_dz_case.py --width 0.02 --stage 
 python ./projects/lssty1xdesi/scripts/make_desi_dz_case.py --width 0.02 --stage fiducial
 ```
 
-The last step writes the model vector at the EXAMPLE's fiducial point
-as the case's data vector, so the EXAMPLE evaluates to
+The last step writes the model vector of the linear example
+(`exploration/EXAMPLE_EVALUATE_LINEAR<N>.yaml`) at its fiducial point
+as the case's data vector, so that example evaluates to
 $`\chi^2 \approx 0`$.
 
 # The LSST Y1 3×2pt case <a name="lsst_case"></a>
@@ -408,10 +413,10 @@ of it:
 
 | Layout | Example | Likelihood class |
 |---|---|---|
-| $`\Delta d_\mathrm{com} = 62`$ Mpc | `EXAMPLE_EVALUATE_MODEL_B1.yaml` | `desi_cl_model_b` |
-| $`\Delta z = 0.02`$ | `EXAMPLE_EVALUATE_MODEL_B2.yaml` | `desi_cl_dr1_dz0p02_model_b` |
-| $`\Delta z = 0.05`$ | `EXAMPLE_EVALUATE_MODEL_B3.yaml` | `desi_cl_dr1_dz0p05_model_b` |
-| $`\Delta z = 0.2`$ | `EXAMPLE_EVALUATE_MODEL_B4.yaml` | `desi_cl_dr1_dz0p20_model_b` |
+| $`\Delta d_\mathrm{com} = 62`$ Mpc | `EXAMPLE_EVALUATE1.yaml` | `desi_cl_model_b` |
+| $`\Delta z = 0.02`$ | `EXAMPLE_EVALUATE2.yaml` | `desi_cl_dr1_dz0p02_model_b` |
+| $`\Delta z = 0.05`$ | `EXAMPLE_EVALUATE3.yaml` | `desi_cl_dr1_dz0p05_model_b` |
+| $`\Delta z = 0.2`$ | `EXAMPLE_EVALUATE4.yaml` | `desi_cl_dr1_dz0p20_model_b` |
 
 Each class sets `higher_order_bias: 1` and reads two parameter files
 (cobaya takes a likelihood's parameters from its class):
@@ -434,16 +439,16 @@ Each class sets `higher_order_bias: 1` and reads two parameter files
   `DESI_UB1_<n>` per bin. A chunk of one or two bins has no residuals,
   so its bins are free.
 
-The examples run like `EXAMPLE_EVALUATE1.yaml`
-([basic instructions](#running_cosmolike_projects)), with every offset,
+The examples run as in the
+[basic instructions](#running_cosmolike_projects), with every offset,
 tilt and residual at zero, where every bin's bias is its chunk's
 $`B_g/D(\bar z_n)`$. The data vectors are the linear-bias fiducials, so
 these examples do not evaluate to $`\chi^2 \approx 0`$: the one-loop
 terms change the vector even at zero offsets.
 
-Model A, model A + tilts and model B without tilts, with their classes
-and examples, are in `likelihood/exploration/` and
-[exploration/](exploration/README.md).
+The linear examples (growth-tied linear bias) and model A, model A +
+tilts and model B without tilts, with their classes and examples, are
+in `likelihood/exploration/` and [exploration/](exploration/README.md).
 `scripts/make_desi_params.py` writes the parameter files, with
 `--bias-pessimistic`, `--model-a` or `--model-b` (and `--case <name>`
 for a $`\Delta z`$ layout, e.g. `--case dr1_dz0p05`).
@@ -476,7 +481,7 @@ theory block and select the model:
           baryon_model: 2 # 1 = SP(k), 2 = BCEmu, 3 = FlamingoEmulator, 4 = BACCOemu, 5 = BCemu2025
 
 **Step :three:**: set `external_baryon_suppression: True` on the
-`lssty1xdesi.desi_cl` likelihood block.
+`lssty1xdesi.desi_cl_model_b` likelihood block.
 
 **Step :four:**: add the selected model's sampled parameters to the
 `params` block and to the `sampler: evaluate: override` block.
@@ -999,10 +1004,10 @@ extrapolated tail by $`\Delta\chi^2 = 2.09`$
 ($`\Delta z = 0.02`$), and the $`40\ \mathrm{Mpc}^{-1}`$ table
 brings them to $`\Delta\chi^2 = 0.12`$ and 0.10.
 
-`EXAMPLE_MCMC1.yaml` samples with the settings of
-`EXAMPLE_EVALUATE1.yaml` (`accuracyboost: 2`, `kmax_boltzmann: 20`),
-so a chain evaluates the model with the same settings that generated
-its data vector. The hybrid `EXAMPLE_EMUL2_*` examples keep
+`EXAMPLE_MCMC1.yaml` samples with the settings of the linear example
+`exploration/EXAMPLE_EVALUATE_LINEAR1.yaml` (`accuracyboost: 2`,
+`kmax_boltzmann: 20`), so a chain evaluates the model with the same
+settings that generated its data vector. The hybrid `EXAMPLE_EMUL2_*` examples keep
 `accuracyboost: 1` and `kmax_boltzmann: 5`.
 
 Each likelihood yaml documents the measured $`\Delta\chi^2`$ ladder

@@ -9,7 +9,9 @@ converged one. Fiducial self-consistency cannot catch this (a data
 vector generated on a given comb always matches itself), so this test
 checks two things that can:
 
-  1. the example evaluated at the project default nonlimber_accuracyboost
+  1. the linear example of the Delta d_com = 62 Mpc layout
+     (exploration/EXAMPLE_EVALUATE_LINEAR1.yaml, the model of the stored
+     fiducial) evaluated at the project default nonlimber_accuracyboost
      reproduces the stored fiducial data vector (chi2 < 0.01) - catches
      a fiducial regenerated on the wrong grid;
   2. doubling the boost moves the prediction by less than CONV_TOL in
@@ -49,7 +51,8 @@ def run(nl_boost):
     Returns:
       (datavector, chi2 against the stored fiducial, boost used)
     """
-    info = yaml_load_file(os.path.join(PRJ, "EXAMPLE_EVALUATE1.yaml"))
+    info = yaml_load_file(os.path.join(PRJ, "exploration",
+                                       "EXAMPLE_EVALUATE_LINEAR1.yaml"))
     point = dict(info["sampler"]["evaluate"]["override"])
     for key in ("sampler", "output", "timing"):
         info.pop(key, None)

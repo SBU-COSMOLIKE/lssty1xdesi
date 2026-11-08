@@ -115,7 +115,12 @@ def layout(ells):
 
 def write_examples():
     """Write EXAMPLE_EVALUATE5.yaml and EXAMPLE_EVALUATE_COVARIANCE5.yaml."""
-    text = open(os.path.join(PROJECT, "EXAMPLE_EVALUATE1.yaml")).read()
+    # the template is the linear Delta d_com = 62 Mpc example, whose
+    # cosmological parameters and theory block the LSST case shares; its
+    # likelihood block (with the prior block that follows it), evaluation
+    # point and output line are replaced below
+    text = open(os.path.join(PROJECT, "exploration",
+                             "EXAMPLE_EVALUATE_LINEAR1.yaml")).read()
     start = text.index("likelihood:\n")
     end = text.index("\nparams:\n")
     block = f"""likelihood:
@@ -133,7 +138,7 @@ def write_examples():
     # text[o1:] starts with "\noutput:", which keeps the blank line the
     # template has between the override block and the output key
     text = text[:o0] + over + text[o1:]
-    text = text.replace("output: ./projects/lssty1xdesi/chains/EXAMPLE_EVALUATE1",
+    text = text.replace("output: ./projects/lssty1xdesi/chains/EXAMPLE_EVALUATE_LINEAR1",
                         f"output: ./projects/lssty1xdesi/chains/EXAMPLE_EVALUATE{NUMBER}")
     header = ("# The LSST Y1 3x2pt case in Fourier band powers (the DESI bands):\n"
               "# scripts/make_lsst_3x2pt_case.py builds its files.\n")

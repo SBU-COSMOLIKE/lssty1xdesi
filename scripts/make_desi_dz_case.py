@@ -33,11 +33,13 @@ Delta z cases lists the full command sequence):
                bin table, densities, pairs, mask, the dataset with
                placeholder data vector and covariance, the parameter
                fragment, the likelihood class and yaml, and the EXAMPLE
-               yamls;
+               yamls (the linear example
+               exploration/EXAMPLE_EVALUATE_LINEAR<N>.yaml and
+               EXAMPLE_EVALUATE_COVARIANCE<N>.yaml);
   covariance - writes the cosmolike covariance file from the Gaussian
                term of the case's archive (compute_covariance.py on
                EXAMPLE_EVALUATE_COVARIANCE<N>.yaml);
-  fiducial   - evaluates the case's EXAMPLE yaml at its fiducial point
+  fiducial   - evaluates the case's linear example at its fiducial point
                and writes the model vector as the case's data vector.
 
 Usage (from the Cocoa/ folder, cocoapy311 active, start_cocoa.sh
@@ -65,7 +67,8 @@ import make_desi_params as parmod   # noqa: E402  parameter groups, fiducials
 
 # width (as spelled in the input file names) -> (case name, the
 # probes_properties file holding the per-bin ngal, the number of the
-# case's EXAMPLE yamls: EXAMPLE_EVALUATE<N>.yaml and
+# case's EXAMPLE yamls: EXAMPLE_EVALUATE<N>.yaml (the paper's model),
+# exploration/EXAMPLE_EVALUATE_LINEAR<N>.yaml (linear bias) and
 # EXAMPLE_EVALUATE_COVARIANCE<N>.yaml; 1 is the comoving DR3 layout)
 WIDTHS = {
     "0.02": ("dr1_dz0p02", "probes_properties_002.yaml", 2),
@@ -232,28 +235,33 @@ def leaders(case):
 def write_examples(width, case, stem, cls, nbin):
     """Write the case's evaluate and covariance EXAMPLE yamls."""
     number = WIDTHS[width][2]
-    # the evaluate example: the project example on the case's likelihood
-    text = open(os.path.join(PROJECT, "EXAMPLE_EVALUATE1.yaml")).read()
+    # the evaluate example: the linear example of the Delta d_com = 62 Mpc
+    # layout on the case's likelihood (growth-tied linear bias, the model
+    # the fiducial stage turns into the case's data vector). The paper's
+    # model on the case, EXAMPLE_EVALUATE<N>.yaml, is not written here.
+    template = os.path.join(PROJECT, "exploration", "EXAMPLE_EVALUATE_LINEAR1.yaml")
+    text = open(template).read()
     for old, new in (
             ("  lssty1xdesi.desi_cl:\n", f"  lssty1xdesi.{cls}:\n"),
             ("data_file: lssty1xdesi_desi_dr3.dataset",
              f"data_file: {stem}.dataset"),
             ("chains/desi_theory.modelvector",
              f"chains/desi_{case}_theory.modelvector"),
-            ("output: ./projects/lssty1xdesi/chains/EXAMPLE_EVALUATE1",
-             f"output: ./projects/lssty1xdesi/chains/EXAMPLE_EVALUATE{number}")):
+            ("output: ./projects/lssty1xdesi/chains/EXAMPLE_EVALUATE_LINEAR1",
+             f"output: ./projects/lssty1xdesi/chains/EXAMPLE_EVALUATE_LINEAR{number}")):
         if text.count(old) != 1:
-            raise AssertionError(f"EXAMPLE_EVALUATE1.yaml: anchor {old!r}")
+            raise AssertionError(f"{template}: anchor {old!r}")
         text = text.replace(old, new)
     text = re.sub(r"      DESI_(B1|SIGV)_\d+: [^\n]*\n", "", text)
     lead = "".join(f"      {k}: {v}\n" for k, v in leaders(case).items())
     anchor = "      w: -1.0\n"
     if text.count(anchor) != 1:
-        raise AssertionError("EXAMPLE_EVALUATE1.yaml: override anchor")
+        raise AssertionError(f"{template}: override anchor")
     text = text.replace(anchor, anchor + lead)
     header = (f"# The DESI DR1 fixed-width Delta z = {width} case ({nbin} lens "
               "bins):\n# scripts/make_desi_dz_case.py builds its files.\n")
-    out = os.path.join(PROJECT, f"EXAMPLE_EVALUATE{number}.yaml")
+    out = os.path.join(PROJECT, "exploration",
+                       f"EXAMPLE_EVALUATE_LINEAR{number}.yaml")
     open(out, "w").write(header + text)
 
     # the covariance example: the production yaml on the case
@@ -434,8 +442,9 @@ def stage_fiducial(width):
     case, stem, cls = case_names(width)
     from cobaya.model import get_model
     from cobaya.yaml import yaml_load_file
+    # the linear example: its fiducial vector is the case's data vector
     info = yaml_load_file(os.path.join(
-        PROJECT, f"EXAMPLE_EVALUATE{WIDTHS[width][2]}.yaml"))
+        PROJECT, "exploration", f"EXAMPLE_EVALUATE_LINEAR{WIDTHS[width][2]}.yaml"))
     point = dict(info["sampler"]["evaluate"]["override"])
     for key in ("sampler", "output", "force", "resume", "debug"):
         info.pop(key, None)

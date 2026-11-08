@@ -591,7 +591,7 @@ This project's `frozen/` holds:
 | `frozen_config_emul2_example1.py` | the `example1` configuration with the hybrid emulators, plus the exact evaluation point |
 | `data/` | the tests' own copy of the project's `data/` folder (data vectors, covariances, n(z) histograms, window functions, masks, pair lists), plus the baryonic-feedback vectors the generator writes |
 | `reference_chi2.json` | the reference $\chi^2$ values, one per configuration and variant |
-| `EXAMPLE_EVALUATE1.yaml` to `EXAMPLE_EVALUATE4.yaml` | snapshots of the live examples, kept only so a human can diff how they drifted since the freeze |
+| `EXAMPLE_EVALUATE1.yaml` to `EXAMPLE_EVALUATE4.yaml` | snapshots of the linear examples, today `exploration/EXAMPLE_EVALUATE_LINEAR1.yaml` to `exploration/EXAMPLE_EVALUATE_LINEAR4.yaml`, kept only so a human can diff how they drifted since the freeze |
 | `EXAMPLE_EMUL2_EVALUATE1.yaml` | snapshot of the hybrid example, kept for the same reason |
 
 ## :interrobang: FAQ: How can maintainers refresh the snapshot? <a name="refreeze"></a>

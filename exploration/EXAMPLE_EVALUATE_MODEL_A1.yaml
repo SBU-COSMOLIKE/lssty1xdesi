@@ -1,4 +1,4 @@
-# EXAMPLE_EVALUATE1.yaml (Delta d_com = 62 Mpc) with the model A bias of notes/higher_order_bias
+# EXAMPLE_EVALUATE_LINEAR1.yaml (Delta d_com = 62 Mpc) with the model A bias of notes/higher_order_bias
 # (likelihood exploration.desi_cl_model_a): the model A chunk offsets sit at their fiducial,
 # zero, in the evaluate override.
 timing: True

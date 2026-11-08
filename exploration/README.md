@@ -1,13 +1,13 @@
 # Exploration examples and likelihoods
 
 The paper uses one bias model: model B + tilts on the pessimistic
-linear-bias prior, run by `EXAMPLE_EVALUATE_MODEL_B1.yaml` to
-`EXAMPLE_EVALUATE_MODEL_B4.yaml` in the project folder (likelihoods
+linear-bias prior, run by `EXAMPLE_EVALUATE1.yaml` to
+`EXAMPLE_EVALUATE4.yaml` in the project folder (likelihoods
 `lssty1xdesi.desi_cl*_model_b`). This folder and the subpackage
 `likelihood/exploration/` hold the other models the forecast explored.
 They moved here from the project folder and from `likelihood/` without
 changes to their parameters, and each example still runs from `Cocoa/`
-like `EXAMPLE_EVALUATE1.yaml`, for example
+like the project's examples, for example
 
       cobaya-run ./projects/lssty1xdesi/exploration/EXAMPLE_EVALUATE_MODEL_A1.yaml -f
 
@@ -18,6 +18,7 @@ $`0.05`$, $`0.2`$ (`<case>` = `dr1_dz0p02`, `dr1_dz0p05`, `dr1_dz0p20`).
 
 | File | Model | Served |
 |---|---|---|
+| `EXAMPLE_EVALUATE_LINEAR1.yaml` to `4.yaml` | the growth-tied linear bias, the model of the shipped data vectors ($`\chi^2 \approx 0`$ at the fiducial), formerly `EXAMPLE_EVALUATE1.yaml` to `4.yaml`; likelihood `desi_cl[_<case>]` | the linear-bias forecasts of `EXAMPLE_EVALUATE_FISHER.ipynb` and `EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb`; note `linear_bias_kmax`; the model that `scripts/make_desi_dz_case.py` turns into the Δz data vectors; snapshot as `tests/frozen/EXAMPLE_EVALUATE1.yaml` to `4.yaml` |
 | `EXAMPLE_EVALUATE_MODEL_A1.yaml` to `A4.yaml` | model A on the growth-tied linear bias; likelihood `exploration.desi_cl[_<case>]_model_a` | the cobaya models of `EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb`, `EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb` and `EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb`; notes `correlated_bias_prior_v2` (Model A), `linear_bias_kmax`, `higher_order_bias` |
 | `EXAMPLE_EVALUATE_MODEL_B_GROWTH_TIED1.yaml` to `4.yaml` | model B on the growth-tied linear bias, formerly `EXAMPLE_EVALUATE_MODEL_B1.yaml` to `B4.yaml`; likelihood `exploration.desi_cl[_<case>]_model_b_growth_tied` | model B of `notes/higher_order_bias` (The model as implemented) |
 | `likelihood/exploration/desi_cl[_<case>]_model_a.py`, `.yaml` | the model A classes | the model A examples |
@@ -28,8 +29,9 @@ $`0.05`$, $`0.2`$ (`<case>` = `dr1_dz0p02`, `dr1_dz0p05`, `dr1_dz0p20`).
 | `likelihood/exploration/params_desi_dr3_forecast.yaml` | the source forecast's own bias fiducials with the seven-group velocity dispersions | no example reads it |
 
 The Fisher notebooks build their priors in code with the widths of these
-parameter files. They name the model A examples by their former path in
-the project folder and open them only when they rebuild their derivative
-caches; a rebuild needs the path `exploration/EXAMPLE_EVALUATE_MODEL_A<n>.yaml`.
+parameter files, and their cobaya models from the linear and model A
+examples of this folder.
 `scripts/make_desi_params.py` writes every parameter file listed here
-(`--model-a`, `--model-b`, and no flag for the DR3 forecast fiducials).
+(`--model-a`, `--model-b`, and no flag for the DR3 forecast fiducials);
+`scripts/make_desi_dz_case.py` writes `EXAMPLE_EVALUATE_LINEAR2.yaml` to
+`4.yaml`.

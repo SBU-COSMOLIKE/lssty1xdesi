@@ -1,4 +1,4 @@
-# EXAMPLE_EVALUATE4.yaml (Delta z = 0.2) with the model A bias of notes/higher_order_bias
+# EXAMPLE_EVALUATE_LINEAR4.yaml (Delta z = 0.2) with the model A bias of notes/higher_order_bias
 # (likelihood exploration.desi_cl_dr1_dz0p20_model_a): the model A chunk offsets sit at their fiducial,
 # zero, in the evaluate override.
 # The DESI DR1 fixed-width Delta z = 0.2 case (10 lens bins):
