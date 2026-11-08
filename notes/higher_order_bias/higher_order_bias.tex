@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
 
 % One symbol per object, used consistently.
@@ -291,39 +292,29 @@ for $1 \lesssim \bone \lesssim 10$ and redshift independent, reads
 \label{eq:lazeyras}
 \end{equation}
 
-Table~\ref{tab:coev} evaluates these expectations for the six DESI
-chunks of this project, with $\bone = B_g/D(z_{\rm eff})$ and the
-project amplitudes $B_g = 1.34$ (BGS), $1.70$ (LRG) and $0.84$ (ELG).
-The last two columns show how much the co-evolution $\bs$ moves across
-a chunk when $\bone$ follows the $B_g/D(z)$ shape; this drift is the
-subject of Section~\ref{sec:evolution}.
+Figure~\ref{fig:coev} draws these expectations across the six DESI
+chunks of this project, with $\bone = B_g/D(z)$ and the project
+amplitudes $B_g = 1.34$ (BGS), $1.70$ (LRG) and $0.84$ (ELG).  Each
+curve spans its chunk, so its slope shows how much the co-evolution
+$\bs$ moves across a chunk when $\bone$ follows the $B_g/D(z)$ shape;
+this drift is the subject of Section~\ref{sec:evolution}.
 
-\begin{table}
+\begin{figure}[tbp]
 \centering
-\begin{tabular}{lcccccc}
-\toprule
-chunk & $z_{\rm eff}$ & $\bone = B_g/D$ & $\btwo$ (Lazeyras) &
-$\bs$ (co-ev.) & $\bthree$ (co-ev.) & $\bs$ at chunk edges \\
-\midrule
-BGS  & 0.295 & 1.56 & $-0.64$ & $-0.32$ & $+0.06$ & $-0.24$ to $-0.37$ \\
-LRG1 & 0.510 & 2.21 & $+0.30$ & $-0.69$ & $+0.12$ & $-0.62$ to $-0.75$ \\
-LRG2 & 0.706 & 2.43 & $+0.81$ & $-0.82$ & $+0.15$ & $-0.75$ to $-0.88$ \\
-LRG3 & 0.919 & 2.68 & $+1.50$ & $-0.96$ & $+0.17$ & $-0.88$ to $-1.09$ \\
-ELG1 & 0.955 & 1.35 & $-0.77$ & $-0.20$ & $+0.04$ & $-0.15$ to $-0.25$ \\
-ELG2 & 1.317 & 1.57 & $-0.64$ & $-0.32$ & $+0.06$ & $-0.25$ to $-0.42$ \\
-\bottomrule
-\end{tabular}
-\caption{Higher-order bias expectations per DESI chunk in the CCL
-convention of Eq.~\eqref{eq:basis}, from the project's fiducial linear
-biases $\bone = B_g/D(z)$ at the chunk effective redshifts, the
-Lazeyras et al. quadratic fit of Eq.~\eqref{eq:lazeyras}, and the
-co-evolution relations of Eq.~\eqref{eq:coev}.  The growth factor is
-computed at the project fiducial cosmology
-($\Omega_m = 0.3$, $h = 0.6732$).  The $z_{\rm eff}$ values are the
-DESI DR1 effective redshifts; ELG1, which the DESI DR1 full-shape
-analysis excluded, uses its chunk's central redshift.}
-\label{tab:coev}
-\end{table}
+\includegraphics{plots/coevolution_biases/coevolution_biases.pdf}
+\caption{The fiducial biases of the six DESI chunks in the CCL
+convention of Eq.~\eqref{eq:basis}, against redshift: the project's
+linear bias $\bone = B_g/D(z)$, the Lazeyras et al. $\btwo$ of
+Eq.~\eqref{eq:lazeyras}, and the co-evolution $\bs$ and $\bthree$ of
+Eq.~\eqref{eq:coev}.  Each curve spans one chunk (the redshift ticks
+are the chunk edges); the chunks of one tracer share $B_g$, so their
+curves join.  Markers sit at the DESI DR1 effective redshifts; ELG1,
+which the DR1 full-shape analysis excluded, is marked near its
+chunk's center.
+$D$ is computed at the project fiducial cosmology
+(Appendix~\ref{app:numerics}).}
+\label{fig:coev}
+\end{figure}
 
 \subsection{Redshift space}
 \label{sec:redshift-space}
@@ -438,33 +429,23 @@ $b_2^{\rm E}$, $b_s^{\rm E}$, attributed to the DESI DR1 full-shape
 analysis.  The earlier review flagged the $b_s^{\rm E}$ column
 (positive, $0.6$--$1.4$) as incompatible with co-evolution, which
 predicts $\bs$ between $-0.3$ and $-1.0$ for these tracers
-(Table~\ref{tab:coev}), and suspected a Lagrangian-to-Eulerian
+(Figure~\ref{fig:coev}), and suspected a Lagrangian-to-Eulerian
 conversion error without establishing it.  The provenance can now be
 established from the numbers themselves.
 
-\begin{table}
+\begin{figure}[tbp]
 \centering
-\begin{tabular}{lccccc}
-\toprule
-chunk & $z_{\rm eff}$ & draft ``$b_1^{\rm E}$'' & $\sigma_8(z_{\rm eff})$ &
-draft value $/\,\sigma_8(z_{\rm eff})$ & project $\bone = B_g/D$ \\
-\midrule
-BGS  & 0.295 & 1.37500 & 0.724 & 1.90 & 1.56 \\
-LRG1 & 0.510 & 1.44800 & 0.649 & 2.23 & 2.21 \\
-LRG2 & 0.706 & 1.40300 & 0.590 & 2.38 & 2.43 \\
-LRG3 & 0.919 & 1.38800 & 0.535 & 2.60 & 2.68 \\
-ELG2 & 1.317 & 0.70400 & 0.453 & 1.56 & 1.56 \\
-\bottomrule
-\end{tabular}
-\caption{The draft table's linear-bias column read as the DESI
-physical combination $\bone\sigma_8(z_{\rm eff})$.  Dividing each
-entry by $\sigma_8$ at the DESI DR1 effective redshift of that chunk
-(computed at the project fiducial cosmology, $\sigma_8(0)=0.843$)
-returns an Eulerian linear bias that matches the project's own
-fiducial $B_g/D(z_{\rm eff})$ to $1$--$5\%$ for LRG1--3 and ELG2.  The
-BGS row differs by $27\%$; the text discusses it.}
-\label{tab:draft-check}
-\end{table}
+\includegraphics{plots/draft_bias_check/draft_bias_check.pdf}
+\caption{The draft table's linear-bias column (``$b_1^{\rm E}$'')
+read as the DESI physical combination $\bone\sigma_8(z_{\rm eff})$:
+as printed (open circles) and divided by $\sigma_8$ at the chunk's
+DESI DR1 effective redshift (filled circles), against the project's
+fiducial $\bone = B_g/D(z)$ over each chunk (gray).  $\sigma_8(z)$ is
+the rms linear density fluctuation in spheres of $8\Mpch$ at the
+project fiducial cosmology, $\sigma_8(0) = 0.843$.  The draft has no
+ELG1 row.}
+\label{fig:draft-check}
+\end{figure}
 
 Three facts identify the table as the DESI physical-basis combinations
 of Eq.~\eqref{eq:physical-basis} inserted raw:
@@ -472,7 +453,7 @@ of Eq.~\eqref{eq:physical-basis} inserted raw:
 \begin{enumerate}
 \item \textbf{The linear column divided by $\sigma_8(z_{\rm eff})$
 lands on the known biases for four of the five chunks.}
-Table~\ref{tab:draft-check} shows the check: for LRG1--3 and ELG2 the
+Figure~\ref{fig:draft-check} shows the check: for LRG1--3 and ELG2 the
 implied Eulerian bias agrees with the project's fiducial
 $B_g/D(z_{\rm eff})$ to $1$--$5\%$.  An independent check at a
 Planck-like cosmology ($\Omega_m = 0.3138$, $\sigma_8 = 0.8076$, run
@@ -483,7 +464,8 @@ instead, the column is unphysical: it would make the three LRG chunks
 nearly unbiased ($\bone\simeq1.4$ where LRGs sit near $2.2$--$2.7$)
 and the ELG2 chunk anti-biased ($\bone=0.70$) at $z=1.3$.  The BGS row
 is the exception: it implies $\bone \simeq 1.90$ against the project's
-$1.56$, a ratio of $1.27$ in both checks.  Whether that reflects the
+$1.56$, a ratio of $1.22$, and $1.27$ in the Planck-like check.
+Whether that reflects the
 project's BGS fiducial $B_g = 1.34$, which comes from the source
 forecast's configuration rather than from a DESI DR1 fit, or a
 different origin of that row, is not established here.  The direct
@@ -531,7 +513,7 @@ these particular chain values are dominated by the width of the DESI
 prior and by degeneracies with the counterterms, not by a measurement
 of the tidal field.  A forecast fiducial should come from the
 calibrated relations of Section~\ref{sec:coevolution}
-(Table~\ref{tab:coev}); the DESI posteriors then motivate the prior
+(Figure~\ref{fig:coev}); the DESI posteriors then motivate the prior
 widths, not the central values.
 
 \section{Projection to thin-bin angular spectra}
@@ -750,34 +732,28 @@ $P_{gg}$ first turns negative, and let
 $\Delta_2 = \btwo - \btwo^{\rm fit}(\bone)$ be the offset of $\btwo$
 from the Lazeyras calibration of Eq.~\eqref{eq:lazeyras} (the group
 offset $\Delta_{2,g}$ of Section~\ref{sec:trends}).
-Table~\ref{tab:kneg} gives $k_{\rm neg}$ for three representative bins,
-with $\bs$ on co-evolution.
+Figure~\ref{fig:kneg} draws $k_{\rm neg}$ against $\Delta_2$ for three
+representative bins, with $\bs$ on co-evolution.
 
-\begin{table}
+\begin{figure}[tbp]
 \centering
-\begin{tabular}{lccccc}
-\toprule
-bin & $\Delta_2 = -1$ & $-0.5$ & $0$ & $+0.5$ & $+1$ \\
-\midrule
-BGS, $z = 0.1$, $\bone = 1.41$ & 0.16 & 0.20 & 0.28 & 0.55 & 4.6 \\
-BGS, $z = 0.3$, $\bone = 1.57$ & 0.20 & 0.25 & 0.35 & 0.83 & 4.0 \\
-ELG, $z = 1.1$, $\bone = 1.43$ & 0.26 & 0.32 & 0.46 & 0.95 & 5.1 \\
-\bottomrule
-\end{tabular}
-\caption{The wavenumber $k_{\rm neg}$ [$h\,\mathrm{Mpc}^{-1}$] at which
-the one-loop $P_{gg}$ in CosmoLike's subtracted convention first turns
-negative, against the offset $\Delta_2$ of $\btwo$ from the Lazeyras
-calibration.  The tidal bias $\bs$ follows co-evolution,
-$\bone = B_g/D(z)$ with the project amplitudes, and $\bthree$ and the
-counterterm are zero.  The templates are Python FAST-PT on the CAMB
-linear spectrum at the fiducial cosmology, and the leading term is
-$\bone^2 D^2\plin$.  The halofit $\pnl$ that the likelihood puts in
+\includegraphics{plots/k_neg/k_neg.pdf}
+\caption{The wavenumber $k_{\rm neg}$ at which the one-loop $P_{gg}$
+in CosmoLike's subtracted convention first turns negative, against
+the offset $\Delta_2$ of $\btwo$ from the Lazeyras calibration, for
+two BGS bins and one ELG bin.  The tidal bias $\bs$ follows
+co-evolution, $\bone = B_g/D(z)$ with the project amplitudes, and
+$\bthree$ and the counterterm are zero.  The leading term is
+$\bone^2 D^2\plin$; the halofit $\pnl$ that the likelihood puts in
 that term is larger at these wavenumbers, so the hybrid model of
-Eq.~\eqref{eq:pgg} turns negative at somewhat higher $k$.}
-\label{tab:kneg}
-\end{table}
+Eq.~\eqref{eq:pgg} turns negative at somewhat higher $k$.  Where
+$\btwo + \tfrac{2}{3}\bs$ vanishes, $P_\infty$ of Eq.~\eqref{eq:pinf}
+vanishes with it and $k_{\rm neg}$ leaves the panel.  The numerical
+set-up is in Appendix~\ref{app:numerics}.}
+\label{fig:kneg}
+\end{figure}
 
-Three facts frame the table.  In the LRG bins the constant stays
+Three facts frame the figure.  In the LRG bins the constant stays
 small against the galaxy power, because the calibrated $\btwo$ partly
 cancels $\tfrac{2}{3}\bs$ and the larger $\bone^2$ raises the positive
 terms: $k_{\rm neg} > 1.5\hMpc$.  At the calibrated biases
@@ -861,7 +837,7 @@ bands, and one prior width below the calibrations every kept $C_\ell$
 stays positive.  Model B, at $\kmax \approx 0.18\hMpc$ on the dense
 BGS, is not.  For the low-redshift BGS bins, one-loop perturbation
 theory is not trustworthy near $k \approx 0.15$--$0.2\hMpc$ once
-$\btwo$ sits a unit below the calibration (Table~\ref{tab:kneg}).
+$\btwo$ sits a unit below the calibration (Figure~\ref{fig:kneg}).
 Three remedies are available:
 \begin{enumerate}
 \item A BGS-specific cut, $\kmax \approx 0.14\hMpc$ at $z = 0$.  It
@@ -894,7 +870,7 @@ $\mu^4$ members ($\alpha_4$, $\mathrm{SN}_4$), which DESI itself drops
 with the hexadecapole and whose thin-shell projections are suppressed
 relative to their $\mu^2$ partners; the $\bthree$ term, bounded by
 co-evolution at $|\bthree| \le 0.17$ and worth at most $0.6\%$ of
-$P_{gg}$ at $k \le 0.1\hMpc$ (Table~\ref{tab:sizes}), and degenerate
+$P_{gg}$ at $k \le 0.1\hMpc$ (Figure~\ref{fig:sizes}), and degenerate
 with $\alpha_0$ in shape over the fitted range; and the derivative
 bias $b_{k^2}$, exactly degenerate with $\alpha_0$ at one loop.  Terms
 that cannot be dropped at the shipped mask: the $\btwo$ and $\bs$
@@ -905,79 +881,49 @@ freedom), and $\mathrm{SN}_0$.  The quantitative basis follows.
 \section{The size of every term}
 \label{sec:sizes}
 
-Table~\ref{tab:sizes} gives the fractional contribution of each
-one-loop term to $P_{gg}$, computed with FAST-PT 4.0 and CAMB 1.6.5 in
-the group's \texttt{ccl} conda environment at the project fiducial
-cosmology (the \texttt{cocoapy311} environment carries neither
-package; Appendix~\ref{app:numerics} records the setup).  The
-reference is the linear-bias model $\bone^2\pnl$ with halofit, the
-quantity the current likelihood computes.  Biases follow
-Table~\ref{tab:coev}; the counterterm column shows the one-sigma DESI
-prior $\alpha_0 = 12.5\,h^{-2}\mathrm{Mpc}^2$ as a size scale; the
-shot-noise column shows the Poisson power $1/\bar{n}$ from the
-project's own thin-bin densities, which the covariance carries as
-noise, as context for the stochastic freedom.
+Figure~\ref{fig:sizes} draws the fractional contribution of each
+one-loop term to $P_{gg}$ against $k$, computed with FAST-PT 4.0 and
+CAMB 1.6.5 in the group's \texttt{ccl} conda environment at the
+project fiducial cosmology (the \texttt{cocoapy311} environment
+carries neither package; Appendix~\ref{app:numerics} records the
+setup).  The reference is the linear-bias model $\bone^2\pnl$ with
+halofit, the quantity the current likelihood computes.  Biases follow
+Figure~\ref{fig:coev} at each tracer's redshift; the dashed curve shows
+the counterterm at the one-sigma DESI prior
+$\alpha_0 = 12.5\,h^{-2}\mathrm{Mpc}^2$ as a size scale.  Figure~\ref{fig:poisson} shows, on the same scale, the
+Poisson power $1/\bar{n}$ from the project's own thin-bin densities,
+which the covariance carries as noise, as context for the stochastic
+freedom.
 
-\begin{table}
+\begin{figure}[tbp]
 \centering
-\small
-\begin{tabular}{lrrrrrrrrr}
-\toprule
-$k$ [$h$/Mpc] & $\bone\btwo$ & $\tfrac14\btwo^2$ & $\bone\bs$ &
-$\tfrac12\btwo\bs$ & $\tfrac14\bs^2$ & $\bone\bthree$ &
-loop sum & $\alpha_0 k^2\plin$ & $1/\bar{n}$ \\
-\midrule
-\multicolumn{10}{l}{$z=0.3$, BGS-like: $\bone=1.56$, $\btwo=-0.64$,
-$\bs=-0.32$, $1/\bar{n}=171$} \\
-0.050 & $-0.8$ & $+2.0$ & $+0.1$ & $+1.0$ & $+0.2$ & $+0.1$ & $+2.6$ & $1.3$ & $0.7$ \\
-0.075 & $-2.3$ & $+2.7$ & $+0.3$ & $+1.1$ & $+0.2$ & $+0.2$ & $+2.2$ & $2.9$ & $1.0$ \\
-0.100 & $-4.9$ & $+3.9$ & $+0.5$ & $+1.4$ & $+0.2$ & $+0.3$ & $+1.4$ & $5.0$ & $1.6$ \\
-0.150 & $-10.8$ & $+5.7$ & $+0.9$ & $+1.5$ & $+0.3$ & $+0.4$ & $-2.0$ & $10.7$ & $2.7$ \\
-0.200 & $-17.2$ & $+7.2$ & $+1.3$ & $+1.6$ & $+0.3$ & $+0.5$ & $-6.3$ & $17.7$ & $4.0$ \\
-\midrule
-\multicolumn{10}{l}{$z=0.5$, LRG-like: $\bone=2.20$, $\btwo=+0.28$,
-$\bs=-0.69$, $1/\bar{n}=2463$} \\
-0.050 & $+0.2$ & $+0.2$ & $+0.2$ & $-0.4$ & $+0.3$ & $+0.1$ & $+0.6$ & $0.7$ & $6.4$ \\
-0.075 & $+0.6$ & $+0.2$ & $+0.4$ & $-0.4$ & $+0.3$ & $+0.2$ & $+1.3$ & $1.5$ & $9.2$ \\
-0.100 & $+1.2$ & $+0.3$ & $+0.6$ & $-0.5$ & $+0.4$ & $+0.3$ & $+2.4$ & $2.5$ & $14.2$ \\
-0.150 & $+2.7$ & $+0.5$ & $+1.2$ & $-0.6$ & $+0.5$ & $+0.5$ & $+4.7$ & $5.4$ & $24.2$ \\
-0.200 & $+4.4$ & $+0.6$ & $+1.6$ & $-0.6$ & $+0.6$ & $+0.7$ & $+7.2$ & $9.1$ & $36.2$ \\
-\midrule
-\multicolumn{10}{l}{$z=0.8$, LRG-like: $\bone=2.54$, $\btwo=+1.09$,
-$\bs=-0.88$, $1/\bar{n}=2312$} \\
-0.050 & $+0.5$ & $+1.4$ & $+0.1$ & $-1.1$ & $+0.3$ & $+0.1$ & $+1.3$ & $0.5$ & $6.0$ \\
-0.075 & $+1.5$ & $+1.9$ & $+0.3$ & $-1.2$ & $+0.3$ & $+0.2$ & $+2.9$ & $1.1$ & $8.6$ \\
-0.100 & $+3.1$ & $+2.7$ & $+0.5$ & $-1.5$ & $+0.4$ & $+0.3$ & $+5.5$ & $1.9$ & $13.3$ \\
-0.150 & $+7.1$ & $+4.0$ & $+1.0$ & $-1.7$ & $+0.5$ & $+0.4$ & $+11.2$ & $4.1$ & $22.9$ \\
-0.200 & $+11.5$ & $+5.1$ & $+1.4$ & $-1.8$ & $+0.5$ & $+0.6$ & $+17.4$ & $7.0$ & $34.6$ \\
-\midrule
-\multicolumn{10}{l}{$z=1.3$, ELG-like: $\bone=1.56$, $\btwo=-0.64$,
-$\bs=-0.32$, $1/\bar{n}=2913$} \\
-0.050 & $-0.3$ & $+0.8$ & $+0.1$ & $+0.4$ & $+0.1$ & $+0.0$ & $+1.0$ & $1.3$ & $31.0$ \\
-0.075 & $-0.9$ & $+1.1$ & $+0.1$ & $+0.4$ & $+0.1$ & $+0.1$ & $+0.9$ & $2.9$ & $43.9$ \\
-0.100 & $-2.0$ & $+1.6$ & $+0.2$ & $+0.5$ & $+0.1$ & $+0.1$ & $+0.6$ & $5.1$ & $69.1$ \\
-0.150 & $-4.5$ & $+2.4$ & $+0.4$ & $+0.6$ & $+0.1$ & $+0.2$ & $-0.8$ & $11.1$ & $119.8$ \\
-0.200 & $-7.4$ & $+3.2$ & $+0.5$ & $+0.7$ & $+0.1$ & $+0.2$ & $-2.7$ & $19.1$ & $183.8$ \\
-\bottomrule
-\end{tabular}
+\includegraphics{plots/term_sizes/term_sizes.pdf}
 \caption{Each one-loop term of Eq.~\eqref{eq:pgg} in percent of the
-linear-bias model $\bone^2\pnl$ (halofit), at the co-evolution biases
-of Table~\ref{tab:coev}.  Loop templates are FAST-PT at $z=0$ scaled
-by $D^4(z)$, with the low-$k$ constants kept (CCL's default,
-\texttt{sub\_lowk} off).  The counterterm column evaluates
-$\alpha_0 k^2\plin(k,z)$ at the DESI one-sigma prior width
-$\alpha_0 = 12.5\,h^{-2}\mathrm{Mpc}^2$.  The last column is the
-Poisson power from the project's DESI DR3-forecast thin-bin densities
-($\bar{n} = 5.8\times10^{-3}$, $4.1\times10^{-4}$,
-$4.3\times10^{-4}$, $3.4\times10^{-4}$ in $(h/\mathrm{Mpc})^3$ at
-$z = 0.3, 0.5, 0.8, 1.3$); it sits in the covariance, not the model,
-and is listed to set the scale of the stochastic freedom.
-$1/\bar{n}$ values in the subheadings are in
-$(h^{-1}\mathrm{Mpc})^3$.}
-\label{tab:sizes}
-\end{table}
+linear-bias model $\bone^2\pnl$ (halofit), against $k$ at the tracer
+redshift, for four DESI-like tracers at the co-evolution biases of
+Figure~\ref{fig:coev}.  The three tidal terms
+($\bone\bs P_{\delta_1 s_2}$, $\tfrac12\btwo\bs P_{\delta_2 s_2}$ and
+$\tfrac14\bs^2 P_{s_2 s_2}$) are drawn as their sum.  Loop templates
+are FAST-PT at $z=0$ scaled by $D^4(z)$, with the low-$k$ constants
+kept (CCL's default, \texttt{sub\_lowk} off).  The dashed curve is the
+counterterm $\alpha_0 k^2\plin(k,z)$ at the DESI one-sigma prior width
+$\alpha_0 = 12.5\,h^{-2}\mathrm{Mpc}^2$.}
+\label{fig:sizes}
+\end{figure}
 
-Reading the table at the project's two reference cuts:
+\begin{figure}[tbp]
+\centering
+\includegraphics{plots/poisson_power/poisson_power.pdf}
+\caption{The Poisson power $1/\bar{n}$ in percent of the linear-bias
+model $\bone^2\pnl$ (halofit) of the four tracers of
+Figure~\ref{fig:sizes}, with $\bar{n}$ the density of the project's
+DESI DR3-forecast thin bin nearest each tracer redshift.  The
+covariance carries this power as noise; it is not part of the model
+and is drawn to set the scale of the stochastic freedom.}
+\label{fig:poisson}
+\end{figure}
+
+Reading the figures at the project's two reference cuts:
 
 \textbf{At $\kmax = 0.075\hMpc$} (the non-Limber UV-fraction cut that
 matches the thin-bin radial resolution), the net loop correction is
@@ -1059,7 +1005,7 @@ the model needs an explicit radial counterterm.
 the covariance, but the non-Poisson residual is detected at tens of
 percent of Poisson for red samples \cite{Nicola2023}, which is
 percent-level in $P_{gg}$ for the LRG and ELG chunks
-(Table~\ref{tab:sizes}).  A forecast that fixes it to zero converts
+(Figure~\ref{fig:poisson}).  A forecast that fixes it to zero converts
 halo-exclusion physics into cosmological information.  One
 $\mathrm{SN}_0$ per chunk is required at either cut; the
 \texttt{sub\_lowk} constants fold into the same parameter.
@@ -1068,7 +1014,7 @@ $(\bone,\btwo,\bs)$ per chunk while the pipeline evolves
 $\bone = B_g/D(z)$ across the chunk's thin bins.  The two statements
 disagree with each other, and the constant option disagrees with
 co-evolution: if $\bone$ drifts by $7$--$20\%$ across a chunk, $\bs$
-drifts with it (Table~\ref{tab:coev}, last column).
+drifts with it (Figure~\ref{fig:coev}, the $\bs$ panel).
 Section~\ref{sec:evolution} resolves this.
 \item \textbf{Halofit $P_{\delta\delta}$}: the hybrid is validated for
 projected statistics to beyond the shipped mask \cite{Nicola2023}.
@@ -1359,7 +1305,7 @@ for DESI's reason: it tracks what the data constrain and reduces
 projection effects.
 
 In both configurations, the fiducial higher-order values are the
-co-evolution and Lazeyras values of Table~\ref{tab:coev}, not imports
+co-evolution and Lazeyras values of Figure~\ref{fig:coev}, not imports
 of DESI chain values, for the reason
 Section~\ref{sec:verdict} ends with; and the covariance and Fisher
 machinery must adopt the same model as the data vector, including the
@@ -1807,20 +1753,28 @@ subtracts exactly these three constants in the combinations shown in
 Eq.~\eqref{eq:pgg}.  The third-order template is
 $\sigma_3^2(k)\plin(k)$ with the filter $\sigma_3^2$ defined through
 the $I_R$ kernel of \cite{Saito2014}; its co-evolution-weighted
-contribution is the $\bone\bthree$ column of Table~\ref{tab:sizes}.
+contribution is the $\bone\bthree$ curve of Figure~\ref{fig:sizes}.
 The unequal-time factors quoted in Section~\ref{sec:separability}
 follow from the perturbative order of each side of the correlator:
 22-type products of two second-order fields carry
 $D^2(z_1)D^2(z_2)$, 13-type products of a third-order and a linear
 field carry the symmetrized $D^3 D$.
 
-\section{Numerical setup for the size tables}
+\section{Numerical setup for the figures}
 \label{app:numerics}
 
-Cosmology: the project fiducial,
+Every figure of this note lives in its own folder under
+\texttt{plots/}, named after the figure, with its data
+(\texttt{data.json}) and the script that draws it from those data
+alone; \texttt{plots/make\_figure\_data.py} writes every
+\texttt{data.json}.
+
+Figures~\ref{fig:coev}, \ref{fig:draft-check}, \ref{fig:sizes} and
+\ref{fig:poisson}.  Cosmology: the project fiducial,
 $\Omega_m = 0.3$, $\Omega_b = 0.04$, $h = 0.6732$,
 $10^9 A_s = 2.1$, $n_s = 0.966$, massless neutrinos, giving
-$\sigma_8(0) = 0.843$.  Linear and halofit spectra from CAMB 1.6.5;
+$\sigma_8(0) = 0.843$.  Linear and halofit spectra from CAMB 1.6.5,
+halofit in the Takahashi version the likelihood uses;
 loop templates from FAST-PT 4.0 on a 1200-point logarithmic grid with
 low- and high-$k$ extrapolation and a FFTLog window of $0.75$,
 mirroring CCL's \texttt{EulerianPTCalculator} defaults; growth factors
@@ -1828,16 +1782,24 @@ from the evolution of the $k = 0.05\,\mathrm{Mpc}^{-1}$ mode.  The
 packages come from the group's \texttt{ccl} conda environment (pyccl
 3.3.3 is present there for cross-checks; the \texttt{cocoapy311}
 environment has neither fastpt nor pyccl).  Thin-bin densities for
-the Poisson column: the project files
+Figure~\ref{fig:poisson}: the project files
 \texttt{data/lssty1xdesi\_desi\_dr3\_ngal.txt} (surface density per
 bin) and \texttt{\ldots\_bins.txt} (bin mean redshifts), converted to
 three-dimensional densities with
 $\bar{n} = n_{2D}\,/(\chi^2\,\Delta\chi)$ at
 $\Delta\chi = 62.28$\,Mpc.  The $\sigma_8(z_{\rm eff})$ values of
-Table~\ref{tab:draft-check} use the same cosmology; the DESI fiducial
+Figure~\ref{fig:draft-check} use the same cosmology; the DESI fiducial
 differs from it by a few percent in $\sigma_8$, which moves the
 implied biases coherently by the same few percent and does not affect
 the identification.
+
+Figure~\ref{fig:kneg} and the $\sigma_4$ of Eq.~\eqref{eq:pinf} use
+the likelihood's evaluation cosmology instead: the same parameters
+with $n_s = 0.96605$ and one massive neutrino of $0.06$\,eV inside
+$\Omega_m$, the linear spectrum on a 2000-point logarithmic grid up to
+$40\hMpc$, and the growth factor from the ratio of the linear spectra
+at $k = 10^{-4}\hMpc$.  The massless set-up above gives a $\sigma_4$
+larger by $7\%$ and values of $k_{\rm neg}$ within $2\%$ of these.
 
 \begin{thebibliography}{99}
 
