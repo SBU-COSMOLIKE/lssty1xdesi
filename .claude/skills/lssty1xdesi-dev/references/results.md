@@ -9,7 +9,7 @@ k_max/D(zbar_i) by the UV-fraction criterion (alpha = 0.05) within the
 shipped mask. Shifts are Fisher linear responses, (w0, wa) in units of
 the fit's marginalized ellipse and Omega_m, A_s in their own sigma;
 the threshold is sigma/3. The covariance is the Gaussian one on the
-model A fiducial (SKILL.md, "The covariance"). Figures and text quote
+one-loop fiducial (SKILL.md, "The covariance"). Figures and text quote
 no FoM above k_max = 0.2.
 
 | result | notebook (section) | data |

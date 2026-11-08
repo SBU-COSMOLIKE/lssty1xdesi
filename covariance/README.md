@@ -197,11 +197,12 @@ $`[15+10b,\ 24+10b]`$ for $`b = 0..52`$ - the supports read from
 
 ## FAQ: What does the Gaussian term include? <a name="gaussian"></a>
 
-The galaxy model of the likelihood's model A at its fiducial: the
+The likelihood's one-loop galaxy model at its fiducial, which the
+paper's model and every exploration variant share: the
 per-bin linear bias $`b_1`$ over the nonlinear matter power plus the
 one-loop terms of the quadratic and tidal biases $`b_2`$ and
-$`b_{s^2}`$, which follow each bin's $`b_1`$ through model A's
-calibrations (`_model_a_biases` in the adapter). Also included are the
+$`b_{s^2}`$, which follow each bin's $`b_1`$ through the
+calibrations (`_one_loop_biases` in the adapter). Also included are the
 lens redshift-space distortions (exact non-Limber for the linear
 field, the Limber window for its nonlinear excess), the fiducial
 finger-of-god smearing of the lens kernels, shot and shape noise, and

@@ -25,17 +25,17 @@ The shipped covariance (data/lssty1xdesi_desi_dr3_cov) is imported from
 the source forecast's sacc file; this module computes an independent one
 with cosmolike's own kernels, so the two can be compared entry by entry.
 
-The Gaussian term's galaxy spectra use the one-loop galaxy bias of the
-likelihood's model A (likelihood/desi_cl.py, higher_order_bias: 1) at
-its fiducial point. Each bin's linear bias is the likelihood's fiducial
+The Gaussian term's galaxy spectra use the likelihood's one-loop galaxy
+bias (likelihood/desi_cl.py, higher_order_bias: 1) at its fiducial
+point, which the paper's model and every exploration variant share. Each bin's linear bias is the likelihood's fiducial
 b1_i = B_g/D(zbar_i): the sample amplitude B_g (CHUNK_BIAS) divided by
 the linear growth at the bin's mean redshift, computed as the
 likelihood computes it (_lens_growth). The quadratic and tidal biases
-follow b1_i through model A's calibrations with zero offsets,
+follow b1_i through the calibrations with zero offsets,
 b2_i = 0.412 - 2.143 b1_i + 0.929 b1_i^2 + 0.008 b1_i^3 (Lazeyras et
-al., arXiv:1511.01096) and bs2_i = -(4/7)(b1_i - 1) (_model_a_biases);
-model A's other terms (b3, the k^2 counterterm alpha_0 and the
-stochastic SN0) are zero at its fiducial. The galaxy spectra are b1^2
+al., arXiv:1511.01096) and bs2_i = -(4/7)(b1_i - 1) (_one_loop_biases);
+the other terms (b3, the counterterms alpha_0 and alpha_2, and the
+stochastic SN0 and SN2) are zero at the fiducial. The galaxy spectra are b1^2
 times the nonlinear matter power plus the one-loop b2 and bs2 terms of
 cosmolike's C-FAST-PT, projected in Limber; the non-Limber recompute
 corrects the linear part only. SSC and cNG keep their linear-bias
@@ -347,11 +347,11 @@ def _lens_bias(case, cosmology):
     return [CHUNK_BIAS[str(name)]/float(d) for name, d in zip(chunk_names, growth)]
 
 
-def _model_a_biases(b1):
-    """Return model A's fiducial quadratic and tidal biases of each bin.
+def _one_loop_biases(b1):
+    """Return the one-loop fiducial quadratic and tidal biases of each bin.
 
     The relations of likelihood/desi_cl.py (lazeyras_b2 and
-    model_a_biases), at their fiducial offsets DESI_DB2 = DESI_DBS = 0;
+    one_loop_biases), at their fiducial offsets DESI_DB2 = DESI_DBS = 0;
     keep the two in sync. Both follow the bin's full linear bias b1:
 
       b2  = 0.412 - 2.143 b1 + 0.929 b1^2 + 0.008 b1^3,
@@ -543,13 +543,13 @@ def configuration(accuracy_boost=None, gaussian=None, case="dr3",
     }
     # the per-bin bias needs the growth of the cosmology above
     settings["bias"] = _lens_bias(case, settings["cosmology"])
-    # The DESI cases model the galaxies with model A's one-loop bias at its
+    # The DESI cases model the galaxies with the one-loop bias at its
     # fiducial: the quadratic and tidal biases of each bin follow its b1
-    # (_model_a_biases). The shared code adds their one-loop terms to the
+    # (_one_loop_biases). The shared code adds their one-loop terms to the
     # Gaussian spectra only. The LSST photometric case keeps linear bias,
     # the model of its likelihood.
     if not _lsst(case):
-        settings["bias2"], settings["bias_s2"] = _model_a_biases(
+        settings["bias2"], settings["bias_s2"] = _one_loop_biases(
             settings["bias"])
     settings.update(numerical)
     if gaussian is None:

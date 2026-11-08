@@ -278,7 +278,7 @@ Every term projects without the Limber approximation where it matters
 ## The covariance
 
 Gaussian, built at 14,000 deg^2 (the forecasts rescale its inverse to
-12,300 deg^2) on the model A fiducial: b_{1,i} = B_g/D(zbar_i) with D
+12,300 deg^2) on the one-loop fiducial: b_{1,i} = B_g/D(zbar_i) with D
 computed as the likelihood does, b2 and bs2 on the calibrations, every
 other term zero. One covariance therefore serves models A and B. The
 one-loop terms come from cosmolike's own C-FASTPT tables, through the
@@ -446,7 +446,7 @@ These are settled; reopen one only with the PI.
 
 **The covariance**
 
-- **One covariance on the model A fiducial**, with the one-loop Gaussian
+- **One covariance on the one-loop fiducial**, with the one-loop Gaussian
   term computed in C (the clean option, chosen over rescaling the
   linear signal by the model A to linear ratio). Models A and B share
   the fiducial, so they share the covariance.

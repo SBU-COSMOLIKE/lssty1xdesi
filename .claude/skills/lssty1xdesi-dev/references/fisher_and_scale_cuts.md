@@ -3,7 +3,7 @@
 Detail behind SKILL.md, "The Fisher machinery and the notebooks". Unless
 stated, the numbers below are linear bias (the growth-tied shipped
 yamls) and were measured with the corrected linear-bias covariance of
-2026-11-07. The covariance on the model A fiducial that replaced it
+2026-11-07. The covariance on the one-loop fiducial that replaced it
 moves FoMs at k_max <= 0.1 by about 1% and raises the shipped-mask
 linear-bias FoMs by 3-10% (`covariance.md`, Sec. 1); the scale-cut FoM
 table of Sec. 5 is the rerun on the current covariance. These numbers

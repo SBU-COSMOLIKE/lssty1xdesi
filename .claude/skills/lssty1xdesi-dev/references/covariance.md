@@ -18,7 +18,7 @@ does (`_lens_growth`; GROWTH_KREF must equal the likelihood's KREF).
 `_lens_growth` agrees with an independent LCDM growth integral to
 2e-4.
 
-**One-loop bias at the model A fiducial.** `_model_a_biases` hands the
+**One-loop bias at its fiducial.** `_one_loop_biases` hands the
 core b_{2,i} = 0.412 - 2.143 b1 + 0.929 b1^2 + 0.008 b1^3 (Lazeyras et
 al., arXiv:1511.01096) and b_{s^2,i} = -(4/7)(b_{1,i} - 1)
 (co-evolution), with every offset, counterterm and stochastic amplitude
