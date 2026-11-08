@@ -108,7 +108,7 @@ $C_\ell^{\rm UV}$, from the power above it, and a band is kept while
 \end{equation}
 and within the shipped mask, which caps every bin at
 $k = 0.1185\,{\rm Mpc}^{-1}$ ($0.176\hMpc$) with no growth scaling.
-The scan runs over $\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$, each the
+The scan runs over $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$, each the
 $z = 0$ value.
 
 \paragraph{The truths.}
@@ -186,9 +186,13 @@ At $0.05$ the largest shift always comes from a negative bracket.
   \centering
   \includegraphics[width=\linewidth]{plots/fob_kmax/fob_kmax.pdf}
   \caption{The shift of a linear-bias fit to the one-loop truth
-    against the scale cut.  Lines: the calibrated
-    truth, one color per prior; bands: the range of the four brackets.
-    On $\Delta z = 0.02$ the cut at $0.05$ keeps no band; on
+    against the scale cut, one column per layout.  Lines: the
+    calibrated truth; color: the layout (black: growth-tied); line
+    width and marker: the prior (growth-tied thickest with stars,
+    baseline down-triangles, pessimistic crosses, free thinnest with
+    plus signs); band: the range of the four brackets, for the
+    pessimistic prior only; dashed:
+    $\sigma/3$.  On $\Delta z = 0.02$ the cut at $0.05$ keeps no band; on
     $\Delta z = 0.2$ the free line covers the baseline and pessimistic
     ones.  \kmaxclause}
   \label{fig:fobkmax}
@@ -256,8 +260,9 @@ Every value is in \texttt{plots/ladder\_bias\_params/data.json}.
     $(w_0, w_a)$, $\Omega_m$ and $A_s$: $2000$ truths, the known drifts
     plus a residual drawn from the baseline (left) or the pessimistic
     prior (right), each fitted under every prior.  Points: the mean
-    shift over the truths; bars: 16th--84th percentiles; gray columns:
-    the baseline and pessimistic priors.  Where
+    shift over the truths; bars: 16th--84th percentiles; color and
+    marker: the layouts; gray columns: the baseline and pessimistic
+    priors; dashed: $\sigma/3$.  Where
     the fit's prior equals the truth's scatter, the fit's error covers
     the mean shift and $\eta = 1$.  $\kmax = 0.075\hMpc$; \kmaxclause}
   \label{fig:ladderbiasparams}
@@ -280,8 +285,9 @@ precise.
   \includegraphics[width=3.5in]{plots/fom_kmax/fom_kmax.pdf}
   \caption{${\rm FoM}(w_0, w_a)$ of a linear-bias fit to the DESI
     $C_\ell^{gg}$ alone against the scale cut, one panel per layout,
-    for the priors that pass the accuracy test.  On $\Delta z = 0.2$
-    the three priors coincide.  \kmaxclause}
+    for the priors that pass the accuracy test.  Color: the layout;
+    line width and marker: the prior; gray long-dashed: LSST Y1 3x2pt.
+    On $\Delta z = 0.2$ the three priors coincide.  \kmaxclause}
   \label{fig:fomkmax}
 \end{figure}
 

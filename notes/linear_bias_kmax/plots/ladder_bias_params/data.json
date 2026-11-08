@@ -25,7 +25,7 @@
   {
    "name": "Delta d_com = 62 Mpc",
    "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
-   "color": "C0",
+   "color": "#0072B2",
    "fits": {
     "tied": {
      "conserved": {
@@ -248,7 +248,7 @@
   {
    "name": "Delta z = 0.02",
    "label": "$\\Delta z = 0.02$",
-   "color": "C3",
+   "color": "#E69F00",
    "fits": {
     "tied": {
      "conserved": {
@@ -471,7 +471,7 @@
   {
    "name": "Delta z = 0.05",
    "label": "$\\Delta z = 0.05$",
-   "color": "C2",
+   "color": "#CC79A7",
    "fits": {
     "tied": {
      "conserved": {
@@ -694,7 +694,7 @@
   {
    "name": "Delta z = 0.2",
    "label": "$\\Delta z = 0.2$",
-   "color": "C1",
+   "color": "#56B4E9",
    "fits": {
     "tied": {
      "conserved": {

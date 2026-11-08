@@ -39,7 +39,14 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DRAW_COLORS = ['#1f77b4', '#d62728', '#2ca02c', '#9467bd']
+# colorblind-safe colors (Okabe-Ito, without its green; no red or green),
+# all distinct from the black drift lines
+DRAW_COLORS = ['#0072B2', '#E69F00', '#56B4E9', '#CC79A7']
+# each draw also has its own marker, so a draw can be followed through the
+# crossings in black and white
+DRAW_MARKERS = ['o', 's', '^', 'D']
+# the marker size of the draws [pt]
+DRAW_MARKER_SIZE = 2.3
 LAW_STYLE = {'conserved': {'ls': '--', 'label': 'conserved population'},
              'flux_limit': {'ls': '-.', 'label': r'BGS flux limit $r < 19.5$'}}
 ROWS = ['baseline', 'pessimistic']
@@ -97,9 +104,9 @@ for col, (group, scale) in enumerate(zip(groups, scales)):
     z = np.array(group['z'])
     for row, case in enumerate(ROWS):
         ax = axes[row, col]
-        for draw, color in zip(group['draws'][case], DRAW_COLORS):
-            ax.plot(z, 100.0*np.array(draw)/scale, color=color, lw=0.7, marker='o', ms=1.4,
-                    alpha=0.85)
+        for draw, color, marker in zip(group['draws'][case], DRAW_COLORS, DRAW_MARKERS):
+            ax.plot(z, 100.0*np.array(draw)/scale, color=color, lw=0.7, marker=marker,
+                    ms=DRAW_MARKER_SIZE, alpha=0.85)
         for law, values in group['laws'].items():
             ax.plot(z, 100.0*np.array(values)/scale, color='black', lw=1.5,
                     ls=LAW_STYLE[law]['ls'])
@@ -138,7 +145,8 @@ else:
 
 handles = [Line2D([], [], color='black', lw=1.5, ls=LAW_STYLE[k]['ls'], label=LAW_STYLE[k]['label'])
            for k in ('conserved', 'flux_limit')]
-handles.append(Line2D([], [], color='0.45', lw=0.7, marker='o', ms=1.4, label='prior draws'))
+handles.append(Line2D([], [], color='0.45', lw=0.7, marker='o', ms=DRAW_MARKER_SIZE,
+                      label='prior draws'))
 fig.legend(handles=handles, loc='lower center', ncol=3, frameon=False, fontsize=8,
            bbox_to_anchor=(0.5, 0.93))
 fig.savefig(os.path.join(HERE, 'prior_draws.pdf'))

@@ -1,5 +1,5 @@
 {
- "about": "the random-truth accuracy test under model A: truths = known drifts plus a baseline or pessimistic residual (2000 draws, b2 and bs2 following b1), fitted with every linear-bias prior and higher-order variant; mean and 16-84 percentiles over the draws (bias history only, no data noise) of the (w0, wa) shift in units of each fit's ellipse, and sqrt(E[chi2_w]/2), the exact average over the data noise and the bias history (stored as error_inflation); plus the shift of a calibration drift of the b2 and bs2 offsets. Written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb.",
+ "about": "the random-truth accuracy test under model A: truths = known drifts plus a baseline or pessimistic residual (2000 draws, b2 and bs2 following b1), fitted with every linear-bias prior under model A (key A), model A + tilts (key A tilts) and model A calibrated; mean and 16-84 percentiles over the draws (bias history only, no data noise) of the (w0, wa) shift in units of each fit's ellipse, and sqrt(E[chi2_w]/2), the exact average over the data noise and the bias history (stored as error_inflation); plus the shift of a calibration drift of the b2 and bs2 offsets. Written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb.",
  "kmax_h_per_Mpc": 0.075,
  "lsst_y1_3x2pt_fom": 17.26,
  "lsst_y1_3x2pt_fom_om_as": 214.9,
@@ -24,8 +24,8 @@
  ],
  "variants": [
   "A calibrated",
-  "A baseline",
-  "A pessimistic"
+  "A",
+  "A tilts"
  ],
  "priors": {
   "baseline": {
@@ -77,7 +77,7 @@
   {
    "name": "Delta d_com = 62 Mpc",
    "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
-   "color": "C0",
+   "color": "#0072B2",
    "fits": {
     "A calibrated": {
      "tied": {
@@ -309,7 +309,7 @@
       }
      }
     },
-    "A baseline": {
+    "A": {
      "tied": {
       "baseline": {
        "mean": 4.630943190859304,
@@ -539,7 +539,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "baseline": {
        "mean": 1.2829347384793155,
@@ -774,7 +774,7 @@
   {
    "name": "Delta z = 0.02",
    "label": "$\\Delta z = 0.02$",
-   "color": "C3",
+   "color": "#E69F00",
    "fits": {
     "A calibrated": {
      "tied": {
@@ -1006,7 +1006,7 @@
       }
      }
     },
-    "A baseline": {
+    "A": {
      "tied": {
       "baseline": {
        "mean": 4.548165192603909,
@@ -1236,7 +1236,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "baseline": {
        "mean": 1.387623801601356,
@@ -1471,7 +1471,7 @@
   {
    "name": "Delta z = 0.05",
    "label": "$\\Delta z = 0.05$",
-   "color": "C2",
+   "color": "#CC79A7",
    "fits": {
     "A calibrated": {
      "tied": {
@@ -1703,7 +1703,7 @@
       }
      }
     },
-    "A baseline": {
+    "A": {
      "tied": {
       "baseline": {
        "mean": 8.636331757733526,
@@ -1933,7 +1933,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "baseline": {
        "mean": 1.7726957482882222,
@@ -2168,7 +2168,7 @@
   {
    "name": "Delta z = 0.2",
    "label": "$\\Delta z = 0.2$",
-   "color": "C1",
+   "color": "#56B4E9",
    "fits": {
     "A calibrated": {
      "tied": {
@@ -2400,7 +2400,7 @@
       }
      }
     },
-    "A baseline": {
+    "A": {
      "tied": {
       "baseline": {
        "mean": 5.356201386515005,
@@ -2630,7 +2630,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "baseline": {
        "mean": 1.559165706395852,

@@ -1,6 +1,6 @@
 """Redraw goodness_of_fit.pdf from data.json: for each parameter, does the
 fit's quoted error bar honestly cover where the fit actually lands? Model A
-baseline on the growth-tied and baseline linear-bias priors, when the
+(no tilts) on the growth-tied and baseline linear-bias priors, when the
 truths carry the known bias drifts plus a residual drawn from the
 pessimistic prior.
 
@@ -11,7 +11,7 @@ the random truths and the data noise. It is 1 when the error bars cover
 the truth as often as they claim; above 1 they are too small. One wide
 panel per scored parameter, stacked, one column per bin layout. data.json,
 written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, also holds the
-pessimistic and free priors and model A pessimistic, which the figure
+pessimistic and free priors and model A + tilts, which the figure
 leaves out (the caption says so).
 Run from any folder: python plot_goodness_of_fit.py
 """
@@ -46,12 +46,16 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VARIANT, TRUTH = 'A baseline', 'pessimistic'
+VARIANT, TRUTH = 'A', 'pessimistic'
 PARAM_LABELS = {'w0wa': r'$(w_0, w_a)$', 'omegam': r'$\Omega_\mathrm{m}$',
                 'As_1e9': r'$A_\mathrm{s}$'}
 # the marker of each drawn prior (the color is the layout's)
-RUNG_MARKERS = {'tied': {'marker': 's', 'ms': 6.0, 'label': 'growth-tied'},
-                'baseline': {'marker': 'o', 'ms': 6.0, 'label': 'baseline prior'}}
+# The prior markers are the notes' prior markers (growth-tied star, baseline
+# down-triangle, pessimistic X, free plus); circles, squares, diamonds and
+# up-triangles are kept for the bin layouts. The star is drawn larger: at one
+# size it looks smaller than the others.
+RUNG_MARKERS = {'tied': {'marker': '*', 'ms': 8.5, 'label': 'growth-tied'},
+                'baseline': {'marker': 'v', 'ms': 6.0, 'label': 'baseline prior'}}
 TICK_LABELS = {'Delta d_com = 62 Mpc': '$\\Delta d_\\mathrm{com}$\n62 Mpc',
                'Delta z = 0.02': '$\\Delta z$\n0.02', 'Delta z = 0.05': '$\\Delta z$\n0.05',
                'Delta z = 0.2': '$\\Delta z$\n0.2'}
@@ -133,9 +137,9 @@ fig.supylabel(r'$\sqrt{\langle\chi^2\rangle/n_\mathrm{dof}}$', x=-0.02,
               fontsize=10)
 handles = [Line2D([], [], ls='none', marker=st['marker'], ms=st['ms'], color='0.3',
                   label=st['label']) for st in RUNG_MARKERS.values()]
-handles.append(Line2D([], [], color='0.3', ls='--', lw=1.0, label='honest error bars'))
+# the reference line (eta = 1, honest error bars) carries no legend entry: the caption names it
 legend = axes[0].legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 1.0),
-                        ncol=3,
+                        ncol=2,
                         frameon=False, fontsize=8.5, handlelength=1.6, columnspacing=1.0,
                         handletextpad=0.4)
 check_clear(fig, [('legend', legend)])

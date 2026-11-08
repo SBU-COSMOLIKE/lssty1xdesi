@@ -13,6 +13,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.legend_handler import HandlerTuple
 from matplotlib.lines import Line2D
 
 # Figure style of the whole notebook: the shared plotting functions never change
@@ -39,6 +40,10 @@ matplotlib.rcParams['savefig.format'] = 'pdf'
 HERE = os.path.dirname(os.path.abspath(__file__))
 SHIFT_FLOOR = 1.0e-3
 OFFSETS = [-0.15, -0.05, 0.05, 0.15]
+# Each layout has its color and its own marker, so the figure reads in black
+# and white (the same markers as every other layout figure of the notes).
+LAYOUT_MARKER = {'Delta d_com = 62 Mpc': 'o', 'Delta z = 0.02': 's', 'Delta z = 0.05': 'D',
+                 'Delta z = 0.2': '^'}
 PARAM_LABELS = {'w0wa': r'$(w_0, w_a)$ shift [$\sigma$]',
                 'omegam': r'$\Omega_\mathrm{m}$ shift [$\sigma$]',
                 'As_1e9': r'$A_\mathrm{s}$ shift [$\sigma$]'}
@@ -70,11 +75,11 @@ for col, truth in enumerate(data['truths']):
             # shift); those points sit on the floor as open markers
             fit = raw >= SHIFT_FLOOR
             ax.errorbar((x + dx)[fit], mean[fit], yerr=[(mean - low)[fit], (high - mean)[fit]],
-                        color=lay['color'], ls='none', marker='o', ms=4.5, capsize=2.0,
-                        elinewidth=1.0)
-            ax.plot((x + dx)[~fit], mean[~fit], ls='none', marker='o', ms=4.5, mfc='white',
-                    mec=lay['color'])
-        ax.axhline(data['shift_threshold'], color='firebrick', lw=1.0, ls='--')
+                        color=lay['color'], ls='none', marker=LAYOUT_MARKER[lay['name']],
+                        ms=4.5, capsize=2.0, elinewidth=1.0)
+            ax.plot((x + dx)[~fit], mean[~fit], ls='none', marker=LAYOUT_MARKER[lay['name']],
+                    ms=4.5, mfc='white', mec=lay['color'])
+        ax.axhline(data['shift_threshold'], color='0.1', lw=1.0, ls='--')
         ax.set_yscale('log')
         ax.set_ylim(0.6*SHIFT_FLOOR, 100.0)
         if row == 0:
@@ -84,13 +89,15 @@ for col, truth in enumerate(data['truths']):
         if row == len(data['params']) - 1:
             ax.set_xticks(x)
             ax.set_xticklabels([f'fit:\n{DISPLAY[r]}' for r in rungs])
-handles = [Line2D([], [], color=lay['color'], ls='none', marker='o', ms=4.5, label=lay['label'])
-           for lay in data['layouts']]
-handles.append(Line2D([], [], color='firebrick', lw=1.0, ls='--', label=r'$\sigma/3$'))
-handles.append(Line2D([], [], color='0.3', ls='none', marker='o', ms=4.5, mfc='white',
-                      mec='0.3', label=r'exact recovery (at $10^{-3}$)'))
+handles = [Line2D([], [], color=lay['color'], ls='none', marker=LAYOUT_MARKER[lay['name']],
+                  ms=4.5, label=lay['label']) for lay in data['layouts']]
+# the reference line (sigma/3) carries no legend entry: the caption names it
+# the open markers as drawn, one per layout
+handles.append(tuple(Line2D([], [], ls='none', marker=LAYOUT_MARKER[lay['name']], ms=4.5,
+                            mfc='white', mec=lay['color']) for lay in data['layouts']))
+labels = [lay['label'] for lay in data['layouts']] + [r'exact recovery (at $10^{-3}$)']
 # just above the column titles (the axes end at 0.88 of the figure); two rows
-fig.legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 0.905), ncol=3,
-           frameon=False, fontsize=10)
+fig.legend(handles=handles, labels=labels, loc='lower center', bbox_to_anchor=(0.5, 0.905),
+           ncol=5, frameon=False, fontsize=10, handler_map={tuple: HandlerTuple(ndivide=None)})
 fig.savefig(os.path.join(HERE, 'ladder_bias_params.pdf'))
 fig.savefig(os.path.join(HERE, 'ladder_bias_params.png'), dpi=200)

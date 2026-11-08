@@ -3,9 +3,10 @@ fits to random truths under model A (one-loop bias, notes/higher_order_bias),
 in units of each fit's own ellipse. Each truth is a known drift of the
 linear bias plus a residual drawn from the baseline prior (top panel) or the
 pessimistic prior (bottom panel), with the higher-order biases following
-b1; every linear-bias prior fits every truth. Filled markers: model A
-baseline (one offset per group); open markers: model A pessimistic
-(offsets plus tilts). Points: the mean shift over the draws; bars: the
+b1; every linear-bias prior fits every truth. Each layout has its color
+and its marker shape. Filled markers: model A (one offset per
+group); open markers: model A + tilts (offsets plus tilts in redshift).
+Points: the mean shift over the draws; bars: the
 16th-84th percentiles. data.json, written by
 EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, also holds the shifts of the
 calibration drift, which plots/calibration_drift draws.
@@ -18,6 +19,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.legend_handler import HandlerTuple
 from matplotlib.lines import Line2D
 
 # Figure style of the whole notebook: the shared plotting functions never change
@@ -48,13 +50,17 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SHIFT_FLOOR = 1.0e-3
 # horizontal offsets: one per layout, and a smaller one per variant
 OFFSETS = [-0.27, -0.09, 0.09, 0.27]
-VARIANTS = {'A baseline': {'dx': -0.035, 'filled': True},
-            'A pessimistic': {'dx': 0.035, 'filled': False}}
+VARIANTS = {'A': {'dx': -0.035, 'filled': True},
+            'A tilts': {'dx': 0.035, 'filled': False}}
 # the names the figure prints for the linear-bias priors (the data keys
 # keep the notebook's names)
 DISPLAY = {'tied': 'growth-tied', 'baseline': 'baseline',
            'pessimistic': 'pessimistic', 'independent': 'free'}
 MARKER_SIZE = 3.6
+# Each layout has its marker shape as well as its color, so the layouts stay
+# apart in black and white (the shapes of every layout figure of the notes).
+LAYOUT_MARKER = {'Delta d_com = 62 Mpc': 'o', 'Delta z = 0.02': 's', 'Delta z = 0.05': 'D',
+                 'Delta z = 0.2': '^'}
 
 
 def data_points(ax):
@@ -115,9 +121,10 @@ for ax, truth in zip(axes, truths):
             low = np.maximum([s['p16'] for s in fits], SHIFT_FLOOR)
             high = np.maximum([s['p84'] for s in fits], SHIFT_FLOOR)
             ax.errorbar(x + dx + st['dx'], mean, yerr=[mean - low, high - mean], ls='none',
-                        color=lay['color'], marker='o', ms=MARKER_SIZE, mfc=face,
+                        color=lay['color'], marker=LAYOUT_MARKER[lay['name']],
+                        ms=MARKER_SIZE, mfc=face,
                         mec=lay['color'], mew=0.9, capsize=1.5, elinewidth=0.8)
-    ax.axhline(data['shift_threshold'], color='firebrick', lw=1.0, ls='--')
+    ax.axhline(data['shift_threshold'], color='0.1', lw=1.0, ls='--')
     ax.set_yscale('log')
     ax.set_ylim(0.5*SHIFT_FLOOR, 60.0)
     ax.set_yticks([1e-3, 1e-2, 1e-1, 1e0, 1e1])
@@ -128,27 +135,38 @@ for ax, truth in zip(axes, truths):
     ax.set_ylabel(f'truth: {truth}\nscatter', rotation=90, fontsize=8.5, labelpad=4)
     labels.append((f'sigma/3 label ({truth})',
                    ax.text(x[-1] + 0.47, 1.7*data['shift_threshold'], r'$\sigma/3$',
-                           va='bottom', ha='right', fontsize=8.5, color='firebrick')))
+                           va='bottom', ha='right', fontsize=8.5, color='0.1')))
 axes[-1].set_xticks(x)
 axes[-1].set_xticklabels([DISPLAY[r] for r in rungs], fontsize=8.5)
 axes[-1].set_xlim(-0.5, x[-1] + 0.5)
 axes[-1].set_xlabel('linear-bias prior of the fit', fontsize=9)
 fig.supylabel(r'$(w_0, w_a)$ shift [$\sigma$]', x=-0.01, fontsize=9.5)
 
-# Legend columns fill top to bottom, so the handles are ordered for the rows
-# to read: (62 Mpc, 0.02, model A baseline) and (0.05, 0.2, model A
-# pessimistic).
-lay_handles = [Line2D([], [], ls='none', marker='o', ms=MARKER_SIZE + 0.6,
-                      mfc=lay['color'], mec=lay['color'], label=lay['label'])
+# Two legends above the top panel, stacked close: the layouts (color and
+# marker shape), and above them the two variants, each shown by its markers
+# as drawn (the four layouts, filled or open).
+lay_handles = [Line2D([], [], ls='none', marker=LAYOUT_MARKER[lay['name']],
+                      ms=MARKER_SIZE + 0.6, mfc=lay['color'], mec=lay['color'],
+                      label=lay['label'])
                for lay in data['layouts']]
-var_handles = [Line2D([], [], ls='none', marker='o', ms=MARKER_SIZE + 0.6, mfc='0.3',
-                      mec='0.3', label='model A baseline'),
-               Line2D([], [], ls='none', marker='o', ms=MARKER_SIZE + 0.6, mfc='white',
-                      mec='0.3', label='model A pessimistic')]
-handles = [lay_handles[0], lay_handles[2], lay_handles[1], lay_handles[3]] + var_handles
-legend = axes[0].legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 1.0),
-                        ncol=3, frameon=False, fontsize=7.5, handlelength=1.0,
-                        columnspacing=0.8, handletextpad=0.3, labelspacing=0.35)
+layout_legend = axes[0].legend(handles=lay_handles, loc='lower center',
+                               bbox_to_anchor=(0.5, 1.0), ncol=2, frameon=False, fontsize=7.5,
+                               handlelength=1.0, columnspacing=1.2, handletextpad=0.3,
+                               labelspacing=0.35, borderpad=0.2)
+axes[0].add_artist(layout_legend)
+fig.canvas.draw()
+layout_top = axes[0].transAxes.inverted().transform(
+    (0.0, layout_legend.get_window_extent(fig.canvas.get_renderer()).y1))[1]
+var_handles = [tuple(Line2D([], [], ls='none', marker=LAYOUT_MARKER[lay['name']],
+                            ms=MARKER_SIZE + 0.6, mfc=lay['color'] if filled else 'white',
+                            mec=lay['color'], mew=0.9)
+                     for lay in data['layouts']) for filled in (True, False)]
+legend = axes[0].legend(handles=var_handles, labels=['model A', 'model A + tilts'],
+                        handler_map={tuple: HandlerTuple(ndivide=None)},
+                        loc='lower center', bbox_to_anchor=(0.5, layout_top), ncol=2,
+                        frameon=False, fontsize=7.5, handlelength=3.4, columnspacing=1.2,
+                        handletextpad=0.4, borderpad=0.1, borderaxespad=0.0)
+labels.append(('layout legend', layout_legend))
 labels.append(('legend', legend))
 check_clear(fig, labels)
 fig.savefig(os.path.join(HERE, 'ladder_bias_scatter.pdf'))

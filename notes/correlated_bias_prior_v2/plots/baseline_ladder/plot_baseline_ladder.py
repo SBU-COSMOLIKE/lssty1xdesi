@@ -1,8 +1,9 @@
 """Redraw the two FoM figures of this folder from data.json: the figures of
 merit of each DESI layout on the linear-bias priors that pass the
 accuracy test (baseline, pessimistic, free), under model A (one-loop
-bias, notes/higher_order_bias) in its two forecast variants: model A
-baseline (solid) and model A pessimistic (dashed), one color per layout.
+bias, notes/higher_order_bias) in its two variants: model A (solid, filled
+markers) and model A + tilts (dashed, open markers). Each layout has its own color, line width and marker, so the
+figures read in black and white.
 The growth-tied prior is not drawn: the accuracy test shows it biases the
 cosmology by many sigma, so its FoM means nothing (data.json keeps it).
 
@@ -24,6 +25,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.legend_handler import HandlerTuple
 from matplotlib.lines import Line2D
 from matplotlib.transforms import Bbox
 
@@ -49,14 +51,38 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# the line style of each drawn variant: the two forecast variants of model A
-STYLES = {
-    'A baseline': {'ls': '-', 'lw': 1.6, 'marker': 'o', 'ms': 4.5, 'label': 'model A baseline'},
-    'A pessimistic': {'ls': '--', 'lw': 1.3, 'marker': 'D', 'ms': 4.0,
-                      'label': 'model A pessimistic'},
+# Each layout has a line width and a marker as well as its color, so the
+# layouts stay apart in black and white; the marker sits at each prior.
+LAYOUT_STYLE = {
+    'Delta d_com = 62 Mpc': {'lw': 2.4, 'marker': 'o'},
+    'Delta z = 0.02': {'lw': 1.8, 'marker': 's'},
+    'Delta z = 0.05': {'lw': 1.3, 'marker': 'D'},
+    'Delta z = 0.2': {'lw': 0.9, 'marker': '^'},
 }
+# the marker size [pt]
+MARKER_SIZE = 4.0
+# The two variants of model A: solid with filled markers, dashed
+# with open markers. The dash and gap lengths are in points: matplotlib
+# scales a dash pattern by the line width, so dividing by it keeps the
+# dashes visible on the thinnest line.
+DASH = (4.5, 2.5)
+STYLES = {
+    'A': {'dashed': False, 'open': False, 'label': 'model A'},
+    'A tilts': {'dashed': True, 'open': True, 'label': 'model A + tilts'},
+}
+
+
+def line_style(lay, variant, color):
+    '''The plot keywords of one layout (lay: its name) and one variant.'''
+    st = LAYOUT_STYLE[lay]
+    ls = (0, (DASH[0]/st['lw'], DASH[1]/st['lw'])) if STYLES[variant]['dashed'] else '-'
+    face = 'white' if STYLES[variant]['open'] else color
+    return {'color': color, 'ls': ls, 'lw': st['lw'], 'marker': st['marker'],
+            'ms': MARKER_SIZE, 'mfc': face, 'mec': color}
+
+
 # the LSST Y1 reference: a gray line with long dashes, distinct from the
-# dashed model A pessimistic lines
+# dashed model A + tilts lines
 LSST_STYLE = {'color': '0.5', 'ls': (0, (7, 3)), 'lw': 1.2}
 # a reference more than this factor above the highest DESI point is not
 # drawn: the axis would be stretched for one line, so a text comment inside
@@ -107,10 +133,9 @@ def line_points(ax):
 for field, ylabel, lsst_key, name in FIGURES:
     fig, ax = plt.subplots(figsize=(3.5, 2.7))
     for lay in layouts:
-        for variant, st in STYLES.items():
+        for variant in STYLES:
             y = np.array([lay[field][variant][k] for k in rungs])
-            ax.plot(x, y, color=lay['color'], ls=st['ls'], lw=st['lw'], marker=st['marker'],
-                    ms=st['ms'])
+            ax.plot(x, y, **line_style(lay['name'], variant, lay['color']))
     top = max(lay[field][v][k] for lay in layouts for v in STYLES for k in rungs)
     lsst = data.get(lsst_key)
     lsst_text = None
@@ -126,21 +151,25 @@ for field, ylabel, lsst_key, name in FIGURES:
     ax.grid(False, axis='x')
     ax.set_ylabel(ylabel, fontsize=10)
 
-    # the layouts by color, inside the panel in its empty upper right,
-    # under the cut they share
+    # the layouts (color, line width and marker), inside the panel in its
+    # empty upper right, under the cut they share
     layout_legend = ax.legend(
-        handles=[Line2D([], [], color=lay['color'], lw=2.0, label=lay['label'])
+        handles=[Line2D([], [], label=lay['label'],
+                        **line_style(lay['name'], 'A', lay['color']))
                  for lay in layouts],
-        loc='upper right', ncol=2, frameon=False, fontsize=8, handlelength=1.2,
+        loc='upper right', ncol=2, frameon=False, fontsize=8, handlelength=2.0,
         labelspacing=0.2, handletextpad=0.5, columnspacing=0.9, borderaxespad=0.25,
         borderpad=0.2, title=KMAX_TEXT, title_fontsize=8)
     ax.add_artist(layout_legend)
-    # the line styles above the panel, the same in both figures so their
-    # panels line up side by side
-    style_handles = [Line2D([], [], color='0.25', ls=st['ls'], lw=st['lw'], marker=st['marker'],
-                            ms=st['ms'], label=st['label']) for st in STYLES.values()]
-    ax.legend(handles=style_handles, loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=2,
-              frameon=False, fontsize=8.5, handlelength=2.4, columnspacing=1.0,
+    # the two variants above the panel, the same in both figures so their
+    # panels line up side by side; each is shown by its four drawn lines side
+    # by side (solid with filled markers, dashed with open ones)
+    style_handles = [tuple(Line2D([], [], **line_style(lay['name'], variant, lay['color']))
+                           for lay in layouts) for variant in STYLES]
+    ax.legend(handles=style_handles, labels=[st['label'] for st in STYLES.values()],
+              handler_map={tuple: HandlerTuple(ndivide=None, pad=0.0)},
+              loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=2,
+              frameon=False, fontsize=8.5, handlelength=6.0, columnspacing=1.2,
               handletextpad=0.5)
 
     # the off-scale LSST Y1 value, as a comment just under the layout legend

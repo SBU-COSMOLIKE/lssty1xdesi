@@ -1,5 +1,5 @@
-"""Redraw drift_shifts.pdf from data.json: the shift of a model A baseline
-fit when the true linear biases follow a known drift away from the
+"""Redraw drift_shifts.pdf from data.json: the shift of a model A fit
+(no tilts) when the true linear biases follow a known drift away from the
 growth-tied shape (b2 and bs2 following b1 through their calibrations).
 Left column: a conserved galaxy population in every group; right column:
 the r < 19.5 flux limit in BGS. One row per scored parameter: (w0, wa) in
@@ -7,7 +7,7 @@ units of the fit's ellipse, Omega_m and A_s in their own marginalized
 sigma. Inside a panel the bin layouts are the columns and the marker shape
 is the linear-bias prior. data.json, written by
 EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, also holds the free prior (exactly
-zero) and model A pessimistic, which the figure leaves out (the caption
+zero) and model A + tilts, which the figure leaves out (the caption
 says so).
 Run from any folder: python plot_drift_shifts.py
 """
@@ -42,15 +42,19 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VARIANT = 'A baseline'
+VARIANT = 'A'
 PARAM_LABELS = {'w0wa': r'$(w_0, w_a)$', 'omegam': r'$\Omega_\mathrm{m}$',
                 'As_1e9': r'$A_\mathrm{s}$'}
 # one marker shape per drawn linear-bias prior, at its own offset inside the
 # layout's column (the color is the layout's)
-PRIOR_MARKERS = {'tied': {'marker': 's', 'dx': -0.22, 'label': 'growth-tied'},
-                 'baseline': {'marker': 'o', 'dx': 0.0, 'label': 'baseline'},
-                 'pessimistic': {'marker': 'D', 'dx': 0.22, 'label': 'pessimistic'}}
-MARKER_SIZE = 4.0
+# The prior markers are the notes' prior markers (growth-tied star, baseline
+# down-triangle, pessimistic X, free plus); circles, squares, diamonds and
+# up-triangles are kept for the bin layouts. The star is drawn larger: at one
+# size it looks smaller than the others.
+PRIOR_MARKERS = {'tied': {'marker': '*', 'ms': 6.5, 'dx': -0.22, 'label': 'growth-tied'},
+                 'baseline': {'marker': 'v', 'ms': 4.5, 'dx': 0.0, 'label': 'baseline'},
+                 'pessimistic': {'marker': 'X', 'ms': 4.5, 'dx': 0.22,
+                                 'label': 'pessimistic'}}
 # one column of panels per known drift
 DRIFT_TITLES = {'conserved': 'conserved population', 'flux_limit': r'BGS flux limit $r < 19.5$'}
 TICK_LABELS = {'Delta d_com = 62 Mpc': '62\nMpc', 'Delta z = 0.02': '0.02',
@@ -116,12 +120,12 @@ fig, axes = plt.subplots(len(params), len(drifts), figsize=(3.5, 1.05*len(params
 for row, p in enumerate(params):
     for col, drift in enumerate(drifts):
         ax = axes[row, col]
-        ax.axhline(data['shift_threshold'], color='firebrick', ls='--', lw=1.0)
+        ax.axhline(data['shift_threshold'], color='0.1', ls='--', lw=1.0)
         for i, lay in enumerate(layouts):
             shift = lay['shift'][VARIANT][drift]
             for prior, st in PRIOR_MARKERS.items():
                 ax.plot(i + st['dx'], max(shift[prior][p], FLOOR), ls='none',
-                        marker=st['marker'], ms=MARKER_SIZE, color=lay['color'])
+                        marker=st['marker'], ms=st['ms'], color=lay['color'])
         ax.set_yscale('log')
         ax.set_ylim(*y_range)
         # labeled decades away from the edges, where the panels sit close
@@ -141,13 +145,14 @@ for ax in axes[-1]:
 fig.supxlabel(r'bin layout: $\Delta d_\mathrm{com}$ or $\Delta z$', y=-0.05, fontsize=9)
 fig.supylabel(r'shift [$\sigma$]', x=-0.02, fontsize=9.5)
 
-# one key per encoding: the marker shape is the prior, the dashed line the
-# threshold (the color is the layout, read off the x axis)
-handles = [Line2D([], [], ls='none', marker=st['marker'], ms=MARKER_SIZE, color='0.3',
+# one key per encoding: the marker shape is the prior (the color is the
+# layout, read off the x axis; the dashed sigma/3 line is named in the
+# caption)
+handles = [Line2D([], [], ls='none', marker=st['marker'], ms=st['ms'], color='0.3',
                   label=st['label']) for st in PRIOR_MARKERS.values()]
-handles.append(Line2D([], [], color='firebrick', ls='--', lw=1.0, label=r'$\sigma/3$'))
+# the reference line (sigma/3) carries no legend entry: the caption names it
 legend = fig.legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 0.94),
-                    ncol=4, frameon=False, fontsize=8, handlelength=1.4, columnspacing=0.8,
+                    ncol=3, frameon=False, fontsize=8, handlelength=1.4, columnspacing=0.8,
                     handletextpad=0.3, title='linear-bias prior of the fit',
                     title_fontsize=8)
 check_clear(fig, [('legend', legend)])

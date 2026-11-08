@@ -14,8 +14,8 @@
   "independent"
  ],
  "variants": [
-  "A baseline",
-  "A pessimistic"
+  "A",
+  "A tilts"
  ],
  "truths": [
   "baseline",
@@ -25,9 +25,9 @@
   {
    "name": "Delta d_com = 62 Mpc",
    "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
-   "color": "C0",
+   "color": "#0072B2",
    "gof": {
-    "A baseline": {
+    "A": {
      "baseline": {
       "tied": {
        "w0wa": 3.444266571373665,
@@ -73,7 +73,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "baseline": {
       "tied": {
        "w0wa": 1.3693195385683274,
@@ -124,9 +124,9 @@
   {
    "name": "Delta z = 0.02",
    "label": "$\\Delta z = 0.02$",
-   "color": "C3",
+   "color": "#E69F00",
    "gof": {
-    "A baseline": {
+    "A": {
      "baseline": {
       "tied": {
        "w0wa": 3.390506949167293,
@@ -172,7 +172,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "baseline": {
       "tied": {
        "w0wa": 1.4081174351585317,
@@ -223,9 +223,9 @@
   {
    "name": "Delta z = 0.05",
    "label": "$\\Delta z = 0.05$",
-   "color": "C2",
+   "color": "#CC79A7",
    "gof": {
-    "A baseline": {
+    "A": {
      "baseline": {
       "tied": {
        "w0wa": 6.223566780604493,
@@ -271,7 +271,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "baseline": {
       "tied": {
        "w0wa": 1.6317393753829765,
@@ -322,9 +322,9 @@
   {
    "name": "Delta z = 0.2",
    "label": "$\\Delta z = 0.2$",
-   "color": "C1",
+   "color": "#56B4E9",
    "gof": {
-    "A baseline": {
+    "A": {
      "baseline": {
       "tied": {
        "w0wa": 3.963914567520855,
@@ -370,7 +370,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "baseline": {
       "tied": {
        "w0wa": 1.4991867265026697,

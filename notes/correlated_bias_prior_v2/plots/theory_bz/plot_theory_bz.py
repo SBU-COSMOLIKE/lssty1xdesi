@@ -36,8 +36,10 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-GROUP_COLORS = {'BGS': '#1f77b4', 'LRG1': '#d62728', 'LRG2': '#9467bd',
-                'LRG3': '#8c564b', 'ELG1': '#2ca02c', 'ELG2': '#ff7f0e'}
+# colorblind-safe colors (Okabe-Ito, without its green; no red or green);
+# ELG2 shares LRG1's orange, far from it in redshift and named on the curve
+GROUP_COLORS = {'BGS': '#0072B2', 'LRG1': '#E69F00', 'LRG2': '#56B4E9',
+                'LRG3': '#CC79A7', 'ELG1': '#000000', 'ELG2': '#E69F00'}
 
 
 def data_points(ax):

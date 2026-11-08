@@ -14,8 +14,8 @@
   "independent"
  ],
  "variants": [
-  "A baseline",
-  "A pessimistic"
+  "A",
+  "A tilts"
  ],
  "drifts": [
   "conserved",
@@ -25,9 +25,9 @@
   {
    "name": "Delta d_com = 62 Mpc",
    "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
-   "color": "C0",
+   "color": "#0072B2",
    "shift": {
-    "A baseline": {
+    "A": {
      "conserved": {
       "tied": {
        "w0wa": 4.677744037691988,
@@ -73,7 +73,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "conserved": {
       "tied": {
        "w0wa": 1.2160520105281856,
@@ -124,9 +124,9 @@
   {
    "name": "Delta z = 0.02",
    "label": "$\\Delta z = 0.02$",
-   "color": "C3",
+   "color": "#E69F00",
    "shift": {
-    "A baseline": {
+    "A": {
      "conserved": {
       "tied": {
        "w0wa": 5.189069438151789,
@@ -172,7 +172,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "conserved": {
       "tied": {
        "w0wa": 1.3953501731971898,
@@ -223,9 +223,9 @@
   {
    "name": "Delta z = 0.05",
    "label": "$\\Delta z = 0.05$",
-   "color": "C2",
+   "color": "#CC79A7",
    "shift": {
-    "A baseline": {
+    "A": {
      "conserved": {
       "tied": {
        "w0wa": 6.076520761919701,
@@ -271,7 +271,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "conserved": {
       "tied": {
        "w0wa": 1.7936063786607266,
@@ -322,9 +322,9 @@
   {
    "name": "Delta z = 0.2",
    "label": "$\\Delta z = 0.2$",
-   "color": "C1",
+   "color": "#56B4E9",
    "shift": {
-    "A baseline": {
+    "A": {
      "conserved": {
       "tied": {
        "w0wa": 3.9780250477076,
@@ -370,7 +370,7 @@
       }
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "conserved": {
       "tied": {
        "w0wa": 1.4764437907236483,

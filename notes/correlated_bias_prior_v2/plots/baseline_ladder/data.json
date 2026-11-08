@@ -1,5 +1,5 @@
 {
- "about": "FoM(w0, wa) of DESI C_gg alone at k_max on each linear-bias prior under model A (notes/higher_order_bias) for three higher-order variants, with the linear-bias FoMs (v1_linear) and the shifts of the known drifts. Written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb.",
+ "about": "FoM(w0, wa) of DESI C_gg alone at k_max on each linear-bias prior under model A (notes/higher_order_bias), for model A (key A), model A + tilts (key A tilts) and model A calibrated, with the linear-bias FoMs (v1_linear) and the shifts of the known drifts. Written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb.",
  "kmax_h_per_Mpc": 0.075,
  "lsst_y1_3x2pt_fom": 17.26,
  "lsst_y1_3x2pt_fom_om_as": 214.9,
@@ -24,8 +24,8 @@
  ],
  "variants": [
   "A calibrated",
-  "A baseline",
-  "A pessimistic"
+  "A",
+  "A tilts"
  ],
  "priors": {
   "baseline": {
@@ -68,7 +68,7 @@
   {
    "name": "Delta d_com = 62 Mpc",
    "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
-   "color": "C0",
+   "color": "#0072B2",
    "v1_linear": {
     "tied": 7.627411203127562,
     "baseline": 5.104890581088736,
@@ -82,13 +82,13 @@
      "pessimistic": 16.349229695910857,
      "independent": 14.848732541704422
     },
-    "A baseline": {
+    "A": {
      "tied": 15.68226377396724,
      "baseline": 10.147506182846614,
      "pessimistic": 8.574218152560414,
      "independent": 7.669140461540792
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": 10.586950664515102,
      "baseline": 9.558181975297686,
      "pessimistic": 8.094867211845589,
@@ -102,13 +102,13 @@
      "pessimistic": 4.755060537287881,
      "independent": 4.045737418240031
     },
-    "A baseline": {
+    "A": {
      "tied": 6.577978888047531,
      "baseline": 4.329039055380337,
      "pessimistic": 2.7759103579388853,
      "independent": 2.2442526724756005
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": 4.947465520074945,
      "baseline": 4.1321809337947215,
      "pessimistic": 2.5858289053848917,
@@ -150,7 +150,7 @@
       "flux_limit_As_1e9": 2.0461085857777163e-13
      }
     },
-    "A baseline": {
+    "A": {
      "tied": {
       "conserved": 4.677744037691988,
       "conserved_omegam": 2.734950063841576,
@@ -184,7 +184,7 @@
       "flux_limit_As_1e9": 1.1969642091042866e-13
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "conserved": 1.2160520105281856,
       "conserved_omegam": 0.6656013167291384,
@@ -223,7 +223,7 @@
   {
    "name": "Delta z = 0.02",
    "label": "$\\Delta z = 0.02$",
-   "color": "C3",
+   "color": "#E69F00",
    "v1_linear": {
     "tied": 7.2405144921405045,
     "baseline": 4.647711525760278,
@@ -237,13 +237,13 @@
      "pessimistic": 9.846598662371992,
      "independent": 5.2179266634942625
     },
-    "A baseline": {
+    "A": {
      "tied": 11.940950320554764,
      "baseline": 8.573174270183362,
      "pessimistic": 7.52275605702102,
      "independent": 4.1199918484245375
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": 8.231526115011103,
      "baseline": 7.609426037039874,
      "pessimistic": 6.579192378109319,
@@ -257,13 +257,13 @@
      "pessimistic": 3.863540845544762,
      "independent": 1.7349392689153567
     },
-    "A baseline": {
+    "A": {
      "tied": 6.458308737404146,
      "baseline": 3.998590294695709,
      "pessimistic": 3.013971864043984,
      "independent": 1.291450774732596
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": 4.286254681033295,
      "baseline": 3.6842275770557884,
      "pessimistic": 2.6990569264871063,
@@ -305,7 +305,7 @@
       "flux_limit_As_1e9": 5.514244713292509e-13
      }
     },
-    "A baseline": {
+    "A": {
      "tied": {
       "conserved": 5.189069438151789,
       "conserved_omegam": 1.6818358131103577,
@@ -339,7 +339,7 @@
       "flux_limit_As_1e9": 8.523377905280378e-14
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "conserved": 1.3953501731971898,
       "conserved_omegam": 0.4410055982030442,
@@ -378,7 +378,7 @@
   {
    "name": "Delta z = 0.05",
    "label": "$\\Delta z = 0.05$",
-   "color": "C2",
+   "color": "#CC79A7",
    "v1_linear": {
     "tied": 2.7716605382831294,
     "baseline": 0.7118207019932663,
@@ -392,13 +392,13 @@
      "pessimistic": 6.936180585584415,
      "independent": 6.3366285928510475
     },
-    "A baseline": {
+    "A": {
      "tied": 7.254369678686334,
      "baseline": 3.1022649776817577,
      "pessimistic": 2.2314166169829206,
      "independent": 1.8465947792665802
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": 3.1050901179749917,
      "baseline": 2.569640292891004,
      "pessimistic": 1.7674912639524363,
@@ -412,13 +412,13 @@
      "pessimistic": 1.100048599826205,
      "independent": 0.9977153305445309
     },
-    "A baseline": {
+    "A": {
      "tied": 1.9903952419984108,
      "baseline": 0.5220479562671734,
      "pessimistic": 0.3458636929729648,
      "independent": 0.27965967389802665
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": 0.6281913207819498,
      "baseline": 0.42644124194544714,
      "pessimistic": 0.2679891439945776,
@@ -460,7 +460,7 @@
       "flux_limit_As_1e9": 7.127620742026061e-14
      }
     },
-    "A baseline": {
+    "A": {
      "tied": {
       "conserved": 6.076520761919701,
       "conserved_omegam": 1.293780937646948,
@@ -494,7 +494,7 @@
       "flux_limit_As_1e9": 1.1450596546090253e-12
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "conserved": 1.7936063786607266,
       "conserved_omegam": 0.4085546084418339,
@@ -533,7 +533,7 @@
   {
    "name": "Delta z = 0.2",
    "label": "$\\Delta z = 0.2$",
-   "color": "C1",
+   "color": "#56B4E9",
    "v1_linear": {
     "tied": 0.6518125950344678,
     "baseline": 0.17722771807101156,
@@ -547,13 +547,13 @@
      "pessimistic": 2.7911352530630062,
      "independent": 2.7911352530630062
     },
-    "A baseline": {
+    "A": {
      "tied": 2.1565777958537726,
      "baseline": 0.7159759693194556,
      "pessimistic": 0.7159759693194556,
      "independent": 0.7159759693194556
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": 0.7435493974175633,
      "baseline": 0.45672625958564517,
      "pessimistic": 0.45672625958564517,
@@ -567,13 +567,13 @@
      "pessimistic": 0.29485402957541507,
      "independent": 0.29485402957541507
     },
-    "A baseline": {
+    "A": {
      "tied": 0.3898050305016365,
      "baseline": 0.08842333536999956,
      "pessimistic": 0.08842333536999956,
      "independent": 0.08842333536999956
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": 0.10353835948408785,
      "baseline": 0.05364388016365614,
      "pessimistic": 0.05364388016365614,
@@ -615,7 +615,7 @@
       "flux_limit_As_1e9": 8.510648255312025e-15
      }
     },
-    "A baseline": {
+    "A": {
      "tied": {
       "conserved": 3.9780250477076,
       "conserved_omegam": 1.445725689007386,
@@ -649,7 +649,7 @@
       "flux_limit_As_1e9": 2.275524819595246e-13
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "conserved": 1.4764437907236483,
       "conserved_omegam": 1.1092581438309495,

@@ -36,7 +36,14 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DRAW_COLORS = ['#1f77b4', '#d62728', '#2ca02c', '#9467bd', '#8c564b']
+# colorblind-safe colors (Okabe-Ito, without its green; no red or green),
+# all distinct from the black drift line
+DRAW_COLORS = ['#0072B2', '#E69F00', '#56B4E9', '#CC79A7', '0.55']
+# each draw also has its own marker, so a draw can be followed through the
+# crossings in black and white
+DRAW_MARKERS = ['o', 's', '^', 'D', 'v']
+# the marker size of the draws [pt]
+DRAW_MARKER_SIZE = 3.2
 
 
 def data_points(ax):
@@ -83,10 +90,10 @@ memory = data['memory_prior']
 
 # full width of a two-column article
 fig, axes = plt.subplots(1, 2, figsize=(7.0, 3.4), sharey=True, gridspec_kw={'wspace': 0.06})
-for draw, color in zip(data['kernel_draws'], DRAW_COLORS):
-    axes[0].plot(z, 100.0*np.array(draw), color=color, lw=1.2, marker='o', ms=2.5)
-for draw, color in zip(data['memory_draws'], DRAW_COLORS):
-    axes[1].plot(z, 100.0*np.array(draw), color=color, lw=1.2, marker='o', ms=2.5)
+for ax, key in zip(axes, ('kernel_draws', 'memory_draws')):
+    for draw, color, marker in zip(data[key], DRAW_COLORS, DRAW_MARKERS):
+        ax.plot(z, 100.0*np.array(draw), color=color, lw=1.2, marker=marker,
+                ms=DRAW_MARKER_SIZE)
 for ax in axes:
     ax.plot(z, 100.0*np.array(data['flux_limit']), color='black', lw=2.6, ls='-.')
     ax.axhline(0.0, color='0.2', lw=0.8)
@@ -97,7 +104,8 @@ axes[0].set_title(rf'kernel: $\sigma_g = {100*kernel["sigma_b"]:.0f}\%$, $L = {k
 axes[1].set_title(rf'memory: free tilt + $\sigma_g = {100*memory["sigma_b"]:.0f}\%$, '
                   rf'$L = {memory["L"]:g}$', fontsize=10.5)
 handles = [Line2D([], [], color='black', lw=2.6, ls='-.', label=r'BGS flux limit $r < 19.5$'),
-           Line2D([], [], color='0.4', lw=1.2, marker='o', ms=2.5, label='prior draws')]
+           Line2D([], [], color='0.4', lw=1.2, marker='o', ms=DRAW_MARKER_SIZE,
+                  label='prior draws')]
 legend = axes[1].legend(handles=handles, loc='lower right', frameon=False, fontsize=9.5)
 check_clear(fig, [('legend', legend)])
 fig.savefig(os.path.join(HERE, 'theory_draws.pdf'))

@@ -47,13 +47,18 @@ matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # one color per tracer type, the same in every figure of the note
-TRACER_COLORS = {'bgs': '#1b9e77', 'lrg': '#d95f02', 'elg': '#7570b3'}
+# colorblind-safe colors (Okabe-Ito, without its green; no red or green)
+TRACER_COLORS = {'bgs': '#0072B2', 'lrg': '#E69F00', 'elg': '#CC79A7'}
 TRACER_NAMES = {'bgs': 'BGS', 'lrg': 'LRG', 'elg': 'ELG'}
+# each tracer also has its own line style and marker shape, so the curves
+# read in black and white
+TRACER_STYLE = {'bgs': {'ls': '-', 'marker': 'o'}, 'lrg': {'ls': '--', 'marker': 's'},
+                'elg': {'ls': '-.', 'marker': 'D'}}
 # the panels, top to bottom: data.json key and the bias name on the right side
 PANELS = [('b1', r'$b_1$'), ('b2', r'$b_2$'), ('bs2', r'$b_{s^2}$'),
           ('b3nl', r'$b_{3\mathrm{nl}}$')]
 CURVE_STYLE = {'lw': 1.6}
-MARKER_STYLE = {'marker': 'o', 'ms': 4.0, 'ls': 'none'}
+MARKER_STYLE = {'ms': 4.0, 'ls': 'none'}
 ZERO_LINE = {'color': '0.6', 'lw': 0.6}
 # the DESI chunk edges, which label the redshift axis
 Z_TICKS = [0.1, 0.4, 0.6, 0.8, 1.1, 1.6]
@@ -164,8 +169,10 @@ for ax, (key, name) in zip(axes, PANELS):
     ax.axhline(0.0, **ZERO_LINE)
     for chunk in chunks:
         color = TRACER_COLORS[chunk['sample']]
-        ax.plot(chunk['z'], chunk[key], color=color, **CURVE_STYLE)
-        ax.plot(chunk['z_eff'], chunk['at_z_eff'][key], color=color, **MARKER_STYLE)
+        style = TRACER_STYLE[chunk['sample']]
+        ax.plot(chunk['z'], chunk[key], color=color, ls=style['ls'], **CURVE_STYLE)
+        ax.plot(chunk['z_eff'], chunk['at_z_eff'][key], color=color, marker=style['marker'],
+                **MARKER_STYLE)
     ax.set_ylim(*y_range)
     ax.set_yticks([-1, 0, 1, 2, 3])
     ax.tick_params(axis='y', labelsize=8.5)
@@ -183,7 +190,8 @@ ylabel = fig.supylabel('fiducial bias, CCL convention', x=-0.03, fontsize=10)
 handles = []
 for sample in ('bgs', 'lrg', 'elg'):
     handles.append(Line2D([], [], color=TRACER_COLORS[sample], label=TRACER_NAMES[sample],
-                          marker='o', ms=4.0, **CURVE_STYLE))
+                          ls=TRACER_STYLE[sample]['ls'], marker=TRACER_STYLE[sample]['marker'],
+                          ms=4.0, **CURVE_STYLE))
 legend = axes[0].legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 1.0),
                         ncol=3, frameon=False, fontsize=8.5, handlelength=2.0,
                         columnspacing=1.4, handletextpad=0.5)

@@ -1,11 +1,11 @@
-"""Redraw calibration_drift.pdf from data.json: the shift of a model A
-baseline fit when the calibrations themselves drift, the b2 and bs2
+"""Redraw calibration_drift.pdf from data.json: the shift of a model A fit
+(no tilts) when the calibrations themselves drift, the b2 and bs2
 offsets changing linearly in redshift across each group (b1 at its
 fiducial), under the four linear-bias priors. (w0, wa) is scored in units
 of the fit's ellipse, Omega_m and A_s in their own marginalized sigma. One
 wide panel per scored parameter, stacked, one column per bin layout.
 data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, also holds
-model A pessimistic, whose tilts absorb this drift exactly by construction
+model A + tilts, whose tilts absorb this drift exactly by construction
 (the caption says so).
 Run from any folder: python plot_calibration_drift.py
 """
@@ -40,14 +40,18 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VARIANT = 'A baseline'
+VARIANT = 'A'
 PARAM_LABELS = {'w0wa': r'$(w_0, w_a)$', 'omegam': r'$\Omega_\mathrm{m}$',
                 'As_1e9': r'$A_\mathrm{s}$'}
 # every linear-bias prior at its own offset inside the layout's column
-RUNG_MARKERS = {'tied': {'marker': 's', 'dx': -0.27, 'label': 'growth-tied'},
-                'baseline': {'marker': 'o', 'dx': -0.09, 'label': 'baseline'},
-                'pessimistic': {'marker': 'D', 'dx': 0.09, 'label': 'pessimistic'},
-                'independent': {'marker': '^', 'dx': 0.27, 'label': 'free'}}
+# The prior markers are the notes' prior markers (growth-tied star, baseline
+# down-triangle, pessimistic X, free plus); circles, squares, diamonds and
+# up-triangles are kept for the bin layouts. The star is drawn larger: at one
+# size it looks smaller than the others.
+RUNG_MARKERS = {'tied': {'marker': '*', 'ms': 7.5, 'dx': -0.27, 'label': 'growth-tied'},
+                'baseline': {'marker': 'v', 'ms': 5.5, 'dx': -0.09, 'label': 'baseline'},
+                'pessimistic': {'marker': 'X', 'ms': 5.5, 'dx': 0.09, 'label': 'pessimistic'},
+                'independent': {'marker': 'P', 'ms': 5.5, 'dx': 0.27, 'label': 'free'}}
 TICK_LABELS = {'Delta d_com = 62 Mpc': '$\\Delta d_\\mathrm{com}$\n62 Mpc',
                'Delta z = 0.02': '$\\Delta z$\n0.02', 'Delta z = 0.05': '$\\Delta z$\n0.05',
                'Delta z = 0.2': '$\\Delta z$\n0.2'}
@@ -101,12 +105,12 @@ y_range = (min(values)/2.5, max(values)*5.0)
 fig, axes = plt.subplots(len(params), 1, figsize=(3.5, 1.15*len(params)), sharex=True,
                          sharey=True, gridspec_kw={'hspace': 0.06})
 for ax, p in zip(axes, params):
-    ax.axhline(data['shift_threshold'], color='firebrick', ls='--', lw=1.0)
+    ax.axhline(data['shift_threshold'], color='0.1', ls='--', lw=1.0)
     for i, lay in enumerate(layouts):
         shift = lay['shift'][VARIANT]
         for rung, st in RUNG_MARKERS.items():
-            ax.plot(i + st['dx'], shift[rung][p], ls='none', marker=st['marker'], ms=5.0,
-                    color=lay['color'])
+            ax.plot(i + st['dx'], shift[rung][p], ls='none', marker=st['marker'],
+                    ms=st['ms'], color=lay['color'])
     ax.set_yscale('log')
     ax.set_ylim(*y_range)
     ax.set_yticks([1e-2, 1e-1, 1])
@@ -120,11 +124,11 @@ axes[-1].set_xticks(x)
 axes[-1].set_xticklabels([TICK_LABELS.get(lay['name'], lay['name']) for lay in layouts],
                          fontsize=9)
 fig.supylabel(r'shift [$\sigma$]', x=-0.04, fontsize=10)
-handles = [Line2D([], [], ls='none', marker=st['marker'], ms=5.0, color='0.3',
+handles = [Line2D([], [], ls='none', marker=st['marker'], ms=st['ms'], color='0.3',
                   label=st['label']) for st in RUNG_MARKERS.values()]
-handles.append(Line2D([], [], color='firebrick', ls='--', lw=1.0, label=r'$\sigma/3$'))
+# the reference line (sigma/3) carries no legend entry: the caption names it
 legend = axes[0].legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 1.0),
-                        ncol=5, frameon=False, fontsize=8.5, handlelength=1.4,
+                        ncol=4, frameon=False, fontsize=8.5, handlelength=1.4,
                         columnspacing=0.8, handletextpad=0.3, title='linear-bias prior',
                         title_fontsize=8.5)
 check_clear(fig, [('legend', legend)])

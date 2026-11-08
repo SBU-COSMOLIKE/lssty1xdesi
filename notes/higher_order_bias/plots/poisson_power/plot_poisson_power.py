@@ -41,10 +41,12 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# one color per tracer type, the same in every figure of the note; the two LRG
-# redshifts differ by line style
-TRACER_COLORS = {'BGS-like': '#1b9e77', 'LRG-like': '#d95f02', 'ELG-like': '#7570b3'}
-LINE_STYLES = {0.3: '-', 0.5: '-', 0.8: '--', 1.3: '-'}
+# one color per tracer type, the same in every figure of the note
+# colorblind-safe colors (Okabe-Ito, without its green; no red or green)
+TRACER_COLORS = {'BGS-like': '#0072B2', 'LRG-like': '#E69F00', 'ELG-like': '#CC79A7'}
+# one line style per curve (keyed by its redshift), so the curves read in
+# black and white too
+LINE_STYLES = {0.3: '-', 0.5: '-.', 0.8: '--', 1.3: ':'}
 # the values span 2.5 decades, so the y axis is logarithmic
 Y_RANGE = (0.2, 400.0)
 # a label may not come closer to a drawn line or marker than this, in points

@@ -106,7 +106,7 @@ err_down = 100.0*np.array([row['b_err_down'] for row in data['bins']])*d/B
 fig, ax = plt.subplots(figsize=(3.5, 1.7))
 ax.axhline(0.0, color='0.3', ls='--', lw=1.0)
 ax.errorbar(z_c, residual, yerr=[err_down, err_up], xerr=[z_c - z_lo, z_hi - z_c], ls='none',
-            marker='o', ms=4.0, color='C0', capsize=1.5, elinewidth=0.9)
+            marker='o', ms=4.0, color='#0072B2', capsize=1.5, elinewidth=0.9)
 ax.set_xlabel(r'photometric redshift $z$', fontsize=9)
 ax.set_ylabel(r'$b\,D(z)/1.5 - 1$ [%]', fontsize=9)
 ax.set_xlim(0.38, 0.96)
@@ -114,7 +114,7 @@ ax.set_ylim(-6.0, 15.0)
 ax.grid(False, axis='x')
 legend = ax.legend(handles=[Line2D([], [], color='0.3', ls='--', lw=1.0,
                                    label=r'constant clustering amplitude, $b = 1.5/D$'),
-                            Line2D([], [], ls='none', marker='o', ms=4.0, color='C0',
+                            Line2D([], [], ls='none', marker='o', ms=4.0, color='#0072B2',
                                    label='Zhou et al. (2021)')],
                    loc='upper left', frameon=False, fontsize=7.5, handlelength=1.6,
                    labelspacing=0.3)

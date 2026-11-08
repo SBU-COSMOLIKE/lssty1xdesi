@@ -9,11 +9,13 @@ while less than 5% of it comes from wavenumbers above k_max/D(zbar_i),
 with D the linear growth factor and zbar_i the bin's mean redshift.
 
 The figure is one column of a two-column paper: one panel per bin
-layout, stacked, all on the same logarithmic y range. Each panel draws
-the linear-bias priors that pass the accuracy test of the linear-bias
-priors (baseline, pessimistic, free). The growth-tied prior fails that
-test, so its FoM is not drawn; data.json keeps it. A gray dashed line
-marks the LSST Y1 3x2pt FoM(w0, wa) for scale.
+layout, stacked, all on the same logarithmic y range. Each panel draws, in
+its layout's color, the linear-bias priors that pass the accuracy test of
+the linear-bias priors (baseline, pessimistic, free), told apart by line
+width and marker. The growth-tied prior fails that test, so its FoM is not
+drawn; data.json keeps it. A gray long-dashed line marks the LSST Y1 3x2pt
+FoM(w0, wa) for scale. Cuts up to k_max = 0.2 h/Mpc
+(KMAX_MAX) are drawn.
 
 data.json holds the fom entries of ../fob_kmax/data.json, which
 EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb writes; a cut that leaves no
@@ -51,15 +53,25 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# The priors drawn, with the colors of the shift figure fob_kmax so a prior
-# keeps one color across the note. Drawn in this order: on Delta z = 0.2
-# the three priors coincide (every group holds one or two bins), and the
-# free line, drawn last, covers the other two.
+# Each panel is one layout and takes the layout's color (the notes' layout
+# colors, Okabe-Ito without its green). The priors drawn differ by line
+# width and marker, the notes' prior markers (baseline down-triangle,
+# pessimistic X, free plus), the same as in fob_kmax; circles, squares,
+# diamonds and up-triangles are kept for the layouts. Drawn in this order: on
+# Delta z = 0.2 the three priors coincide (every group holds one or two
+# bins), and the thinner lines, drawn last, stay visible on the thicker ones.
 PRIOR_STYLE = {
-    'baseline': {'color': 'C0', 'label': 'baseline prior'},
-    'pessimistic': {'color': 'C3', 'label': 'pessimistic prior'},
-    'independent': {'color': 'C2', 'label': 'free'},
+    'baseline': {'lw': 1.8, 'marker': 'v', 'label': 'baseline prior'},
+    'pessimistic': {'lw': 1.3, 'marker': 'X', 'label': 'pessimistic prior'},
+    'independent': {'lw': 0.9, 'marker': 'P', 'label': 'free'},
 }
+# the legend's color: the priors are the same in every panel, whose color
+# is its layout's
+LEGEND_COLOR = '0.2'
+# the marker size at each cut [pt]
+MARKER_SIZE = 3.5
+# the largest cut drawn [h/Mpc at z = 0]; data.json may hold larger ones
+KMAX_MAX = 0.2
 # the LSST Y1 reference: gray with long dashes, so it reads as a reference
 # and not as one more prior
 LSST_STYLE = {
@@ -142,7 +154,10 @@ def check_clear(fig, artists, axes):
 
 with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
-kmax = np.array(data['kmax_h_per_Mpc'], dtype=float)
+kmax_all = np.array(data['kmax_h_per_Mpc'], dtype=float)
+# the cuts drawn: KMAX_MAX and below (1e-9 absorbs the float rounding)
+DRAWN_CUTS = kmax_all <= KMAX_MAX + 1.0e-9
+kmax = kmax_all[DRAWN_CUTS]
 layouts = data['layouts']
 lsst = data['lsst_y1_3x2pt_fom']
 
@@ -154,8 +169,10 @@ for ax, lay in zip(axes, layouts):
     for key, st in PRIOR_STYLE.items():
         # null (no fit at that cut) becomes NaN, which matplotlib leaves
         # out of the line
-        fom = np.array([np.nan if v is None else v for v in lay['fom'][key]], dtype=float)
-        ax.plot(kmax, fom, color=st['color'], lw=1.4, marker='o', ms=2.8)
+        fom = np.array([np.nan if v is None else v for v in lay['fom'][key]],
+                       dtype=float)[DRAWN_CUTS]
+        ax.plot(kmax, fom, color=lay['color'], lw=st['lw'], marker=st['marker'],
+                ms=MARKER_SIZE)
     ax.set_yscale('log')
     ax.set_ylim(*Y_RANGE)
     # no tick at the top edge, where its label would reach into the gap
@@ -169,12 +186,12 @@ axes[-1].set_xlim(kmax[0] - 0.01, kmax[-1] + 0.01)
 axes[-1].set_xlabel(r'$k_\mathrm{max}$ [$h$ Mpc$^{-1}$] at $z = 0$', fontsize=10)
 fig.supylabel(r'FoM$(w_0, w_a)$, DESI $C_\ell^{gg}$ alone', x=-0.02, fontsize=10)
 
-handles = [Line2D([], [], color=st['color'], lw=1.4, marker='o', ms=2.8, label=st['label'])
-           for st in PRIOR_STYLE.values()]
-handles.append(Line2D([], [], label='LSST Y1 3x2pt', **LSST_STYLE))
+handles = [Line2D([], [], color=LEGEND_COLOR, lw=st['lw'], marker=st['marker'], ms=MARKER_SIZE,
+                  label=st['label']) for st in PRIOR_STYLE.values()]
+# the reference line (LSST Y1 3x2pt) carries no legend entry: the caption names it
 # two rows above the top panel, where no data are drawn
 legend = axes[0].legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 1.0),
-                        ncol=2, frameon=False, fontsize=8, handlelength=2.2,
+                        ncol=3, frameon=False, fontsize=8, handlelength=2.2,
                         columnspacing=1.2, handletextpad=0.5, labelspacing=0.3)
 check_clear(fig, labels + [legend], axes)
 fig.savefig(os.path.join(HERE, 'fom_kmax.pdf'))

@@ -14,8 +14,8 @@
   "independent"
  ],
  "variants": [
-  "A baseline",
-  "A pessimistic"
+  "A",
+  "A tilts"
  ],
  "calibration_drift": {
   "b2": 1.0,
@@ -25,9 +25,9 @@
   {
    "name": "Delta d_com = 62 Mpc",
    "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
-   "color": "C0",
+   "color": "#0072B2",
    "shift": {
-    "A baseline": {
+    "A": {
      "tied": {
       "w0wa": 0.6693331650164437,
       "omegam": 0.06260983783491325,
@@ -49,7 +49,7 @@
       "As_1e9": 0.08956507509745983
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "w0wa": 2.0140845122755543e-13,
       "omegam": 3.6636168118251806e-14,
@@ -76,9 +76,9 @@
   {
    "name": "Delta z = 0.02",
    "label": "$\\Delta z = 0.02$",
-   "color": "C3",
+   "color": "#E69F00",
    "shift": {
-    "A baseline": {
+    "A": {
      "tied": {
       "w0wa": 0.567216631725091,
       "omegam": 0.010372134479661585,
@@ -100,7 +100,7 @@
       "As_1e9": 0.013842924240447864
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "w0wa": 1.9139010866040465e-14,
       "omegam": 2.4282469127135157e-14,
@@ -127,9 +127,9 @@
   {
    "name": "Delta z = 0.05",
    "label": "$\\Delta z = 0.05$",
-   "color": "C2",
+   "color": "#CC79A7",
    "shift": {
-    "A baseline": {
+    "A": {
      "tied": {
       "w0wa": 0.7263016724600484,
       "omegam": 0.06374776744269807,
@@ -151,7 +151,7 @@
       "As_1e9": 0.36667540370571833
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "w0wa": 8.550821186694929e-13,
       "omegam": 7.482834531414171e-13,
@@ -178,9 +178,9 @@
   {
    "name": "Delta z = 0.2",
    "label": "$\\Delta z = 0.2$",
-   "color": "C1",
+   "color": "#56B4E9",
    "shift": {
-    "A baseline": {
+    "A": {
      "tied": {
       "w0wa": 1.087113030775561,
       "omegam": 0.44014318121225093,
@@ -202,7 +202,7 @@
       "As_1e9": 0.3139664675908736
      }
     },
-    "A pessimistic": {
+    "A tilts": {
      "tied": {
       "w0wa": 6.954039586216921e-13,
       "omegam": 1.86995425937813e-13,

@@ -685,16 +685,18 @@ counterterm, so the prior would set the per-bin posteriors.
 What a free parameter adds on top of the inherited trend is a drift of
 the calibration itself: $\btwo$ at fixed $\bone$ changes with the
 satellite fraction and the color mix, slowly within one selection.  The
-freedom therefore sits per group.  The \emph{baseline} variant gives
-each group one offset, $\Delta_{2,i} = \Delta_{2,g}$ (and likewise
-$\Delta_s$); the \emph{pessimistic} variant adds a linear tilt,
+freedom therefore sits per group.  Models A and B give each group one
+offset, $\Delta_{2,i} = \Delta_{2,g}$ (and likewise $\Delta_s$);
+\emph{model A + tilts} and \emph{model B + tilts} add a free straight
+line in redshift within the group, the kind of line $s_g$ gives the
+linear bias,
 $\Delta_{2,i} = \Delta_{2,g} + t_{2,g}(\bar{z}_i - \bar{z}_g)$, with a
-flat prior on $t_{2,g}$.  The counterterms follow the same pattern,
-because their scale follows the size of the host halos, a population
+flat prior on the tilt $t_{2,g}$.  The counterterms follow the same
+pattern, because their scale follows the size of the host halos, a population
 property that drifts with the selection.  The stochastic amplitudes
 never tilt: the Poisson part $1/\bar{n}_i$ is known per bin and sits in
-the covariance, so only the non-Poisson fraction could drift, and the
-variants tilt only what has a physical driver.
+the covariance, so only the non-Poisson fraction could drift, and
+only what has a physical driver tilts.
 
 \subsection{Models A and B}
 \label{sec:models}
@@ -707,8 +709,8 @@ layout and variant under \texttt{likelihood/}, written by
 \texttt{B1}--\texttt{B4} set them up on the four layouts.  The
 likelihood reads every parameter per bin; a group is a yaml statement
 that ties its bins to one offset, or to an offset and a tilt.
-Table~\ref{tab:widths} lists the prior widths.  Either model, in
-either variant, runs under any of the linear-bias priors.
+Table~\ref{tab:widths} lists the prior widths.  Either model, with or
+without tilts, runs under any of the linear-bias priors.
 
 \begin{table}[tbp]
 \centering
@@ -722,9 +724,9 @@ $\alpha_0$ [$h^{-2}\mathrm{Mpc}^2$] & $0.5/\kmax^2$ & $0.5/\kmax^2$ \\
 $\alpha_2$ [$h^{-2}\mathrm{Mpc}^2$] & fixed to $0$ & $0.5/\kmax^2$ \\
 $\SNz$ [$1/\bar{n}_i$] & $2$ & $2$ \\
 $\SNt$ [$f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}_i$] & $5$ & $5$ \\
-tilted in the pessimistic variant & $\Delta_2$, $\Delta_s$, $\alpha_0$
+tilted (+ tilts only) & $\Delta_2$, $\Delta_s$, $\alpha_0$
  & $\Delta_2$, $\Delta_s$, $\alpha_0$, $\alpha_2$ \\
-parameters, baseline / pessimistic & $5$ / $8$ & $6$ / $10$ \\
+parameters, without / with tilts & $5$ / $8$ & $6$ / $10$ \\
 \bottomrule
 \end{tabular}
 \caption{The widths of the Gaussian priors of the higher-order
@@ -764,7 +766,7 @@ are too small (the correlated-prior note).  Model A carries $\SNt$
 because without it the thin layouts fail at its cut
 (Section~\ref{sec:stochastic-projection}).  Model B frees $\alpha_2$
 for the scan in $\kmax$.  With the amplitude $B_g$ and the linear tilt
-$s_g$, model B baseline has eight parameters per group: DESI DR1's
+$s_g$, model B has eight parameters per group: DESI DR1's
 seven per tracer \cite{DESI2024V,DESI2024VII} plus the linear tilt the
 thin bins resolve.  Every fiducial higher-order parameter is zero, so
 the fiducial model sits on the calibrations; no DESI chain value
@@ -1182,15 +1184,19 @@ Eq.~\eqref{eq:perbin-evolution}, reproduce the stencil derivative of
 each group amplitude (the correlated-prior note, ``Numerical checks'').
 \item \textbf{The forecast.}  The correlated-prior note fits random
 bias histories under every linear-bias prior (its accuracy test), and
-fits model A to truths that carry model B's extra freedom:
-$\alpha_2 = \pm12.5\aunit$, $\SNt = \pm5$, or the offsets at their
-one-sigma widths.  Model A keeps every shift below $\sigma/3$ up to
-its own cut, $\kmax = 0.075\hMpc$, on the two thin layouts (at $0.1$
-it fails, mostly through $\alpha_2$), to $0.1$ (model A baseline) or
-$0.15$ (model A pessimistic) on
-$\Delta z = 0.05$, and at every cut on $\Delta z = 0.2$.  Its figures
-\texttt{fom\_kmax\_models} and \texttt{model\_a\_break} draw the
-figures of merit of both models and the largest shift against $\kmax$.
+fits both models to truths that carry $\alpha_2 = \pm12.5\aunit$
+(model A only), $\SNt = \pm5$, the offsets at their one-sigma widths,
+or a linear drift of the calibrations across each group.  Without
+tilts that drift limits both models to $0.075$ on the two thin layouts
+and $0.05$ on $\Delta z = 0.05$ and $0.2$.  The tilts absorb it
+exactly: model A + tilts keeps every shift below $\sigma/3$ up to its
+own cut, $\kmax = 0.075\hMpc$, on the two thin layouts (at $0.1$ it
+fails through $\alpha_2$), to $0.15$ on $\Delta z = 0.05$, and at
+every cut on $\Delta z = 0.2$; the largest shift of model B + tilts
+is at most $0.43\sigma$ at any cut and $0.34\sigma$ beyond $0.1$.
+That note adopts model B + tilts on the pessimistic prior; its figure
+\texttt{fom\_kmax\_models} draws the figures of merit of both models
+and the largest shift against $\kmax$.
 \end{itemize}
 
 \appendix

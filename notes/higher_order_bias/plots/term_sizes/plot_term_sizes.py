@@ -45,13 +45,16 @@ matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # the drawn terms: data.json key, legend label, line style; the three tidal
-# terms are drawn as their sum to keep each panel to six curves
+# terms are drawn as their sum to keep each panel to six curves. Every term
+# has its own line pattern as well as its color, so the panels read in black
+# and white; the counterterm is the only dashed curve (the caption names it).
 TERMS = [
-    ('b1b2', r'$b_1 b_2 P_{\delta_1\delta_2}$', {'color': '#1f77b4', 'lw': 1.3}),
-    ('b2b2', r'$\frac{1}{4}b_2^2 P_{\delta_2\delta_2}$', {'color': '#ff7f0e', 'lw': 1.3}),
-    ('tidal', r'$b_{s^2}$ terms', {'color': '#2ca02c', 'lw': 1.3}),
+    ('b1b2', r'$b_1 b_2 P_{\delta_1\delta_2}$', {'color': '#0072B2', 'lw': 1.3}),
+    ('b2b2', r'$\frac{1}{4}b_2^2 P_{\delta_2\delta_2}$',
+     {'color': '#E69F00', 'lw': 1.5, 'ls': ':'}),
+    ('tidal', r'$b_{s^2}$ terms', {'color': '#56B4E9', 'lw': 1.3, 'ls': '-.'}),
     ('b1b3nl', r'$b_1 b_{3\mathrm{nl}}\sigma_3^2 P_\mathrm{lin}$',
-     {'color': '#9467bd', 'lw': 1.3}),
+     {'color': '#CC79A7', 'lw': 1.3, 'ls': (0, (4, 1.2, 1, 1.2, 1, 1.2))}),
     ('loop_sum', 'loop sum', {'color': 'black', 'lw': 2.0}),
     ('counterterm', r'$\alpha_0 k^2 P_\mathrm{lin}$',
      {'color': '0.45', 'lw': 1.3, 'ls': '--'}),
