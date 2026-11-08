@@ -89,8 +89,9 @@ constant; it is the constant-clustering-amplitude shape, not the
 evolution law of a conserved galaxy population.  (The likelihood
 itself reads one bias parameter per thin bin; the shipped parameter
 files tie them to one sampled value per chunk.)  The project's
-correlated-prior note (\texttt{notes/correlated\_bias\_prior}) shows
-that this growth-tied model (one amplitude per group, the bias
+correlated-prior note (\texttt{notes/correlated\_bias\_prior\_v2},
+sections ``The models'' and ``Which $L$ and $\sigma_b$ are physical'')
+shows that this growth-tied model (one amplitude per group, the bias
 following $1/D(z)$) is too rigid, and the recommendation of
 Section~\ref{sec:recommendation} uses that note's per-bin model,
 $b_{1,i} = B_g(1+\delta_i)/D(z_i)$ with one fractional deviation
@@ -1081,8 +1082,9 @@ mask edge.
 \label{sec:evolution}
 
 The project's correlated-prior note
-(\texttt{notes/correlated\_bias\_prior}) models the linear bias of bin
-$i$ in group $g$ with that note's memory model, a free tilt per group
+(\texttt{notes/correlated\_bias\_prior\_v2}) models the linear bias of bin
+$i$ in group $g$ with that note's memory model (its section ``The
+memory model''), a free tilt per group
 with a correlated prior on the residuals around the tilted line:
 \begin{equation}
 b_{1,i} = \frac{B_g\,(1 + \delta_i)}{D(z_i)} , \qquad
@@ -1313,16 +1315,21 @@ alternative.  The correlated-prior note shows that even a conserved
 population departs from that shape, by about $1\%$ per
 $\Delta z = 0.05$ through the bias continuity equation, and that
 selected samples drift more: the BGS flux limit moves the bias by
-about $22\%$ across its group.  The same note measures what the
+about $22\%$ across its group (its sections ``The bias continuity
+equation, step by step'' and ``The BGS flux-limit bias model, step by
+step'').  The linear-bias fits of \texttt{notes/linear\_bias\_kmax}
+measure what the
 tying buys in the dark-energy figure of merit ${\rm FoM}(w_0, w_a)$,
 the inverse area of the error ellipse of the equation-of-state
 parameters $w_0$ and $w_a$, on DESI $C_\ell^{gg}$ alone at
 $\kmax = 0.075\hMpc$ and the $\Delta d_{\rm com} = 62$\,Mpc layout:
-the growth-tied prior gives $32.9$, the baseline prior above $18.2$,
+the growth-tied prior gives $32.9$, the baseline prior $18.2$,
 the pessimistic prior $11.4$, and the free prior, one free amplitude
 per bin, $10.7$.  The factor of $1.8$ between the growth-tied and
 baseline-prior numbers rests on a rigidity the physics does not
-support: in the same note's bias test, a conserved galaxy population
+support: in the accuracy test of the linear-bias priors (defined in
+the correlated-prior note's section ``The accuracy test: the figure of
+bias''), a conserved galaxy population
 fitted with the growth-tied prior
 displaces $(w_0, w_a)$ by $11$--$21\sigma$, while the baseline and
 pessimistic priors keep the displacement below $\sigma/3$.

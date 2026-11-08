@@ -1,6 +1,6 @@
 ---
 name: lssty1xdesi-dev
-description: Development on the lssty1xdesi project - DESI thin-bin spectroscopic angular clustering - the Delta d_com = 62 Mpc layout, 76 bins of equal comoving width, from a DESI DR3-like source forecast - cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebook (EXAMPLE_EVALUATE_FISHER.ipynb), and the galaxy-bias notes under notes/ (correlated_bias_prior, higher_order_bias, bias_model_summary) with their plots/ folders. Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, the dndz FoG convolution, the correlated bias prior, the bias ladder (tied, baseline, pessimistic, independent), the memory model, the figure of bias, the error inflation, or higher-order bias models A and B. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
+description: Development on the lssty1xdesi project - DESI thin-bin spectroscopic angular clustering - the Delta d_com = 62 Mpc layout, 76 bins of equal comoving width, from a DESI DR3-like source forecast - cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebooks (EXAMPLE_EVALUATE_FISHER.ipynb, EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb), and the galaxy-bias notes under notes/ (correlated_bias_prior_v2, linear_bias_kmax, higher_order_bias, bias_model_summary) with their plots/ folders. Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, the dndz FoG convolution, the correlated bias prior, the bias ladder (growth-tied, baseline, pessimistic, free), the memory model, the figure of bias, the statistic sqrt(<chi^2>/n_dof) of the accuracy test, or higher-order bias models A and B. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
 ---
 
 # lssty1xdesi: the thin-bin extreme
@@ -548,39 +548,63 @@ Conclusions:
 
 ## The bias notes are the physics reference
 
-The physics of the galaxy-bias model lives in three LaTeX notes under
-`notes/`. For any physics question - a derivation, an equation, an
-assumption, a citation, a literature value - read the `.tex` source,
-not the PDF and not this skill; find the part with
-`grep -n '\\section\|\\subsection' <note>.tex` (line numbers drift).
-This skill keeps decisions, load-bearing numbers and code pointers
-only; when it and a note disagree on physics, the note is right and
-the skill is corrected.
+The physics of the galaxy-bias model lives in four LaTeX notes under
+`notes/`. `correlated_bias_prior_v2` is the correlated-prior note: the
+per-bin linear-bias priors, their derivations, and the prior ladder
+and accuracy test under the one-loop model A (its results are figures,
+no tables). `linear_bias_kmax` measures up to which k_max a
+linear-bias fit holds and runs the accuracy test of the linear-bias
+priors; `higher_order_bias` builds models A and B; `bias_model_summary`
+is the 2-page summary of A and B. For any physics question - a
+derivation, an equation, an assumption, a citation, a literature
+value - read the `.tex` source, not the PDF and not this skill; find
+the part with `grep -n '\\section\|\\subsection' <note>.tex` (line
+numbers drift). Cite a note's section by its title, never by an
+appendix letter. This skill keeps decisions, load-bearing numbers and
+code pointers only; when it and a note disagree on physics, the note
+is right and the skill is corrected.
 
 | question | note: section |
 |---|---|
-| the result in 2-3 pages, for collaborators | correlated_bias_prior: Summary |
+| the model A forecast in 2-3 pages, for collaborators | correlated_bias_prior_v2: Summary |
 | models A and B, priors, budget in 2 pages | bias_model_summary |
-| the models; physical L and sigma_b (continuity, selection, measurements) | correlated_bias_prior: The models; Which L and sigma_b are physical |
-| kernel scan, memory model, figure of bias, error inflation, roughness | correlated_bias_prior: Results; The memory model; The accuracy test; The roughness scan |
-| projection algebra, b - 1 proportional to 1/D, BGS flux limit and its omissions, literature | correlated_bias_prior: the appendices after The roughness scan |
+| the models; physical L and sigma_b (continuity, selection, measurements) | correlated_bias_prior_v2: The models; Which L and sigma_b are physical |
+| memory model, figure of bias, random truths, sqrt(<chi^2>/n_dof) | correlated_bias_prior_v2: The memory model; The accuracy test: the figure of bias |
+| projection algebra | correlated_bias_prior_v2: The projected precision for two bins; The tridiagonal inverse from the chain of links |
+| b - 1 proportional to 1/D, BGS flux limit and its omissions | correlated_bias_prior_v2: The bias continuity equation, step by step; The BGS flux-limit bias model, step by step |
+| bias measurements in the literature | correlated_bias_prior_v2: What the literature says, paper by paper |
+| the identities checked numerically | correlated_bias_prior_v2: Numerical verification |
+| linear bias against k_max; the linear-bias ladder at k_max = 0.075 h/Mpc | linear_bias_kmax: Summary; The shift tables |
 | one-loop P_gg, bases and conversions, DESI DR1 full-shape priors | higher_order_bias: The one-loop galaxy power spectrum; The DESI DR1 full-shape model and priors; appendix Bases and conversions |
 | the draft paper's bias table | higher_order_bias: The draft paper's bias table: the tidal-bias verdict |
 | projection to thin bins, term sizes, the higher-order ladder | higher_order_bias: Projection to thin-bin angular spectra; The size of every term; Bias evolution within a group |
 | models A and B, code gaps, order of work | higher_order_bias: Recommendation; Implementation in CoCoA |
 
-`notes/correlated_bias_prior/verify_prior.py` checks the note's
-identities (23 PASS lines). Recipes and the notebook cells behind the
-numbers below: `references/bias_notes_workflow.md`.
+`notes/correlated_bias_prior_v2/verify_prior.py` checks the
+identities of the correlated-prior note (23 PASS lines). Recipes and
+the notebook cells behind the numbers below:
+`references/bias_notes_workflow.md`.
+
+Naming in every note, notebook markdown and README: the four
+linear-bias priors are growth-tied, baseline, pessimistic and free;
+the code keeps `'tied'` and `'independent'` for the first and last,
+and calls a prior a rung (`LADDER_RUNGS`, `rung_columns`,
+`rung_system`), a word kept out of reader-facing text. The accuracy
+statistic sqrt(<chi^2>/n_dof) has no name: write the symbol, and
+explain it at its first use in each document (chi^2 the squared
+distance of the recovered parameters from the truth in units of the
+fit's marginalized covariance, n_dof = 2 for (w0, wa) and 1 for
+Omega_m or A_s; 1 means the error bars honestly cover where the fit
+lands). The code stores it under the key `'error_inflation'`.
 
 ## The linear-bias ladder
 
 The shipped yamls tie the bins of a tracer group g to one amplitude,
 b_i = B_g/D(z_i) (B_g the group's DESI_B1, D the linear growth factor,
 D(0) = 1). That shape keeps b D constant; a conserved population obeys
-b - 1 proportional to 1/D instead (Fry 1996). The forecast reports
-four stated assumptions, all cases of one per-bin model, the memory
-model:
+b - 1 proportional to 1/D instead (Fry 1996). The forecast states
+four assumptions on the per-bin linear bias, all cases of one per-bin
+model, the memory model:
 
     b_{1,i} = B_g (1 + delta_i) / D(z_i),   delta_i = s_g (z_i - zbar_g) + eps_i,
     <eps_i eps_j> = sigma_g^2 exp(-|z_i - z_j| / L)   (same group; 0 across),
@@ -593,22 +617,29 @@ P = Q - Q U (U^T Q U)^-1 U^T Q (Q the inverse kernel, U = [1, z - zbar]):
 it charges the residual's shape, never the level or the line, and is
 zero for groups of one or two bins.
 
-| rung | prior | stated source |
+| prior | definition | stated source |
 |---|---|---|
-| tied | b_i = B_g/D(z_i) | the upper FoM limit |
+| growth-tied | b_i = B_g/D(z_i) | the upper FoM limit |
 | baseline | sigma_g = 3% BGS, 1% other groups; L = 0.2 | BGS: the r < 19.5 flux limit drifts the bias 22% across the group and a line leaves 2.4% rms; 1% hedges unmodeled selection curvature, ~10x the <= 0.16% a conserved population leaves |
 | pessimistic | sigma_g = 3% every group; L = 0.05 | local features of the largest measured size on the scale of the 4000 A break crossing a filter edge (Delta z ~ 0.03-0.05) |
-| independent | one flat bias per bin | the lower limit |
+| free | one flat bias per bin | the lower limit |
 
-The four rungs are the whole ladder (no tied-plus-tilt rung). Without
-mock catalogs no single prior is defensible, so the paper shows how
-the FoM depends on the assumption between the two absolute limits: a
-referee who rejects the baseline moves one rung down, and nothing is
-retracted. FoM(w0, wa), DESI C_gg alone, k_max = 0.075 h/Mpc
-(UV-fraction cut; LSST Y1 3x2pt alone: 17.26; on Delta z = 0.2 every
-group has one or two bins, so the lower three rungs coincide):
+The four priors are the whole ladder (no growth-tied-plus-tilt
+prior). Without mock catalogs no single prior is defensible, so the
+paper shows how the FoM depends on the assumption between the two
+absolute limits: a referee who rejects the baseline moves one step
+down, and nothing is retracted.
 
-| layout | tied | baseline | pessimistic | independent |
+The numbers of this section are linear bias, the reference that
+built the mechanics; `notes/linear_bias_kmax` shows that a linear fit
+is already biased at this cut (Omega_m moves by 2.0-2.4 sigma on
+Delta d_com = 62 Mpc under every prior), so the forecast is the
+ladder under model A (next section). FoM(w0, wa) with linear bias,
+DESI C_gg alone, k_max = 0.075 h/Mpc (UV-fraction cut; LSST Y1 3x2pt
+alone: 17.26; on Delta z = 0.2 every group has one or two bins, so
+the lower three priors coincide):
+
+| layout | growth-tied | baseline | pessimistic | free |
 |---|---:|---:|---:|---:|
 | Delta d_com = 62 Mpc | 32.94 | 18.19 | 11.45 | 10.69 |
 | Delta z = 0.02 | 19.93 | 12.47 | 7.41 | 4.02 |
@@ -618,37 +649,43 @@ group has one or two bins, so the lower three rungs coincide):
 - **Roughness.** Smooth deviations constrain only sigma_g/sqrt(L),
   so scans use x = sigma_g sqrt(0.1/L), the rms change of delta
   between bins Delta z = 0.05 apart; the memory model collapses in L
-  at fixed x. The rungs sit at x = 0.71% (baseline, non-BGS), 2.1%
+  at fixed x. The priors sit at x = 0.71% (baseline, non-BGS), 2.1%
   (baseline BGS) and 4.2% (pessimistic).
 - **Figure of bias** Delta_w = sqrt(dw^T C_w^-1 dw): the linear-response
-  (w0, wa) shift dw of a fit to biased data, in units of the rung's
+  (w0, wa) shift dw of a fit to biased data, in units of the fit's
   own marginalized ellipse C_w; threshold 1/3. A conserved-population
-  drift moves the tied rung by 17.4 / 12.4 / 21.5 / 10.9 sigma (table
-  order); baseline and pessimistic stay below 0.3 for both known drifts.
-- **Random truths and error inflation.** 2000 truths per case, each
-  the known drift (BGS flux limit in BGS, conserved population
-  elsewhere) plus a residual drawn from the baseline or the pessimistic
-  kernel, fitted with every rung. The verdict is sqrt(E[chi2_w]/2),
-  chi2_w the squared (w0, wa) distance from the truth in ellipse units
-  with data noise and sigma_v priors included: 1 for an honest
-  ellipse, above 1 the factor the axes are too small by (the FoM is
-  too large by its square):
+  drift moves the growth-tied fit by 17.4 / 12.4 / 21.5 / 10.9 sigma
+  (table order); baseline and pessimistic stay below 0.3 for both
+  known drifts.
+- **Random truths and sqrt(<chi^2>/n_dof).** 2000 truths per case,
+  each the known drift (BGS flux limit in BGS, conserved population
+  elsewhere) plus a residual drawn from the baseline or the
+  pessimistic kernel, fitted under every prior. The verdict is
+  sqrt(<chi^2>/n_dof), n_dof = 2 for (w0, wa), chi^2 the squared
+  (w0, wa) distance from the truth in ellipse units with data noise
+  and sigma_v priors included: 1 for an honest ellipse, above 1 the
+  factor the axes are too small by (the FoM is too large by its
+  square). With linear bias:
 
-| truth scatter | tied | baseline | pessimistic | independent |
+| truth scatter | growth-tied | baseline | pessimistic | free |
 |---|---|---|---|---|
 | baseline | 8.54-16.9 | 1.00-1.01 | 0.971 / 0.866 / 0.994 / 1.00 | 1.00 |
 | pessimistic | 8.89-17.6 | 2.28 / 1.53 / 2.14 / 1.00 | 1.00-1.02 | 1.00 |
 
-  The tied rung is excluded on accuracy (8.5-18x too optimistic). The
-  baseline is honest under its own scatter but 1.5-2.3x too small if
-  local features reach the pessimistic size, so the baseline FoM rests
-  on that assumption and the pessimistic FoM is the safe statement;
-  the pessimistic rung is honest or at most 15% conservative. Matched
-  cases give scatter + noise = 2 exactly (P Sigma P = P); the drift
-  term leaves sqrt(1 + Delta_drift^2/2) <= 1.02.
+  The growth-tied prior is excluded on accuracy (8.5-18x too
+  optimistic). The baseline is honest under its own scatter but
+  1.5-2.3x too small if local features reach the pessimistic size, so
+  the baseline FoM rests on that assumption and the pessimistic FoM is
+  the safe statement; the pessimistic prior is honest or at most 15%
+  conservative. Matched cases give scatter + noise = 2 exactly
+  (P Sigma P = P); the drift term leaves
+  sqrt(1 + Delta_drift^2/2) <= 1.02. Scored for Omega_m and A_s (one
+  parameter, n_dof = 1) the verdict is the same
+  (`notes/linear_bias_kmax`, figure ladder_bias_params).
 - **Limits.** First order in delta (a few percent of the shift for
   1-3% residuals, perhaps 10-20% for the 22% BGS drift). Absolute FoMs
-  carry the covariance bias mismatch (2.4-3.2x); rung ratios do not.
+  carry the covariance bias mismatch (2.4-3.2x); ratios between priors
+  do not.
 
 ## Higher-order bias: models A and B
 
@@ -694,12 +731,30 @@ Delta_{2,g} and Delta_{s,g} per group, and b_3nl fixed.
 DESI DR1 full shape uses 7 nuisances per chunk, 42 in total at
 k_max = 0.2 h/Mpc; model B baseline is that budget plus one b_1 tilt
 per chunk. Fiducials come from the calibrations, never from DESI
-chain values. Order of work (higher_order_bias, "Model B and the
-order of work"): yamls with per-bin biases, tilts and the kernel prior
--> interface (tidal argument, SN_0 slot, b_K-to-alpha_0 mapping) ->
-desi_cl.py -> C one-loop adjacent-bin cross pairs (they log_fatal
-with second-order bias today) -> validation against CCL -> covariance
--> model B.
+chain values.
+
+Model A runs end to end (higher_order_bias, "Gaps against model A"):
+`desi_cl` option `higher_order_bias: 1`, the example yamls
+EXAMPLE_EVALUATE_MODEL_A1-A4.yaml, and
+EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, which builds the Fisher
+matrices of the correlated-prior note on the band powers that
+EXAMPLE_EVALUATE_FISHER.ipynb keeps at k_max = 0.075 h/Mpc. The note quotes two
+configurations (FoM(w0, wa), DESI C_gg alone, layout order
+Delta d_com = 62 Mpc, Delta z = 0.02, 0.05, 0.2):
+
+| configuration | FoM(w0, wa) | stated assumption |
+|---|---|---|
+| model A baseline on the baseline prior | 15.3 / 10.8 / 1.39 / 0.228 | residuals no larger or rougher than the baseline prior; calibrations exact up to one offset per group |
+| model A pessimistic on the pessimistic prior | 8.59 / 5.40 / 0.705 / 0.154 | honest under both truth families; absorbs a linear calibration drift exactly |
+
+The growth-tied prior is excluded under both variants (its ellipse
+is 5.6-10.3x too small under model A baseline). The baseline prior
+has sqrt(<chi^2>/n_dof) = 1.00-1.01 under its own scatter and
+1.55-2.3 under pessimistic scatter. A linear drift of the calibration
+offsets shifts (w0, wa) by 0.35-0.57 sigma under model A baseline
+(baseline, pessimistic and free priors; Delta d_com = 62 Mpc,
+Delta z = 0.05 and 0.2); model A pessimistic absorbs it exactly. Open in the code: the covariance still carries linear
+bias, and model B.
 
 ## Open work
 
@@ -707,12 +762,14 @@ with second-order bias today) -> validation against CCL -> covariance
   D(zbar_i) and the DESI covariances must be regenerated; the
   UV-fraction scale cuts it waited for are implemented. Until then
   every absolute FoM carries the 2.4-3.2x inflation.
-- **Model A, then model B**, in the order above; the G + SSC final
-  covariance and the joint lens sample as in the sections above.
+- **The linear notebook's export.** EXAMPLE_EVALUATE_FISHER.ipynb
+  still writes its ladder figures into the deleted folder
+  `notes/correlated_bias_prior/plots/`; its retargeting is scheduled
+  with the covariance fix.
+- **Model B**, after model A; the G + SSC final covariance and the
+  joint lens sample as in the sections above.
 - **Optional:** a nonlinear spot-check of the linear-response figure
-  of bias (a few data-vector evaluations at drawn truths); new legends
-  for fom_range and fom_collapse, whose "baseline"/"plausible" mean
-  the kernel scan's reference point and scanned range.
+  of bias (a few data-vector evaluations at drawn truths).
 
 ## The amplitude cut prior
 

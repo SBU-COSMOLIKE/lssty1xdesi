@@ -1,7 +1,7 @@
 """Numerical checks of the correlated galaxy-bias prior.
 
 This script verifies, one by one, the identities derived in the companion
-note ``correlated_bias_prior.tex``: the two-bin inverse covariance and
+note ``correlated_bias_prior_v2.tex``: the two-bin inverse covariance and
 projected precision, the three-bin inverse with its exactly zero
 (1, 3) entry, the properties of the projected precision P for a
 general exponential kernel on unevenly spaced

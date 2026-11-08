@@ -696,11 +696,14 @@ $`\langle\delta_i\delta_j\rangle = \sigma_b^2\,e^{-|\bar z_i - \bar z_j|/L}`$
 within a group ($`\sigma_b`$ the fluctuation amplitude, $`L`$ the
 correlation length in redshift) and the group amplitude $`B_g`$
 free, perturbs the constant-clustering-amplitude shape
-$`B_g/D(\bar z_i)`$ bin by bin. These results are preliminary
-(linear bias only); the derivation, the physics behind the plausible
-$`L`$ and $`\sigma_b`$, and the result figures are in [the
-correlated-bias-prior
-note](notes/correlated_bias_prior/correlated_bias_prior.pdf).
+$`B_g/D(\bar z_i)`$ bin by bin. These results are linear bias only.
+[The correlated-prior
+note](notes/correlated_bias_prior_v2/correlated_bias_prior_v2.pdf)
+holds the derivation, the physics behind the plausible $`L`$ and
+$`\sigma_b`$, and the prior ladder under the one-loop bias model A;
+[the $`k_\mathrm{max}`$ note](notes/linear_bias_kmax/linear_bias_kmax.pdf)
+shows that a linear-bias fit is already biased at
+$`k_\mathrm{max} = 0.075\,h\,\mathrm{Mpc}^{-1}`$.
 
 **Known limitation - the covariance bias mismatch.** The DESI
 covariance files are computed with each bin's linear bias set to its

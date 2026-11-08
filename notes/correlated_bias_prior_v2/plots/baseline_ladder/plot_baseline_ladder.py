@@ -1,9 +1,10 @@
 """Redraw the two FoM figures of this folder from data.json: the figures of
-merit of each DESI layout down the linear-bias priors, from growth-tied
-(one amplitude per group, b = B/D(z)) to one free bias per bin, under
-model A (one-loop bias, notes/higher_order_bias) in its two forecast
-variants: model A baseline (solid) and model A pessimistic (dashed), one
-color per layout.
+merit of each DESI layout on the linear-bias priors that pass the
+accuracy test (baseline, pessimistic, free), under model A (one-loop
+bias, notes/higher_order_bias) in its two forecast variants: model A
+baseline (solid) and model A pessimistic (dashed), one color per layout.
+The growth-tied prior is not drawn: the accuracy test shows it biases the
+cosmology by many sigma, so its FoM means nothing (data.json keeps it).
 
   baseline_ladder.pdf       - FoM(w0, wa), with the LSST Y1 3x2pt reference
   baseline_ladder_om_as.pdf - FoM(Omega_m, 10^9 A_s)
@@ -64,7 +65,9 @@ FIGURES = [('fom', r'FoM$(w_0, w_a)$, DESI $C_\ell^{gg}$ alone', 'baseline_ladde
 
 with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
-rungs = [r['key'] for r in data['rungs']]
+# the priors that pass the accuracy test (growth-tied fails it, so its FoM
+# is not drawn)
+rungs = [r['key'] for r in data['rungs'] if r['key'] != 'tied']
 x = np.arange(len(rungs))
 layouts = data['layouts']
 lsst = data['lsst_y1_3x2pt_fom']
@@ -94,8 +97,6 @@ def line_points(ax):
 
 for field, ylabel, name in FIGURES:
     fig, ax = plt.subplots(figsize=(3.5, 2.7))
-    for k in ('baseline', 'pessimistic'):
-        ax.axvspan(rungs.index(k) - 0.22, rungs.index(k) + 0.22, color='0.93', zorder=0)
     for lay in layouts:
         for variant, st in STYLES.items():
             y = np.array([lay[field][variant][k] for k in rungs])
@@ -108,7 +109,7 @@ for field, ylabel, name in FIGURES:
         top = max(top, lsst)
     ax.set_xlim(-0.35, x[-1] + 0.35)
     ax.set_xticks(x)
-    ax.set_xticklabels([DISPLAY[r['key']] for r in data['rungs']], fontsize=9.5)
+    ax.set_xticklabels([DISPLAY[k] for k in rungs], fontsize=9.5)
     ax.grid(False, axis='x')
     ax.set_ylabel(ylabel, fontsize=10)
 
@@ -117,9 +118,9 @@ for field, ylabel, name in FIGURES:
     layout_legend = ax.legend(
         handles=[Line2D([], [], color=lay['color'], lw=2.0, label=lay['label'])
                  for lay in layouts],
-        loc='upper right', frameon=False, fontsize=8, handlelength=1.2, labelspacing=0.2,
-        handletextpad=0.5, borderaxespad=0.25, borderpad=0.2, title=KMAX_TEXT,
-        title_fontsize=8)
+        loc='upper right', ncol=2, frameon=False, fontsize=8, handlelength=1.2,
+        labelspacing=0.2, handletextpad=0.5, columnspacing=0.9, borderaxespad=0.25,
+        borderpad=0.2, title=KMAX_TEXT, title_fontsize=8)
     ax.add_artist(layout_legend)
     # the line styles above the panel, the same in both figures so their
     # panels line up side by side (the caption names the dotted LSST Y1
@@ -133,7 +134,7 @@ for field, ylabel, name in FIGURES:
     # The legend inside the panel must never sit on the data. The y axis
     # gets the least headroom at which it clears every line (the LSST
     # reference included), so the axis is not stretched more than needed.
-    for headroom in np.arange(1.12, 1.62, 0.02):
+    for headroom in np.arange(1.12, 2.02, 0.02):
         ax.set_ylim(0.0, top*headroom)
         fig.canvas.draw()
         box = layout_legend.get_window_extent(fig.canvas.get_renderer()).expanded(1.03, 1.05)

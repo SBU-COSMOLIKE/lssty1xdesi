@@ -1,9 +1,10 @@
-"""Redraw goodness_of_fit.pdf from data.json: the goodness of fit of the
-parameter recovery under model A baseline, on the tied and baseline rungs
-of the linear-bias ladder, when the truths carry the known bias drifts
-plus a residual drawn from the pessimistic prior.
+"""Redraw goodness_of_fit.pdf from data.json: for each parameter, does the
+fit's quoted error bar honestly cover where the fit actually lands? Model A
+baseline on the growth-tied and baseline linear-bias priors, when the
+truths carry the known bias drifts plus a residual drawn from the
+pessimistic prior.
 
-The statistic is sqrt(E[chi2]/n_dof), with chi2 the distance of the
+The statistic has no name: sqrt(<chi2>/n_dof), with chi2 the distance of the
 recovered parameters from the truth in units of the fit's own covariance
 ((w0, wa): n_dof = 2; Omega_m or A_s: n_dof = 1) and E the average over
 the random truths and the data noise. It is 1 when the error bars cover
@@ -91,11 +92,11 @@ axes[-1].set_xlim(-0.5, len(layouts) - 0.5)
 axes[-1].set_xticks(x)
 axes[-1].set_xticklabels([TICK_LABELS.get(lay['name'], lay['name']) for lay in layouts],
                          fontsize=9)
-fig.supylabel(r'goodness of fit $\sqrt{\langle\chi^2\rangle/n_\mathrm{dof}}$', x=-0.02,
+fig.supylabel(r'$\sqrt{\langle\chi^2\rangle/n_\mathrm{dof}}$', x=-0.02,
               fontsize=10)
 handles = [Line2D([], [], ls='none', marker=st['marker'], ms=st['ms'], color='0.3',
                   label=st['label']) for st in RUNG_MARKERS.values()]
-handles.append(Line2D([], [], color='0.3', ls='--', lw=1.0, label='consistent (1)'))
+handles.append(Line2D([], [], color='0.3', ls='--', lw=1.0, label='honest error bars'))
 axes[0].legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=3,
                frameon=False, fontsize=8.5, handlelength=1.6, columnspacing=1.0,
                handletextpad=0.4)

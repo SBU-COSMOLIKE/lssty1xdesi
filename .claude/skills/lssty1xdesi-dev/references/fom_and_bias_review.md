@@ -186,9 +186,9 @@ term by term against CCL's EulerianPTCalculator source
   (b_s ~ +4 to +6) are prior- and degeneracy-dominated.
 - **The linear-bias model the paper must state** is the per-bin bias
   b_{1,i} = B_g (1 + delta_i)/D(z_i) of the correlated-prior note
-  (the skill's ladder section), not one constant set per chunk; the
-  shipped yamls' tied b_i = DESI_B1/D(zbar_i) is the ladder's tied
-  rung.
+  (notes/correlated_bias_prior_v2; the skill's ladder section), not
+  one constant set per chunk; the shipped yamls' tied
+  b_i = DESI_B1/D(zbar_i) is the ladder's growth-tied prior.
 
 ## 5. Higher-order bias
 

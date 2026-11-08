@@ -5,7 +5,7 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 
-% One symbol per object, as in notes/correlated_bias_prior.
+% One symbol per object, as in notes/correlated_bias_prior_v2.
 \newcommand{\Cov}{\mathsf{C}}
 \newcommand{\T}{^{\mathsf{T}}}
 \newcommand{\kmax}{k_{\rm max}}
@@ -37,13 +37,14 @@ the matter density contrast and $b_1$ the linear bias of a bin.  This
 is exact on large scales.  On smaller scales higher-order terms grow
 with the wavenumber $k$, so linear bias is safe only below some
 Fourier scale cut $\kmax$.  This note answers two questions about the
-correlated-prior note (\texttt{notes/correlated\_bias\_prior}, ``the
-v1 note'' below).
+linear-bias priors of the correlated-prior note
+(\texttt{notes/correlated\_bias\_prior\_v2}), defined in its section
+``The models''.
 \begin{enumerate}
   \item Up to which $\kmax$ does a linear-bias fit to a one-loop truth
     stay unbiased, on all four bin layouts, for the dark-energy pair
     $(w_0, w_a)$, for $\Omega_m$ and for $A_s$?
-  \item Does the v1 accuracy test of the bias priors, growth-tied
+  \item Does the accuracy test of the linear-bias priors, growth-tied
     versus correlated, give the same verdict for $\Omega_m$ and $A_s$ as for
     $(w_0, w_a)$?
 \end{enumerate}
@@ -56,12 +57,13 @@ primordial curvature power spectrum, sampled as $10^9 A_s$.
 No scanned cut is safe on all four layouts.  Only the layout of equal
 comoving bin width passes, at $\kmax = 0.05\hMpc$, under every prior
 of the bias ladder and for every truth tried.  At $\kmax = 0.075\hMpc$,
-the cut of the v1 note, a linear fit is biased on every layout and
+the cut of the correlated-prior note, a linear fit is biased on every layout and
 under every prior, and freeing the linear bias bin by bin does not cure it.
 The safe cut is also expensive: it keeps less than a tenth of the
 dark-energy figure of merit, the inverse area of the $(w_0, w_a)$
 error ellipse.  For the second question the answer is yes: scored for
-$\Omega_m$ and $A_s$, the v1 test excludes the growth-tied prior and accepts
+$\Omega_m$ and $A_s$, the accuracy test of the linear-bias priors
+excludes the growth-tied prior and accepts
 the correlated priors, as it does for $(w_0, w_a)$.
 
 \paragraph{The setup.}
@@ -72,7 +74,8 @@ $\Delta d_{\rm com} = 62$~Mpc, and bins of fixed redshift width
 $\Delta z = 0.02$, $0.05$ and $0.2$.  The Gaussian covariance is
 computed for $14{,}000$ square degrees and rescaled to the survey's
 $12{,}300$.  Each one-loop truth, described below, is fitted with
-linear bias under the four linear-bias priors of the v1 ladder.  With
+linear bias under the four linear-bias priors of the correlated-prior
+note's ladder.  With
 $D(z)$ the linear growth factor normalized to $D(0) = 1$ and $z_i$ the
 redshift of bin $i$, they are: \textbf{growth-tied}, one amplitude
 $B_g$ per group $g$, with the bias following $1/D(z)$,
@@ -86,8 +89,9 @@ each fit is its Fisher linear response (Appendix~\ref{app:method}).
 The $(w_0, w_a)$ shift is scored in units of the fit's own
 marginalized error ellipse, and $\Omega_m$
 and $A_s$ each in units of its own marginalized error $\sigma$.  A
-fit is unbiased when every shift is below $\sigma/3$, the v1 note's
-threshold.
+fit is unbiased when every shift is below $\sigma/3$, the threshold of
+the correlated-prior note's section ``The accuracy test: the figure of
+bias''.
 
 \paragraph{The scale cut.}
 $\kmax$ labels a family of cuts in multipole, one per bin.  Bin $i$
@@ -217,7 +221,7 @@ shifts against $\kmax$.
   \label{fig:fobkmax}
 \end{figure}
 
-\paragraph{At the v1 cut, every prior is biased.}
+\paragraph{At the forecast's cut, every prior is biased.}
 At $\kmax = 0.075\hMpc$, under the calibrated truth, every prior on
 every layout shifts some parameter by about $1\sigma$ or more, and no
 bracket brings any prior on any layout under the threshold.  On
@@ -249,40 +253,46 @@ free): $1$--$8\%$ of its value, far below the LSST Y1 3x2pt
 reference of $17.26$.  The loss is part of why the cut at $0.05$
 passes: it keeps fewer bands, on larger scales, where the one-loop
 terms are smaller and the data less precise.  The absolute FoMs carry
-the covariance mismatch of the v1 note (Appendix~\ref{app:limits}).
+the covariance mismatch of Appendix~\ref{app:limits}.
 
-\paragraph{The v1 accuracy test for $\Omega_m$ and $A_s$.}
-Figure~\ref{fig:ladderbiasparams} repeats the v1 test, with linear
-truths at $\kmax = 0.075\hMpc$: a known bias drift (the $r < 19.5$
+\paragraph{The accuracy test of the linear-bias priors for $\Omega_m$ and $A_s$.}
+Figure~\ref{fig:ladderbiasparams} repeats the accuracy test of the
+correlated-prior note (its section ``The accuracy test: the figure of
+bias'') with linear-bias fits and linear truths at
+$\kmax = 0.075\hMpc$: a known bias drift (the $r < 19.5$
 flux limit in BGS, a conserved galaxy population in the other groups)
 plus a residual drawn from the baseline or the pessimistic prior,
-$2000$ draws with the v1 random seed, each fitted under every prior.
+$2000$ draws with the random seed of the correlated-prior note's test,
+each fitted under every prior.
 The verdict for $\Omega_m$ and $A_s$ is the verdict for $(w_0, w_a)$;
-the numbers are in the v1 note's appendix ``The same test for
-$\Omega_m$ and $A_s$''.  The growth-tied prior is excluded: the
+every number of this paragraph is in the figure's data file,
+\texttt{plots/ladder\_bias\_params/data.json}, written by the notebook
+\texttt{EXAMPLE\_EVALUATE\_FISHER\_LINEAR\_KMAX.ipynb}.  The growth-tied prior is excluded: the
 conserved-population drift alone moves $\Omega_m$ by $3.99$, $5.21$,
-$11.7$ and $6.42\sigma$, and $A_s$ by $3.79$, $9.90$, $5.82$ and
+$11.7$ and $6.42\sigma$, and $A_s$ by $3.79$, $9.89$, $5.82$ and
 $0.58\sigma$, on $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$,
-$0.05$ and $0.2$.  The verdict is the goodness of fit of the
-parameter recovery, $\sqrt{\langle\chi^2\rangle/n_{\rm dof}}$.  Here
-$\chi^2$ is the distance of the recovered parameters from the truth
-in units of the fit's own covariance, with $n_{\rm dof} = 2$ for
-$(w_0, w_a)$ and $1$ for $\Omega_m$ or $A_s$, and the average runs
-over the random truths and the data noise.  It is $1$ when the error
-bars cover the truth as often as they claim; above $1$ it is the
-factor by which they are too small.  It scores the recovery of the
+$0.05$ and $0.2$.  The verdict is
+$\sqrt{\langle\chi^2\rangle/n_{\rm dof}}$, where $\chi^2$ is the
+squared distance of the recovered parameters from the truth in units
+of the fit's marginalized covariance, $n_{\rm dof} = 2$ for
+$(w_0, w_a)$ and $1$ for $\Omega_m$ or $A_s$, and the average
+$\langle\cdot\rangle$ runs over the random truths and the data noise;
+a value of $1$ means the error bars honestly cover where the fit
+lands, and above $1$ it is the factor by which they are too small.
+It scores the recovery of the
 parameters, not the $\chi^2$ of the data: a biased fit can match the
-band powers well while its cosmology is wrong.  The goodness of fit
-is $1$ for the baseline prior under its own scatter, but under
+band powers well while its cosmology is wrong.  For the baseline prior
+$\sqrt{\langle\chi^2\rangle/n_{\rm dof}} = 1$ under its own scatter,
+but under
 pessimistic scatter its $\Omega_m$ error bar is up to $2.75$ times
 too small.  The pessimistic prior is honest or conservative under both
-truths, with a goodness of fit of at most $1.04$.
+truths, with $\sqrt{\langle\chi^2\rangle/n_{\rm dof}} \le 1.04$.
 
 \begin{figure}[!t]
   \centering
   \includegraphics[width=0.8\linewidth]{plots/ladder_bias_params/ladder_bias_params.pdf}
   \small
-  \caption{The v1 accuracy test scored for $(w_0, w_a)$, $\Omega_m$
+  \caption{The accuracy test of the linear-bias priors, scored for $(w_0, w_a)$, $\Omega_m$
     and $A_s$.  The truths are linear: the true bias of bin $i$ is the
     growth-tied value times $1 + \delta_i^{\rm drift} + \varepsilon_i$, with
     the drift the $r < 19.5$ flux-limit deviation in BGS and the
@@ -299,8 +309,8 @@ truths, with a goodness of fit of at most $1.04$.
     pessimistic priors.  In the left column the baseline prior, and in
     the right column the pessimistic prior, equals the truth's
     scatter: there the mean shift is not a bias, because the fit's
-    error already covers that scatter, and its goodness of fit
-    is $1$.  Open markers on the floor at $10^{-3}$: exact recovery,
+    error already covers that scatter, and its
+    $\sqrt{\langle\chi^2\rangle/n_{\rm dof}}$ is $1$.  Open markers on the floor at $10^{-3}$: exact recovery,
     zero shift; the free prior absorbs any such truth, and on
     $\Delta z = 0.2$ so do the baseline and pessimistic priors.
     $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin is cut by the
@@ -320,11 +330,12 @@ truths, with a goodness of fit of at most $1.04$.
   \item That cut keeps less than a tenth of the FoM, so it is not a
     useful operating point.
   \item At $\kmax = 0.075\hMpc$ the forecast should use the one-loop
-    model A.  The companion note
-    \texttt{notes/correlated\_bias\_prior\_v2} redoes the v1 ladder
-    and accuracy test under model A.
-  \item The v1 note's FoMs at $0.075\hMpc$ remain the linear-bias
-    reference, not a final forecast.
+    model A.  The correlated-prior note,
+    \texttt{notes/correlated\_bias\_prior\_v2}, runs the prior ladder
+    and the accuracy test under model A.
+  \item The linear-bias FoMs at $0.075\hMpc$ of
+    Table~\ref{tab:shifts} remain a linear-bias reference, not a final
+    forecast.
 \end{itemize}
 
 \clearpage
@@ -386,7 +397,8 @@ Fisher matrix is
 $F = \mathsf{D}\T \Cov^{-1} \mathsf{D} + F_{\rm priors}$, where
 $F_{\rm priors}$ holds the velocity-dispersion priors and, under the
 baseline and pessimistic priors, the projected precision of the bias
-prior derived in the v1 note.
+prior, derived in the sections ``The projected precision for two
+bins'' and ``The memory model'' of the correlated-prior note.
 
 If the data are the truth $m_{\rm truth}$ while the model at the
 fiducial predicts $m_{\rm lin}$, then to first order in the
@@ -418,7 +430,7 @@ the displacement of the dark-energy ellipse in units of its own
 size.  For a single parameter $p$ the shift is
 $\Delta_p = |\delta p|/\sigma_p$, with
 $\sigma_p = \sqrt{(F^{-1})_{pp}}$ its marginalized error.  The
-threshold is $1/3$, as in the v1 note.  A shift of $\sigma/3$ added
+threshold is $1/3$, as in the correlated-prior note.  A shift of $\sigma/3$ added
 in quadrature to a $1\sigma$ error gives $\sqrt{1 + 1/9} = 1.05$, so
 below the threshold the total error grows by at most about $5\%$.
 Both the response and the error use the same fit's $F$.
@@ -583,23 +595,27 @@ $b_2 - 1$, $\Delta z = 0.05$).
     $1.6\%$, $2.3\%$ and $1.9\%$ of the linear band powers on
     $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$ and
     $0.2$.
-  \item \textbf{The priors are the v1 priors.}  The FoMs at
-    $\kmax = 0.075\hMpc$ in Table~\ref{tab:shifts} equal the v1
-    ladder, from $32.9$, $18.2$, $11.4$ and $10.7$ on
+  \item \textbf{The priors are the ladder's.}  The FoMs at
+    $\kmax = 0.075\hMpc$ in Table~\ref{tab:shifts} equal the
+    linear-bias ladder of the linear notebook, from $32.9$, $18.2$,
+    $11.4$ and $10.7$ on
     $\Delta d_{\rm com} = 62$~Mpc to $1.91$ and $0.515$ on
     $\Delta z = 0.2$.
-  \item \textbf{The truths are the v1 truths.}  The drifts and the
-    $2000$ random truths are drawn with the v1 seed and order.  The
-    matched cases reproduce the v1 $(w_0, w_a)$ goodness of fit within
-    $0.019$ of $1$, and the drift-only $(w_0, w_a)$ shifts of the
+  \item \textbf{The truths are the linear notebook's.}  The drifts and
+    the $2000$ random truths are drawn with the linear notebook's seed
+    and order, the truths the correlated-prior note fits under model
+    A.  In the matched cases, where the fit's prior equals the truth's
+    scatter, the $(w_0, w_a)$ value of
+    $\sqrt{\langle\chi^2\rangle/n_{\rm dof}}$ is within $0.019$ of
+    $1$, and the drift-only $(w_0, w_a)$ shifts of the
     growth-tied prior, $17.4$, $12.4$, $21.5$ and $10.9$ for the
-    conserved-population drift, equal the v1 table.
+    conserved-population drift, equal the linear notebook's.
   \item \textbf{The white-noise constant.}  The truths use the exact
     projection of the one-loop white-noise constant
     (Appendix~\ref{sec:truths}).  The higher-order note reports that
     this projection leaves linear-bias vectors bitwise unchanged, and
-    the v1 note's $62$~Mpc numbers at $0.075$, computed before it, are
-    reproduced here.
+    the linear notebook's $62$~Mpc numbers at $0.075$, computed before
+    it, are reproduced here.
 \end{itemize}
 
 \section{Limitations}
@@ -631,7 +647,7 @@ $b_2 - 1$, $\Delta z = 0.05$).
     carries that region exactly, while the low-rank non-Limber
     correction floors it.  This is immaterial at
     $\kmax \le 0.075\hMpc$, where the conclusions are drawn.
-  \item \textbf{The covariance.}  As in the v1 note, the covariance
+  \item \textbf{The covariance.}  As in the correlated-prior note, the covariance
     is built with each group's raw bias while the data vector uses
     $b_i = B_g/D(\bar{z}_i)$, which inflates the absolute FoMs by
     about $2.4$--$3.2$.  The shifts and FoMs here use that covariance
