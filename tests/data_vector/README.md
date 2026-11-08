@@ -592,7 +592,7 @@ This project's `frozen/` holds:
 | `data/` | the tests' own copy of the project's `data/` folder (data vectors, covariances, n(z) histograms, window functions, masks, pair lists), plus the baryonic-feedback vectors the generator writes |
 | `reference_chi2.json` | the reference $\chi^2$ values, one per configuration and variant |
 | `EXAMPLE_EVALUATE1.yaml` to `EXAMPLE_EVALUATE4.yaml` | snapshots of the linear examples, today `exploration/EXAMPLE_EVALUATE_LINEAR1.yaml` to `exploration/EXAMPLE_EVALUATE_LINEAR4.yaml`, kept only so a human can diff how they drifted since the freeze |
-| `EXAMPLE_EMUL2_EVALUATE1.yaml` | snapshot of the hybrid example, kept for the same reason |
+| `EXAMPLE_EMUL2_EVALUATE1.yaml` | snapshot of the hybrid example, kept for the same reason (the project no longer ships the hybrid examples; git history keeps them) |
 
 ## :interrobang: FAQ: How can maintainers refresh the snapshot? <a name="refreeze"></a>
 

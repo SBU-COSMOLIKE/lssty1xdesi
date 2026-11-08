@@ -7,7 +7,7 @@
 5. [The LSST Y1 3×2pt case](#lsst_case)
 6. [The one-loop bias model](#higher_order_bias)
 7. [Baryonic feedback on EXAMPLE_EVALUATE1](#baryonic_feedback)
-8. [Running Hybrid Cosmolike-ML emulators](#cobaya_base_code_examples_emul2)
+8. [Nested sampling with Nautilus](#nautilus)
 9. [Running Fisher](#fisher)
 10. [Unit tests](#unit_tests)
 11. [Computing covariances](#computing_covariances)
@@ -79,7 +79,7 @@ flowchart TB
   A["EXAMPLE_EVALUATE1.yaml: first evaluation (Δd_com = 62 Mpc comoving bins)"] --> B["EXAMPLE_EVALUATE2-4.yaml: DESI DR1 fixed-width bins"]
   A --> C["EXAMPLE_EVALUATE5.yaml: LSST Y1 3x2pt in band powers"]
   A --> D["EXAMPLE_MCMC1.yaml: chains"]
-  A --> E["EXAMPLE_EMUL2_*: hybrid examples"]
+  A --> E["EXAMPLE_NAUTILUS1.py: nested sampling"]
   A --> F["EXAMPLE_EVALUATE_COVARIANCE.ipynb: covariance terms"]
   F --> G["covariance/compute_covariance.py: production covariance"]
   B --> H["EXAMPLE_EVALUATE_FISHER.ipynb: forecasts and projection biases on every DESI layout"]
@@ -100,10 +100,12 @@ flowchart TB
   bias models, on the linear data vectors: the growth-tied linear bias
   (`EXAMPLE_EVALUATE_LINEAR1.yaml` to `EXAMPLE_EVALUATE_LINEAR4.yaml`),
   model A, and model B on the growth-tied linear bias.
-- `EXAMPLE_EMUL2_EVALUATE1.yaml` is the hybrid-emulator variant of the
-  linear example `exploration/EXAMPLE_EVALUATE_LINEAR1.yaml`, with MCMC
-  and Nautilus examples alongside
-  ([hybrid emulators](#cobaya_base_code_examples_emul2)).
+- `EXAMPLE_MCMC1.yaml` samples the paper's model on the
+  $`\Delta d_\mathrm{com} = 62`$ Mpc layout, from the Fisher proposal
+  covariance `EXAMPLE_MCMC1.covmat`.
+- `EXAMPLE_NAUTILUS1.py` runs the Nautilus nested sampler on the model
+  of `EXAMPLE_EVALUATE1.yaml` ([Nautilus](#nautilus)). The linear-bias
+  MCMC is in [exploration/](exploration/README.md).
 - `EXAMPLE_EVALUATE_FISHER.ipynb` forecasts, on every DESI layout, the
   constraints of DESI clustering, LSST Y1 3×2pt and their combination,
   and the parameter biases of the projection approximations
@@ -514,35 +516,18 @@ theory block and select the model:
 > [test guide](tests/README.md) exercise every model against stored
 > per-model vectors.
 
-# Running Hybrid Cosmolike-ML emulators <a name="cobaya_base_code_examples_emul2"></a>
+# Nested sampling with Nautilus <a name="nautilus"></a>
 
-> [!NOTE]
-> These hybrid examples verify the workflow; assess emulator accuracy
-> and posterior convergence for your analysis. The thin DESI bins
-> resolve emulator error that broad photometric bins average over, so
-> the advisory emulator checks of the [test guide](tests/README.md)
-> measure the shipped networks' offset from the exact physics before
-> any production use.
-
-The `EXAMPLE_EMUL2` examples emulate the background expansion and
-matter power spectra (`use_emulator: 2`). CosmoLike still computes the
-survey projections, bias, intrinsic-alignment and Fingers-of-God
-contributions, so changing n(z) or nuisance parameters does not
-require retraining a survey data-vector network. All three examples
-run `lssty1xdesi.desi_cl` on the $`\Delta d_\mathrm{com} = 62`$ Mpc
-layout:
-
-| Example | File |
-|---|---|
-| Fixed evaluation | [EXAMPLE_EMUL2_EVALUATE1.yaml](EXAMPLE_EMUL2_EVALUATE1.yaml) |
-| Cobaya MCMC | [EXAMPLE_EMUL2_MCMC1.yaml](EXAMPLE_EMUL2_MCMC1.yaml) |
-| Nautilus sampling | [EXAMPLE_EMUL2_NAUTILUS1.py](EXAMPLE_EMUL2_NAUTILUS1.py) |
-
-The shared theory networks live in `external_modules/data/emultrf`.
-Install them through the
-[main Cocoa emulator recipe](https://github.com/CosmoLike/cocoa#cobaya_base_code_examples_emul2).
-These networks assume **mnu = 0.06 eV**; do not sample neutrino mass.
-Check their training range before widening cosmological priors.
+`EXAMPLE_NAUTILUS1.py` samples the model of `EXAMPLE_EVALUATE1.yaml` -
+the paper's model on the $`\Delta d_\mathrm{com} = 62`$ Mpc layout, with
+CAMB - with the Nautilus nested sampler, which estimates the Bayesian
+evidence and weighted posterior samples. Its options and steps follow
+the Nautilus driver of the other Cocoa projects
+(`cosmolike_core/cocoa_hybrid_sampling.py`, which accepts only emulator
+likelihoods); every MPI rank builds its own model. The model samples 163
+parameters. The default budget (`--nlive 1000`, `--maxfeval 100000`) is
+the shared default, and a run that reaches `--maxfeval` stops without
+convergence.
 
 We assume Cocoa and this project are installed, the Cocoa Conda
 environment is active, the shell is Bash, and the current folder is
@@ -554,50 +539,7 @@ environment is active, the shell is Bash, and the current folder is
 source start_cocoa.sh
 ```
 
-**Step :two:**: Select the number of OpenMP cores (below, we set it to 4).
-
-  - Linux
-
-        export OMP_NUM_THREADS=4; export OMP_PROC_BIND=close; \
-        export OMP_PLACES=cores; export OMP_DYNAMIC=FALSE; \
-        export OPENBLAS_NUM_THREADS=1; export MKL_NUM_THREADS=1
-
-  - macOS (arm)
-
-        export OMP_NUM_THREADS=4; export OMP_PROC_BIND=disabled; \
-        export OMP_PLACES=cores; export OMP_DYNAMIC=FALSE; \
-        export OPENBLAS_NUM_THREADS=1; export MKL_NUM_THREADS=1
-
-**Step :three:**: remove GPU access on Linux; these examples use the CPU.
-
-```bash
-export CUDA_VISIBLE_DEVICES=""
-```
-
-**Step :four:**: evaluate the first hybrid example.
-
-- Linux
-
-      "${CONDA_PREFIX}"/bin/mpirun -n 1 --oversubscribe \
-        --mca pml ob1 --mca btl vader,tcp,self \
-        --bind-to core:overload-allowed --report-bindings \
-        --rank-by slot --map-by numa:pe=${OMP_NUM_THREADS} \
-        cobaya-run ./projects/lssty1xdesi/EXAMPLE_EMUL2_EVALUATE1.yaml --force
-
-- macOS (arm)
-
-      mpirun -n 1 --oversubscribe \
-        cobaya-run ./projects/lssty1xdesi/EXAMPLE_EMUL2_EVALUATE1.yaml --force
-
-Keep BLAS at one thread per MPI rank (`OPENBLAS_NUM_THREADS=1`,
-`MKL_NUM_THREADS=1`); on macOS also use `VECLIB_MAXIMUM_THREADS=1`.
-
-### Cobaya MCMC
-
-With the same assumptions, run the hybrid MCMC example. Check chain
-convergence before interpreting posterior constraints.
-
-**Step :one:**: Select the number of OpenMP cores (below, we set it to 8).
+**Step :two:**: Select the number of OpenMP cores (below, we set it to 8).
 
   - Linux
 
@@ -611,38 +553,15 @@ convergence before interpreting posterior constraints.
         export OMP_PLACES=cores; export OMP_DYNAMIC=FALSE; \
         export OPENBLAS_NUM_THREADS=1; export MKL_NUM_THREADS=1
 
-**Step :two:**: remove GPU access on Linux; these examples use the CPU.
+**Step :three:**: check the setup before a long run. The check builds the
+model, evaluates the fiducial point ($`\chi^2 \approx 10^{-11}`$) and builds
+the Nautilus sampler, without sampling.
 
 ```bash
-export CUDA_VISIBLE_DEVICES=""
+python ./projects/lssty1xdesi/EXAMPLE_NAUTILUS1.py --check
 ```
 
-**Step :three:**: start Cobaya's hybrid MCMC.
-
-- Linux
-
-      "${CONDA_PREFIX}"/bin/mpirun -n 4 --oversubscribe \
-        --mca pml ob1 --mca btl vader,tcp,self \
-        --bind-to core:overload-allowed --report-bindings \
-        --rank-by slot --map-by numa:pe=${OMP_NUM_THREADS} \
-        cobaya-run ./projects/lssty1xdesi/EXAMPLE_EMUL2_MCMC1.yaml
-
-- macOS (arm)
-
-      mpirun -n 4 --oversubscribe \
-        cobaya-run ./projects/lssty1xdesi/EXAMPLE_EMUL2_MCMC1.yaml
-
-### Nautilus
-
-With the same assumptions and CPU setup as the MCMC subsection:
-
-**Step :one:**: check the hybrid setup before a long run.
-
-```bash
-python ./projects/lssty1xdesi/EXAMPLE_EMUL2_NAUTILUS1.py --check
-```
-
-**Step :two:**: run Nautilus as an independent sampling example.
+**Step :four:**: run Nautilus.
 
 - Linux
 
@@ -651,21 +570,21 @@ python ./projects/lssty1xdesi/EXAMPLE_EMUL2_NAUTILUS1.py --check
         -x PATH -x LD_LIBRARY_PATH -x PYTHONPATH -x CONDA_PREFIX -x ROOTDIR \
         -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x OMP_DYNAMIC \
         -x OPENBLAS_NUM_THREADS -x MKL_NUM_THREADS -x CLIK_PATH -x CLIK_DATA \
-        -x CLIK_PLUGIN -x CUDA_VISIBLE_DEVICES --mca mpi_yield_when_idle 1 \
+        -x CLIK_PLUGIN --mca mpi_yield_when_idle 1 \
         --mca btl_tcp_if_exclude lo,docker0,virbr0,ib0 \
         --bind-to core:overload-allowed --report-bindings \
         --rank-by slot --map-by numa:pe=${OMP_NUM_THREADS} \
-        python ./projects/lssty1xdesi/EXAMPLE_EMUL2_NAUTILUS1.py --nlive 1000 --neff 10000 --maxfeval 100000 --outroot hybrid_nautilus1
+        python ./projects/lssty1xdesi/EXAMPLE_NAUTILUS1.py --nlive 1000 --neff 10000 --maxfeval 100000 --outroot nautilus1
 
 - macOS (arm)
 
       mpirun -n 12 --oversubscribe \
-        python ./projects/lssty1xdesi/EXAMPLE_EMUL2_NAUTILUS1.py --nlive 1000 --neff 10000 --maxfeval 100000 --outroot hybrid_nautilus1
+        python ./projects/lssty1xdesi/EXAMPLE_NAUTILUS1.py --nlive 1000 --neff 10000 --maxfeval 100000 --outroot nautilus1
 
 The results go to `projects/lssty1xdesi/chains/<outroot>.*`; an
 existing result is never overwritten, so use a new `--outroot` for
 each run. Nautilus writes weighted GetDist-compatible rows and a JSON
-convergence record. Reaching `--maxfeval` is not convergence.
+record of the run. Reaching `--maxfeval` is not convergence.
 
 # Running Fisher <a name="fisher"></a>
 
@@ -1019,11 +938,10 @@ extrapolated tail by $`\Delta\chi^2 = 2.09`$
 ($`\Delta z = 0.02`$), and the $`40\ \mathrm{Mpc}^{-1}`$ table
 brings them to $`\Delta\chi^2 = 0.12`$ and 0.10.
 
-`EXAMPLE_MCMC1.yaml` samples with the settings of the linear example
-`exploration/EXAMPLE_EVALUATE_LINEAR1.yaml` (`accuracyboost: 2`,
-`kmax_boltzmann: 20`), so a chain evaluates the model with the same
-settings that generated its data vector. The hybrid `EXAMPLE_EMUL2_*` examples keep
-`accuracyboost: 1` and `kmax_boltzmann: 5`.
+`EXAMPLE_MCMC1.yaml` samples with the settings of
+`EXAMPLE_EVALUATE1.yaml` (`accuracyboost: 2`, `kmax_boltzmann: 20`),
+so a chain evaluates the model with the same settings that generated
+its data vector.
 
 Each likelihood yaml documents the measured $`\Delta\chi^2`$ ladder
 behind its values, and the accuracy checks of the

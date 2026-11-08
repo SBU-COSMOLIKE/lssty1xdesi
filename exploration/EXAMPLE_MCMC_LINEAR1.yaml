@@ -4,26 +4,30 @@ stop_at_error: True
 
 likelihood:
   lssty1xdesi.desi_cl:
-    # hybrid emulators (use_emulator = 2): the P(k), distances and
-    # H(z) come from the trained emulators below instead of CAMB; the
-    # data vector itself is computed exactly, as in the CAMB example
-    use_emulator: 2
     path: ./external_modules/data/lssty1xdesi
     # linear bias: the linear-fiducial dataset (the main dataset holds the
     # paper model's vector; see exploration/README.md)
     data_file: lssty1xdesi_desi_dr3_linear.dataset
+    # band powers at the dataset's explicit centers (Delta ell = 10)
     binning_space: fourier
+    # the FoG convolution rebuilds the n(z) at every point
     external_nz_modeling: 1
     print_datavector: False
-    print_datavector_file: "./projects/lssty1xdesi/chains/desi_theory_emul2.modelvector"
-    accuracyboost: 1
+    print_datavector_file: "./projects/lssty1xdesi/chains/desi_theory.modelvector"
+    accuracyboost: 2 # DR3 thin bins: 1 moves chi2 by 0.13
     integration_accuracy: 0
+    # Ntable.LMAX: only bounds the low-rank cap in fourier mode
     lmax: 5000
-    kmax_boltzmann: 5.0
+    # P(k) up to kmax_boltzmann x accuracyboost = 40/Mpc (low Omega_m needs the tail)
+    kmax_boltzmann: 20.0
+    # 1 EE2, 2 Halofit
     non_linear_emul: 2
     IA_model: 0
-    IA_code: 0
+    IA_code: 1
     IA_redshift_evolution: 3
+    # thin comoving bins keep real non-Limber power far past ell = 150:
+    # the low-rank method computes the full nonlinear density-density
+    # term with no Limber hand-off below the cap
     adopt_limber_gg: 0
     nonlimber_lowrank_gg: 1
     nonlimber_lowrank_rank: 5
@@ -44,7 +48,7 @@ likelihood:
 prior:
   amplitude_cut: "lambda As_1e9, DESI_B1_1, DESI_B1_19, DESI_B1_30, DESI_B1_39, DESI_B1_50, DESI_B1_62: 0.0 if (As_1e9/2.1)*max((DESI_B1_1/1.34)**2, (DESI_B1_19/1.7)**2, (DESI_B1_30/1.7)**2, (DESI_B1_39/1.7)**2, (DESI_B1_50/0.84)**2, (DESI_B1_62/0.84)**2) <= 8 else -np.inf"
 
-params: # EE2 PRIORS
+params:
   As_1e9:
     prior:
       min: 0.5
@@ -52,9 +56,10 @@ params: # EE2 PRIORS
     ref:
       dist: norm
       loc: 2.1
-      scale: 0.25
+      scale: 0.2
     proposal: 0.2
     latex: 10^9 A_\mathrm{s}
+    drop: true
     renames: A
   ns:
     prior:
@@ -63,8 +68,8 @@ params: # EE2 PRIORS
     ref:
       dist: norm
       loc: 0.96605
-      scale: 0.01
-    proposal: 0.01
+      scale: 0.015
+    proposal: 0.015
     latex: n_\mathrm{s}
   H0:
     prior:
@@ -73,7 +78,7 @@ params: # EE2 PRIORS
     ref:
       dist: norm
       loc: 67.32
-      scale: 5
+      scale: 3
     proposal: 3
     latex: H_0
   omegab:
@@ -83,9 +88,10 @@ params: # EE2 PRIORS
     ref:
       dist: norm
       loc: 0.0495
-      scale: 0.004
-    proposal: 0.004
+      scale: 0.005
+    proposal: 0.005
     latex: \Omega_\mathrm{b}
+    drop: true
   omegam:
     prior:
       min: 0.2
@@ -93,19 +99,9 @@ params: # EE2 PRIORS
     ref:
       dist: norm
       loc: 0.316
-      scale: 0.02
-    proposal: 0.02
+      scale: 0.015
+    proposal: 0.015
     latex: \Omega_\mathrm{m}
-  w0pwa:
-    prior:
-      min: -3 # w0 + wa > -3: below it the early phantom regime needs a costlier CAMB
-      max: -0.01
-    ref:
-      dist: norm
-      loc: -0.99
-      scale: 0.05
-    proposal: 0.05
-    latex: w_{0,\mathrm{DE}}+w_{a,\mathrm{DE}}
     drop: true
   w:
     prior:
@@ -117,21 +113,74 @@ params: # EE2 PRIORS
       scale: 0.05
     proposal: 0.05
     latex: w_{0,\mathrm{DE}}
+  w0pwa:
+    prior:
+      min: -3 # w0 + wa > -3: below it the early phantom regime needs a costlier CAMB
+      max: -0.01
+    ref:
+      dist: norm
+      loc: -0.99
+      scale: 0.05
+    proposal: 0.05
+    latex: w_{0,\mathrm{DE}}+w_{a,\mathrm{DE}}
+    drop: true
   wa:
     value: 'lambda w0pwa, w: w0pwa - w'
-    derived: false
-    latex: 'w_{a,\mathrm{DE}}'
+    latex: w_{a,\mathrm{DE}}
   mnu:
-    value: 0.06
+    prior:
+      min: 0.06
+      max: 0.6
+    ref:
+      dist: norm
+      loc: 0.25
+      scale: 0.1
+    proposal: 0.05
+  tau:
+    value: 0.0697186
+    latex: \tau_\mathrm{reio}
+  # ---------------------------------------------------------------------------------------
+  # ------------------------------------- DERIVED PARAMETERS ------------------------------
+  # ---------------------------------------------------------------------------------------
+  # WARNING: DO NOT REMOVE omegabh2/omegach2/omegamh2/wa/As/ FROM DERIVED PARAMETERS
+  # SEE: github.com/CosmoLike/cocoa#warning-warning-warning-weak-lensing-yaml-files-in-cobaya-
+  # --------------------------------------------------------------------------------------- 
+  As:
+    value: 'lambda As_1e9: 1e-9 * As_1e9'
+    latex: A_\mathrm{s}
   omegabh2:
     value: 'lambda omegab, H0: omegab*(H0/100)**2'
     latex: \Omega_\mathrm{b} h^2
   omegach2:
     value: 'lambda omegam, omegab, mnu, H0: (omegam-omegab)*(H0/100)**2-(mnu*(3.046/3)**0.75)/94.0708'
     latex: \Omega_\mathrm{c} h^2
-  As:
-    value: 'lambda As_1e9: 1e-9*As_1e9'
-    latex: 'A_\mathrm{s}'
+  omegal:
+    latex: \Omega_\Lambda
+  omegamh2:
+    derived: 'lambda omegam, H0: omegam*(H0/100)**2'
+    latex: \Omega_\mathrm{m} h^2
+  sigma8:
+    latex: \sigma_8
+  s8h5:
+    derived: 'lambda sigma8, H0: sigma8*(H0*1e-2)**(-0.5)'
+    latex: \sigma_8/h^{0.5}
+  s8omegamp5:
+    derived: 'lambda sigma8, omegam: sigma8*omegam**0.5'
+    latex: \sigma_8 \Omega_\mathrm{m}^{0.5}
+  s8omegamp25:
+    derived: 'lambda sigma8, omegam: sigma8*omegam**0.25'
+    latex: \sigma_8 \Omega_\mathrm{m}^{0.25}
+  age:
+    latex: '{\rm{Age}}/\mathrm{Gyr}'
+  rdrag:
+    latex: r_\mathrm{drag}
+  yheused:
+    latex: Y_P^\mathrm{BBN}
+  omegan2:
+    latex: \Omega_\mathrm{\\nu} h^2
+  omegan:
+    derived: 'lambda omegan2, H0: omegan2/((H0/100)**2)'
+    latex: \Omega_\mathrm{\\nu}
   # ------------------------------------------------------------------------
   # ------------------------------------------------------------------------
   # Nuisance parameters below (it overwrites the default settings)
@@ -141,36 +190,30 @@ params: # EE2 PRIORS
   # ------------------------------------------------------------------------
   # Intrinsic alignment
 theory:
-  emulrdrag:
-    path: ./cobaya/cobaya/theories/
-    provides: ['rdrag']
+  camb:
+    path: ./external_modules/code/CAMB
+    stop_at_error: False
+    use_renames: True
     extra_args:
-      file: ['external_modules/data/emultrf/BAO_SN_RES/emul_lcdm_rdrag_GP.joblib'] 
-      extra: ['external_modules/data/emultrf/BAO_SN_RES/extra_lcdm_rdrag.npy'] 
-      ord: [['omegabh2','omegach2']]
-  emulbaosn:
-    path: ./cobaya/cobaya/theories/
-    stop_at_error: True
-    provides: ['comoving_radial_distance', 'angular_diameter_distance', 'Hubble']
-    extra_args:
-      device: "cpu"
-      file:  [None, 'external_modules/data/emultrf/BAO_SN_RES/w0wa/emul_w0wa_H.pt']
-      extra: [None, 'external_modules/data/emultrf/BAO_SN_RES/w0wa/extra_w0wa_H.npy']    
-      ord: [None, ['omegam','H0','w','wa']]
-      extrapar: [{'MLA': 'INT', 'ZMIN' : 0.0001, 'ZMAX' : 3, 'NZ' : 600},
-                 {'MLA': 'ResMLP', 'offset' : 0.0, 'INTDIM' : 4, 'NLAYER' : 6,
-                  'TMAT': 'external_modules/data/emultrf/BAO_SN_RES/w0wa/PCA_w0wa_H.npy',
-                  'ZLIN': 'external_modules/data/emultrf/BAO_SN_RES/w0wa/z_lin_w0wa.npy'}]
-  emulmps:
-    path: ./cobaya/cobaya/theories/
-    stop_at_error: True
-    extra_args:
-      model_file:    "external_modules/data/emultrf/emulmps/npce_emul/emulator_npce.keras"
-      metadata_file: "external_modules/data/emultrf/emulmps/npce_emul/metadata.joblib"
-      nl_model_file:    "external_modules/data/emultrf/emulmps/w0wa_halofit/emulator_halofit.keras"
-      nl_metadata_file: "external_modules/data/emultrf/emulmps/w0wa_halofit/metadata.joblib"
-      use_syren: False
-      param_order: ["As_1e9", "ns", "H0", "omegab", "omegam", 'w', 'wa']
+      halofit_version: takahashi
+      AccuracyBoost: 1.05
+      lens_potential_accuracy: 1.0
+      dark_energy_model: ppf
+      accurate_massive_neutrino_transfers: false
+      k_per_logint: 15
+      kmax: 7.5
+#  NOTE: under TATT with IA_code: 1 the fastpt defaults are the
+#  converged two-grid configuration: accuracyboost multiplies the
+#  density of the output table cosmolike interpolates (the accuracy
+#  driver) and internal_accuracyboost the FFTLog grid, both rebased
+#  so 1.0 just works (see tests/README.md, test 15).
+#  fastpt:
+#    path: ./external_modules/code/FAST-PT
+#    extra_args:
+#      accuracyboost: 1.0
+#      internal_accuracyboost: 1.0
+#      kmax_boltzmann: 7.5
+#      extrap_kmax: 250.0
 sampler:
   mcmc:
     # no slow/fast blocking: this likelihood recomputes its whole
@@ -196,4 +239,4 @@ sampler:
     burn_in: 0
     Rminus1_single_split: 4
 
-output: ./projects/lssty1xdesi/chains/EXAMPLE_EMUL2_MCMC1
+output: ./projects/lssty1xdesi/chains/EXAMPLE_MCMC_LINEAR1
