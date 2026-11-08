@@ -14,21 +14,23 @@ so the sampler sees exactly one degree of freedom per group, tied
 members never appear in chain output, and changing the grouping (or
 freeing every bin) is an edit to this configuration, never to code.
 
-Two fragments are written into likelihood/:
+Two fragments are written:
 
-  params_desi.yaml              = the project default: bias grouped
-                                  by the Table-2 chunks (BGS, LRG1-3,
-                                  ELG1-2) and velocity dispersions by
-                                  the same chunks with BGS split in
-                                  two (SIGV_BGS_SPLIT_Z), at the
-                                  forecast's simulation-fit fiducials:
-                                  the values the committed fiducial
-                                  data vector and the covariance
-                                  kernels assume.
-  params_desi_dr3_forecast.yaml = the DR3 forecast model: the same
+  likelihood/params_desi.yaml   = the project default, the growth-tied
+                                  linear bias: bias grouped by the
+                                  Table-2 chunks (BGS, LRG1-3, ELG1-2)
+                                  and velocity dispersions by the same
+                                  chunks with BGS split in two
+                                  (SIGV_BGS_SPLIT_Z), at the forecast's
+                                  simulation-fit fiducials: the values
+                                  the committed fiducial data vector
+                                  and the covariance kernels assume.
+  likelihood/exploration/params_desi_dr3_forecast.yaml
+                                = the DR3 forecast model: the same
                                   seven-group velocity dispersions
                                   over the forecast pipeline's own
-                                  bias fiducials.
+                                  bias fiducials (no likelihood or
+                                  example reads it).
 
 Groups are read off the dataset's bin table, never hardcoded: a bin
 belongs to the group of its (sample, chunk) row.
@@ -41,20 +43,32 @@ scripts/make_desi_dz_case.py, e.g. dr1_dz0p02) it writes instead the
 single fragment likelihood/params_desi_<name>.yaml - the project
 default model on that case's bin table.
 
+With --bias-pessimistic (alone or with --case) it writes instead the
+linear fragment of the paper model,
+likelihood/params_desi[_<case>]_bias_pessimistic.yaml: the pessimistic
+linear-bias prior of notes/correlated_bias_prior_v2 (a free amplitude
+and tilt per group, and a correlated Gaussian residual per bin; see
+emit_bias_pessimistic), with the velocity dispersions of
+params_desi.yaml. The desi_cl*_model_b likelihoods read it.
+
 With --model-a (alone or with --case) it writes the model A fragments
-of the higher-order bias note instead: params_desi[_<case>]_model_a.yaml
-(one offset per chunk for b2, bs2, alpha_0, SN0 and SN2, the tilts fixed
-at zero, and alpha_2 fixed to 0 in every bin) and
-params_desi[_<case>]_model_a_pessimistic.yaml (the b2, bs2 and alpha_0
-tilts free). The desi_cl*_model_a likelihoods read them next to
-the linear fragment.
+of the higher-order bias note instead, into likelihood/exploration/:
+params_desi[_<case>]_model_a.yaml (model A: one offset per chunk for
+b2, bs2, alpha_0, SN0 and SN2, the tilts fixed at zero, and alpha_2
+fixed to 0 in every bin) and params_desi[_<case>]_model_a_tilts.yaml
+(model A + tilts: the b2, bs2 and alpha_0 tilts free). The
+exploration.desi_cl*_model_a likelihoods read them next to the
+growth-tied linear fragment.
 
 With --model-b (alone or with --case) it writes the model B fragments:
-params_desi[_<case>]_model_b.yaml (one offset per chunk for b2, bs2,
-alpha_0, alpha_2, SN0 and SN2, the tilts fixed at zero, at the wider
-DESI DR1 prior widths) and params_desi[_<case>]_model_b_pessimistic.yaml
-(the b2, bs2, alpha_0 and alpha_2 tilts free). The desi_cl*_model_b
-likelihoods read them next to the linear fragment.
+likelihood/exploration/params_desi[_<case>]_model_b.yaml (model B: one
+offset per chunk for b2, bs2, alpha_0, alpha_2, SN0 and SN2, the tilts
+fixed at zero, at the wider DESI DR1 prior widths; read by the
+exploration.desi_cl*_model_b_growth_tied likelihoods) and
+likelihood/params_desi[_<case>]_model_b_tilts.yaml (model B + tilts:
+the b2, bs2, alpha_0 and alpha_2 tilts free; read by the
+desi_cl*_model_b likelihoods of the paper model, next to the
+pessimistic linear fragment).
 """
 import argparse
 import os
@@ -64,10 +78,14 @@ import numpy as np
 PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BIN_TABLE = os.path.join(PROJECT, "data", "lssty1xdesi_desi_dr3_bins.txt")
 OUT_DIR = os.path.join(PROJECT, "likelihood")
+# the fragments no likelihood of the paper model reads (model A, model B
+# without tilts, the DR3 forecast fiducials) live in the subpackage
+# likelihood/exploration/, next to the classes that read them
+EXPLORATION_DIR = os.path.join(OUT_DIR, "exploration")
 
-# the two generated models: for each, the bias grouping key and the
-# fiducial value per group (velocity dispersions always use the
-# seven sigv_group_key groups)
+# the two generated models: for each, the output folder, the bias
+# grouping key and the fiducial value per group (velocity dispersions
+# always use the seven sigv_group_key groups)
 MODELS = {
     "params_desi.yaml": {
         "comment": ("the project default: Table-2 bias chunks and the "
@@ -76,6 +94,7 @@ MODELS = {
                     "simulation-fit fiducials - keep the dispersions "
                     "in sync with the covariance adapter's "
                     "CHUNK_SIGMA_V"),
+        "folder": OUT_DIR,
         "bias_groups": "chunk",
         "bias_values": {"BGS": 1.34, "LRG1": 1.70, "LRG2": 1.70,
                         "LRG3": 1.70, "ELG1": 0.84, "ELG2": 0.84},
@@ -87,6 +106,7 @@ MODELS = {
         "comment": ("the DR3 forecast model: the same seven-group "
                     "velocity dispersions over the forecast pipeline's "
                     "own bias fiducials"),
+        "folder": EXPLORATION_DIR,
         "bias_groups": "chunk",
         "bias_values": {"BGS": 1.375, "LRG1": 1.448, "LRG2": 1.403,
                         "LRG3": 1.388, "ELG1": 0.704, "ELG2": 0.704},
@@ -197,6 +217,196 @@ def emit_blocks(out, prefix, groups, values, prior, scale, latex_of):
             out.write(f"    value: 'lambda {leader}: {leader}'\n")
 
 
+# The pessimistic linear-bias prior of notes/correlated_bias_prior_v2
+# (section "The linear-bias prior"). Bin i of group g has
+#     b_{1,i} = B_g (1 + delta_i) / D(zbar_i),
+#     delta_i = s_g (zbar_i - zbar_g) + eps_i,
+# with B_g the group amplitude (b1 at z = 0 under a constant clustering
+# amplitude b D), D the linear growth factor, s_g the tilt of the group's
+# line per unit redshift, zbar_g the mean of the group's bin redshifts,
+# and eps_i the residual of bin i around that line. The residuals are
+# Gaussian, correlated inside a group and independent across groups,
+#     <eps_i eps_j> = sigma_g^2 exp(-|zbar_i - zbar_j| / L),
+# with sigma_g the width of one bin's residual and L the redshift
+# separation over which two residuals forget each other. The pessimistic
+# prior takes sigma_g = 3% in every group and L = 0.05: local selection
+# features as large as the largest derived curvature, on the redshift
+# scale over which the 4000 A break crosses a filter edge. The likelihood
+# divides each DESI_B1_<n> by D(zbar_n), so the fragment sets
+# DESI_B1_<n> = B_g (1 + delta_n).
+PESSIMISTIC_SIGMA = 0.03
+PESSIMISTIC_L = 0.05
+
+# The flat prior of a tilt s_g lets the group's line move its outermost
+# bin by at most this fraction of B_g, either way:
+# |s_g| <= TILT_EDGE_FRACTION / max_i |zbar_i - zbar_g|. The largest
+# derived drift, the BGS flux limit, changes the bias by 22% across its
+# group (about 11% at either edge), less than a quarter of the range, so
+# the bound does not bind. It also keeps every bias positive: at the
+# bound the line leaves 1 + delta_i >= 0.5 - |eps_i|, and a 3% residual
+# reaches 0.5 only at 17 standard deviations (the likelihood stops on a
+# b1 <= 0).
+TILT_EDGE_FRACTION = 0.5
+# The reference scatter and proposal width of a tilt move the outermost
+# bin by 1% of B_g, close to what B1_SCALE moves the LRG amplitude
+# (0.02/1.7). A whitened residual has a unit-width prior; its reference
+# scatter and proposal width are a tenth of that, like the higher-order
+# offsets below.
+TILT_EDGE_SCALE = 0.01
+RESIDUAL_SCALE = 0.1
+
+
+def residual_coefficients(z, sigma, length):
+    """The matrix that turns a group's whitened residuals into its residuals.
+
+    The residuals eps of one group have the covariance
+    sigma^2 K, K_ij = exp(-|z_i - z_j| / length). With E the lower
+    triangular Cholesky factor of that covariance (E E^T = sigma^2 K) and
+    u a vector of independent unit Gaussians, eps = E u has the
+    covariance E <u u^T> E^T = E E^T = sigma^2 K. Sampling u instead of eps
+    turns a correlated Gaussian prior into independent unit Gaussians,
+    which cobaya states one parameter at a time; the correlation moves
+    into the fixed coefficients of E. Lower triangular means bin n of the
+    group reads only the residuals of the group's first n bins.
+
+    Arguments:
+      z      = the mean redshifts of the group's bins, in bin order
+               (numpy array, length >= 3 where it is used).
+      sigma  = the width of one bin's residual (fractional, e.g. 0.03).
+      length = the correlation length L in redshift.
+
+    Returns:
+      (n, n) float64 array E, lower triangular, E E^T = sigma^2 K.
+    """
+    # separation[i, j] = |z_i - z_j|: numpy broadcasting of a column
+    # against a row gives every pair at once
+    separation = np.abs(z[:, None] - z[None, :])
+    covariance = sigma**2*np.exp(-separation/length)
+    return np.linalg.cholesky(covariance)
+
+
+def emit_bias_pessimistic(out, chunks, zbars, values):
+    """Write the DESI_B1 blocks of the pessimistic linear-bias prior.
+
+    Each group g gets a sampled amplitude DESI_B1_<g> = B_g (the flat
+    B1_PRIOR box and the reference of the growth-tied fragment), a sampled
+    tilt DESI_TB1_<g> = s_g with a flat prior (TILT_EDGE_FRACTION), and
+    one sampled whitened residual DESI_UB1_<n> ~ N(0, 1) per bin. Every
+    bin n of the group then takes the value
+
+        DESI_B1_<n> = B_g (1 + s_g (z_n - zbar_g) + sum_m E_nm u_m),
+
+    with E = residual_coefficients(z, PESSIMISTIC_SIGMA, PESSIMISTIC_L)
+    and the sum over the group's bins m up to n. Each coefficient is
+    written with 16 significant digits, so the prior the yaml states
+    equals the kernel to double-precision round-off.
+
+    Groups of one or two bins: there B_g alone (one bin) or B_g and s_g
+    (two bins) already set every bin's bias freely, so a residual cannot
+    be told apart from them and its parameters would only be exact
+    degeneracies. Such a group carries no residuals, and a one-bin group
+    no tilt (z_n - zbar_g = 0); its bins are free, as in the Fisher
+    notebooks, whose projected prior precision is zero for a group of one
+    or two bins. At the fiducial (s_g = 0, every u = 0) every bin takes
+    exactly B_g, the growth-tied value.
+
+    Arguments:
+      out    = the open output file.
+      chunks = per-bin group (chunk) name, in bin order.
+      zbars  = per-bin mean redshift, in bin order.
+      values = group name -> fiducial B_g (the reference center).
+    """
+    groups = list(dict.fromkeys(chunks))
+    for g in groups:
+        # the 0-based positions of the group's bins in the bin table
+        members = []
+        for i, chunk in enumerate(chunks):
+            if chunk == g:
+                members.append(i)
+        z = np.array([float(zbars[i]) for i in members])
+        offsets = z - np.mean(z)
+        nbin = len(members)
+        amplitude = f"DESI_B1_{g}"
+        tilt = f"DESI_TB1_{g}"
+
+        out.write(f"  {amplitude}: # amplitude B_g of group {g}\n")
+        out.write("    prior:\n")
+        out.write(f"      min: {B1_PRIOR[0]}\n")
+        out.write(f"      max: {B1_PRIOR[1]}\n")
+        out.write("    ref:\n")
+        out.write("      dist: norm\n")
+        out.write(f"      loc: {values[g]}\n")
+        out.write(f"      scale: {B1_SCALE}\n")
+        out.write(f"    proposal: {B1_SCALE}\n")
+        out.write(f"    latex: B_\\mathrm{{{g}}}\n")
+
+        if nbin >= 2:
+            edge = float(np.max(np.abs(offsets)))
+            span = TILT_EDGE_FRACTION/edge
+            scale = TILT_EDGE_SCALE/edge
+            out.write(f"  {tilt}: # tilt s_g of group {g} [per unit z]: "
+                      f"+-{TILT_EDGE_FRACTION:g} of B_g at the outermost "
+                      "bin\n")
+            out.write("    prior:\n")
+            out.write(f"      min: {-span:.4g}\n")
+            out.write(f"      max: {span:.4g}\n")
+            out.write("    ref:\n")
+            out.write("      dist: norm\n")
+            out.write("      loc: 0.0\n")
+            out.write(f"      scale: {scale:.4g}\n")
+            out.write(f"    proposal: {scale:.4g}\n")
+            out.write(f"    latex: s_\\mathrm{{{g}}}\n")
+        else:
+            out.write(f"  # group {g} has one bin: no tilt and no residual "
+                      "(both are degenerate with B_g)\n")
+
+        residuals = []
+        if nbin >= 3:
+            for i in members:
+                name = f"DESI_UB1_{i + 1}"
+                residuals.append(name)
+                out.write(f"  {name}: # whitened residual of bin {i + 1} "
+                          f"(group {g})\n")
+                out.write("    prior:\n")
+                out.write("      dist: norm\n")
+                out.write("      loc: 0.0\n")
+                out.write("      scale: 1.0\n")
+                out.write("    ref:\n")
+                out.write("      dist: norm\n")
+                out.write("      loc: 0.0\n")
+                out.write(f"      scale: {RESIDUAL_SCALE}\n")
+                out.write(f"    proposal: {RESIDUAL_SCALE}\n")
+                out.write(f"    latex: u_{{{i + 1}}}\n")
+            coefficients = residual_coefficients(
+                z, sigma=PESSIMISTIC_SIGMA, length=PESSIMISTIC_L)
+        elif nbin == 2:
+            out.write(f"  # group {g} has two bins: no residuals (B_g and "
+                      "the tilt already free both bins)\n")
+
+        for position, i in enumerate(members):
+            name = f"DESI_B1_{i + 1}"
+            arguments = [amplitude]
+            delta = ""
+            if nbin >= 2:
+                arguments.append(tilt)
+                delta = f" + {tilt}*({offsets[position]:+.15e})"
+            if nbin >= 3:
+                # the lower-triangular row: bin `position` reads the
+                # residuals of the group's bins 0..position
+                terms = []
+                for m in range(position + 1):
+                    arguments.append(residuals[m])
+                    terms.append(f"{coefficients[position, m]:+.15e}"
+                                 f"*{residuals[m]}")
+                delta = delta + " " + " ".join(terms)
+            out.write(f"  {name}: # group {g}\n")
+            if nbin == 1:
+                out.write(f"    value: 'lambda {amplitude}: {amplitude}'\n")
+            else:
+                out.write(f"    value: 'lambda {', '.join(arguments)}: "
+                          f"{amplitude}*(1.0{delta})'\n")
+
+
 # Model A (notes/higher_order_bias, its recommendation section): the
 # analysis cut, and the Gaussian prior widths of the per-chunk offsets,
 # all centered on zero. alpha_0 follows the DESI rule rescaled to this
@@ -220,7 +430,7 @@ MODEL_A_FAMILIES = (
     ("DESI_SN0", None, 2.0, "s_{0}"),
     ("DESI_SN2", None, 5.0, "s_{2}"),
 )
-# the flat range of a free tilt (pessimistic variant), per unit redshift
+# the flat range of a free tilt (model A + tilts), per unit redshift
 MODEL_A_TILT_RANGE = {"DESI_TB2": 50.0, "DESI_TBS": 50.0,
                       "DESI_TA0": 5000.0}
 
@@ -249,7 +459,7 @@ MODEL_B_FAMILIES = (
     ("DESI_SN0", None, 2.0, "s_{0}"),
     ("DESI_SN2", None, 5.0, "s_{2}"),
 )
-# the flat range of a free tilt (pessimistic variant), per unit redshift:
+# the flat range of a free tilt (model B + tilts), per unit redshift:
 # about as many prior widths as model A's ranges span (50 for Delta_2,
 # 100 for Delta_s, about 60 for the counterterms), rounded
 MODEL_B_TILT_RANGE = {
@@ -260,13 +470,13 @@ MODEL_B_TILT_RANGE = {
 }
 
 
-def emit_offsets(out, chunks, zbars, pessimistic, families, tilt_range):
+def emit_offsets(out, chunks, zbars, tilts, families, tilt_range):
     """Write the higher-order bias parameters of one model and bin table.
 
     Each chunk g has one sampled offset per family (DESI_DB2_<g>,
     DESI_DBS_<g>, ...) and, for the families with a tilt prefix, a tilt
-    in redshift (DESI_TB2_<g>, ...): fixed at zero in the baseline
-    variant, free in the pessimistic one. Every bin n of the chunk takes
+    in redshift (DESI_TB2_<g>, ...): fixed at zero in model A (or B),
+    free in model A + tilts (or B + tilts). Every bin n of the chunk takes
     its per-bin value from them,
 
         DESI_DB2_<n> = DESI_DB2_<g> + DESI_TB2_<g> (z_n - zbar_g),
@@ -274,22 +484,31 @@ def emit_offsets(out, chunks, zbars, pessimistic, families, tilt_range):
     with z_n the bin's mean redshift and zbar_g the mean of the chunk's
     bin redshifts; the stochastic amplitudes never tilt (the Poisson
     part is known per bin and sits in the covariance). A family with no
-    width is not sampled: every bin's value is fixed to 0.
+    width is not sampled: every bin's value is fixed to 0. The tilt of a
+    one-bin chunk is fixed to 0 even with free tilts: its only bin has
+    z_n - zbar_g = 0, so the tilt multiplies zero, and a sampled tilt
+    would be a direction no data can constrain (on Delta z = 0.2, LRG1
+    and LRG2 have one bin each).
 
     Arguments:
       out         = the open output file.
       chunks      = per-bin chunk name, in bin order.
       zbars       = per-bin mean redshift, in bin order.
-      pessimistic = True frees the tilts.
+      tilts       = True frees the tilts.
       families    = the model's (per-bin prefix, tilt prefix or None,
                     Gaussian width or None, latex symbol) rows, in output
                     order (MODEL_A_FAMILIES or MODEL_B_FAMILIES).
       tilt_range  = tilt prefix -> half width of the flat tilt prior,
-                    per unit redshift (read only when pessimistic).
+                    per unit redshift (read only when tilts is True).
     """
     groups = list(dict.fromkeys(chunks))
     zbar_of = {g: float(np.mean([z for c, z in zip(chunks, zbars)
                                  if c == g])) for g in groups}
+    # the number of bins of each chunk (list.count counts the bins whose
+    # chunk name equals g)
+    nbin_of = {}
+    for g in groups:
+        nbin_of[g] = list(chunks).count(g)
     for prefix, tilt, width, symbol in families:
         if width is None:
             # a family the model does not have: each bin's value is a
@@ -313,7 +532,13 @@ def emit_offsets(out, chunks, zbars, pessimistic, families, tilt_range):
             out.write(f"    latex: {symbol}^{{\\mathrm{{{g}}}}}\n")
             if tilt is None:
                 continue
-            if pessimistic:
+            if tilts and nbin_of[g] == 1:
+                # the only bin has z_n - zbar_g = 0: the tilt multiplies
+                # zero, so a sampled tilt would be a pure degeneracy
+                out.write(f"  {tilt}_{g}: # tilt of chunk {g}, fixed (one "
+                          "bin: z_n - zbar_g = 0)\n")
+                out.write("    value: 0.0\n")
+            elif tilts:
                 span = tilt_range[tilt]
                 out.write(f"  {tilt}_{g}: # tilt of chunk {g} [per unit z]\n")
                 out.write("    prior:\n")
@@ -327,7 +552,7 @@ def emit_offsets(out, chunks, zbars, pessimistic, families, tilt_range):
                 out.write(f"    latex: t_{{{symbol}}}^{{\\mathrm{{{g}}}}}\n")
             else:
                 out.write(f"  {tilt}_{g}: # tilt of chunk {g}, fixed "
-                          "(baseline)\n")
+                          "(no tilts)\n")
                 out.write("    value: 0.0\n")
         for n, (g, z) in enumerate(zip(chunks, zbars), start=1):
             leader = f"{prefix}_{g}"
@@ -341,7 +566,7 @@ def emit_offsets(out, chunks, zbars, pessimistic, families, tilt_range):
                           f"{t}*({float(z) - zbar_of[g]:+.8f})'\n")
 
 
-def emit_model_a(out, chunks, zbars, pessimistic):
+def emit_model_a(out, chunks, zbars, tilts):
     """Write the model A parameters of one bin table.
 
     Model A has five sampled families, DESI_DB2, DESI_DBS and DESI_A0,
@@ -350,13 +575,13 @@ def emit_model_a(out, chunks, zbars, pessimistic):
     follow emit_offsets.
 
     Arguments:
-      out, chunks, zbars, pessimistic = as in emit_offsets.
+      out, chunks, zbars, tilts = as in emit_offsets.
     """
-    emit_offsets(out, chunks, zbars, pessimistic,
+    emit_offsets(out, chunks, zbars, tilts,
                  families=MODEL_A_FAMILIES, tilt_range=MODEL_A_TILT_RANGE)
 
 
-def emit_model_b(out, chunks, zbars, pessimistic):
+def emit_model_b(out, chunks, zbars, tilts):
     """Write the model B parameters of one bin table.
 
     Model B has six families: DESI_DB2, DESI_DBS, DESI_A0 and DESI_A2,
@@ -364,9 +589,9 @@ def emit_model_b(out, chunks, zbars, pessimistic):
     offsets, tilts and per-bin ties follow emit_offsets.
 
     Arguments:
-      out, chunks, zbars, pessimistic = as in emit_offsets.
+      out, chunks, zbars, tilts = as in emit_offsets.
     """
-    emit_offsets(out, chunks, zbars, pessimistic,
+    emit_offsets(out, chunks, zbars, tilts,
                  families=MODEL_B_FAMILIES, tilt_range=MODEL_B_TILT_RANGE)
 
 
@@ -377,19 +602,29 @@ def main():
         "--case", default=None,
         help="a Delta z case (e.g. dr1_dz0p02): write only its "
              "params_desi_<case>.yaml from its bin table")
-    # the two higher-order models write different files: one run writes
-    # one of them (argparse refuses both flags together)
+    # the pessimistic linear fragment and the two higher-order models
+    # write different files: one run writes one of them (argparse refuses
+    # two of these flags together)
     model_flags = parser.add_mutually_exclusive_group()
     model_flags.add_argument(
+        "--bias-pessimistic", action="store_true",
+        help="write the linear fragment of the paper model instead: "
+             "params_desi[_<case>]_bias_pessimistic.yaml (the pessimistic "
+             "linear-bias prior: amplitude and tilt per group, correlated "
+             "residual per bin)")
+    model_flags.add_argument(
         "--model-a", action="store_true",
-        help="write the model A fragments instead: "
-             "params_desi[_<case>]_model_a.yaml (offsets per chunk, "
-             "tilts fixed) and ..._model_a_pessimistic.yaml (tilts free)")
+        help="write the model A fragments instead, into "
+             "likelihood/exploration/: params_desi[_<case>]_model_a.yaml "
+             "(model A: offsets per chunk, tilts fixed) and "
+             "..._model_a_tilts.yaml (model A + tilts: tilts free)")
     model_flags.add_argument(
         "--model-b", action="store_true",
         help="write the model B fragments instead: "
-             "params_desi[_<case>]_model_b.yaml (offsets per chunk, "
-             "tilts fixed) and ..._model_b_pessimistic.yaml (tilts free)")
+             "likelihood/exploration/params_desi[_<case>]_model_b.yaml "
+             "(model B: offsets per chunk, tilts fixed) and "
+             "likelihood/params_desi[_<case>]_model_b_tilts.yaml (model B "
+             "+ tilts: tilts free, the paper model)")
     args = parser.parse_args()
     bin_table = BIN_TABLE
     models = MODELS
@@ -404,19 +639,58 @@ def main():
     chunks = [c for s, c in table]
     zbars = np.loadtxt(bin_table, usecols=4, ndmin=1)
 
+    if args.bias_pessimistic:
+        stem = ("params_desi" if args.case is None
+                else f"params_desi_{args.case}")
+        default = MODELS["params_desi.yaml"]
+        sigv_groups = [sigv_group_key(s, c, z)
+                       for s, c, z in zip(samples, chunks, zbars)]
+        sigv_latex = {g: "\\sigma_v^\\mathrm{" + g.upper() + "}"
+                      for g in dict.fromkeys(sigv_groups)}
+        path = os.path.join(OUT_DIR, f"{stem}_bias_pessimistic.yaml")
+        with open(path, "w") as out:
+            out.write("# Generated by scripts/make_desi_params.py "
+                      "--bias-pessimistic: the pessimistic linear-bias "
+                      "prior of\n"
+                      "# notes/correlated_bias_prior_v2 (section \"The "
+                      "linear-bias prior\"), sigma_g = "
+                      f"{PESSIMISTIC_SIGMA:g} in every group and "
+                      f"L = {PESSIMISTIC_L:g}.\n"
+                      "# Bin n of group g: DESI_B1_<n> = B_g (1 + delta_n), "
+                      "delta_n = s_g (z_n - zbar_g) + eps_n, with\n"
+                      "# B_g = DESI_B1_<g> (b1 at z = 0 under a constant "
+                      "clustering amplitude; the likelihood\n"
+                      "# divides DESI_B1_<n> by D(z_n)), s_g = DESI_TB1_<g> "
+                      "(flat prior), zbar_g the mean of the group's\n"
+                      "# bin redshifts, and eps = sigma_g C u, C the "
+                      "Cholesky factor of exp(-|z_i - z_j|/L) in the\n"
+                      "# group and u_n = DESI_UB1_<n> ~ N(0, 1). Groups "
+                      "of one or two bins carry no residuals\n"
+                      "# (and one bin no tilt): their bins are free (see "
+                      "emit_bias_pessimistic).\n"
+                      "# Velocity dispersions [km/s]: the seven groups of "
+                      "params_desi.yaml, leaders sampled,\n"
+                      "# members tied by value.\n")
+            emit_bias_pessimistic(out, chunks, zbars,
+                                  values=default["bias_values"])
+            emit_blocks(out, "DESI_SIGV", sigv_groups,
+                        default["sigv_values"], SIGV_PRIOR_SIGMA,
+                        SIGV_SCALE, sigv_latex)
+        print(f"wrote {path}")
+        return 0
+
     if args.model_a:
         stem = ("params_desi" if args.case is None
                 else f"params_desi_{args.case}")
-        for suffix, pessimistic in (("_model_a", False),
-                                    ("_model_a_pessimistic", True)):
-            path = os.path.join(OUT_DIR, f"{stem}{suffix}.yaml")
+        for suffix, tilts in (("_model_a", False), ("_model_a_tilts", True)):
+            path = os.path.join(EXPLORATION_DIR, f"{stem}{suffix}.yaml")
             with open(path, "w") as out:
                 out.write("# Generated by scripts/make_desi_params.py "
                           "--model-a: the model A parameters of "
                           "notes/higher_order_bias")
-                out.write(" (pessimistic variant: free tilts).\n"
-                          if pessimistic else
-                          " (baseline: one offset per chunk).\n")
+                out.write(" (model A + tilts: free tilts).\n"
+                          if tilts else
+                          " (model A: one offset per chunk).\n")
                 out.write("# DESI_A2 (alpha_2) is fixed to 0 in every "
                           "bin: model A has no radial counterterm.\n")
                 out.write("# Units: DESI_A0 in h^-2 Mpc^2, DESI_SN0 in "
@@ -426,7 +700,7 @@ def main():
                           "# satellites' velocity dispersion in Mpc/h); "
                           "the per-bin values are tied to the chunk\n"
                           "# parameters (see emit_model_a).\n")
-                emit_model_a(out, chunks, zbars, pessimistic)
+                emit_model_a(out, chunks, zbars, tilts)
             print(f"wrote {path}")
         return 0
 
@@ -435,17 +709,19 @@ def main():
                 else f"params_desi_{args.case}")
         # the counterterm width of MODEL_B_FAMILIES, quoted in the header
         width = 0.5/MODEL_B_KMAX**2
-        for suffix, pessimistic in (("_model_b", False),
-                                    ("_model_b_pessimistic", True)):
-            path = os.path.join(OUT_DIR, f"{stem}{suffix}.yaml")
+        # model B without tilts is an exploration fragment; model B +
+        # tilts is the paper model's higher-order fragment
+        for suffix, tilts, folder in (("_model_b", False, EXPLORATION_DIR),
+                                      ("_model_b_tilts", True, OUT_DIR)):
+            path = os.path.join(folder, f"{stem}{suffix}.yaml")
             with open(path, "w") as out:
                 out.write("# Generated by scripts/make_desi_params.py "
                           "--model-b: the model B parameters of "
                           "notes/higher_order_bias")
-                out.write(" (pessimistic variant: free tilts on Delta_2, "
+                out.write(" (model B + tilts: free tilts on Delta_2, "
                           "Delta_s, alpha_0 and alpha_2).\n"
-                          if pessimistic else
-                          " (baseline: one offset per chunk).\n")
+                          if tilts else
+                          " (model B: one offset per chunk).\n")
                 out.write("# Units: DESI_A0 and DESI_A2 in h^-2 Mpc^2, "
                           "DESI_SN0 in units of each bin's Poisson power,\n"
                           "# DESI_SN2 in units of f_sat sigma_v^2 times "
@@ -459,7 +735,7 @@ def main():
                           "# the same in every case; the alpha_0 and "
                           "alpha_2 prior widths are 0.5/k_max^2 = "
                           f"{width:.1f} h^-2 Mpc^2.\n")
-                emit_model_b(out, chunks, zbars, pessimistic)
+                emit_model_b(out, chunks, zbars, tilts)
             print(f"wrote {path}")
         return 0
 
@@ -473,7 +749,7 @@ def main():
         sigv_latex = {g: "\\sigma_v^\\mathrm{" + g.upper() + "}"
                       for g in dict.fromkeys(sigv_groups)}
 
-        path = os.path.join(OUT_DIR, fname)
+        path = os.path.join(model["folder"], fname)
         with open(path, "w") as out:
             out.write(f"# Generated by scripts/make_desi_params.py: "
                       f"{model['comment']}.\n")

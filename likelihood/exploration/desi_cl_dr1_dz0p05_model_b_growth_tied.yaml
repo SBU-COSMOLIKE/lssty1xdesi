@@ -1,0 +1,10 @@
+# desi_cl_dr1_dz0p05 with model B of notes/higher_order_bias on the growth-
+# tied linear bias; every option not set here is desi_cl_dr1_dz0p05.yaml's.
+# the one-loop model; model B is its parameter fragment below
+# (alpha_2 free)
+higher_order_bias: 1
+# the one-loop model hands cosmolike every bias per bin, with b3 = 0
+bias_model: [0,0,0,0,0,0]
+# the growth-tied linear fragment of the parent folder and the model B
+# one of this folder (offsets per chunk, tilts fixed at zero)
+params: !defaults [../params_desi_dr1_dz0p05, params_desi_dr1_dz0p05_model_b]

@@ -81,10 +81,12 @@ flowchart TB
   DESI DR1 binnings of fixed width in redshift, and
   `EXAMPLE_EVALUATE5.yaml` the LSST Y1 3×2pt case
   ([Δz cases](#dz_cases), [LSST case](#lsst_case)).
-- `EXAMPLE_EVALUATE_MODEL_A1.yaml` to `EXAMPLE_EVALUATE_MODEL_A4.yaml`
-  and `EXAMPLE_EVALUATE_MODEL_B1.yaml` to `EXAMPLE_EVALUATE_MODEL_B4.yaml`
-  evaluate the four DESI layouts with the one-loop bias model, under
-  the parameter files of models A and B ([one-loop bias](#higher_order_bias)).
+- `EXAMPLE_EVALUATE_MODEL_B1.yaml` to `EXAMPLE_EVALUATE_MODEL_B4.yaml`
+  evaluate the four DESI layouts with the paper's bias model, the
+  one-loop model B + tilts on the pessimistic linear-bias prior
+  ([one-loop bias](#higher_order_bias)); the examples of the other
+  models (model A, model B on the growth-tied linear bias) are in
+  [exploration/](exploration/README.md).
 - `EXAMPLE_EMUL2_EVALUATE1.yaml` is the hybrid-emulator variant of the
   first example, with MCMC and Nautilus examples alongside
   ([hybrid emulators](#cobaya_base_code_examples_emul2)).
@@ -400,34 +402,51 @@ $`\sigma_v`$ the satellites' velocity dispersion in
 $`h^{-1}\,\mathrm{Mpc}`$: 0.1 and 7.8 for BGS and LRG, 0.1 and 2.9 for
 ELG.
 
-Each layout has one likelihood class and one example per parameter file:
+The paper uses one of these variants, model B + tilts on the pessimistic
+linear-bias prior. Each layout has one likelihood class and one example
+of it:
 
-| Layout | Model A example | Model B example | Model B likelihood class |
-|---|---|---|---|
-| $`\Delta d_\mathrm{com} = 62`$ Mpc | `EXAMPLE_EVALUATE_MODEL_A1.yaml` | `EXAMPLE_EVALUATE_MODEL_B1.yaml` | `desi_cl_model_b` |
-| $`\Delta z = 0.02`$ | `EXAMPLE_EVALUATE_MODEL_A2.yaml` | `EXAMPLE_EVALUATE_MODEL_B2.yaml` | `desi_cl_dr1_dz0p02_model_b` |
-| $`\Delta z = 0.05`$ | `EXAMPLE_EVALUATE_MODEL_A3.yaml` | `EXAMPLE_EVALUATE_MODEL_B3.yaml` | `desi_cl_dr1_dz0p05_model_b` |
-| $`\Delta z = 0.2`$ | `EXAMPLE_EVALUATE_MODEL_A4.yaml` | `EXAMPLE_EVALUATE_MODEL_B4.yaml` | `desi_cl_dr1_dz0p20_model_b` |
+| Layout | Example | Likelihood class |
+|---|---|---|
+| $`\Delta d_\mathrm{com} = 62`$ Mpc | `EXAMPLE_EVALUATE_MODEL_B1.yaml` | `desi_cl_model_b` |
+| $`\Delta z = 0.02`$ | `EXAMPLE_EVALUATE_MODEL_B2.yaml` | `desi_cl_dr1_dz0p02_model_b` |
+| $`\Delta z = 0.05`$ | `EXAMPLE_EVALUATE_MODEL_B3.yaml` | `desi_cl_dr1_dz0p05_model_b` |
+| $`\Delta z = 0.2`$ | `EXAMPLE_EVALUATE_MODEL_B4.yaml` | `desi_cl_dr1_dz0p20_model_b` |
 
-The model A classes carry the same names with `_model_a`. Both set
-`higher_order_bias: 1` and differ only in the parameter file they read
-(cobaya takes a likelihood's parameters from its class). The examples
-run like `EXAMPLE_EVALUATE1.yaml`
-([basic instructions](#running_cosmolike_projects)), with every offset
-at zero. The data vectors are the linear-bias fiducials, so these
-examples do not evaluate to $`\chi^2 \approx 0`$: the one-loop terms
-change the vector even at zero offsets.
+Each class sets `higher_order_bias: 1` and reads two parameter files
+(cobaya takes a likelihood's parameters from its class):
 
-Each class reads the baseline parameter file,
-`likelihood/params_desi[_<case>]_model_b.yaml` for model B, with one
-offset per chunk. The pessimistic file (`..._model_b_pessimistic.yaml`)
-adds a free tilt in redshift per chunk to the offsets of $`b_2`$,
-$`b_{s^2}`$ and the counterterms (`DESI_TB2_<g>`, `DESI_TBS_<g>`,
-`DESI_TA0_<g>`, and in model B `DESI_TA2_<g>`); the stochastic
-amplitudes never tilt. A comment in each class yaml says how to switch.
-`scripts/make_desi_params.py` writes the files, with `--model-a` or
-`--model-b` (and `--case <name>` for a $`\Delta z`$ layout, e.g.
-`--case dr1_dz0p05`).
+- `likelihood/params_desi[_<case>]_model_b_tilts.yaml`, model B + tilts:
+  the offsets of $`b_2`$, $`b_{s^2}`$ and the counterterms each get a
+  free tilt in redshift per chunk (`DESI_TB2_<g>`, `DESI_TBS_<g>`,
+  `DESI_TA0_<g>`, `DESI_TA2_<g>`); the stochastic amplitudes never tilt.
+- `likelihood/params_desi[_<case>]_bias_pessimistic.yaml`, the
+  pessimistic linear-bias prior of
+  [the correlated-prior note](notes/correlated_bias_prior_v2/correlated_bias_prior_v2.pdf):
+  bin $`n`$ of chunk $`g`$ has
+  $`b_{1,n} = B_g\,(1 + \delta_n)/D(\bar z_n)`$ with
+  $`\delta_n = s_g\,(\bar z_n - \bar z_g) + \varepsilon_n`$. The amplitude
+  $`B_g`$ (`DESI_B1_<g>`) and the tilt $`s_g`$ (`DESI_TB1_<g>`) have flat
+  priors, $`\bar z_g`$ is the mean of the chunk's bin redshifts, and the
+  residual $`\varepsilon_n`$ has a Gaussian prior of width 3% whose
+  correlation between two bins of the chunk is
+  $`\exp(-|\bar z_m - \bar z_n|/0.05)`$, sampled as one unit Gaussian
+  `DESI_UB1_<n>` per bin. A chunk of one or two bins has no residuals,
+  so its bins are free.
+
+The examples run like `EXAMPLE_EVALUATE1.yaml`
+([basic instructions](#running_cosmolike_projects)), with every offset,
+tilt and residual at zero, where every bin's bias is its chunk's
+$`B_g/D(\bar z_n)`$. The data vectors are the linear-bias fiducials, so
+these examples do not evaluate to $`\chi^2 \approx 0`$: the one-loop
+terms change the vector even at zero offsets.
+
+Model A, model A + tilts and model B without tilts, with their classes
+and examples, are in `likelihood/exploration/` and
+[exploration/](exploration/README.md).
+`scripts/make_desi_params.py` writes the parameter files, with
+`--bias-pessimistic`, `--model-a` or `--model-b` (and `--case <name>`
+for a $`\Delta z`$ layout, e.g. `--case dr1_dz0p05`).
 
 # Baryonic feedback on EXAMPLE_EVALUATE1 <a name="baryonic_feedback"></a>
 
