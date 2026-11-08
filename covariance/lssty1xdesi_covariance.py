@@ -26,7 +26,11 @@ the source forecast's sacc file; this module computes an independent one
 with cosmolike's own kernels, so the two can be compared entry by entry.
 
 The Gaussian term's spectra model linear per-bin galaxy bias over the
-nonlinear matter power, with the lens redshift-space distortions in
+nonlinear matter power. Each bin's bias is the likelihood's fiducial
+b_i = B_g/D(zbar_i): the sample amplitude B_g (CHUNK_BIAS) divided by
+the linear growth at the bin's mean redshift, computed as the
+likelihood computes it (_lens_growth). The spectra carry the lens
+redshift-space distortions in
 both the Limber window and the non-Limber recompute's j_l'' transfer
 (gaussian rsd = nonlimber = true): the exact distortion term lands
 the lowest-redshift clustering rows on the source forecast's
@@ -35,8 +39,10 @@ covariance/README.md). The lens kernels carry the fiducial
 finger-of-god smearing: each thin bin's n(z) is convolved once, at
 the fixed fiducial dispersions, matching what the data vector's
 sampled convolution computes at its fiducial point
-(_fog_convolved_lens_file). The one-loop bias terms remain outside
-the covariance model - covariance accuracy targets are
+(_fog_convolved_lens_file). The one-loop bias terms of model A
+(b2 and bs2 at their calibrations) remain outside the covariance
+model: on the bands kept at k_max = 0.075 h/Mpc they change the
+clustering spectra by about 2%, and covariance accuracy targets are
 parameter-error level, far looser than the data-vector chi2 rule.
 
 Cases. The layout above is the default case, "dr3" (the comoving bins
@@ -98,9 +104,10 @@ LSST_AREA_DEG2 = 12300.0
 NLENS = 76
 NSOURCE = 5
 
-# fiducial linear bias of each sample chunk, the DESI_B1 leader values of
-# the EXAMPLE yaml files (one value per chunk of
-# data/lssty1xdesi_desi_dr3_bins.txt; every bin of a chunk shares it)
+# fiducial bias amplitude B_g of each sample chunk, the DESI_B1 leader
+# values of the EXAMPLE yaml files (one value per chunk of
+# data/lssty1xdesi_desi_dr3_bins.txt). It is the bias at z = 0: a bin's
+# bias is B_g/D(zbar_i), as in the likelihood (_lens_bias).
 CHUNK_BIAS = {
     "BGS": 1.34,
     "LRG1": 1.70,
@@ -132,6 +139,11 @@ SIGMA_V_BGS_SPLIT_Z = 0.255
 # speed of light [km/s]: a line-of-sight velocity dispersion sigma_v
 # smears observed redshifts by sigma_z = (1 + zbar) sigma_v / c
 C_KMS = 299792.458
+
+# The large scale [1/Mpc] where the likelihood reads the growth factor
+# D(z) off the linear P(k) ratio (KREF of likelihood/desi_cl.py; keep
+# the two in sync). Growth is scale independent there.
+GROWTH_KREF = 5.0e-3
 
 
 def _stem(case):
@@ -271,24 +283,62 @@ def _band_edges():
     return first, last
 
 
-def _lens_bias(case="dr3"):
+def _lens_growth(zbar, cosmology):
+    """Return the linear growth D(z)/D(0) at each redshift of zbar.
+
+    The likelihood (likelihood/desi_cl.py) reads the growth off the
+    linear matter power at one large scale, D(z) = sqrt(P(z, k)/P(0, k))
+    at k = GROWTH_KREF, where growth does not depend on scale. This
+    function repeats that definition with the covariance cosmology, so
+    the covariance's bias matches the data vector's.
+
+    Arguments:
+      zbar = float array of redshifts (the bins' mean redshifts).
+      cosmology = the "cosmology" mapping of configuration().
+
+    Returns:
+      float64 array of D(zbar)/D(0), one per entry of zbar.
+    """
+    # imported here, like CAMB inside it: only the DESI cases need it
+    from cosmolike_notebook_utils.camb_cosmology import get_camb_cosmology
+    from scipy.interpolate import CubicSpline
+    log10k, z_nodes, ln_power = get_camb_cosmology(**cosmology)[:3]
+    # lnP_linear is the (n_z, n_k) table flattened in Fortran order,
+    # with k in h/Mpc
+    table = ln_power.reshape((len(z_nodes), len(log10k)), order="F")
+    log10k_ref = np.log10(GROWTH_KREF/(cosmology["H0"]/100.0))
+    if not log10k[0] < log10k_ref < log10k[-1]:
+        raise ValueError("GROWTH_KREF lies outside the CAMB k range")
+    # ln P at the reference scale on every z node, then a spline in z
+    at_kref = np.array([CubicSpline(log10k, row)(log10k_ref) for row in table])
+    ln_p = CubicSpline(z_nodes, at_kref)
+    return np.exp(0.5*(ln_p(np.asarray(zbar, dtype=float)) - ln_p(0.0)))
+
+
+def _lens_bias(case, cosmology):
     """Return the fiducial linear bias of each lens bin of one case.
 
     The case's bin table names each bin's chunk (BGS, LRG1..LRG3,
-    ELG1, ELG2); CHUNK_BIAS maps the chunk to its leader value. Every
-    downstream bin order follows that file.
+    ELG1, ELG2) and its mean redshift zbar_i. The bias is the
+    likelihood's fiducial b_i = B_g/D(zbar_i), with B_g = CHUNK_BIAS of
+    the chunk and D the linear growth (_lens_growth). Every downstream
+    bin order follows that file.
 
     Arguments:
-      case = one of CASES (default "dr3").
+      case = one of CASES.
+      cosmology = the "cosmology" mapping of configuration().
 
     Returns:
-      float list, one entry per lens bin (the LSST case: LSST_LENS_BIAS).
+      float list, one entry per lens bin (the LSST case: LSST_LENS_BIAS,
+      which are already the per-bin biases).
     """
     if _lsst(case):
         return list(LSST_LENS_BIAS)
-    chunk_names = np.loadtxt(_PROJECT/f"data/{_stem(case)}_bins.txt",
-                             dtype=str, usecols=3, ndmin=1)
-    return [CHUNK_BIAS[str(name)] for name in chunk_names]
+    bins_file = _PROJECT/f"data/{_stem(case)}_bins.txt"
+    chunk_names = np.loadtxt(bins_file, dtype=str, usecols=3, ndmin=1)
+    zbar = np.loadtxt(bins_file, usecols=4, ndmin=1)
+    growth = _lens_growth(zbar, cosmology)
+    return [CHUNK_BIAS[str(name)]/float(d) for name, d in zip(chunk_names, growth)]
 
 
 def _fog_convolved_lens_file(case="dr3"):
@@ -452,13 +502,14 @@ def configuration(accuracy_boost=None, gaussian=None, case="dr3",
         "lens_density_arcmin2": lens_density.tolist(),
         "source_density_arcmin2": [2.0]*NSOURCE,
         "sigma_e_component": [0.26]*NSOURCE,
-        "bias": _lens_bias(case),
         # scale-factor edges of the line-of-sight integration panels,
         # at z = 3.5, 2, 1.5, 1, 0.7, 0.4, 0.2 and 1e-5 (the last edge
         # stops just short of the observer); the DESI bins live inside
         # z < 1.7 and the LSST sources inside z < 3.5
         "a_edges": 1.0/(1.0+np.array([3.5, 2., 1.5, 1., .7, .4, .2, 1.e-5])),
     }
+    # the per-bin bias needs the growth of the cosmology above
+    settings["bias"] = _lens_bias(case, settings["cosmology"])
     settings.update(numerical)
     if gaussian is None:
         # the project default: redshift distortions on, in both the

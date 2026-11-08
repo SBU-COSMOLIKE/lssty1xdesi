@@ -38,13 +38,19 @@ Outputs (into the project's data/ folder):
   lssty1xdesi_desi_dr3.mask         = [index, 0/1], 1 exactly where a
                                       sacc bandpower exists (the
                                       per-spectrum scale cuts)
-  lssty1xdesi_desi_dr3_cov          = [i, j, cov] for every imported
+  lssty1xdesi_desi_dr3_sacc_cov     = [i, j, cov] for every imported
                                       row (auto and cross, with their
                                       correlations), plus a placeholder
                                       1.0 diagonal on every masked
                                       index (the reader demands a
                                       positive diagonal everywhere;
-                                      masked rows never reach the chi2)
+                                      masked rows never reach the chi2).
+                                      The source forecast's covariance,
+                                      kept for the comparison of the
+                                      covariance guide; the likelihood
+                                      reads lssty1xdesi_desi_dr3_cov,
+                                      the project's own Gaussian term
+                                      (scripts/make_desi_covariance.py)
   lssty1xdesi_desi_dr3_windows.npz  = per-spectrum integer multipoles
                                       and weights, kept for the
                                       exact-bandpower follow-up
@@ -253,8 +259,10 @@ def main():
     # imported entries carry the sacc covariance; every other index gets
     # a 1.0 placeholder diagonal (the reader checks the full diagonal is
     # positive before inverting, and re-masks the inverse afterwards, so
-    # the placeholder can never reach the chi2)
-    out_cov = os.path.join(DATA, "lssty1xdesi_desi_dr3_cov")
+    # the placeholder can never reach the chi2). The file is the
+    # comparison copy: the dataset names the project's own Gaussian
+    # covariance, which scripts/make_desi_covariance.py writes
+    out_cov = os.path.join(DATA, "lssty1xdesi_desi_dr3_sacc_cov")
     indices = sorted(sacc_row_of)
     with open(out_cov, "w") as out:
         for a_pos, i in enumerate(indices):
