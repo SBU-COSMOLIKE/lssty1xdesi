@@ -73,6 +73,26 @@
     "pessimistic": 11.445679955858031,
     "independent": 10.694141090115169
    },
+   "fom_om_as": {
+    "A calibrated": {
+     "tied": 101.56411671284773,
+     "baseline": 74.5099683380804,
+     "pessimistic": 60.802243762287276,
+     "independent": 58.72688764807648
+    },
+    "A baseline": {
+     "tied": 67.79627491044948,
+     "baseline": 39.700678124603684,
+     "pessimistic": 33.08996553891295,
+     "independent": 31.92339710143013
+    },
+    "A pessimistic": {
+     "tied": 44.699220109860995,
+     "baseline": 37.22250994107653,
+     "pessimistic": 31.115097904525356,
+     "independent": 29.951991418841242
+    }
+   },
    "fom": {
     "A calibrated": {
      "tied": 39.4160097922883,
@@ -207,6 +227,26 @@
     "baseline": 12.468831498079867,
     "pessimistic": 7.413301558984482,
     "independent": 4.0163934116315625
+   },
+   "fom_om_as": {
+    "A calibrated": {
+     "tied": 44.58809220587151,
+     "baseline": 29.2290575894263,
+     "pessimistic": 22.093865522925864,
+     "independent": 13.676363129241253
+    },
+    "A baseline": {
+     "tied": 30.554027006601654,
+     "baseline": 21.72979590218141,
+     "pessimistic": 17.085287044025645,
+     "independent": 10.753390563767143
+    },
+    "A pessimistic": {
+     "tied": 21.203257265137132,
+     "baseline": 18.717247378697675,
+     "pessimistic": 14.477621161330394,
+     "independent": 8.58113578502094
+    }
    },
    "fom": {
     "A calibrated": {
@@ -343,6 +383,26 @@
     "pessimistic": 1.3290844753385616,
     "independent": 1.225015947517183
    },
+   "fom_om_as": {
+    "A calibrated": {
+     "tied": 48.6849689442093,
+     "baseline": 22.898034818431316,
+     "pessimistic": 18.11843059553597,
+     "independent": 17.40466264165953
+    },
+    "A baseline": {
+     "tied": 18.7698766307601,
+     "baseline": 8.383839259585947,
+     "pessimistic": 5.760229904247544,
+     "independent": 5.257327809201882
+    },
+    "A pessimistic": {
+     "tied": 9.700070139555018,
+     "baseline": 7.205662989708682,
+     "pessimistic": 4.670304472867441,
+     "independent": 4.318035825606826
+    }
+   },
    "fom": {
     "A calibrated": {
      "tied": 11.932947280092769,
@@ -477,6 +537,26 @@
     "baseline": 0.515381470203161,
     "pessimistic": 0.515381470203161,
     "independent": 0.515381470203161
+   },
+   "fom_om_as": {
+    "A calibrated": {
+     "tied": 18.062150637228264,
+     "baseline": 7.829233231859304,
+     "pessimistic": 7.829233231859304,
+     "independent": 7.829233231859304
+    },
+    "A baseline": {
+     "tied": 5.770312134624609,
+     "baseline": 1.935890475924314,
+     "pessimistic": 1.935890475924314,
+     "independent": 1.935890475924314
+    },
+    "A pessimistic": {
+     "tied": 2.4196554103688146,
+     "baseline": 1.3877721174055213,
+     "pessimistic": 1.3877721174055213,
+     "independent": 1.3877721174055213
+    }
    },
    "fom": {
     "A calibrated": {
