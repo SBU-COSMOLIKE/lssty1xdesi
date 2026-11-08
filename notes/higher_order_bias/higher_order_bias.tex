@@ -21,11 +21,14 @@
 \newcommand{\kmax}{k_{\mathrm{max}}}
 \newcommand{\hMpc}{\,h\,\mathrm{Mpc}^{-1}}
 \newcommand{\Mpch}{\,h^{-1}\mathrm{Mpc}}
+\newcommand{\aunit}{\,h^{-2}\mathrm{Mpc}^2}
+\newcommand{\SNz}{\mathrm{SN}_0}
+\newcommand{\SNt}{\mathrm{SN}_2}
 
 \emergencystretch=2em
 
 \title{Higher-order galaxy bias for DESI thin-bin angular clustering\\
-\large A theoretical study for the lssty1xdesi project}
+\large The one-loop bias model of the lssty1xdesi project}
 \date{November 2026}
 \author{}
 
@@ -36,102 +39,78 @@
 \noindent
 The lssty1xdesi forecast combines LSST Y1 3x2pt with DESI angular
 galaxy clustering $C_\ell^{gg}$ in thin redshift bins, computed without
-the Limber approximation.  Its likelihood models galaxy clustering with
-linear bias times the halofit matter power spectrum, and the draft
-paper extends that to a one-loop Eulerian bias expansion.  This note
-collects the physics that any higher-order bias implementation must
-respect: the one-loop galaxy power spectrum in real and redshift space,
-the Eulerian and Lagrangian bias bases with every conversion factor,
-the DESI DR1 full-shape parameterization and priors, the projection of
-each term to thin-bin angular spectra, and the measured size of each
-term at the project's scale cuts.  Two conclusions carry the most
-weight.  First, the draft paper's bias table holds the DESI DR1
-``physical'' sampling combinations $(1+\boneL)\sigma_8(z_{\rm eff})$,
-$\btwoL\sigma_8^2$ and $\bsL\sigma_8^2$, inserted into the Eulerian
-calculator without removing the $\sigma_8$ powers, without rotating
-from the Lagrangian to the Eulerian basis, and without the factor of
-two of the CCL normalization.  The linear-bias column confirms this
-reading for four of the five chunks; the BGS entry does not match the
-project fiducial and needs a check against the DESI chains.  Under
-this reading the tidal term enters the galaxy power spectrum with the
-opposite sign and several times the magnitude of the co-evolution
-expectation, which moves the loop correction by several percent of
-$P_{gg}$ at $k\simeq0.1\hMpc$, the size of the whole effect.  Second, at
-the project cut $\kmax=0.075\hMpc$ the one-loop terms are a $1$--$3\%$
-correction that a minimal one-loop model (the correlated-prior note's
-per-bin linear bias, co-evolution-centered $\btwo$ and
-$\bs$, one counterterm, one stochastic amplitude per tracer chunk)
-covers; at the shipped mask near $0.18\hMpc$ the corrections reach
-$10$--$20\%$, so $\btwo$ and $\bs$ must be freed per chunk with wide
-priors and the redshift-space pieces, which this project has not yet
-modeled, must enter the model.
+the Limber approximation.  This note describes the one-loop galaxy bias
+model of its DESI likelihood and the physics behind each choice.  The
+model is one likelihood option with every term per bin: the real-space
+one-loop Eulerian bias expansion on a per-bin linear bias, with the
+quadratic and tidal biases tied to calibrated relations plus group
+offsets, a $k^2$ counterterm, the redshift-space counterterm $\alpha_2$
+in the DESI DR1 convention, and two stochastic terms, a white noise
+$\SNz$ and a line-of-sight term $\SNt k^2\mu^2$.  Models A and B are
+two parameter files of this option: model A, built for
+$\kmax = 0.075\hMpc$, fixes $\alpha_2 = 0$; model B frees it and
+doubles the offset widths.  Every term projects exactly: $\alpha_2$
+through the Kaiser transfers, $\SNt$ through the radial derivatives of
+the bin kernels.  That derivative structure anticorrelates the
+projected $\SNt$ of neighboring thin bins, a pattern no white noise
+reproduces; without $\SNt$, model A fails on the thin layouts at its
+own cut.  The draft paper's bias table holds the DESI DR1 sampling
+combinations of Lagrangian biases, not Eulerian biases, so the model
+takes its fiducials from the calibrations.  The loop terms change the
+galaxy power by up to $7\%$ at model A's per-bin cut and up to $15\%$
+at the shipped mask.
 \end{abstract}
 
 \tableofcontents
 
-\section{Scope and context}
+\section{Scope and conventions}
 \label{sec:scope}
 
 The lssty1xdesi project forecasts DESI spectroscopic galaxy clustering
-as angular power spectra $C_\ell^{gg}$ in 76 thin bins of equal
-comoving width (about 62\,Mpc), combined with LSST Y1 3x2pt.  The thin
-bins resolve radial Fourier modes up to
-$k_\parallel \simeq \pi/\Delta\chi \simeq 0.05\,\mathrm{Mpc}^{-1}
-\simeq 0.075\hMpc$, where $\Delta\chi$ is the comoving bin width, so
-the angular analysis recovers most of the three-dimensional information
-of a power spectrum analysis at the same scale cut
-\cite{Asorey2012}.  The shipped likelihood models the galaxy power as
-$P_{gg} = \bone^2(z)\,\pnl(k,z)$ with $\pnl$ the halofit matter power
-spectrum, one bias amplitude per tracer chunk evolving as
-$\bone(z) = B_g/D(z)$, where $D(z)$ is the linear growth factor
-normalized to $D(0)=1$ and $B_g$ is the chunk amplitude.  The $1/D$
-shape keeps the clustering amplitude $\bone(z) D(z)$ of a chunk
-constant; it is the constant-clustering-amplitude shape, not the
-evolution law of a conserved galaxy population.  (The likelihood
-itself reads one bias parameter per thin bin; the shipped parameter
-files tie them to one sampled value per chunk.)  The project's
-correlated-prior note (\texttt{notes/correlated\_bias\_prior\_v2},
-sections ``The models'' and ``Which $L$ and $\sigma_b$ are physical'')
-shows that this growth-tied model (one amplitude per group, the bias
-following $1/D(z)$) is too rigid, and the recommendation of
-Section~\ref{sec:recommendation} uses that note's per-bin model,
-$b_{1,i} = B_g(1+\delta_i)/D(z_i)$ with one fractional deviation
-$\delta_i$ per bin, split into a free tilt per chunk and a residual
-under a correlated prior (Section~\ref{sec:evolution}).
+as angular power spectra $C_\ell^{gg}$ in thin redshift bins, combined
+with LSST Y1 3x2pt.  The DESI spectra are computed on four bin
+layouts: 76 bins of equal comoving width
+($\Delta d_{\rm com} = 62$\,Mpc), and bins of fixed redshift width
+$\Delta z = 0.02$, $0.05$ and $0.2$.  The bins fall into six tracer
+groups: BGS, LRG1, LRG2, LRG3, ELG1 and ELG2.  A bin of comoving width
+$\Delta\chi$ resolves radial Fourier modes up to
+$k_\parallel \simeq \pi/\Delta\chi$, about $0.075\hMpc$ for the
+$62$\,Mpc bins, so the angular analysis recovers most of the
+three-dimensional information at that scale \cite{Asorey2012}.
 
-An earlier review of the forecast (the project reference
-\texttt{references/fom\_and\_bias\_review.md}) concluded that this
-model is too rigid for the shipped scale cuts: linear bias is accurate
-only to $\kmax\simeq0.08$--$0.12\hMpc$, while the shipped masks reach
-$k\simeq0.18\hMpc$.  The missing terms are the second-order and tidal
-bias loops, the $k^2$ counterterms, and the stochastic terms.
-Throughout this note, higher-order bias means the bias beyond linear
-order: the quadratic $\btwo$ and tidal $\bs$ at second order and
-$\bthree$ at third, all of which enter $P_{gg}$ at one loop.  This
-note is the theoretical study that the higher-order bias
-implementation will build on.  It answers six questions: the structure
-of the one-loop galaxy power spectrum and its bias bases
-(Section~\ref{sec:oneloop}, derivations in
-Appendix~\ref{app:conversions}); the DESI DR1 full-shape model and
-priors (Section~\ref{sec:desi}); the origin of the draft paper's bias
-values and the tidal-bias verdict (Section~\ref{sec:verdict}); the
-projection of each term to thin-bin angular spectra
-(Section~\ref{sec:projection}); the measured size of every term
-(Section~\ref{sec:sizes}); and the recommended model
-(Sections~\ref{sec:evolution} and \ref{sec:recommendation}).
-Section~\ref{sec:implementation} reports the companion implementation
-study: the CosmoLike inventory, the comparison with the draft's data
-vector, and the ordered plan.
+With linear bias the likelihood models the galaxy power as
+$P_{gg} = \bone^2\pnl$, with $\pnl$ the halofit matter power spectrum,
+and a linear-bias fit holds only to $\kmax = 0.05\hMpc$ on this data
+vector (\texttt{notes/linear\_bias\_kmax}).  This note describes the
+one-loop model that replaces it: the physics it rests on
+(Sections~\ref{sec:oneloop}--\ref{sec:verdict}), the size of each term
+(Section~\ref{sec:sizes}), the model and its two parameter files,
+models A and B (Section~\ref{sec:model}), the exact projection of each
+term to thin-bin spectra (Section~\ref{sec:projection}), and the checks
+(Section~\ref{sec:validation}).  The forecasts made with it are in
+\texttt{notes/correlated\_bias\_prior\_v2}, the correlated-prior note:
+model A at $\kmax = 0.075\hMpc$, models A and B against $\kmax$, and
+where model A breaks.
 
-Conventions.  $k$ is the comoving wavenumber, quoted in $h$/Mpc unless
-a unit is written; $z$ is redshift; $\mu$ is the cosine between the
-wavevector and the line of sight; $f = d\ln D/d\ln a$ is the linear
-growth rate; $\sigma_8(z)$ is the rms linear density fluctuation in
-spheres of $8\Mpch$; $A_s$ is the primordial scalar amplitude;
-$\bar{n}$ is the tracer number density.  The matter overdensity is
-$\delta$, the galaxy overdensity $\delta_g$, and
-$s_{ij} = (\partial_i\partial_j/\partial^2 - \delta_{ij}/3)\,\delta$
-is the tidal field with $s^2 = s_{ij}s_{ij}$.
+\paragraph{Conventions.}
+$\ell$ is the multipole; $k$ is the comoving wavenumber, in $h$/Mpc
+unless a unit is written; $z$ is redshift and $\bar{z}_i$ the mean redshift of bin $i$; $\mu$ is
+the cosine between the wavevector and the line of sight; $D(z)$ is the
+linear growth factor, $D(0) = 1$, and $f = d\ln D/d\ln a$ the growth
+rate, with $a$ the scale factor; $\sigma_8(z)$ is the rms linear
+density fluctuation in spheres of $8\Mpch$; $\Omega_m$ is the matter
+density today in units of the critical density; $\bar{n}$ is the
+tracer number density.  The matter overdensity is $\delta$, the galaxy
+overdensity $\delta_g$, and
+$s_{ij} = (\partial_i\partial_j/\partial^2 - \delta_{ij}/3)\,\delta$ is
+the tidal field, with $s^2 = s_{ij}s_{ij}$.  A parameter's
+marginalized one-sigma error is $\sigma$.  $\kmax$ is quoted at
+$z = 0$: bin $i$ is cut at $\kmax/D(\bar{z}_i)$ by the non-Limber
+UV-fraction criterion \cite{Saraivanov2026}, which keeps a band while
+less than $5\%$ of it comes from the power spectrum above that
+wavenumber.  A fit uses the bands that both this cut and the shipped
+mask keep; the mask stops every bin at
+$k = 0.1185\,\mathrm{Mpc}^{-1} \simeq 0.176\hMpc$.
 
 \section{The one-loop galaxy power spectrum}
 \label{sec:oneloop}
@@ -143,7 +122,7 @@ At one loop, every rotationally invariant local gravitational
 observable up to third order in the linear density enters the galaxy
 density.  After renormalization, the McDonald--Roy basis
 \cite{McDonaldRoy2009,Saito2014} carries four deterministic bias
-parameters plus a derivative bias and a noise field:
+parameters, a derivative bias and a noise field:
 \begin{equation}
 \delta_g = \bone\,\delta
  + \frac{\btwo}{2}\left(\delta^2 - \langle\delta^2\rangle\right)
@@ -154,11 +133,12 @@ parameters plus a derivative bias and a noise field:
 \end{equation}
 where $\psi$ is the one independent third-order operator that survives
 at one loop (Appendix~\ref{app:conversions} writes it out) and
-$\epsilon$ is the stochastic field uncorrelated with the long modes.
-This is the convention of FAST-PT and of CCL's
-\texttt{EulerianPTCalculator}, verified in this study against the CCL
-source (\texttt{pyccl/nl\_pt/ept.py}): the code documents the
-expansion of Eq.~\eqref{eq:basis} and assembles the auto spectrum as
+$\epsilon$ is the stochastic field, uncorrelated with the long modes.
+Higher-order bias means the coefficients beyond linear order: $\btwo$
+and $\bs$ at second order and $\bthree$ at third.  This is the
+convention of FAST-PT, of CCL's \texttt{EulerianPTCalculator}
+(\texttt{pyccl/nl\_pt/ept.py}) and of CosmoLike, which all assemble the
+auto spectrum as
 \begin{align}
 P_{gg}(k) ={}& \bone^2\,\pnl(k)
  + \bone\btwo\,P_{\delta_1\delta_2}(k)
@@ -170,48 +150,41 @@ P_{gg}(k) ={}& \bone^2\,\pnl(k)
  + \bone b_{k^2} k^2 P(k) ,
 \label{eq:pgg}
 \end{align}
-plus stochastic terms discussed below.  The six quadratic templates
-$P_{XY}$ are the mode-coupling integrals of two linear spectra over
-the second-order kernels (Appendix~\ref{app:loops}); $\sigma_3^2(k)$
-is the third-order filter of \cite{McDonaldRoy2009,Saito2014}; and
-$b_{k^2}$ is CCL's name for the derivative-bias coefficient, whose
-term is degenerate at this order with the effective-field-theory
-counterterm $\alpha_0 k^2 \plin$.  The draft paper's six-term
-expression is exactly the first six terms of Eq.~\eqref{eq:pgg}, as
-the earlier review already established; the draft then adds
-$\alpha_0 k^2 \plin$ and sets $\bthree = 0$.
+plus stochastic terms.  The five quadratic templates $P_{XY}$ are
+mode-coupling integrals of two linear spectra over the second-order
+kernels (Appendix~\ref{app:loops}); $\sigma_3^2(k)$ is the third-order
+filter of \cite{McDonaldRoy2009,Saito2014}; and $b_{k^2}$ is CCL's name
+for the derivative bias, degenerate at this order with the
+effective-field-theory counterterm $\alpha_0 k^2\plin$.  The draft
+paper's expression is exactly the first six terms of
+Eq.~\eqref{eq:pgg}, plus $\alpha_0 k^2\plin$, with $\bthree = 0$.
 
 Three templates do not vanish at low $k$:
 $P_{\delta_2\delta_2} \to 2\sigma_4$,
 $P_{\delta_2 s_2} \to \tfrac{4}{3}\sigma_4$ and
 $P_{s_2 s_2} \to \tfrac{8}{9}\sigma_4$, with $\sigma_4$ a constant
 built from the linear spectrum (Appendix~\ref{app:loops}).  These
-constants are white noise, indistinguishable from shot noise, and CCL
-subtracts them only when its \texttt{sub\_lowk} option is on (the
-default is off).  Whichever setting the pipeline uses must be stated,
-because with \texttt{sub\_lowk} off and no free shot-noise parameter
-the constants enter the data vector as unmodeled power: at the
-co-evolution biases of the BGS chunk the three constants sum to about
-$920$ $(h^{-1}\mathrm{Mpc})^3$ at $z = 0.3$ (the
-$\tfrac{1}{4}\btwo^2$ piece alone is $517$), five times that chunk's
-Poisson power $1/\bar{n} \simeq 170$ $(h^{-1}\mathrm{Mpc})^3$.
-CosmoLike's galaxy-clustering integrand subtracts exactly these
-constants (Section~\ref{sec:implementation}), the
-\texttt{sub\_lowk}-on convention, so a CCL vector at the CCL default
-and a CosmoLike vector differ by this white noise until the two
-settings are aligned.  Section~\ref{sec:whitenoise} follows the
+constants are white noise, indistinguishable from shot noise.  CCL
+subtracts them only with its \texttt{sub\_lowk} option (off by
+default); CosmoLike always subtracts them, and the model is stated in
+that subtracted convention.  The choice matters for a dense sample: at
+the calibrated biases of BGS at $z = 0.3$ the three constants sum to
+about $920\,(h^{-1}\mathrm{Mpc})^3$, five times the Poisson power
+$1/\bar{n} \simeq 170\,(h^{-1}\mathrm{Mpc})^3$ of the project's BGS
+bins there, so a CCL vector at its default and a CosmoLike vector
+differ by that white noise.  Section~\ref{sec:whitenoise} follows the
 subtraction to high $k$, where it leaves a negative constant.
 
-The hybrid choice of Eq.~\eqref{eq:pgg} is that the $\bone^2$ term
-carries the full nonlinear matter power (halofit here) while the loop
-templates stay at one-loop standard perturbation theory.  Nicola et
-al. \cite{Nicola2023} validated this hybrid against simulations for an
-LSST-like projected 3x2pt analysis: with the nonlinear $\pnl$ in the
-$\bone^2$ term the Eulerian model recovers unbiased cosmology to at
-least $\kmax = 0.4\,\mathrm{Mpc}^{-1}$, while the fully perturbative
-$\pnl$ fails beyond about $0.2\,\mathrm{Mpc}^{-1}$.  The same work
-finds significant non-Poisson stochasticity in every galaxy sample it
-fits, a point Section~\ref{sec:sizes} returns to.
+The $\bone^2$ term carries the full nonlinear matter power (halofit),
+while the loop templates stay at one-loop standard perturbation theory.
+Nicola et al. \cite{Nicola2023} validated this hybrid for an LSST-like
+projected 3x2pt analysis: with the nonlinear $\pnl$ in the $\bone^2$
+term the Eulerian model recovers unbiased cosmology to at least
+$\kmax = 0.4\,\mathrm{Mpc}^{-1}$, while the fully perturbative version
+fails beyond about $0.2\,\mathrm{Mpc}^{-1}$.  The same work finds
+significant non-Poisson stochasticity in every galaxy sample it fits
+(Section~\ref{sec:sizes}).  The hybrid asks for consistency: the same
+$\pnl$ in the data vector, the covariance and the Fisher derivatives.
 
 \subsection{The Lagrangian basis and the exact conversions}
 \label{sec:lagrangian}
@@ -227,10 +200,9 @@ F[\delta_0(\mathbf{q})] = 1 + \boneL\,\delta_0
 \label{eq:lagbasis}
 \end{equation}
 where $\delta_0$ and $s_0$ are the linear density and tidal fields at
-the initial time and $O_3$ is the one independent cubic operator.
-Note the normalization: the quadratic term carries a $1/2$, the tidal
-term does not.  Chen, Vlah and White
-\cite{ChenVlahWhite2020} give the rotation to their Eulerian
+the initial time and $O_3$ is the one independent cubic operator.  The
+quadratic term carries a $1/2$, the tidal term does not.  Chen, Vlah
+and White \cite{ChenVlahWhite2020} give the rotation to their Eulerian
 parameters $c_n$, defined by
 $\delta_g = c_1\delta + \tfrac{c_2}{2}\delta^2 + c_s s^2 + \ldots$
 (again no $1/2$ on the tidal term):
@@ -257,15 +229,15 @@ two between $c_s s^2$ and $(\bs/2)s^2$:
 \end{equation}
 The $\bthree$ entry uses the third-order co-evolution result of Saito
 et al. \cite{Saito2014} for the dynamically generated part; the
-$2\bthreeL$ normalization depends on the choice of $O_3$ and is
-irrelevant here because every analysis in play sets $\bthreeL=0$.
-A third common basis writes the tidal operator as the Galileon
+$2\bthreeL$ normalization depends on the choice of $O_3$ and plays no
+role here, because every analysis in play sets $\bthreeL = 0$.  A
+third basis writes the tidal operator as the Galileon
 $\mathcal{G}_2 = s^2 - \tfrac{2}{3}\delta^2$ with coefficient
 $b_{\mathcal{G}_2}$ (written $\gamma_2$ by \cite{Semenaite2025}); then
 $b_{\mathcal{G}_2} = c_s = \bs/2$ and the quadratic coefficient shifts
 by $+\tfrac{4}{3}b_{\mathcal{G}_2}$ (Appendix~\ref{app:conversions}).
 
-\subsection{Co-evolution and the $b_n(b_1)$ calibrations}
+\subsection{Co-evolution and the \texorpdfstring{$b_n(b_1)$}{bn(b1)} calibrations}
 \label{sec:coevolution}
 
 If galaxies form with purely local Lagrangian bias
@@ -275,43 +247,42 @@ Setting $\bsL = 0$ in Eq.~\eqref{eq:full-conversion} gives the
 co-evolution relations \cite{Saito2014}
 \begin{equation}
 \bs = -\frac{4}{7}\left(\bone - 1\right) , \qquad
-\bthree = \frac{32}{315}\left(\bone - 1\right) .
+\bthree = \frac{32}{315}\left(\bone - 1\right) ,
 \label{eq:coev}
 \end{equation}
-Both are negative-slope in $\bone$ for the tidal bias: every tracer
-with $\bone > 1$ has $\bs < 0$ in this convention.  Simulations
-support the relations at the $10$--$30\%$ level; the excursion-set
-calibration used by \cite{Semenaite2025},
+so every tracer with $\bone > 1$ has $\bs < 0$ in this convention.
+Simulations support the relations at the $10$--$30\%$ level; the
+excursion-set calibration used by \cite{Semenaite2025},
 $b_{\mathcal{G}_2} = 0.524 - 0.547\,\bone + 0.046\,\bone^2$, gives a
 $\bs = 2b_{\mathcal{G}_2}$ about $30\%$ more negative than
 Eq.~\eqref{eq:coev} at $\bone \simeq 2.2$.  For the quadratic bias the
 separate-universe fit of Lazeyras et al. \cite{Lazeyras2016}, valid
 for $1 \lesssim \bone \lesssim 10$ and redshift independent, reads
 \begin{equation}
-\btwo(\bone) = 0.412 - 2.143\,\bone + 0.929\,\bone^2 + 0.008\,\bone^3 .
+\btwo^{\rm fit}(\bone) = 0.412 - 2.143\,\bone + 0.929\,\bone^2
+ + 0.008\,\bone^3 .
 \label{eq:lazeyras}
 \end{equation}
 
-Figure~\ref{fig:coev} draws these expectations across the six DESI
-chunks of this project, with $\bone = B_g/D(z)$ and the project
-amplitudes $B_g = 1.34$ (BGS), $1.70$ (LRG) and $0.84$ (ELG).  Each
-curve spans its chunk, so its slope shows how much the co-evolution
-$\bs$ moves across a chunk when $\bone$ follows the $B_g/D(z)$ shape;
-this drift is the subject of Section~\ref{sec:evolution}.
+Figure~\ref{fig:coev} draws these relations across the six groups at
+the project fiducial, $\bone = B_g/D(z)$ with the amplitudes
+$B_g = 1.34$ (BGS), $1.70$ (LRG) and $0.84$ (ELG).  Each curve spans
+one group, so its slope shows how far the calibrated biases move
+across a group: the drift Section~\ref{sec:evolution} builds into the
+model.
 
 \begin{figure}[tbp]
 \centering
 \includegraphics{plots/coevolution_biases/coevolution_biases.pdf}
-\caption{The fiducial biases of the six DESI chunks in the CCL
-convention of Eq.~\eqref{eq:basis}, against redshift: the project's
-linear bias $\bone = B_g/D(z)$, the Lazeyras et al. $\btwo$ of
+\caption{The fiducial biases of the six DESI groups in the CCL
+convention of Eq.~\eqref{eq:basis}, against redshift: the linear bias
+$\bone = B_g/D(z)$, the Lazeyras et al. $\btwo$ of
 Eq.~\eqref{eq:lazeyras}, and the co-evolution $\bs$ and $\bthree$ of
-Eq.~\eqref{eq:coev}.  Each curve spans one chunk (the redshift ticks
-are the chunk edges); the chunks of one tracer share $B_g$, so their
+Eq.~\eqref{eq:coev}.  Each curve spans one group (the redshift ticks
+are the group edges); the groups of one tracer share $B_g$, so their
 curves join.  Markers sit at the DESI DR1 effective redshifts; ELG1,
-which the DR1 full-shape analysis excluded, is marked near its
-chunk's center.
-$D$ is computed at the project fiducial cosmology
+which the DR1 full-shape analysis excluded, is marked near its group's
+center.  $D$ is computed at the project fiducial cosmology
 (Appendix~\ref{app:numerics}).}
 \label{fig:coev}
 \end{figure}
@@ -320,44 +291,32 @@ $D$ is computed at the project fiducial cosmology
 \label{sec:redshift-space}
 
 In redshift space the one-loop model gains no new bias parameters but
-several new terms.  The DESI DR1 methodology paper
-\cite{DESI2024V} writes every full-shape model in the generic form
+several new terms.  The DESI DR1 methodology paper \cite{DESI2024V}
+writes every full-shape model in the generic form
 \begin{equation}
 P_{s,g}(k,\mu) = P^{\rm PT}_{s,g}(k,\mu)
  + \left(\alpha_0 + \alpha_2\mu^2 + \alpha_4\mu^4\right) k^2
    \plin(k,\mu)
- + \left(\mathrm{SN}_0 + \mathrm{SN}_2\,k^2\mu^2
-   + \mathrm{SN}_4\,k^4\mu^4\right) .
+ + \left(\SNz + \SNt\,k^2\mu^2 + \mathrm{SN}_4\,k^4\mu^4\right) .
 \label{eq:desi-generic}
 \end{equation}
 $P^{\rm PT}_{s,g}$ is the one-loop redshift-space spectrum of biased
 tracers.  Its tree-level limit is the Kaiser spectrum
-$(\bone + f\mu^2)^2\,\plin$; at one loop it couples every bias
-operator of Eq.~\eqref{eq:lagbasis} to the velocity field, producing
+$(\bone + f\mu^2)^2\,\plin$; at one loop every bias operator of
+Eq.~\eqref{eq:lagbasis} couples to the velocity field, producing
 $\mu$-dependent loop terms with the same four bias coefficients
-(the complete velocileptors expression is the resummed one-loop
-redshift-space power spectrum in the theory section of
-\cite{Maus2024}, built from the displacement-field correlators of
-\cite{ChenVlahWhite2020}).  The three counterterms
+\cite{ChenVlahWhite2020,Maus2024}.  The counterterms
 $\alpha_0,\alpha_2,\alpha_4$ absorb the small-scale sensitivity of the
 loop integrals and the leading velocity dispersion; velocileptors
-normalizes them as fractional corrections to the linear multipoles, so
-that $\alpha_n = 12.5\,h^{-2}\mathrm{Mpc}^2$ is a $50\%$ correction to
-the $n$-th moment at $k = 0.2\hMpc$ \cite{Maus2024}.  The three
-stochastic terms descend from the noise field: $\mathrm{SN}_0$ is the
-deviation of the constant noise from the Poisson value already
-subtracted from the estimator, $\mathrm{SN}_2$ is the
-velocity-weighted noise (the leading Fingers-of-God stochastic term),
-and $\mathrm{SN}_4$ its next moment.
-
-The structural summary: a one-loop redshift-space analysis carries
-per tracer sample four deterministic biases
-($\boneL,\btwoL,\bsL,\bthreeL$), three counterterms, and three
-stochastic amplitudes; a real-space or projected analysis keeps the
-same biases but collapses the counterterms toward $\alpha_0$ and the
-stochastic tower toward $\mathrm{SN}_0$, with the $\mu$-dependent
-members reappearing in exactly the way
-Section~\ref{sec:projection} describes.
+normalizes them as fractional corrections to the linear terms they
+multiply, so that $\alpha_n = 12.5\aunit$ is a $50\%$ correction at
+$k = 0.2\hMpc$ \cite{Maus2024}.  The stochastic terms descend from the
+noise field: $\SNz$ is the deviation of the constant noise from the
+Poisson value, $\SNt$ the velocity-weighted noise (the leading
+Fingers-of-God stochastic term) and $\mathrm{SN}_4$ its next moment.
+A projected analysis keeps the same biases;
+Section~\ref{sec:projection} shows which $\mu$-dependent members
+survive the projection into thin bins.
 
 \section{The DESI DR1 full-shape model and priors}
 \label{sec:desi}
@@ -367,11 +326,10 @@ power spectrum monopole and quadrupole of six tracer bins (BGS at
 $z_{\rm eff}=0.295$, LRG1--3 at $0.510$, $0.706$, $0.919$, ELG2 at
 $1.317$, QSO at $1.491$) over $0.02 < k < 0.2\hMpc$.  The ELG1 bin
 ($0.8<z<1.1$) failed the fibre-collision systematics tests and is
-excluded from the full-shape analysis \cite{DESI2024V}.  Four theory
-codes were validated against each other and simulations; the baseline
-is the Eulerian mode of velocileptors, with Folps and PyBird as
-cross-checks and a Gaussian-streaming configuration-space model as a
-fourth \cite{DESI2024V}.  The parameter choices that matter here:
+excluded from the full-shape analysis \cite{DESI2024V}.  The baseline
+theory is the Eulerian mode of velocileptors, validated against Folps,
+PyBird and a Gaussian-streaming configuration-space model
+\cite{DESI2024V}.  The choices that matter here:
 
 \begin{itemize}
 \item \textbf{Basis and sampling.}  Even in the Eulerian mode, DESI
@@ -385,65 +343,60 @@ reparameterized as the ``physical'' combinations
 \end{equation}
 because the data constrain these products directly and the
 reparameterization reduces projection effects on $\sigma_8$
-\cite{DESI2024V,DESI2024VII}.  Note that $1+\boneL$ is the Eulerian
-linear bias, so the first combination is $\bone\sigma_8(z_{\rm eff})$.
-\item \textbf{Priors.}  Uniform $[0,3]$ on
-$(1+\boneL)\sigma_8$; Gaussian with mean zero and width 5 on
-$\btwoL\sigma_8^2$ and on $\bsL\sigma_8^2$; Gaussian with mean zero
-and width $12.5\,h^{-2}\mathrm{Mpc}^2$ on $\alpha_0$ and $\alpha_2$
-(the $50\%$-correction-at-$\kmax$ rule); Gaussian widths of 2 Poisson
-units on $\mathrm{SN}_0$ and of 5 units of
-$f_{\rm sat}\sigma_v^2/\bar{n}$ on $\mathrm{SN}_2$, where
-$f_{\rm sat}$ is the satellite fraction and $\sigma_v$ a
-characteristic velocity dispersion \cite{DESI2024V,DESI2024VII}.
+\cite{DESI2024V,DESI2024VII}.  $1+\boneL$ is the Eulerian linear bias,
+so the first combination is $\bone\sigma_8(z_{\rm eff})$.
+\item \textbf{Priors.}  Uniform $[0,3]$ on $(1+\boneL)\sigma_8$;
+Gaussian with mean zero and width 5 on $\btwoL\sigma_8^2$ and on
+$\bsL\sigma_8^2$; Gaussian with mean zero and width $12.5\aunit$ on
+$\alpha_0$ and $\alpha_2$ (the $50\%$-correction-at-$\kmax$ rule);
+Gaussian widths of 2 Poisson units on $\SNz$ and of 5 units of
+$f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}$ on $\SNt$, where $f_{\rm sat}$
+is the satellite fraction and $\sigma_{\rm sat}$ the satellites'
+velocity dispersion in distance units \cite{DESI2024V,DESI2024VII}.
 \item \textbf{Fixed parameters.}  $\bthreeL = 0$, because the cubic
 bias is expected to be small for intermediate-mass halos and is
 degenerate with the counterterms \cite{DESI2024V,Maus2024};
 $\alpha_4$ and $\mathrm{SN}_4$ drop with the hexadecapole, which DESI
-DR1 does not fit.  The tidal bias is deliberately left free rather
-than tied to co-evolution: tying it would add cosmological information
-that DESI chose not to claim \cite{DESI2024V}.
-\item \textbf{Budget.}  Seven nuisance parameters per bin
-($\boneL,\btwoL,\bsL,\alpha_0,\alpha_2,\mathrm{SN}_0,\mathrm{SN}_2$),
-42 in total, with the counterterms and stochastic terms marginalized
-analytically \cite{DESI2024VII}.
+DR1 does not fit.  The tidal bias is left free rather than tied to
+co-evolution: tying it would add cosmological information that DESI
+chose not to claim \cite{DESI2024V}.
+\item \textbf{Budget.}  Seven nuisance parameters per tracer
+($\boneL,\btwoL,\bsL,\alpha_0,\alpha_2,\SNz,\SNt$), 42 in total, with
+the counterterms and stochastic terms marginalized analytically
+\cite{DESI2024VII}.
 \end{itemize}
 
 Semenaite et al. \cite{Semenaite2025} fit the same DESI DR1 tracers in
-configuration space jointly with weak lensing, with one structural
-difference relevant to this project: both tidal biases are fixed to
-calibrated relations in $\bone$ (the excursion-set $\gamma_2(\bone)$
-and the conserved-evolution $\gamma_{21}(\bone,\gamma_2)$), leaving
-$\bone$ and $\btwo$ free per bin with flat priors, plus counterterms
-and a virial damping parameter.  Their validation on mocks shows that
-fixing the tidal sector to these relations recovers unbiased cosmology
-for DESI-like tracers, which is direct evidence for the
-co-evolution-anchored minimal model this note recommends.
+configuration space jointly with weak lensing, with both tidal biases
+fixed to calibrated relations in $\bone$ (the excursion-set
+$\gamma_2(\bone)$ and the conserved-evolution
+$\gamma_{21}(\bone,\gamma_2)$) and $\bone$ and $\btwo$ free per tracer.
+Their mocks show that fixing the tidal sector to these relations
+recovers unbiased cosmology for DESI-like tracers: direct evidence for
+the calibration-anchored tidal bias of the model of
+Section~\ref{sec:model}.
 
 \section{The draft paper's bias table: the tidal-bias verdict}
 \label{sec:verdict}
 
-The draft paper's bias table (its Table of ``bias parameters per DESI
-redshift bin'') lists, per chunk, values labeled $b_1^{\rm E}$,
-$b_2^{\rm E}$, $b_s^{\rm E}$, attributed to the DESI DR1 full-shape
-analysis.  The earlier review flagged the $b_s^{\rm E}$ column
-(positive, $0.6$--$1.4$) as incompatible with co-evolution, which
-predicts $\bs$ between $-0.3$ and $-1.0$ for these tracers
-(Figure~\ref{fig:coev}), and suspected a Lagrangian-to-Eulerian
-conversion error without establishing it.  The provenance can now be
-established from the numbers themselves.
+The draft paper's bias table (``bias parameters per DESI redshift
+bin'') lists, per group, values labeled $b_1^{\rm E}$, $b_2^{\rm E}$,
+$b_s^{\rm E}$, attributed to the DESI DR1 full-shape analysis.  Its
+$b_s^{\rm E}$ column (positive, $0.6$--$1.4$) contradicts co-evolution,
+which predicts $\bs$ between $-0.3$ and $-1.0$ for these tracers
+(Figure~\ref{fig:coev}).  The numbers themselves establish where the
+table comes from.
 
 \begin{figure}[tbp]
 \centering
 \includegraphics{plots/draft_bias_check/draft_bias_check.pdf}
 \caption{The draft table's linear-bias column (``$b_1^{\rm E}$'')
 read as the DESI physical combination $\bone\sigma_8(z_{\rm eff})$:
-as printed (open circles) and divided by $\sigma_8$ at the chunk's
+as printed (open circles) and divided by $\sigma_8$ at the group's
 DESI DR1 effective redshift (filled circles), against the project's
-fiducial $\bone = B_g/D(z)$ over each chunk (gray).  $\sigma_8(z)$ is
-the rms linear density fluctuation in spheres of $8\Mpch$ at the
-project fiducial cosmology, $\sigma_8(0) = 0.843$.  The draft has no
-ELG1 row.}
+fiducial $\bone = B_g/D(z)$ over each group (gray).  $\sigma_8(z)$ is
+computed at the project fiducial cosmology, $\sigma_8(0) = 0.843$.  The
+draft has no ELG1 row.}
 \label{fig:draft-check}
 \end{figure}
 
@@ -452,74 +405,392 @@ of Eq.~\eqref{eq:physical-basis} inserted raw:
 
 \begin{enumerate}
 \item \textbf{The linear column divided by $\sigma_8(z_{\rm eff})$
-lands on the known biases for four of the five chunks.}
+lands on the known biases for four of the five groups.}
 Figure~\ref{fig:draft-check} shows the check: for LRG1--3 and ELG2 the
 implied Eulerian bias agrees with the project's fiducial
-$B_g/D(z_{\rm eff})$ to $1$--$5\%$.  An independent check at a
-Planck-like cosmology ($\Omega_m = 0.3138$, $\sigma_8 = 0.8076$, run
-by the implementation study) finds the same pattern: ratios of the
-implied bias to $B_g/D(z_{\rm eff})$ of $1.055$, $1.022$, $1.011$ and
-$1.038$ for LRG1--3 and ELG2.  Read directly as Eulerian biases
-instead, the column is unphysical: it would make the three LRG chunks
-nearly unbiased ($\bone\simeq1.4$ where LRGs sit near $2.2$--$2.7$)
-and the ELG2 chunk anti-biased ($\bone=0.70$) at $z=1.3$.  The BGS row
-is the exception: it implies $\bone \simeq 1.90$ against the project's
-$1.56$, a ratio of $1.22$, and $1.27$ in the Planck-like check.
-Whether that reflects the
-project's BGS fiducial $B_g = 1.34$, which comes from the source
-forecast's configuration rather than from a DESI DR1 fit, or a
-different origin of that row, is not established here.  The direct
-test is to read the BGS entry of the public DESI DR1 full-shape
-chains: if the maximum-posterior $(1+\boneL)\sigma_8$ is $1.375$, the
-reading covers BGS as well and the project's BGS amplitude is the
-quantity to revisit.
+$B_g/D(z_{\rm eff})$ to $1$--$3\%$.  An independent check at a
+Planck-like cosmology ($\Omega_m = 0.3138$, $\sigma_8 = 0.8076$) finds
+the same pattern, with ratios of $1.055$, $1.022$, $1.011$ and $1.038$.
+Read directly as Eulerian biases, the column would make the three LRG
+groups nearly unbiased ($\bone \simeq 1.4$ where LRGs sit near
+$2.2$--$2.7$) and ELG2 anti-biased ($\bone = 0.70$) at $z = 1.3$.  The
+BGS row is the exception: it implies $\bone \simeq 1.90$ against the
+project's $1.56$, a ratio of $1.22$ ($1.27$ in the Planck-like check).
+Whether that reflects the project's BGS amplitude $B_g = 1.34$, which
+comes from the source forecast's configuration rather than a DESI DR1
+fit, or a different origin of the row is not established; the BGS
+entry of the public DESI DR1 chains decides it.
 \item \textbf{The empty ELG1 row.}  DESI DR1 excluded ELG1 from the
-full-shape analysis (Section~\ref{sec:desi}); a table transcribed from
-the DESI full-shape products has nothing to put there, and the draft's
-row is indeed empty.
+full-shape analysis (Section~\ref{sec:desi}), so a table transcribed
+from its products has nothing to put there.
 \item \textbf{The magnitudes of the other two columns.}  Read as
-$\btwoL\sigma_8^2$ and $\bsL\sigma_8^2$, the draft's second and third
-columns ($-1.5$ to $+0.3$ and $+0.6$ to $+1.4$) sit comfortably inside
-the DESI Gaussian priors of width 5 on exactly those combinations.
-Read as CCL Eulerian parameters they contradict both co-evolution and
-the DESI prior centering.
+$\btwoL\sigma_8^2$ and $\bsL\sigma_8^2$, the second and third columns
+($-1.5$ to $+0.3$ and $+0.6$ to $+1.4$) sit inside the DESI Gaussian
+priors of width 5 on exactly those combinations.  Read as CCL Eulerian
+parameters they contradict both co-evolution and the DESI prior
+centering.
 \end{enumerate}
 
 \textbf{Verdict.}  The draft's bias table holds the DESI DR1 sampling
 combinations $(1+\boneL)\sigma_8(z_{\rm eff})$, $\btwoL\sigma_8^2$ and
-$\bsL\sigma_8^2$, used as CCL's Eulerian $(\bone,\btwo,\bs)$ with
-three transformations still to apply: removing the $\sigma_8$ powers,
-rotating the Lagrangian parameters to the Eulerian basis via
+$\bsL\sigma_8^2$, used as CCL's Eulerian $(\bone,\btwo,\bs)$ without
+three transformations: removing the $\sigma_8$ powers, rotating the
+Lagrangian parameters to the Eulerian basis with
 Eq.~\eqref{eq:full-conversion}, and the factor of two between the
-velocileptors and CCL tidal normalizations.  The reading is
-established by the linear column for LRG1--3 and ELG2 and extends to
-the other two columns by the table's construction; the BGS linear
-entry awaits the chain check above.  The sign puzzle dissolves: the
-column was never an Eulerian tidal bias.  The corrected recipe, if DESI values are wanted, is
+velocileptors and CCL tidal normalizations.  The linear column
+establishes the reading for LRG1--3 and ELG2, and the table's
+construction extends it to the other two columns.  The sign puzzle
+dissolves: the column was never an Eulerian tidal bias.  The cost of
+the raw reading is large.  The tidal term enters with the opposite
+sign and several times the co-evolution magnitude (the BGS $\bone\bs$
+product is $+1.96$ against $-0.50$), the quadratic coefficient differs
+at a comparable level, and the loop sum moves by several percent of
+$P_{gg}$ at $k \simeq 0.1\hMpc$, the size of the whole correction.  The
+linear column, read as an Eulerian bias, is $30$--$55\%$ low for the
+LRG and ELG groups: a free amplitude absorbs that in a fit, but a data
+vector, a covariance or a Fisher derivative at a fixed fiducial carries
+it.  The conversion, with the bracketed quantities DESI chain values
+and $\sigma_8$ at the DESI fiducial cosmology, is
 \begin{equation}
 \bone = \frac{[(1+\boneL)\sigma_8]}{\sigma_8(z_{\rm eff})} , \quad
 \btwo = \frac{[\btwoL\sigma_8^2]}{\sigma_8^2(z_{\rm eff})}
  + \frac{8}{21}\left(\bone - 1\right) , \quad
 \bs = \frac{2\,[\bsL\sigma_8^2]}{\sigma_8^2(z_{\rm eff})}
- - \frac{4}{7}\left(\bone - 1\right) ,
+ - \frac{4}{7}\left(\bone - 1\right) .
 \label{eq:recipe}
 \end{equation}
-with the bracketed quantities the DESI chain values and $\sigma_8$
-evaluated at the DESI fiducial cosmology.  This note recommends
-against importing the DESI nuisance values at all, beyond the linear
-amplitude: applied to the draft's numbers, Eq.~\eqref{eq:recipe} gives
-$\bsL \simeq 2.5$--$3.3$ and $\bs \simeq +4$ to $+6$, which says that
-these particular chain values are dominated by the width of the DESI
-prior and by degeneracies with the counterterms, not by a measurement
-of the tidal field.  A forecast fiducial should come from the
-calibrated relations of Section~\ref{sec:coevolution}
-(Figure~\ref{fig:coev}); the DESI posteriors then motivate the prior
-widths, not the central values.
+Applied to the draft's numbers it gives $\bsL \simeq 2.5$--$3.3$ and
+$\bs \simeq +4$ to $+6$: chain values dominated by the width of the
+DESI prior and by degeneracies with the counterterms, not a measurement
+of the tidal field.  The model therefore imports no DESI nuisance
+value: its fiducials are the calibrated relations of
+Section~\ref{sec:coevolution}, and the DESI posteriors motivate only
+its prior widths.
+
+\section{The size of every term}
+\label{sec:sizes}
+
+Figure~\ref{fig:sizes} draws each one-loop term of Eq.~\eqref{eq:pgg}
+in percent of the linear-bias model $\bone^2\pnl$, for four DESI-like
+tracers at the calibrated biases of Figure~\ref{fig:coev}
+(Appendix~\ref{app:numerics} gives the setup).
+Figure~\ref{fig:poisson} shows, on the same scale, the Poisson power of
+the project's thin bins, which the covariance carries as noise and
+which sets the scale of the stochastic freedom.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics{plots/term_sizes/term_sizes.pdf}
+\caption{Each one-loop term of Eq.~\eqref{eq:pgg} in percent of the
+linear-bias model $\bone^2\pnl$ (halofit), against $k$ at the tracer
+redshift, for four DESI-like tracers at the calibrated biases of
+Figure~\ref{fig:coev}.  The three tidal terms
+($\bone\bs P_{\delta_1 s_2}$, $\tfrac12\btwo\bs P_{\delta_2 s_2}$ and
+$\tfrac14\bs^2 P_{s_2 s_2}$) are drawn as their sum.  Loop templates
+are FAST-PT at $z=0$ scaled by $D^4(z)$, with the low-$k$ constants
+kept (CCL's default, \texttt{sub\_lowk} off).  The dashed curve is the
+counterterm $\alpha_0 k^2\plin(k,z)$ at DESI's width,
+$\alpha_0 = 12.5\aunit$.}
+\label{fig:sizes}
+\end{figure}
+
+\begin{figure}[tbp]
+\centering
+\includegraphics{plots/poisson_power/poisson_power.pdf}
+\caption{The Poisson power $1/\bar{n}$ in percent of the linear-bias
+model $\bone^2\pnl$ (halofit) of the four tracers of
+Figure~\ref{fig:sizes}, with $\bar{n}$ the density of the project's
+thin bin nearest each tracer redshift.  The covariance carries this
+power as noise; it is drawn to set the scale of the stochastic
+freedom.}
+\label{fig:poisson}
+\end{figure}
+
+\paragraph{At model A's cut.}
+Model A cuts each bin at $0.075\hMpc/D(\bar{z}_i)$: $0.088$, $0.097$,
+$0.112$ and $0.139\hMpc$ for the four tracers of the figure.  At its
+own cut the loop sum of each tracer is $+1.8\%$ (BGS-like), $+2.2\%$
+and $+6.7\%$ (LRG-like at $z = 0.5$ and $0.8$) and $-0.4\%$
+(ELG-like, where terms of $\pm4\%$ cancel); the largest single term is
+the $\bone\btwo$ loop in every case.  The figure keeps the low-$k$
+constants.  In CosmoLike's subtracted convention the BGS-like and
+ELG-like sums become $-5\%$ and $-6\%$ and the LRG-like ones move by
+under a point; the difference is white noise, carried by the
+subtraction and by $\SNz$, not a change of shape.  The $\bone\bthree$
+term stays below $0.3\%$ at $k \le 0.1\hMpc$.  Thirty percent of the
+Poisson power, the non-Poisson stochasticity Nicola et al.
+\cite{Nicola2023} detect in red samples, is $4$--$5\%$ of $P_{gg}$ for
+the LRG-like tracers at their cuts and $31\%$ for the ELG-like tracer,
+whose Poisson power there exceeds its clustering power.  Against the
+forecast's sub-percent amplitude precision per group, none of these
+is negligible.  Below the cut their scale dependence is mild, so the
+linear amplitudes absorb most of each term and what remains is the
+residual shape: the case for calibration-centered freedom with modest
+priors, model A.
+
+\paragraph{At the shipped mask.}
+Model B's reference cut, the shipped mask, stops every bin at
+$k = 0.176\hMpc$.  There the $\bone\btwo$ term alone is $4$--$14\%$ of
+$P_{gg}$, with strong scale dependence, the loop sum reaches $15\%$
+(LRG-like at $z = 0.8$), and the counterterm at DESI's width is
+$6$--$15\%$.  No amplitude absorbs these terms, and their shapes
+differ from one another: the case for model B's wider offsets and its
+radial counterterm, the freedom DESI DR1 carries with seven nuisances
+per tracer at $\kmax = 0.2\hMpc$.
+
+\section{The model as implemented}
+\label{sec:model}
+
+\subsection{One likelihood option, every term per bin}
+\label{sec:option}
+
+The DESI likelihood (\texttt{likelihood/desi\_cl.py}) runs the one-loop
+model when its option \texttt{higher\_order\_bias} is 1 (0 is linear
+bias).  Every term is per bin.  The galaxy power of bin $i$ in redshift
+space is
+\begin{align}
+P_{g,i}(k,\mu) ={}& P_{gg,i}(k)
+ + \left(2\,b_{1,i}\,f\mu^2 + f^2\mu^4\right)\plin(k)
+ + \left(b_{1,i} + f\mu^2\right) f\,\alpha_{2,i}\,\mu^2 k^2\,\plin(k)
+ \nonumber\\
+&+ \frac{1}{\bar{n}_i}\left(\mathrm{SN}_{0,i}
+ + \mathrm{SN}_{2,i}\,f_{\rm sat}\sigma_{\rm sat}^2\,k^2\mu^2\right) ,
+\label{eq:model}
+\end{align}
+whose real-space part is Eq.~\eqref{eq:pgg} in the subtracted
+convention, with $\bthree = 0$ and the counterterm written on $\pnl$:
+\begin{equation}
+P_{gg,i}(k) = b_{1,i}^2\,\pnl(k)
+ + P_{\rm loop}(k;\, b_{1,i}, b_{2,i}, b_{s^2,i})
+ + \alpha_{0,i}\,k^2\,\pnl(k) ,
+\label{eq:model-real}
+\end{equation}
+with $P_{\rm loop}$ the five quadratic templates of Eq.~\eqref{eq:pgg}.
+Redshift-space distortions are linear (Kaiser) apart from the
+$\alpha_2$ term, and each bin's redshift distribution is convolved
+with the sampled Fingers-of-God dispersion $\sigma_v$, as in the
+linear-bias model.  The terms:
+\begin{itemize}
+\item \textbf{Quadratic and tidal biases} follow each bin's own linear
+bias through the calibrations of Section~\ref{sec:coevolution}, plus
+offsets:
+\begin{equation}
+b_{2,i} = \btwo^{\rm fit}(b_{1,i}) + \Delta_{2,i} , \qquad
+b_{s^2,i} = -\frac{4}{7}\left(b_{1,i} - 1\right) + \Delta_{s,i} .
+\label{eq:perbin-evolution}
+\end{equation}
+Section~\ref{sec:evolution} explains why the relations take the full
+$b_{1,i}$ and how the offsets are grouped.
+\item \textbf{$\bthree = 0$}, DESI's baseline.  The co-evolution value
+it discards, $|\bthree| \le 0.17$, is worth at most $0.3\%$ of
+$P_{gg}$ at $k \le 0.1\hMpc$ (Figure~\ref{fig:sizes}) and is close in
+shape to the counterterm; CosmoLike's $\bthree$ template is also
+unusable (Appendix~\ref{app:open}).
+\item \textbf{The counterterm $\alpha_0$}, in $h^{-2}\mathrm{Mpc}^2$,
+rides CosmoLike's derivative-bias slot $2\,\bone b_K k^2\pnl$, with
+$b_K = \alpha_0/[2\bone (c/H_0)^2]$ and $c/H_0 = 2997.92\Mpch$, because
+CosmoLike measures $k$ in units of $H_0/c$.  The term multiplies
+$\pnl$, where DESI's $\alpha_0$ multiplies $(\bone + f\mu^2)\bone\plin$:
+the two coefficients differ by a factor $\bone^2$ and by the ratio
+$\pnl/\plin$, at most $1.16$ at $k \le 0.2\hMpc$ for the tracers of
+Figure~\ref{fig:sizes}.
+\item \textbf{The radial counterterm $\alpha_2$}, in
+$h^{-2}\mathrm{Mpc}^2$, follows the DESI DR1 field convention
+\cite{Maus2024}: the galaxy density gains
+$\tfrac12 f\mu^2\alpha_2 k^2\delta_{\rm L}$, with $\delta_{\rm L}$ the
+linear density contrast, and twice its cross with the Kaiser field
+$(\bone + f\mu^2)\delta_{\rm L}$ is the $\alpha_2$ term of
+Eq.~\eqref{eq:model}.  The likelihood passes $\alpha_{2,i}$; the C code
+(\texttt{galpha2} in \texttt{bias.c}) applies $b_{1,i}$ and $f$.
+\item \textbf{The white noise $\SNz$}, in units of the bin's Poisson
+power $1/\bar{n}_i$: the deviation from Poisson, since the covariance
+carries the Poisson part.  $\bar{n}_i$ is fixed by the bin's surface
+density, so that $1/\bar{n}_i$ projected with the raw redshift
+distribution is the angular shot noise.
+\item \textbf{The line-of-sight stochastic term $\SNt k^2\mu^2$}, in
+units of $f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}_i$, with the DESI DR1
+values \cite{Maus2024} $(f_{\rm sat}, \sigma_{\rm sat}) =
+(0.1, 7.8\Mpch)$ for LRG and $(0.1, 2.9\Mpch)$ for ELG; $\sigma_{\rm
+sat}$ is not the Fingers-of-God $\sigma_v$.  BGS, absent from DESI's
+table, takes the LRG values, a choice without consequence
+(Section~\ref{sec:stochastic-projection}).
+\end{itemize}
+The compiled code has no stochastic slot, so the likelihood adds $\SNz$
+and $\SNt$ as exact templates (Section~\ref{sec:stochastic-projection}).
+A zero amplitude switches a term off at no cost: $\alpha_2 = 0$ in
+every bin skips the term in the C code, and a stochastic family whose
+amplitudes all vanish is not computed.  Of Eq.~\eqref{eq:desi-generic}
+the model drops $\alpha_4$ and $\mathrm{SN}_4$, which DESI DR1 drops
+with the hexadecapole, and the redshift-space one-loop terms, which
+CosmoLike does not have (Appendix~\ref{app:open}); the derivative bias
+$b_{\nabla^2}$ is exactly degenerate with $\alpha_0$ at one loop.
+
+\paragraph{Why $\alpha_2$ takes DESI's field convention.}
+In that convention $\alpha_2 k^2$ is a fractional correction: the
+$\alpha_2$ term is $\alpha_2 k^2$ times the share of the Kaiser power
+carried by the velocity term, $(\bone + f\mu^2) f\mu^2\plin$, whatever
+the bias and the growth rate.  A prior width of $0.5/\kmax^2$ is then
+a $50\%$ correction at $k = \kmax$ in every bin, the meaning of DESI's
+$12.5\aunit$ at $0.2\hMpc$.  Written as a bare power,
+$\alpha_2\mu^2 k^2\plin$, the same width would be a correction whose
+size changes with $b_{1,i}$ and $f$ from bin to bin.
+
+\subsection{Bias evolution within a group}
+\label{sec:evolution}
+
+The linear sector is the per-bin bias of the correlated-prior note
+(its memory model).  Bin $i$ of group $g$ has
+\begin{equation}
+b_{1,i} = \frac{B_g\,(1 + \delta_i)}{D(\bar{z}_i)} , \qquad
+\delta_i = s_g\,(\bar{z}_i - \bar{z}_g) + \varepsilon_i ,
+\label{eq:linear-perbin}
+\end{equation}
+with $B_g$ the group amplitude, $\bar{z}_g$ the mean redshift of the
+group's bins, $\delta_i$ the fractional deviation from the growth-tied
+trend $B_g/D$, $s_g$ a free tilt, and $\varepsilon_i$ a residual under
+a Gaussian prior correlated within the group,
+\begin{equation}
+\bigl\langle \varepsilon_i\,\varepsilon_j \bigr\rangle
+ = \sigma_g^2\,\exp\!\left(-\,\frac{|\bar{z}_i - \bar{z}_j|}{L}\right) ,
+\label{eq:kernel}
+\end{equation}
+and zero across groups; $\sigma_g$ is the per-bin width and $L$ the
+correlation length in redshift.  The four linear-bias priors are
+growth-tied ($\delta_i = 0$), baseline ($\sigma_g = 3\%$ for BGS and
+$1\%$ elsewhere, $L = 0.2$), pessimistic ($3\%$ everywhere,
+$L = 0.05$) and free (one flat bias per bin); the correlated-prior note
+derives them.
+
+The calibrations of Eq.~\eqref{eq:perbin-evolution} take the full
+$b_{1,i}$, deviations included, not the smooth trend $B_g/D(\bar{z}_i)$.
+A deviation $\delta_i$ is a real change of which halos the selection
+reaches in that bin (a flux limit keeps only the brighter galaxies,
+which sit in more massive halos), and the calibrations map halo
+populations at a given linear bias, so the second-order biases of the
+bin's population sit on the calibration curves at $b_{1,i}$.  The
+induced shift is small but determined: near $\bone \simeq 2$ the
+Lazeyras relation has slope $d\btwo/d\bone \simeq 1.7$, so a $3\%$
+residual moves $\btwo$ by about $0.10$, a tenth of model A's offset
+width, and the co-evolution slope $-4/7$ moves $\bs$ by about $0.03$.
+
+The deterministic part carries the within-group evolution, which is
+not small: across LRG3 the co-evolution $\bs$ moves from $-0.88$ to
+$-1.09$ (Figure~\ref{fig:coev}), a drift comparable to the offset
+width.  Holding $\btwo$ and $\bs$ constant across a group while
+$b_{1,i}$ evolves would be inconsistent.  Freeing them per bin, 152
+parameters on the $62$\,Mpc layout, is a bound rather than a model: a
+bin's loop terms are nearly degenerate with its linear bias and
+counterterm, so the prior would set the per-bin posteriors.
+
+What a free parameter adds on top of the inherited trend is a drift of
+the calibration itself: $\btwo$ at fixed $\bone$ changes with the
+satellite fraction and the color mix, slowly within one selection.  The
+freedom therefore sits per group.  The \emph{baseline} variant gives
+each group one offset, $\Delta_{2,i} = \Delta_{2,g}$ (and likewise
+$\Delta_s$); the \emph{pessimistic} variant adds a linear tilt,
+$\Delta_{2,i} = \Delta_{2,g} + t_{2,g}(\bar{z}_i - \bar{z}_g)$, with a
+flat prior on $t_{2,g}$.  The counterterms follow the same pattern,
+because their scale follows the size of the host halos, a population
+property that drifts with the selection.  The stochastic amplitudes
+never tilt: the Poisson part $1/\bar{n}_i$ is known per bin and sits in
+the covariance, so only the non-Poisson fraction could drift, and the
+variants tilt only what has a physical driver.
+
+\subsection{Models A and B}
+\label{sec:models}
+
+Models A and B are two parameter files of the one option, one per
+layout and variant under \texttt{likelihood/}, written by
+\texttt{scripts/make\_desi\_params.py} (options \texttt{--model-a} and
+\texttt{--model-b}); the example yamls
+\texttt{EXAMPLE\_EVALUATE\_MODEL\_A1}--\texttt{A4} and
+\texttt{B1}--\texttt{B4} set them up on the four layouts.  The
+likelihood reads every parameter per bin; a group is a yaml statement
+that ties its bins to one offset, or to an offset and a tilt.
+Table~\ref{tab:widths} lists the prior widths.  Either model, in
+either variant, runs under any of the linear-bias priors.
+
+\begin{table}[tbp]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+per group & model A & model B \\
+\midrule
+offsets $\Delta_2$ / $\Delta_s$ & $1.0$ / $0.5$ & $2.0$ / $1.0$ \\
+$\alpha_0$ [$h^{-2}\mathrm{Mpc}^2$] & $0.5/\kmax^2$ & $0.5/\kmax^2$ \\
+$\alpha_2$ [$h^{-2}\mathrm{Mpc}^2$] & fixed to $0$ & $0.5/\kmax^2$ \\
+$\SNz$ [$1/\bar{n}_i$] & $2$ & $2$ \\
+$\SNt$ [$f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}_i$] & $5$ & $5$ \\
+tilted in the pessimistic variant & $\Delta_2$, $\Delta_s$, $\alpha_0$
+ & $\Delta_2$, $\Delta_s$, $\alpha_0$, $\alpha_2$ \\
+parameters, baseline / pessimistic & $5$ / $8$ & $6$ / $10$ \\
+\bottomrule
+\end{tabular}
+\caption{The widths of the Gaussian priors of the higher-order
+parameters, all centered on zero, and their number per group (the
+tilts, with flat priors, only in groups of more than one bin).
+$\kmax$ is the fit's cut, quoted at $z = 0$; each bin is cut at
+$\kmax/D(\bar{z}_i)$.  Model A: $\kmax = 0.075\hMpc$, an $\alpha_0$
+width of $88.9\aunit$.  Model B: each cut of a scan, or the shipped
+mask, $0.176\hMpc$ in every bin ($16.1\aunit$).}
+\label{tab:widths}
+\end{table}
+
+The widths have stated sources.
+\begin{itemize}
+\item \textbf{Offsets.}  Model A's $1.0$ and $0.5$ cover the known
+imperfection of the calibrations: the scatter of the Lazeyras fit and
+the $30\%$ spread between co-evolution and the excursion-set $\bs$ at
+LRG biases.  Model B doubles them, demoting the calibrations to prior
+centers for cuts where the loops reach $15\%$ of $P_{gg}$.
+\item \textbf{Counterterms.}  The DESI rule of a $50\%$ correction at
+the cut, evaluated at each cut: $0.5/\kmax^2$, which is DESI's $12.5$
+at $0.2\hMpc$.  Because $\alpha_0$ multiplies $\pnl$, at bin $i$'s own
+cut the width is a correction of $0.5/B_g^2$ of the linear galaxy power
+$b_{1,i}^2\pnl$, the same in every bin of a group: $28\%$ for BGS,
+$17\%$ for LRG, $71\%$ for ELG at model A's cut.
+\item \textbf{Stochastic terms.}  DESI DR1's widths.
+\end{itemize}
+
+Model A is built for $\kmax = 0.075\hMpc$, the cut matched to the
+thin-bin radial resolution.  It fixes $\alpha_2 = 0$: at DESI's width
+the $\alpha_2$ term changes the kept auto spectra by about $1\%$
+(Section~\ref{sec:rsd-projection}), and a fit without it holds to that
+cut against $\alpha_2 = \pm12.5\aunit$ (Section~\ref{sec:validation}).
+If $\alpha_2$ instead scatters as widely as model B's prior allows at
+that cut, $88.9\aunit$, model A's error bars on the two thin layouts
+are too small (the correlated-prior note).  Model A carries $\SNt$
+because without it the thin layouts fail at its cut
+(Section~\ref{sec:stochastic-projection}).  Model B frees $\alpha_2$
+for the scan in $\kmax$.  With the amplitude $B_g$ and the linear tilt
+$s_g$, model B baseline has eight parameters per group: DESI DR1's
+seven per tracer \cite{DESI2024V,DESI2024VII} plus the linear tilt the
+thin bins resolve.  Every fiducial higher-order parameter is zero, so
+the fiducial model sits on the calibrations; no DESI chain value
+enters (Section~\ref{sec:verdict}).
+
+\subsection{The covariance}
+\label{sec:covariance}
+
+The Gaussian covariance is built on the model A fiducial:
+$b_{1,i} = B_g/D(\bar{z}_i)$, $\btwo$ and $\bs$ on the calibrations,
+every other term zero.  Models A and B share that fiducial, so one
+covariance serves both.  Its one-loop terms come from CosmoLike's own
+tables of C-FASTPT (its C port of FAST-PT), with the data vector's
+bilinear pair form
+(Section~\ref{sec:separability}), and enter through Limber; the low-$\ell$
+non-Limber recompute stays linear (Appendix~\ref{app:open}).
+\texttt{nonlimber\_accuracyboost} 2 converges the adjacent thin-bin
+cross spectra to $2\%$ and the diagonal to $0.4\%$.  The covariance
+takes massless neutrinos, so its signal sits $3\%$ above the data
+vector ($m_\nu = 0.06$\,eV) at every redshift.  Against a linear-bias
+covariance, the figures of merit move by $-0.4\%$ to $+1.2\%$.
 
 \section{Projection to thin-bin angular spectra}
 \label{sec:projection}
 
-\subsection{Separability and the $D^4$ rule}
+\subsection{Separability and the \texorpdfstring{$D^4$}{D\textasciicircum 4} rule}
 \label{sec:separability}
 
 The exact (non-Limber) angular power spectrum between bins $i$ and $j$
@@ -532,133 +803,194 @@ C_\ell^{ij} = \frac{2}{\pi} \int dk\,k^2
 \label{eq:cl}
 \end{equation}
 where $W_i(\chi)$ is the bin's radial kernel (the normalized,
-Fingers-of-God-convolved $n(z)$ expressed in comoving distance
-$\chi$), $j_\ell$ is the spherical Bessel function, and $\mathcal{P}$
-is the unequal-time galaxy power spectrum.  The computation is
-tractable because every term of the one-loop expansion is separable in
-$k$ and time:
+Fingers-of-God-convolved redshift distribution expressed in comoving
+distance $\chi$), $j_\ell$ is the spherical Bessel function, and
+$\mathcal{P}$ is the unequal-time galaxy power spectrum.  Every term of
+the one-loop expansion is separable in $k$ and time:
 \begin{itemize}
 \item the linear term carries $D(z_1)\,D(z_2)$;
-\item all five quadratic templates ($P_{\delta_1\delta_2}$,
-$P_{\delta_2\delta_2}$, $P_{\delta_1 s_2}$, $P_{\delta_2 s_2}$,
-$P_{s_2 s_2}$) are 22-type mode-coupling integrals over two linear
-spectra, so each carries $D^2(z_1)\,D^2(z_2)$;
+\item the five quadratic templates are 22-type mode-coupling integrals
+over two linear spectra, so each carries $D^2(z_1)\,D^2(z_2)$;
 \item the 13-type pieces (the $\sigma_3^2\plin$ term of $\bthree$ and
-the $P_{13}$ inside the one-loop matter spectrum) carry the
-symmetrized
+the $P_{13}$ inside the one-loop matter spectrum) carry the symmetrized
 $\tfrac{1}{2}\left[D^3(z_1)D(z_2) + D(z_1)D^3(z_2)\right]$.
 \end{itemize}
-At equal times every loop term scales as $D^4(z)$.  This is exactly
-how both CCL and velocileptors evaluate the model: the loop templates
-are computed once from the $z=0$ linear spectrum and rescaled by
-$D^4(z)$, with the bias coefficients supplying the remaining redshift
-dependence \cite{DESI2024VII}.  For the thin bins of this project the
-equal-time evaluation at the bin (or pair) mean redshift is accurate:
-across a $\Delta z = 0.02$ bin the growth factor changes by about
-$1\%$, the symmetric products above differ from $D^4(z_{\rm mid})$
-only at second order in that $1\%$, and the residual is a
-few parts in $10^4$ of the loop terms, which are themselves percent-level
-corrections.
+At equal times every loop term scales as $D^4(z)$.  CCL, velocileptors
+and CosmoLike all compute the templates once from the $z = 0$ linear
+spectrum and rescale them by $D^4$ \cite{DESI2024VII}; CosmoLike's
+\texttt{get\_FPT\_bias} (\texttt{pt\_cfastpt.c}) builds them with
+C-FASTPT and rebuilds them when the cosmology changes.  For thin bins
+the equal-time evaluation at the bin mean is accurate: across a
+$\Delta z = 0.02$ bin the growth factor changes by about $1\%$, the
+symmetric products differ from $D^4(z_{\rm mid})$ only at second order
+in that $1\%$, and the residual is a few parts in $10^4$ of the loop
+terms.
 
-The consequence for the FFTLog machinery is structural, and it is the
-one fact the implementation study needs from this section: adding the
-one-loop terms adds a fixed, small set of $z$-independent $k$-shapes
-(the six quadratic templates, $\sigma_3^2\plin$, $k^2\plin$, and a
-constant), each entering a bin's power spectrum with a scalar
-amplitude $b_X b_Y D^4(z_{\rm bin})$.  The non-Limber cost scales with
-the number of distinct $k$-shapes, not with the number of bins.  The
-project's low-rank engine projects the full per-bin $P_{gg}(k)$
-through an SVD of its square root, so it carries the one-loop sum with
-no structural change; only the sign of $P_{gg}$ matters there.
+The auto spectrum of Eq.~\eqref{eq:pgg} is a quadratic form in the
+bias vector $u_i = (b_{1,i}, b_{2,i}, b_{s^2,i})$,
+$P_{gg,i} = u_i^{\mathsf T} Q\, u_i$, with $Q$ the symmetric matrix of
+templates ($Q_{11} = \pnl$, $Q_{12} = \tfrac12 P_{\delta_1\delta_2}$,
+$Q_{22} = \tfrac14 P_{\delta_2\delta_2}$, and so on).  A cross pair of
+bins $i$ and $j$ carries the bilinear form $u_i^{\mathsf T} Q\, u_j$:
+each product of two biases is shared between the two bins.  The
+low-rank engine projects each bin's full one-loop $P_{gg,i}$,
+counterterm included, through an SVD of its square root, so it carries
+the one-loop sum with no structural change; for the cross pairs it
+uses the bilinear form.
 
 CosmoLike subtracts the low-$k$ constants of the quadratic templates
-(the $\sigma_4$ terms of Section~\ref{sec:realspace}), so the loop sum
-vanishes as $k \to 0$ and large scales keep the linear-bias spectrum.
-As $k \to \infty$ the templates decay, and the same subtraction leaves
-a constant,
+(Section~\ref{sec:realspace}), so the loop sum vanishes as $k \to 0$
+and large scales keep the linear-bias spectrum.  As $k \to \infty$ the
+templates decay and the subtraction leaves a constant,
 \begin{equation}
 P_\infty = -\frac{\sigma_4}{2}\,D^4(z)
  \left(\btwo + \frac{2}{3}\,\bs\right)^2 \le 0 ,
 \label{eq:pinf}
 \end{equation}
 with $\sigma_4 = 4391\,(h^{-1}\mathrm{Mpc})^3$ at $z = 0$ at the
-project fiducial.  Where this negative constant outweighs the decaying
-positive terms, $P_{gg}$ turns negative at high $k$, and its square
-root does not exist there.  Section~\ref{sec:whitenoise} derives
-$P_\infty$ and measures where the sign changes.  The low-rank engine
-first guarded the square root with a floor on $P_{gg}$; it now handles
-the constant exactly, by factorizing $P_{gg} - P_\infty$ and projecting
-$P_\infty$ separately (Section~\ref{sec:whitenoise}).
+likelihood's fiducial.  Where this negative constant outweighs the
+decaying positive terms, $P_{gg}$ turns negative at high $k$ and its
+square root does not exist.  The low-rank engine handles the constant
+exactly: it factorizes $P_{gg} - P_\infty$ and projects $P_\infty$
+separately (Section~\ref{sec:whitenoise}).
 
-\subsection{Linear redshift-space distortions and counterterms for
-thin shells}
+\subsection{Linear redshift-space distortions and the counterterms}
 \label{sec:rsd-projection}
 
-Linear (Kaiser) redshift-space distortions enter
-Eq.~\eqref{eq:cl} through the transformation of the density kernel:
-each factor of $f\mu^2$ in the flat-sky spectrum becomes a second
-derivative of the Bessel kernel in the exact projection,
-\begin{equation}
-\Delta_\ell^i(k) = \int d\chi\,W_i(\chi)
+Linear (Kaiser) redshift-space distortions enter Eq.~\eqref{eq:cl}
+through the transformation of the density kernel: each factor of
+$f\mu^2$ in the flat-sky spectrum becomes a second derivative of the
+Bessel function in the exact projection,
+\begin{align}
+\Delta_\ell^i(k) &= \int d\chi\,W_i(\chi)
  \left[\bone(z)\,j_\ell(k\chi) - f(z)\,j_\ell''(k\chi)\right] D(z) ,
+ \nonumber\\
+R_\ell^i(k) &= -\int d\chi\,W_i(\chi)\,f(z)\,j_\ell''(k\chi)\,D(z) ,
 \label{eq:kaiser}
-\end{equation}
-the form the project's covariance already implements.  For wide
-photometric bins the $j_\ell''$ term integrates down by orders of
-magnitude; for shells thinner than the scales probed it survives at
-full strength, because the shell resolves line-of-sight modes with
-$\mu$ near one.  This is why thin-bin $C_\ell^{gg}$ recovers the
-Kaiser information of a three-dimensional analysis
-\cite{Asorey2012}, and it cuts both ways: every $\mu$-dependent term
-of Eq.~\eqref{eq:desi-generic} that a wide-bin analysis could drop is
+\end{align}
+with $\Delta_\ell^i$ the whole linear transfer of bin $i$ and
+$R_\ell^i$ its velocity part.  For wide photometric bins the
+$j_\ell''$ term integrates down by orders of magnitude; for shells
+thinner than the scales probed it survives at full strength, because
+the shell resolves line-of-sight modes with $\mu$ near one.  This is
+why thin-bin $C_\ell^{gg}$ recovers the Kaiser information of a
+three-dimensional analysis \cite{Asorey2012}, and it cuts both ways:
+every $\mu$-dependent term that a wide-bin analysis could drop is
 alive here.
 
-The counterterms follow the same rule.  The $\alpha_0 k^2\plin$ piece
-is $\mu$-independent and projects like the density: one extra
-$k$-shape, $k^2\plin(k)$, with per-bin amplitude
-$\alpha_0 D^2(z_{\rm bin})$ (the counterterm multiplies the linear
-spectrum, so it scales as $D^2$, not $D^4$).  The
-$\alpha_2\mu^2 k^2\plin$ piece projects through one $j_\ell''$ in one
-of the two Bessel kernels, the same transfer structure as the Kaiser
-term; for thin shells its reach is comparable to $\alpha_0$'s rather
-than suppressed.  The project's Fingers-of-God convolution of each
-bin's $n(z)$ with the velocity-dispersion kernel $\sigma_v$ is a
-nonperturbative stand-in for part of this physics: it damps radial
-power with a $\mu$-dependent, scale-dependent shape set by the sampled
-$\sigma_v$, and is therefore partially degenerate with $\alpha_2$.
-Partial degeneracy is not identity: the convolution is a positive
-damping of fixed functional form, while $\alpha_2$ can take either
-sign and scales as $k^2\plin$.
+\paragraph{$\alpha_0$.}  The $\alpha_0$ term is $\mu$-independent and
+projects like the density: one extra $k$-shape, $k^2\pnl$, in each
+bin's $P_{gg,i}$.  The engine matters.  FKEM, the FFTLog method of
+Fang et al. \cite{FangKEM2020}, projects only the linear term exactly
+and moves every nonlinear term, the counterterm included, through its
+Limber difference; the low-rank engine projects the
+counterterm without the Limber approximation.  On the $\Delta z = 0.05$
+layout the low-rank $\alpha_0$ response is $7.3$ times the Limber one
+at $\ell = 20$ and $1.26$ times at $\ell = 100$, from the $k^2$-weighted
+radial modes of thin, sharp-edged bins, so the model runs on the
+low-rank engine (the correlated-prior note, ``The counterterm requires
+the low-rank engine'').
 
-\subsection{Stochastic terms under projection}
+\paragraph{$\alpha_2$.}  The counterterm field of bin $i$,
+$\tfrac12 f\mu^2\alpha_{2,i} k^2\delta_{\rm L}$, has the transfer
+$\tfrac12\alpha_{2,i}k^2 R_\ell^i$, and its cross with the linear field
+of bin $j$ adds
+\begin{equation}
+\Delta C_\ell^{ij} = \frac{2}{\pi}\int dk\,k^2\,\plin(k)\,
+ \frac{k^2}{2}\left[\alpha_{2,i}\,R_\ell^i\,\Delta_\ell^j
+ + \alpha_{2,j}\,\Delta_\ell^i\,R_\ell^j\right] ,
+\label{eq:alpha2-proj}
+\end{equation}
+which for an auto spectrum is $\alpha_{2,i}k^2\Delta_\ell^i R_\ell^i$
+under the integral.  The projection reuses the two transfers the
+Kaiser term already builds, adds no Bessel integral, and is exact;
+every gg engine carries it (FFTLog, low-rank, FKEM pairs, and Limber
+with $\plin$).  It is linear in $\alpha_2$ to $10^{-12}$, and a
+brute-force $j_\ell$, $j_\ell''$ double integral agrees with it to
+$6\times10^{-4}$ for a thin auto spectrum and an adjacent pair at
+$\ell = 2$--$500$.  At DESI's width, $12.5\aunit$, it raises the auto
+spectra of the shipped mask by a median $0.7\%$ ($\Delta z = 0.05$)
+and $1.1\%$ ($\Delta d_{\rm com} = 62$\,Mpc), at most $2.9\%$.
+
+The Fingers-of-God convolution of each bin's redshift distribution is a
+nonperturbative stand-in for part of the same physics: it damps radial
+power with a shape set by the sampled $\sigma_v$, and is partially
+degenerate with $\alpha_2$.  Partial degeneracy is not identity: the
+convolution is a positive damping of fixed functional form, while
+$\alpha_2$ takes either sign and scales as $k^2\plin$.
+
+\subsection{Stochastic terms in projection}
 \label{sec:stochastic-projection}
 
-A constant three-dimensional power $\mathrm{SN}_0$ projects to
+A constant three-dimensional power $N$ projects to
 \begin{equation}
 C_\ell^{ij}\big|_{\rm stoch}
- = \mathrm{SN}_0 \int d\chi\,
- \frac{W_i(\chi)\,W_j(\chi)}{\chi^2} ,
+ = N \int d\chi\, \frac{W_i(\chi)\,W_j(\chi)}{\chi^2} ,
 \label{eq:sn-projection}
 \end{equation}
 independent of $\ell$.  Equation~\eqref{eq:sn-projection} is exact,
 not a Limber approximation: for a constant $\mathcal{P}$ the $k$
 integral of Eq.~\eqref{eq:cl} collapses by Bessel orthogonality, so
 the Limber formula is exact for white noise.  For a top-hat bin of
-width $\Delta\chi$ the result is $\mathrm{SN}_0/(\chi^2\Delta\chi)$,
-and at the Poisson value $\mathrm{SN}_0 = 1/\bar{n}$ it reproduces the
-familiar angular shot noise $1/\bar{n}_{2D}$, with $\bar{n}_{2D}$ the
-surface density of the bin.  The angular pipeline already carries the Poisson part in the
-covariance as the noise spectrum $N_\ell$, so the free parameter in
-the mean model is the deviation from Poisson, not the full $1/\bar{n}$.
-Two projection-specific effects deserve attention.  First, the
-Fingers-of-God convolution makes adjacent thin-bin kernels overlap, so
-Eq.~\eqref{eq:sn-projection} is nonzero for neighboring pairs: a
-stochastic term leaks into the cross spectra that the project
-measures, with a magnitude set by the kernel overlap integral.
-Second, the $\mathrm{SN}_2 k^2\mu^2$ term projects with the
-radial-derivative structure of Section~\ref{sec:rsd-projection} and
-grows as $k^2$; Section~\ref{sec:sizes} shows it stays below the other
-terms at this project's cuts.
+width $\Delta\chi$ the result is $N/(\chi^2\Delta\chi)$, and at the
+Poisson value $N = 1/\bar{n}$ it reproduces the angular shot noise
+$1/\bar{n}_{2D}$, with $\bar{n}_{2D}$ the surface density of the bin.
+The model's $\SNz$ templates are Eq.~\eqref{eq:sn-projection} with the
+Fingers-of-God-convolved kernels, which overlap for adjacent thin bins,
+so a stochastic term also reaches the measured cross spectra.  A cross
+pair within one tracer sample takes the mean of the two bins' Poisson
+powers; a pair of two samples (an LRG and an ELG bin at the same
+redshift) takes none, because different galaxies share no stochastic
+term.
+
+\paragraph{$\SNt$ projects exactly too.}  A power proportional to
+$k^2\mu^2 = k_\parallel^2$ is that of the radial derivative
+$\partial_\chi\epsilon$ of a white noise $\epsilon$.  Projected with
+the kernel of bin $i$, $\int d\chi\,W_i\,\partial_\chi\epsilon =
+-\int d\chi\,W_i'\,\epsilon$ (integration by parts, with
+$W_i' = dW_i/d\chi$ and the kernel vanishing at its ends), so the
+$\SNt$ term is Eq.~\eqref{eq:sn-projection} with each kernel replaced
+by its radial derivative:
+\begin{equation}
+C_\ell^{ij}\big|_{\SNt} = U_{ij} \int d\chi\,
+ \frac{W_i'(\chi)\,W_j'(\chi)}{\chi^2} ,
+\qquad U_i = \frac{\mathrm{SN}_{2,i}\,f_{\rm sat}\sigma_{\rm sat}^2}{\bar{n}_i} ,
+\label{eq:sn2-projection}
+\end{equation}
+with $U_{ij}$ the mean of $U_i$ and $U_j$ within one sample and zero
+across samples.  A thin bin's kernel is a top hat smoothed only by the
+Fingers-of-God convolution, so $W_i'$ peaks at the two edges, positive
+on the rising edge and negative on the falling one.  The sharper the
+edges, the larger the template: per unit, the $\SNt$ auto template is
+a median $0.022$, $0.017$, $0.0065$ and $0.0017$ times the $\SNz$ one
+on the $62$\,Mpc, $\Delta z = 0.02$, $0.05$ and $0.2$ layouts.
+
+\paragraph{Neighbors are anticorrelated.}  Adjacent thin bins share an
+edge: the falling edge of one is the rising edge of the next, so
+$W_i'W_j' < 0$ there and the projected $\SNt$ of two neighbors is
+negative.  On the $62$\,Mpc layout the normalized adjacent term,
+$K_{ij}/\sqrt{K_{ii}K_{jj}}$ with $K_{ij}$ the integral of
+Eq.~\eqref{eq:sn2-projection}, has a median of $-0.50$ over the 73
+adjacent pairs, against $+0.05$ for $\SNz$.  A white noise adds only
+positive cross terms, products of positive kernels, so no $\SNz$, per
+group or per bin, reproduces the pattern.
+
+\paragraph{Why model A carries $\SNt$.}  Without $\SNt$, a truth with
+$\SNt = \pm5$ units, the one-sigma width of its prior, moved a model A
+fit's
+$\Omega_m$ by $1.3$--$1.7\sigma$ at $\kmax = 0.075\hMpc$ on the two
+thin layouts, mostly through the adjacent cross spectra.  Model A then
+held only to $0.05\hMpc$ on the $62$\,Mpc layout and failed at its
+first fitted cut, $0.075\hMpc$, on $\Delta z = 0.02$.  The LRG term
+carried the effect.  ELG alone moved $\Omega_m$ by at most
+$0.23\sigma$ (its unit, $0.84\,(h^{-1}\mathrm{Mpc})^2$, is a seventh of
+LRG's $6.08$), and BGS by $0.00$, with the borrowed LRG unit or with
+one built from the BGS bins' own Fingers-of-God dispersion, so the BGS
+unit does not matter.  With one $\SNt$ per group, model A holds to its
+own cut on the thin layouts (Section~\ref{sec:validation}).  About half
+of each bin's $\SNt$ auto kernel comes from $k_\parallel$ above the
+bin's own cut at $\kmax = 0.075\hMpc$, a content the linear-model scale
+cut does not see (Appendix~\ref{app:open}).
 
 \subsection{The white-noise limit of the renormalized loops}
 \label{sec:whitenoise}
@@ -679,61 +1011,54 @@ equals $\tfrac{2}{3}$ for opposite wavevectors ($\mu_{12} = -1$): one
 power of it gives $P_{\delta_2 s_2} \to \tfrac{4}{3}\sigma_4$, two give
 $P_{s_2 s_2} \to \tfrac{8}{9}\sigma_4$.
 
-Subtracting $2\sigma_4$, $\tfrac{4}{3}\sigma_4$ and $\tfrac{8}{9}\sigma_4$
-from the $\delta^2\delta^2$, $\delta^2 s^2$ and $s^2 s^2$ templates
-renormalizes the operators: the constant moves into the stochastic
-sector, and the loops vanish on large scales.  As $k \to \infty$ the
-templates themselves decay, so the subtracted loop sum of
+Subtracting these constants renormalizes the operators: the constant
+moves into the stochastic sector and the loops vanish on large scales.
+As $k \to \infty$ the templates decay, so the subtracted loop sum of
 Eq.~\eqref{eq:pgg} tends to minus the subtracted constants, each with
 its bias coefficient:
 \begin{equation}
 \tfrac{1}{4}\btwo^2\,(2\sigma_4)
  + \tfrac{1}{2}\btwo\bs\,(\tfrac{4}{3}\sigma_4)
  + \tfrac{1}{4}\bs^2\,(\tfrac{8}{9}\sigma_4)
- = \frac{\sigma_4}{2}\left(\btwo^2 + \tfrac{4}{3}\btwo\bs
-   + \tfrac{4}{9}\bs^2\right)
  = \frac{\sigma_4}{2}\left(\btwo + \tfrac{2}{3}\bs\right)^2 .
 \label{eq:pinf-algebra}
 \end{equation}
-With the $D^4$ scaling of Section~\ref{sec:separability}, this square
-with a minus sign is $P_\infty$ of Eq.~\eqref{eq:pinf}.  The perfect
-square has a reading: $\btwo + \tfrac{2}{3}\bs$ is the quadratic
-coefficient in the Galileon basis of Appendix~\ref{app:conversions},
-and the Galileon kernel $S_2 - \tfrac{2}{3} = \mu_{12}^2 - 1$ vanishes
-for opposite wavevectors, so $\mathcal{G}_2$ adds no constant of its
-own.
+With the $D^4$ scaling, this square with a minus sign is $P_\infty$ of
+Eq.~\eqref{eq:pinf}.  The perfect square has a reading:
+$\btwo + \tfrac{2}{3}\bs$ is the quadratic coefficient in the Galileon
+basis of Appendix~\ref{app:conversions}, and the Galileon kernel
+$S_2 - \tfrac{2}{3} = \mu_{12}^2 - 1$ vanishes for opposite
+wavevectors, so $\mathcal{G}_2$ adds no constant of its own.
 
-\paragraph{Two conventions.}
+\paragraph{Two conventions, one model.}
 CosmoLike subtracts the three constants, as CCL does with
-\texttt{sub\_lowk} on.  The velocileptors code, the DESI DR1
-baseline in both its Eulerian (EPT) and Lagrangian (LPT) flavors,
-keeps the loop proportional to the square of the quadratic bias
-unsubtracted.  In LPT
-the term is
+\texttt{sub\_lowk} on.  Velocileptors, in both its Eulerian and
+Lagrangian flavors, keeps the loop proportional to the square of the
+quadratic bias unsubtracted (in the Lagrangian flavor
 $\tfrac{1}{2}(\btwoL)^2\xi_{\rm lin}^2$ in configuration space, with
-$\xi_{\rm lin}$ the linear correlation function; in EPT it is
-$(c_2^2/2)\int_{\mathbf{q}}\plin\plin$, with $c_2$ the Eulerian
-quadratic bias of Eq.~\eqref{eq:rotation}.  The code removes only the
-operator means $\langle\delta^2\rangle$ and $\langle s^2\rangle$ of
-Eq.~\eqref{eq:lagbasis}, which touch only the $k = 0$ mode, and the
-stochastic amplitude $\mathrm{SN}_0$ of Eq.~\eqref{eq:desi-generic}
-absorbs the low-$k$ constant \cite{ChenVlahWhite2020,Maus2024}.
-
-The two conventions are the same model.  The subtracted spectrum with
-$\mathrm{SN}_0$ centered at zero equals the unsubtracted spectrum with
-$\mathrm{SN}_0$ centered at
-$-(\sigma_4/2)D^4(\btwo + \tfrac{2}{3}\bs)^2$, a center that moves with
-the biases.  A prior on $\mathrm{SN}_0$ with a fixed center therefore
+$\xi_{\rm lin}$ the linear correlation function); it removes only the
+operator means of Eq.~\eqref{eq:lagbasis}, which touch only the $k = 0$
+mode, and its $\SNz$ absorbs the low-$k$ constant
+\cite{ChenVlahWhite2020,Maus2024}.  The subtracted spectrum with $\SNz$
+centered at zero equals the unsubtracted spectrum with $\SNz$ centered
+at $-(\sigma_4/2)D^4(\btwo + \tfrac{2}{3}\bs)^2$, a center that moves
+with the biases.  A prior on $\SNz$ with a fixed center therefore
 states different physics in the two conventions.
 
 \paragraph{Where $P_{gg}$ turns negative.}
 Let $k_{\rm neg}$ be the wavenumber at which the subtracted one-loop
-$P_{gg}$ first turns negative, and let
-$\Delta_2 = \btwo - \btwo^{\rm fit}(\bone)$ be the offset of $\btwo$
-from the Lazeyras calibration of Eq.~\eqref{eq:lazeyras} (the group
-offset $\Delta_{2,g}$ of Section~\ref{sec:trends}).
+$P_{gg}$ first turns negative, and $\Delta_2 = \btwo - \btwo^{\rm
+fit}(\bone)$ the offset of Eq.~\eqref{eq:perbin-evolution}.
 Figure~\ref{fig:kneg} draws $k_{\rm neg}$ against $\Delta_2$ for three
-representative bins, with $\bs$ on co-evolution.
+representative bins.  In the LRG bins the constant stays small against
+the galaxy power, because the calibrated $\btwo$ partly cancels
+$\tfrac{2}{3}\bs$ and the larger $\bone^2$ raises the positive terms:
+$k_{\rm neg} > 1.5\hMpc$.  At the calibrated biases ($\Delta_2 = 0$),
+$|P_\infty|$ is $5$--$42$ times the Poisson power in the forecast's BGS
+bins, where $1/\bar{n} \simeq 33$--$170\,(h^{-1}\mathrm{Mpc})^3$, and
+$3$--$15\%$ of it in the ELG bins.  Only negative offsets matter:
+$\btwo + \tfrac{2}{3}\bs$ vanishes near $\Delta_2 \simeq +0.9$, so a
+positive offset shrinks the constant and pushes $k_{\rm neg}$ far out.
 
 \begin{figure}[tbp]
 \centering
@@ -741,885 +1066,132 @@ representative bins, with $\bs$ on co-evolution.
 \caption{The wavenumber $k_{\rm neg}$ at which the one-loop $P_{gg}$
 in CosmoLike's subtracted convention first turns negative, against
 the offset $\Delta_2$ of $\btwo$ from the Lazeyras calibration, for
-two BGS bins and one ELG bin.  The tidal bias $\bs$ follows
-co-evolution, $\bone = B_g/D(z)$ with the project amplitudes, and
-$\bthree$ and the counterterm are zero.  The leading term is
-$\bone^2 D^2\plin$; the halofit $\pnl$ that the likelihood puts in
-that term is larger at these wavenumbers, so the hybrid model of
-Eq.~\eqref{eq:pgg} turns negative at somewhat higher $k$.  Where
-$\btwo + \tfrac{2}{3}\bs$ vanishes, $P_\infty$ of Eq.~\eqref{eq:pinf}
-vanishes with it and $k_{\rm neg}$ leaves the panel.  The numerical
-set-up is in Appendix~\ref{app:numerics}.}
+two BGS bins and one ELG bin.  $\bs$ is on co-evolution,
+$\bone = B_g/D(z)$, and $\bthree$ and the counterterm are zero.  The
+leading term is $\bone^2 D^2\plin$; the halofit $\pnl$ of the model is
+larger at these wavenumbers, so the model turns negative at somewhat
+higher $k$.  Where $\btwo + \tfrac{2}{3}\bs$ vanishes, $P_\infty$
+vanishes with it and $k_{\rm neg}$ leaves the panel.  Setup in
+Appendix~\ref{app:numerics}.}
 \label{fig:kneg}
 \end{figure}
 
-Three facts frame the figure.  In the LRG bins the constant stays
-small against the galaxy power, because the calibrated $\btwo$ partly
-cancels $\tfrac{2}{3}\bs$ and the larger $\bone^2$ raises the positive
-terms: $k_{\rm neg} > 1.5\hMpc$.  At the calibrated biases
-($\Delta_2 = 0$), $|P_\infty|$ is $5$--$42$ times the Poisson power
-$1/\bar{n}$ in the forecast's BGS bins, where
-$1/\bar{n} \simeq 33$--$170\,(h^{-1}\mathrm{Mpc})^3$, and $3$--$15\%$
-of it in the ELG bins.  Only negative offsets matter: in these bins
-$\btwo + \tfrac{2}{3}\bs$ vanishes near $\Delta_2 \simeq +0.9$, so a
-positive offset shrinks the constant and pushes $k_{\rm neg}$ far out.
-
-\paragraph{Why thin-bin angular spectra see it and DESI's 3D fits do
-not.}
+\paragraph{Why thin-bin angular spectra see it and DESI's fits do not.}
 An angular spectrum integrates $P(k)$ over all $k$ through each bin's
 radial window (Eq.~\eqref{eq:cl}).  A thin bin passes radial modes far
 above the transverse wavenumber of a band, so no cut in $\ell$
-excludes the region $k > k_{\rm neg}$; the UV-fraction criterion only
-bounds its share.  A white noise projects exactly, to
-$P\int d\chi\,W_i W_j/\chi^2$ (Eq.~\eqref{eq:sn-projection}), so in
-the subtracted convention $P_\infty$ enters every multipole at full
-strength.
-
-DESI's full-shape fits are spared both effects.  They use only
-$0.02 < k < 0.20\hMpc$ in three dimensions \cite{DESI2024V}, so the
-region beyond $k_{\rm neg}$ does not enter them.  And the DESI samples
-are sparse.  DR1 BGS holds 300{,}017 galaxies over $0.1 < z < 0.4$;
-that count and the survey area give
-$1/\bar{n} \approx 3\times10^3\,(h^{-1}\mathrm{Mpc})^3$, an estimate
-made for this note rather than a published DESI value.  The constant
-is then at most of the order of the Poisson power and fits DESI's
-$\mathrm{SN}_0$ prior, $\mathcal{N}(0, 2^2)/\bar{n}$, in either
+excludes the region $k > k_{\rm neg}$; the UV-fraction cut only bounds
+its share.  A white noise projects exactly
+(Eq.~\eqref{eq:sn-projection}), so in the subtracted convention
+$P_\infty$ enters every multipole at full strength.  DESI's full-shape
+fits are spared both effects.  They use only $0.02 < k < 0.20\hMpc$ in
+three dimensions \cite{DESI2024V}, and the DESI DR1 samples are sparse:
+DR1 BGS holds 300{,}017 galaxies over $0.1 < z < 0.4$, which with the
+survey area gives $1/\bar{n} \approx 3\times10^3\,(h^{-1}\mathrm{Mpc})^3$
+(an estimate made for this note).  The constant is then at most of the
+order of the Poisson power and fits DESI's $\SNz$ prior in either
 convention.  The forecast's BGS is $20$--$100$ times denser.
 
 \paragraph{What CosmoLike does.}
 The low-rank engine splices its non-Limber density term into the
 Limber spectrum: it takes the full Limber $C_\ell$, subtracts the
 Limber projection of the density-only term, and adds the non-Limber
-projection of the same term.  Since the cosmolike\_core change that
-splits the white-noise constant off the factorized spectrum, the
-constant passes through this splice exactly:
+projection of the same term.  The white-noise constant passes through
+this splice exactly:
 \begin{itemize}
 \item the engine factorizes $P_{gg} - P_\infty$, the spectrum with the
 unsubtracted templates, which is positive, so its square root exists;
 \item the Limber density-only term subtracted in the splice uses the
 same unsubtracted templates;
 \item the full Limber term keeps the subtracted templates, so
-$P_\infty$ reaches $C_\ell$ through Limber, which is exact for a
-constant power (Section~\ref{sec:stochastic-projection});
-\item a cross pair of bins $i$ and $j$ carries the bilinear constant
+$P_\infty$ reaches $C_\ell$ through Limber, exact for a constant power;
+\item a cross pair carries the bilinear constant
 $-(\sigma_4/2)D^4(b_{2,i} + \tfrac{2}{3}b_{s^2,i})
 (b_{2,j} + \tfrac{2}{3}b_{s^2,j})$.
 \end{itemize}
-Before this change the engine clamped $P_{gg}$ to a small positive
-floor on about a third of its $(k, z)$ grid.  The floor stays in the
-code as a guard, and the tested vectors no longer reach it.  The
-measured effects, on the project's data vectors:
-\begin{itemize}
-\item linear-bias vectors, and a one-loop vector computed with the
-FKEM engine, are bitwise unchanged;
-\item at the calibrated biases the low-rank one-loop vector moves by
-at most $5\times10^{-3}$ of the angular shot noise;
-\item at the highest band the model A cut keeps, the share of a bin's
-white-noise projection that comes from $k > k_{\rm neg}$ is at most
-$0.34\%$ (BGS, $z = 0.11$) and falls to about zero for ELG (a
-flat-sky estimate at the calibrated biases);
-\item one model A prior width below the calibrations ($\Delta_2 = -1$
-and $\Delta_s = -0.5$, with $\Delta_s$ the offset of $\bs$ from
-co-evolution), the clamp had hidden negative $C_\ell$ in the lowest
-BGS bins beyond $k \approx 0.15\hMpc$, in the Limber correspondence
-$k = (\ell + \tfrac{1}{2})/\chi$.  An example is $-29$ times the shot
-noise at $\ell = 50$ on the shipped mask; the FKEM engine, untouched
-by the change and Limber in its one-loop content, gives $-25$;
-\item at the model A cut the same biases keep every kept $C_\ell$
-positive, and the exact treatment moves them by at most $0.27$ of the
-shot noise.
-\end{itemize}
+A floor on the factorized spectrum stays in the code as a guard; the
+tested vectors do not reach it.  Compared with flooring $P_{gg}$
+instead, the exact treatment leaves linear-bias vectors and FKEM
+one-loop vectors bitwise unchanged, as it must, and moves the low-rank
+one-loop vector at the calibrated biases by at most $5\times10^{-3}$ of
+the angular shot noise.  At the highest band model A keeps, the share of a bin's white-noise projection from
+$k > k_{\rm neg}$ is at most $0.34\%$ (BGS, $z = 0.11$) and about zero
+for ELG (a flat-sky estimate at the calibrated biases).  One model A
+prior width below the calibrations ($\Delta_2 = -1$,
+$\Delta_s = -0.5$), the exact treatment shows negative $C_\ell$ in the
+lowest BGS bins beyond $k \approx 0.15\hMpc$ (Limber correspondence
+$k = (\ell + \tfrac12)/\chi$) on the shipped mask, $-29$ times the shot
+noise at $\ell = 50$ ($-25$ with FKEM, Limber in its one-loop content),
+which a floor would hide.  At the model A cut the same biases keep
+every kept $C_\ell$ positive, and the exact treatment moves them by at
+most $0.27$ of the shot noise.
 
-\paragraph{Consequences and remedies.}
-Model A, at $\kmax = 0.075\hMpc$, is safe: at the calibrated biases
-the region beyond $k_{\rm neg}$ carries a negligible share of its kept
+\paragraph{Consequences.}
+Model A at $\kmax = 0.075\hMpc$ is safe: at the calibrated biases the
+region beyond $k_{\rm neg}$ carries a negligible share of its kept
 bands, and one prior width below the calibrations every kept $C_\ell$
-stays positive.  Model B, at $\kmax \approx 0.18\hMpc$ on the dense
-BGS, is not.  For the low-redshift BGS bins, one-loop perturbation
-theory is not trustworthy near $k \approx 0.15$--$0.2\hMpc$ once
-$\btwo$ sits a unit below the calibration (Figure~\ref{fig:kneg}).
-Three remedies are available:
-\begin{enumerate}
-\item A BGS-specific cut, $\kmax \approx 0.14\hMpc$ at $z = 0$.  It
-contains the problem but does not remove it.
-\item A taper on the loop terms above the scale where one-loop
-perturbation theory is trusted, so that $P_{gg} \to \bone^2\pnl$ at
-high $k$ for every $\btwo$.  It removes the problem at the cost of
-changing the model in the ultraviolet, a change the UV-fraction cut
-bounds.  For low-redshift BGS the taper would sit near $0.15\hMpc$.
-\item For chains, a positivity prior that rejects points with
-$P_{gg} < 0$ below a chosen $k$, like the project's amplitude cut
-(the prior that keeps $(A_s/A_{s,{\rm fid}})(b_i/b_{i,{\rm fid}})^2
-\le 8$ per group, with $b_i$ a bin's linear bias).  It leaves the
-model unchanged and does not affect a Fisher forecast.
-\end{enumerate}
-Two other levers miss the sign problem.  A tighter $\btwo$ prior only
-shifts $k_{\rm neg}$.  An $\mathrm{SN}_0$ prior in absolute units,
-$(h^{-1}\mathrm{Mpc})^3$ instead of multiples of $1/\bar{n}$, does not
-touch the negativity, because $\mathrm{SN}_0$ adds the same constant
-at every $k$ and leaves the one-loop $P_{gg}$ as it is.  It solves a
-separate problem: in the unsubtracted convention $\mathrm{SN}_0$ must
-absorb a constant of $5$--$42$ Poisson units in the forecast's BGS,
-and a width of $2/\bar{n}$ is too narrow for a sample this dense.
+stays positive.  At model B's higher cuts on the dense low-redshift
+BGS, one-loop perturbation theory is not trustworthy near
+$k \approx 0.15$--$0.2\hMpc$ once $\btwo$ sits a unit below the
+calibration (Figure~\ref{fig:kneg}).  A Fisher forecast at the
+fiducial is unaffected; chains that reach such points meet the open
+issue of positivity (Appendix~\ref{app:open}).  Two levers miss the
+sign problem: a tighter $\btwo$ prior only shifts $k_{\rm neg}$, and
+$\SNz$ adds the same constant at every $k$.  The subtracted convention
+is also why $\SNz$ keeps DESI's width in Poisson units: in the
+unsubtracted convention $\SNz$ would have to absorb $5$--$42$ Poisson
+units in the forecast's BGS, far outside a width of $2/\bar{n}$.
 
-\subsection{What an angular analysis can drop}
-\label{sec:drops}
+\section{Validation}
+\label{sec:validation}
 
-Terms that can be dropped at both of this project's cuts: the
-$\mu^4$ members ($\alpha_4$, $\mathrm{SN}_4$), which DESI itself drops
-with the hexadecapole and whose thin-shell projections are suppressed
-relative to their $\mu^2$ partners; the $\bthree$ term, bounded by
-co-evolution at $|\bthree| \le 0.17$ and worth at most $0.6\%$ of
-$P_{gg}$ at $k \le 0.1\hMpc$ (Figure~\ref{fig:sizes}), and degenerate
-with $\alpha_0$ in shape over the fitted range; and the derivative
-bias $b_{k^2}$, exactly degenerate with $\alpha_0$ at one loop.  Terms
-that cannot be dropped at the shipped mask: the $\btwo$ and $\bs$
-loops, $\alpha_0$, a radial counterterm degree of freedom (an
-$\alpha_2$ equivalent or a demonstrably sufficient $\sigma_v$
-freedom), and $\mathrm{SN}_0$.  The quantitative basis follows.
-
-\section{The size of every term}
-\label{sec:sizes}
-
-Figure~\ref{fig:sizes} draws the fractional contribution of each
-one-loop term to $P_{gg}$ against $k$, computed with FAST-PT 4.0 and
-CAMB 1.6.5 in the group's \texttt{ccl} conda environment at the
-project fiducial cosmology (the \texttt{cocoapy311} environment
-carries neither package; Appendix~\ref{app:numerics} records the
-setup).  The reference is the linear-bias model $\bone^2\pnl$ with
-halofit, the quantity the current likelihood computes.  Biases follow
-Figure~\ref{fig:coev} at each tracer's redshift; the dashed curve shows
-the counterterm at the one-sigma DESI prior
-$\alpha_0 = 12.5\,h^{-2}\mathrm{Mpc}^2$ as a size scale.  Figure~\ref{fig:poisson} shows, on the same scale, the
-Poisson power $1/\bar{n}$ from the project's own thin-bin densities,
-which the covariance carries as noise, as context for the stochastic
-freedom.
-
-\begin{figure}[tbp]
-\centering
-\includegraphics{plots/term_sizes/term_sizes.pdf}
-\caption{Each one-loop term of Eq.~\eqref{eq:pgg} in percent of the
-linear-bias model $\bone^2\pnl$ (halofit), against $k$ at the tracer
-redshift, for four DESI-like tracers at the co-evolution biases of
-Figure~\ref{fig:coev}.  The three tidal terms
-($\bone\bs P_{\delta_1 s_2}$, $\tfrac12\btwo\bs P_{\delta_2 s_2}$ and
-$\tfrac14\bs^2 P_{s_2 s_2}$) are drawn as their sum.  Loop templates
-are FAST-PT at $z=0$ scaled by $D^4(z)$, with the low-$k$ constants
-kept (CCL's default, \texttt{sub\_lowk} off).  The dashed curve is the
-counterterm $\alpha_0 k^2\plin(k,z)$ at the DESI one-sigma prior width
-$\alpha_0 = 12.5\,h^{-2}\mathrm{Mpc}^2$.}
-\label{fig:sizes}
-\end{figure}
-
-\begin{figure}[tbp]
-\centering
-\includegraphics{plots/poisson_power/poisson_power.pdf}
-\caption{The Poisson power $1/\bar{n}$ in percent of the linear-bias
-model $\bone^2\pnl$ (halofit) of the four tracers of
-Figure~\ref{fig:sizes}, with $\bar{n}$ the density of the project's
-DESI DR3-forecast thin bin nearest each tracer redshift.  The
-covariance carries this power as noise; it is not part of the model
-and is drawn to set the scale of the stochastic freedom.}
-\label{fig:poisson}
-\end{figure}
-
-Reading the figures at the project's two reference cuts:
-
-\textbf{At $\kmax = 0.075\hMpc$} (the non-Limber UV-fraction cut that
-matches the thin-bin radial resolution), the net loop correction is
-$1$--$3\%$ of $P_{gg}$, with individual terms up to $3\%$ and partial
-cancellations that depend on the bias values.  The counterterm prior
-scale is $1$--$3\%$.  A $30\%$ non-Poisson stochastic residual, the
-size Nicola et al. \cite{Nicola2023} detect for red samples, is
-$3\%$ of $P_{gg}$ for the LRG chunks and more for ELG.  Against the
-forecast's statistical power (sub-percent amplitude precision per
-chunk once all bins and bands are aggregated), none of these is
-negligible; the saving grace is that below $0.075\hMpc$ their scale
-dependence is mild, so the free linear amplitudes absorb
-most of each term and the damage concentrates in the residual shape.
-That is an argument for a small extension, not for linear bias alone.
-
-\textbf{At the shipped mask, $k \simeq 0.18\hMpc$}, the picture
-changes qualitatively.  The $\bone\btwo$ term alone reaches
-$7$--$17\%$ with strong scale dependence; the quadratic-quadratic
-terms reach $3$--$7\%$; the counterterm scale is $10$--$19\%$.  These
-are not absorbable by an amplitude, and their shapes differ from one
-another, so the higher-order biases must be free per chunk rather
-than tied to the calibrations, as the DESI DR1 choice of
-$\kmax = 0.2\hMpc$ with seven nuisances per tracer already reflects.
-
-\section{The draft model against DESI's}
-\label{sec:comparison}
-
-Point by point, the draft's Eulerian model against the DESI DR1
-full-shape baseline it cites:
-
+Each piece of the model was checked against an independent
+calculation, and the forecast built on it was tested against truths it
+does not contain.  The checks of the $\alpha_2$ projection and of the
+white-noise splice are in Sections~\ref{sec:rsd-projection} and
+\ref{sec:whitenoise}.
 \begin{itemize}
-\item \textbf{The six quadratic templates match CCL exactly}, and CCL
-matches the McDonald--Roy structure that FAST-PT implements.  No issue
-beyond the \texttt{sub\_lowk} statement of
-Section~\ref{sec:realspace}.
-\item \textbf{The bias values need the conversion of
-Section~\ref{sec:verdict}} before they can enter an Eulerian
-calculator, and this is the largest single correction.  At the
-table's numbers the tidal term enters with the opposite sign and
-several times the magnitude of the co-evolution expectation (the BGS
-$\bone\bs$ product is $+1.96$ against $-0.50$), and the quadratic
-coefficient differs at a comparable level, so the loop sum differs
-from the converted one by several percent of $P_{gg}$ at
-$k \simeq 0.1\hMpc$, the size of the whole correction being modeled.
-The linear column, read as an Eulerian bias, is low by $30$--$60\%$
-for the LRG and ELG chunks; a free amplitude absorbs that in a fit,
-while a fixed-fiducial use (a data vector, a covariance, a Fisher
-derivative) carries it.
-\item \textbf{$\bthreeL = 0$ is safe}, and is DESI's own baseline.
-The co-evolution value it discards is $|\bthree| \le 0.17$, worth at
-most $0.6\%$ of $P_{gg}$ below $0.1\hMpc$, degenerate with $\alpha_0$;
-Maus et al. \cite{Maus2024} validate the choice directly.  The drop
-is safe at both cuts provided $\alpha_0$ stays in the model.
-\item \textbf{$\alpha_0 k^2\plin$ against $b_{k^2}k^2\pnl$}: the same
-physical term in two dressings.  They differ by $\plin$ versus $\pnl$
-(a $10$--$20\%$ relabeling of the coefficient below $0.2\hMpc$) and by
-DESI's convention of factoring $(\bone + f\mu^2)\,\bone\,\alpha_0$ out
-of the tree-level structure.  CosmoLike's concrete form is
-$2\,\bone\,b_K\,k^2\,\pnl$ with $b_K$ the per-bin derivative-bias
-slot, so matching the draft's term needs $\alpha_0 = 2\,\bone\,b_K$ at
-the level of the $k^2$ coefficient plus the $\plin$-versus-$\pnl$
-relabeling.  Any of the three is fine; the prior must be stated in the
-convention used, and the DESI width translates to a $50\%$ correction
-to the linear spectrum at the analysis $\kmax$.
-\item \textbf{No redshift-space loops}: the draft keeps the loop sum
-in real space and attaches linear Kaiser projection plus the
-Fingers-of-God $n(z)$ convolution.  The dropped $\mu$-dependent loop
-and counterterm pieces are the thin-shell analogue of what DESI's
-$\alpha_2$ and the one-loop velocity terms carry, and
-Section~\ref{sec:rsd-projection} shows thin shells do not suppress
-them.  At $\kmax = 0.075\hMpc$ they are percent-level and partially
-degenerate with the sampled $\sigma_v$; the residual after
-marginalizing $\sigma_v$ has not been measured, and that measurement
-(a Fisher bias of a data vector with redshift-space loops against the
-real-space-loop model) belongs to the implementation study.  At
-$0.18\hMpc$ the drop is not defensible without that measurement, and
-the model needs an explicit radial counterterm.
-\item \textbf{No stochastic terms}: the Poisson part sits correctly in
-the covariance, but the non-Poisson residual is detected at tens of
-percent of Poisson for red samples \cite{Nicola2023}, which is
-percent-level in $P_{gg}$ for the LRG and ELG chunks
-(Figure~\ref{fig:poisson}).  A forecast that fixes it to zero converts
-halo-exclusion physics into cosmological information.  One
-$\mathrm{SN}_0$ per chunk is required at either cut; the
-\texttt{sub\_lowk} constants fold into the same parameter.
-\item \textbf{One constant bias set per DESI chunk}: the draft fixes
-$(\bone,\btwo,\bs)$ per chunk while the pipeline evolves
-$\bone = B_g/D(z)$ across the chunk's thin bins.  The two statements
-disagree with each other, and the constant option disagrees with
-co-evolution: if $\bone$ drifts by $7$--$20\%$ across a chunk, $\bs$
-drifts with it (Figure~\ref{fig:coev}, the $\bs$ panel).
-Section~\ref{sec:evolution} resolves this.
-\item \textbf{Halofit $P_{\delta\delta}$}: the hybrid is validated for
-projected statistics to beyond the shipped mask \cite{Nicola2023}.
-The requirements are consistency (the same $\pnl$ in the data vector,
-covariance and Fisher derivatives) and awareness that halofit's
-accuracy, not the bias expansion, can set the error budget at the
-mask edge.
+\item \textbf{Loop templates.}  With $\bthree = 0$, CosmoLike's
+C-FASTPT templates and Python FAST-PT agree to
+$\Delta\chi^2 \le 3.5\times10^{-5}$ on the $62$\,Mpc vector, cross
+pairs included.  Doubling the C-FASTPT grid moves $\Delta\chi^2$ by
+$\sim10^{-8}$, raising \texttt{accuracyboost} to 3--4 moves the
+one-loop part by $\Delta\chi^2 \le 4.5\times10^{-3}$, and the low-rank
+rank is converged at 5 (5 to 12: $10^{-10}$).  One setting fails:
+\texttt{internal\_accuracyboost} $= 4$ breaks the C-FASTPT bias tables
+($\Delta\chi^2 \sim 10^{12}$).
+\item \textbf{Cross pairs.}  The one-loop pair code leaves linear-bias
+vectors bitwise unchanged with the low-rank, FKEM and Limber engines.  A pair of two bins with
+identical redshift distributions equals the polarization of the auto
+spectra (the bilinear form recovered from the quadratic one) to
+$10^{-14}$ of the one-loop increment.  One and eight threads give
+identical vectors.
+\item \textbf{The likelihood option.}  A zero amplitude reproduces the
+vector without the term bitwise.  The $\alpha_2$ and $\SNt$ terms are
+linear (forward and backward differences of the $\alpha_2$ columns
+agree to $3\times10^{-10}$ of the column; $\SNt$ to $3\times10^{-14}$),
+and the stochastic-template code run at order zero reproduces the
+$\SNz$ templates of the model A derivative caches exactly.
+\item \textbf{The covariance.}  Its one-loop increment equals an
+independent evaluation of the data-vector formula to $1.5\times10^{-13}$
+(gg) and $3.2\times10^{-12}$ (gs), and its mean signal divided by the
+model A data vector is flat at $1.03$, the massless-neutrino offset.
+\item \textbf{The derivatives.}  The per-bin bias columns of the Fisher
+construction, summed through the chain rule of
+Eq.~\eqref{eq:perbin-evolution}, reproduce the stencil derivative of
+each group amplitude (the correlated-prior note, ``Numerical checks'').
+\item \textbf{The forecast.}  The correlated-prior note fits random
+bias histories under every linear-bias prior (its accuracy test), and
+fits model A to truths that carry model B's extra freedom:
+$\alpha_2 = \pm12.5\aunit$, $\SNt = \pm5$, or the offsets at their
+one-sigma widths.  Model A keeps every shift below $\sigma/3$ up to
+its own cut, $\kmax = 0.075\hMpc$, on the two thin layouts (at $0.1$
+it fails, mostly through $\alpha_2$), to $0.1$ (model A baseline) or
+$0.15$ (model A pessimistic) on
+$\Delta z = 0.05$, and at every cut on $\Delta z = 0.2$.  Its figures
+\texttt{fom\_kmax\_models} and \texttt{model\_a\_break} draw the
+figures of merit of both models and the largest shift against $\kmax$.
 \end{itemize}
-
-\section{Bias evolution within a group}
-\label{sec:evolution}
-
-The project's correlated-prior note
-(\texttt{notes/correlated\_bias\_prior\_v2}) models the linear bias of bin
-$i$ in group $g$ with that note's memory model (its section ``The
-memory model''), a free tilt per group
-with a correlated prior on the residuals around the tilted line:
-\begin{equation}
-b_{1,i} = \frac{B_g\,(1 + \delta_i)}{D(z_i)} , \qquad
-\delta_i = s_g\,(z_i - \bar{z}_g) + \varepsilon_i ,
-\label{eq:linear-perbin}
-\end{equation}
-where $z_i$ is the bin redshift, $\bar{z}_g$ the mean redshift of the
-group's bins, $\delta_i$ the fractional deviation from the group
-trend $B_g/D$, $s_g$ the tilt of group $g$, free with a flat prior
-like $B_g$, and $\varepsilon_i$ the residual.  The residuals carry a
-Gaussian prior correlated across the bins of a group,
-\begin{equation}
-\bigl\langle \varepsilon_i\,\varepsilon_j \bigr\rangle
- = \sigma_g^2\,\exp\!\left(-\,\frac{|z_i - z_j|}{L}\right) ,
-\label{eq:kernel}
-\end{equation}
-and zero across groups, with $\sigma_g$ the per-bin prior width and
-$L$ the correlation length in redshift;
-Section~\ref{sec:recommendation} fixes the baseline and pessimistic
-values of $(\sigma_g, L)$.
-
-\subsection{Second-order trends from the per-bin linear bias}
-\label{sec:trends}
-
-The higher-order sector should
-follow the same logic.  Co-evolution makes the trend deterministic:
-given the per-bin linear biases $b_{1,i}$,
-\begin{equation}
-b_{s^2,i} = -\frac{4}{7}\left(b_{1,i} - 1\right)
- + \Delta_{s,g} , \qquad
-b_{2,i} = \btwo^{\rm fit}\!\left(b_{1,i}\right)
- + \Delta_{2,g} ,
-\label{eq:perbin-evolution}
-\end{equation}
-with $b_{2,i}$ and $b_{s^2,i}$ the quadratic and tidal biases of bin
-$i$, $\btwo^{\rm fit}$ the Lazeyras relation of
-Eq.~\eqref{eq:lazeyras} and $\Delta_{2,g}$, $\Delta_{s,g}$ one free
-offset per group.
-
-The trends follow the full $b_{1,i}$, deviations included, not the
-smooth group shape $B_g/D(z_i)$.  The reason is physical: a deviation
-$\delta_i$ is a real change of which halos the selection reaches in
-that bin (a flux limit, for example, keeps only the brighter galaxies,
-which sit in more massive halos), and the calibrated relations map
-halo populations at a given linear bias, so the second-order biases
-of the bin's population sit on the calibration curves at $b_{1,i}$,
-not at the group trend.  The induced shift is small but determined:
-near $\bone \simeq 2$ the Lazeyras relation has slope
-$d\btwo/d\bone \simeq 1.7$, so a residual at the per-bin width
-$\sigma_g = 3\%$ (the BGS baseline and the pessimistic width of every
-group) moves $\btwo$ by about $0.10$, a tenth
-of the offset prior width of $1.0$ that
-Section~\ref{sec:recommendation} assigns, and the co-evolution slope
-$-4/7$ moves $\bs$ by about $0.03$ against the offset width of $0.5$.
-
-The offsets absorb the known imperfection of the
-calibrated relations (the $30\%$ spread between co-evolution and the
-excursion-set $\gamma_2$ at LRG biases, and the scatter of the
-Lazeyras fit); the deterministic part carries the within-group
-evolution, which is not small: across LRG3, at $\delta_i = 0$, the
-co-evolution $\bs$
-moves from $-0.88$ to $-1.09$, a drift comparable to the offset prior
-width itself.  Holding $\btwo$ and $\bs$ constant while $b_{1,i}$
-evolves across the group is internally inconsistent; freeing them per
-bin throws away the physical correlation the correlated-prior note
-was written to keep.  The next subsection grades the freedom between
-those two extremes.
-
-\subsection{A ladder for the higher-order freedom}
-\label{sec:ladder}
-
-Equation~\eqref{eq:perbin-evolution} already carries the per-bin
-drift of the higher-order sector: the calibration relations are
-evaluated at the full $b_{1,i}$ of Eq.~\eqref{eq:linear-perbin}, tilt
-and residuals included, so $b_{2,i}$ and $b_{s^2,i}$ inherit every
-move of the linear bias.  What a free parameter adds on top is a
-drift of the calibration itself: $\btwo$ at fixed $\bone$ changes
-with the satellite fraction and the color mix of the sample, and
-within one selection that change is slow.  The freedom therefore sits
-per group, not per bin, and the choices form a ladder, from the most
-rigid to the most free:
-
-\begin{itemize}
-\item \textbf{Upper limit:} the calibration relations exactly, with
-no offsets.  Zero parameters; every calibration error becomes a
-cosmology error.
-\item \textbf{Baseline:} the inherited trend plus one free offset per
-group, the $\Delta_{2,g}$ and $\Delta_{s,g}$ of
-Eq.~\eqref{eq:perbin-evolution}: twelve parameters for the six
-chunks.
-\item \textbf{Pessimistic:} the inherited trend plus a free offset
-and a free tilt per group,
-$\Delta_g \to \Delta_g + t_g\,(z_i - \bar{z}_g)$ with $t_g$ the
-offset tilt: 24 parameters.
-\item \textbf{Lower limit:} $\btwo$ and $\bs$ free per bin, 152
-parameters for the 76 bins.  This option is a bound, not a candidate
-model.  The thin-bin data cannot measure $\btwo$ bin by bin, because
-one bin's loop terms are nearly degenerate with that bin's linear
-bias and counterterm, so the prior, not the data, would set the
-per-bin posteriors; and the freedom erases the scale information that
-justifies fitting to $k \simeq 0.18\hMpc$ in the first place.
-\end{itemize}
-
-The counterterms follow the same two middle options: one
-$\alpha_0$ per group in the baseline (in model B, one $\alpha_2$ as
-well), plus a tilt per group in the pessimistic case, because the
-counterterm scale follows the size of the host halos (their
-Lagrangian radius), a population property that drifts with the
-selection as the calibrations do.  The stochastic amplitudes
-$\mathrm{SN}_0$ and, in model B, $\mathrm{SN}_2$ stay at one per
-group in both cases, with no tilt: the Poisson part $1/\bar{n}(z)$,
-with $\bar{n}$ the tracer number density, is known per bin and sits
-in the covariance, so only the non-Poisson fraction could drift, and
-the ladder tilts only what has a physical driver.
-
-The correlated prior extends naturally to the offsets: chunks of the
-same tracer (LRG1--3, ELG1--2) share selection physics, so a Gaussian
-prior correlated across those chunks, with the same exponential
-kernel in redshift as Eq.~\eqref{eq:kernel}, encodes ``neighboring
-chunks deviate together'' at second order.
-
-Table~\ref{tab:ladder} counts the parameters of the four
-configurations that Section~\ref{sec:recommendation} assembles: model
-A at $\kmax = 0.075\hMpc$ and model B at the shipped mask, each on
-the baseline and the pessimistic option.  For reference, the DESI DR1
-full-shape analysis uses seven nuisance parameters per tracer chunk,
-42 in total at $\kmax = 0.2\hMpc$ \cite{DESI2024V,DESI2024VII}, so
-model B baseline is that budget plus one $\bone$ tilt per chunk.
-
-\begin{table}
-\centering
-\footnotesize
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{lcccc}
-\toprule
- & A baseline & A pessimistic & B baseline & B pessimistic \\
-\midrule
-scale cut $\kmax$ [$h$/Mpc] & 0.075 & 0.075 & $\approx$0.18 & $\approx$0.18 \\
-linear bias, tilt per chunk (new) & 6 & 6 & 6 & 6 \\
-linear bias, per-bin residuals held by the prior & 64 (smooth) & 64 (rough) & 64 (smooth) & 64 (rough) \\
-$\btwo$, $\bs$ offsets & 12 & 24 (+tilt) & 12 & 24 (+tilt) \\
-$\alpha_0$ & 6 & 12 (+tilt) & 6 & 12 (+tilt) \\
-$\alpha_2$ & --- & --- & 6 & 12 (+tilt) \\
-$\mathrm{SN}_0$ & 6 & 6 & 6 & 6 \\
-$\mathrm{SN}_2$ & --- & --- & 6 & 6 \\
-\midrule
-new parameters & 94 & 112 & 106 & 130 \\
-bias-sector parameters without a tight prior, & & & & \\
-\quad total including the 6 existing amplitudes & 36 & 54 & 48 & 72 \\
-\bottomrule
-\end{tabular}
-\caption{The bias-sector parameter budget of the four configurations.
-The 64 residuals are the 76 per-bin deviations of
-Eq.~\eqref{eq:linear-perbin} minus the free amplitude and tilt
-directions of the six chunks; ``smooth'' and ``rough'' name the
-baseline and pessimistic kernels of Eq.~\eqref{eq:kernel}, whose
-$(\sigma_g, L)$ values Section~\ref{sec:recommendation} fixes.  The
-last row counts the 6 existing amplitudes $B_g$, so it is not a
-subset of the ``new'' row.}
-\label{tab:ladder}
-\end{table}
-
-\section{Recommendation}
-\label{sec:recommendation}
-
-Both models below are one-loop models.  Each carries the complete
-real-space one-loop Eulerian bias set of Eq.~\eqref{eq:pgg} ($\bone$,
-$\btwo$, $\bs$, $\bthree$), the $k^2$ counterterm $\alpha_0$ and the
-stochastic amplitude $\mathrm{SN}_0$; they differ in what is free.
-Model A ties the higher-order biases to the calibrations through the
-per-bin linear bias, with group offsets under modest priors; model B
-frees them and adds the redshift-space terms.
-
-\textbf{At $\kmax = 0.075\hMpc$} (the cut matched to the thin-bin
-radial resolution), the minimal defensible model per DESI chunk,
-called model A below, is
-\begin{itemize}
-\item $b_{1,i} = B_g(1+\delta_i)/D(z_i)$ per thin bin, the memory
-model of the correlated-prior note
-(Eqs.~\eqref{eq:linear-perbin} and \eqref{eq:kernel}): the amplitude
-$B_g$ and the tilt $s_g$ free with flat priors, one each per group,
-twelve parameters in total, and the residuals $\varepsilon_i$ under
-the exponential-kernel prior.  The baseline sets $\sigma_g = 3\%$ for
-BGS, sized to its flux-limit curvature, $\sigma_g = 1\%$ for the
-other groups, and $L = 0.2$.  The pessimistic choice sets
-$\sigma_g = 3\%$ in every group and $L = 0.05$, the redshift scale of
-local selection features such as the 4000\,\AA\ break crossing a
-filter edge;
-\item $b_{2,i}$ from the Lazeyras relation on $b_{1,i}$
-(Eq.~\eqref{eq:perbin-evolution}) plus a free
-offset $\Delta_{2,g}$, Gaussian prior of width $1.0$ centered on
-zero;
-\item $b_{s^2,i}$ from co-evolution on $b_{1,i}$ plus a free offset
-$\Delta_{s,g}$, Gaussian prior of width $0.5$ centered on zero (the
-width covers the co-evolution-versus-excursion-set spread at LRG
-biases);
-\item $\bthree$ fixed to co-evolution (or zero; the difference is
-inside the $\alpha_0$ freedom);
-\item one counterterm $\alpha_0$ per chunk, Gaussian prior centered on
-zero with the DESI rule rescaled to this cut: a $50\%$ correction at
-$\kmax = 0.075\hMpc$ means a width of
-$0.5/\kmax^2 \simeq 89\,h^{-2}\mathrm{Mpc}^2$;
-\item one stochastic amplitude $\mathrm{SN}_0$ per chunk, Gaussian
-prior of width twice the Poisson power, following DESI;
-\item the sampled $\sigma_v$ groups kept as the radial damping
-freedom, with the implementation study measuring whether they cover
-the dropped $\mu$-dependent terms at this cut.
-\end{itemize}
-The linear sector carries one amplitude per thin bin (76 in the
-shipped layout of equal comoving bin width
-$\Delta d_{\rm com} = 62$\,Mpc), constrained by the kernel prior in
-every direction except the flat amplitude $B_g$ and tilt $s_g$ of
-each group: twelve flat directions, with the remaining 64 residual
-combinations held by the prior.  The 24 higher-order parameters (four
-per chunk: $\Delta_{2,g}$, $\Delta_{s,g}$, $\alpha_0$,
-$\mathrm{SN}_0$) come on top, against DESI DR1's seven per tracer at
-$\kmax = 0.2\hMpc$; the pessimistic option of Section~\ref{sec:ladder}
-tilts the two offsets and $\alpha_0$ and reaches 42, seven per chunk
-(Table~\ref{tab:ladder}).  The reasoning: at
-this cut every correction is $1$--$3\%$ with mild scale dependence, so
-calibration-centered Gaussian freedom is enough, and the offsets keep
-the model honest about the calibrations without opening flat
-directions.
-
-The growth-tied linear bias $\bone(z) = B_g/D(z)$ with no deviations,
-the shape the shipped parameter files tie to, is not a defensible
-alternative.  The correlated-prior note shows that even a conserved
-population departs from that shape, by about $1\%$ per
-$\Delta z = 0.05$ through the bias continuity equation, and that
-selected samples drift more: the BGS flux limit moves the bias by
-about $22\%$ across its group (its sections ``The bias continuity
-equation, step by step'' and ``The BGS flux-limit bias model, step by
-step'').  The linear-bias fits of \texttt{notes/linear\_bias\_kmax}
-measure what the
-tying buys in the dark-energy figure of merit ${\rm FoM}(w_0, w_a)$,
-the inverse area of the error ellipse of the equation-of-state
-parameters $w_0$ and $w_a$, on DESI $C_\ell^{gg}$ alone at
-$\kmax = 0.075\hMpc$ and the $\Delta d_{\rm com} = 62$\,Mpc layout:
-the growth-tied prior gives $32.9$, the baseline prior $18.2$,
-the pessimistic prior $11.4$, and the free prior, one free amplitude
-per bin, $10.7$.  The factor of $1.8$ between the growth-tied and
-baseline-prior numbers rests on a rigidity the physics does not
-support: in the accuracy test of the linear-bias priors (defined in
-the correlated-prior note's section ``The accuracy test: the figure of
-bias''), a conserved galaxy population
-fitted with the growth-tied prior
-displaces $(w_0, w_a)$ by $11$--$21\sigma$, while the baseline and
-pessimistic priors keep the displacement below $\sigma/3$.
-
-\textbf{At $\kmax \simeq 0.15$--$0.2\hMpc$} (the shipped mask), the
-model, called model B below, keeps the per-bin linear bias
-$b_{1,i}$ with the memory model and widens the higher-order
-sector: the $\btwo$ and $\bs$ offsets with the calibration relations
-demoted to prior centers (widths of order 2 and 1), $\alpha_0$ at
-the DESI DR1 width $12.5\,h^{-2}\mathrm{Mpc}^2$, an explicit radial
-counterterm (the $\alpha_2\mu^2 k^2\plin$ term projected through the
-$j_\ell''$ transfer, or a validated $\sigma_v$-based equivalent) at
-the same DESI DR1 width, $\mathrm{SN}_0$ at twice the Poisson power,
-$\mathrm{SN}_2$ at the DESI DR1 width of five units of
-$f_{\rm sat}\sigma_v^2/\bar{n}$ (Section~\ref{sec:desi}), and the
-redshift-space one-loop question settled by measurement rather than
-assumption.  Counting the linear amplitude and tilt, the baseline
-option is eight parameters per chunk: the DESI DR1 budget of seven
-plus one $\bone$ tilt; the pessimistic option also tilts the offsets
-and both counterterms (Table~\ref{tab:ladder}).  The honest
-statement is that the real-space-loop shortcut is unvalidated at this
-cut: until a Fisher-bias test shows otherwise, headline numbers from
-the shipped mask carry a modeling systematic of the size of the
-$\alpha_2$-equivalent terms.  Sampling in a physical basis
-($\bone\sigma_8$-like combinations) is worth adopting at either cut,
-for DESI's reason: it tracks what the data constrain and reduces
-projection effects.
-
-In both configurations, the fiducial higher-order values are the
-co-evolution and Lazeyras values of Figure~\ref{fig:coev}, not imports
-of DESI chain values, for the reason
-Section~\ref{sec:verdict} ends with; and the covariance and Fisher
-machinery must adopt the same model as the data vector, including the
-stochastic sector.
-
-\section{Implementation in CoCoA}
-\label{sec:implementation}
-
-This section reports the implementation study that ran alongside this
-note: an inventory of what CoCoA/CosmoLike computes today for one-loop
-galaxy bias, the relation of the draft's CCL data vector to it, and
-the gaps against models A and B of
-Section~\ref{sec:recommendation}.  The study itself changed no code:
-the inventory and the gap table describe the code as the study found
-it, and the status list after the table records the model A work done
-since.  File references are to
-\texttt{external\_modules/code/cosmolike\_core/cosmolike} (the
-\texttt{lowrank\_fftlog} branch) and to
-\texttt{projects/lssty1xdesi}.
-
-\subsection{What CosmoLike computes}
-\label{sec:inventory}
-
-The one-loop machinery of Section~\ref{sec:oneloop} largely exists in
-the C code; what is missing sits at the edges (the cross pairs, the
-stochastic sector) and in what the project likelihood passes.
-
-\begin{itemize}
-\item \textbf{Loop templates.}  \texttt{get\_FPT\_bias} in
-\texttt{pt\_cfastpt.c} computes the five quadratic templates
-$P_{\delta_1\delta_2}$, $P_{\delta_2\delta_2}$, $P_{\delta_1 s_2}$,
-$P_{\delta_2 s_2}$, $P_{s_2 s_2}$ from thirteen C-FAST-PT
-$J$ terms at $z = 0$, rescaled by $D^4$ inside the projection
-integrands, exactly the separable structure of
-Section~\ref{sec:separability}; the tables are cosmology-dependent and
-rebuilt when the cosmology changes.  A second producer,
-\texttt{set\_bias\_PS} in \texttt{generic\_interface.cpp}, can install
-a Python FAST-PT table instead.  The $\bthree$ template
-$P_{\delta_1\psi}$ is the exception: \texttt{tab\_d1d3} in
-\texttt{pt\_cfastpt.h} is a fixed, cosmology-independent table,
-acceptable only while $\bthree = 0$.
-\item \textbf{Low-$k$ constants.}  The galaxy-clustering Limber
-integrand in \texttt{cosmo2D.c} subtracts the white-noise constants of
-Section~\ref{sec:realspace} ($P_{\delta_2\delta_2} - 2\sigma_4$ and
-partners, with $\sigma_4$ read as half the low-$k$ limit of
-$P_{\delta_2\delta_2}$): the \texttt{sub\_lowk}-on convention, against
-CCL's default.
-\item \textbf{Bias slots and spectra.}  \texttt{bias.c} carries
-per-bin parameters $\texttt{gb1}$, $\texttt{gb2}$, $\texttt{gbs2}$,
-$\texttt{gb3}$, $\texttt{gbmag}$, $\texttt{gbK}$.
-\texttt{C\_gg\_tomo\_limber\_work} assembles the auto integrand
-$\bone^2\pnl + 2\,\bone b_K k^2 \pnl$ plus $D^4$ times the six loop
-terms of Eq.~\eqref{eq:pgg}; \texttt{C\_gs\_tomo\_limber\_work} and
-\texttt{C\_gk\_tomo\_limber\_work} carry the matching
-galaxy--lensing cross terms
-($\tfrac{1}{2}\btwo P_{\delta_1\delta_2} +
-\tfrac{1}{2}\bs P_{\delta_1 s_2} + \tfrac{1}{2}\bthree
-P_{\delta_1\psi} + b_K k^2\pnl$).
-\item \textbf{Non-Limber engines.}
-\texttt{C\_gg\_lowrank\_decomp\_work}, the low-rank engine, builds
-its per-bin SVD of
-$\sqrt{P_g}$ from the complete one-loop Limber integrand, so the
-auto spectra are already exact in the one-loop $P_g$; it clamps
-$P_g \ge 10^{-15}\,\bone^2 P_\delta$ where the loop sum turns
-negative, the guard Section~\ref{sec:separability} discusses, since
-replaced by the exact treatment of Section~\ref{sec:whitenoise}.  The
-classic FKEM core (\texttt{C\_cl\_tomo}) projects only
-$\bone\plin$ exactly and moves everything else through its Limber
-difference, so its one-loop content is Limber-only: the failure mode
-with scale-dependent bias at thin bins that the draft paper
-describes.  The adjacent-bin cross pairs
-(\texttt{C\_gg\_cross\_tomo\_limber\_work}) stop with
-\texttt{log\_fatal} when second-order bias is active: not
-implemented.
-\item \textbf{Redshift-space distortions and stochastic terms.}
-Linear Kaiser projection (the $j_\ell''$ transfer) plus the
-$\sigma_v$ Fingers-of-God smearing of each $n(z)$; no one-loop
-redshift-space terms, no $\mu$-dependent counterterms, and no
-$\mathrm{SN}_0$ or $\mathrm{SN}_2$ slots anywhere.
-\item \textbf{Interface and likelihood.}
-\texttt{set\_nuisance\_bias\_fastpt} in
-\texttt{generic\_interface.cpp} (arguments \texttt{B1}, \texttt{B2},
-\texttt{B\_MAG}, \texttt{B3nl}, \texttt{BK}), bound as
-\texttt{set\_nuisance\_bias} in the project's
-\texttt{interface/interface.cpp}, takes no tidal argument:
-\texttt{set\_nuisance\_nonlinear\_bias} sets
-$\bs = -\tfrac{4}{7}(\bone - 1)$ per bin whenever $\btwo \ne 0$, the
-co-evolution relation of Eq.~\eqref{eq:coev} in the CCL
-normalization.  The project likelihood
-(\texttt{likelihood/desi\_cl.py}) passes linear bias only
-($\texttt{B2} = \texttt{B3nl} = \texttt{BK} = \texttt{B\_MAG} = 0$),
-so none of the machinery above is exercised by lssty1xdesi today.
-\item \textbf{Fisher and covariance.}  The Fisher module,
-\texttt{cosmolike\_lssty1xdesi\_fisher.py} under
-\texttt{interface/}, varies every
-declared \texttt{DESI\_} parameter, so new nuisances enter it
-automatically once the likelihood reads them; $C_\ell$ is linear in
-$\btwo$, $\bs$, $b_K$ and $\mathrm{SN}_0$ at fixed $\bone$ apart from
-the quadratic $\tfrac{1}{4}\btwo^2$ and $\tfrac{1}{4}\bs^2$ terms, so
-the new derivatives are cheap.  With $\btwo$ and $\bs$ following
-$b_{1,i}$ through Eq.~\eqref{eq:perbin-evolution}, the derivative
-with respect to a deviation $\delta_i$ also picks up the chain
-through $\btwo$ and $\bs$: the loop terms move with
-$d\btwo/d\bone \simeq 1.7$ and $d\bs/d\bone = -4/7$ times the change
-of $b_{1,i}$.  The covariance
-(\texttt{covariances/spectra\_cov.c}) carries linear bias only, on
-top of the open mismatch that it takes the raw chunk amplitudes
-instead of $B_g/D(z)$.
-\end{itemize}
-
-\subsection{The draft's data vector against CosmoLike}
-
-The two calculations share the six templates in the same
-normalization (CCL, FAST-PT and CosmoLike agree term by term).  They
-differ in three places.  First, the low-$k$ constants: CosmoLike
-subtracts them, and a CCL vector at the CCL default does not, so the
-two vectors differ by the white-noise term quantified in
-Section~\ref{sec:realspace} until the draft states its
-\texttt{sub\_lowk} setting.  Second, the $k^2$ term: the draft adds
-$\alpha_0 k^2\plin$ while CosmoLike has $2\,\bone b_K k^2\pnl$;
-matching them needs $\alpha_0 = 2\,\bone b_K$ at the level of the
-$k^2$ coefficient plus the $\plin$-versus-$\pnl$ relabeling
-(Section~\ref{sec:comparison}).  Third, the tidal bias: the interface
-fixes $\bs$ to co-evolution, so CosmoLike cannot take the draft
-table's tidal values; given Section~\ref{sec:verdict}, the
-co-evolution default is closer to the physical value than those
-entries.  The implementation study's independent check of that
-verdict is folded into Section~\ref{sec:verdict}.
-
-\subsection{Gaps against model A}
-
-Model A (Section~\ref{sec:recommendation}: the per-bin linear bias
-$b_{1,i}$ with the free tilt and the kernel prior; per chunk, the
-$\btwo$ and $\bs$ trends on $b_{1,i}$ with group offsets, $\bthree$
-from
-co-evolution or zero, one $\alpha_0$, one $\mathrm{SN}_0$, the
-$\sigma_v$ groups kept) decomposes into the following work items.
-
-\begin{center}
-\small
-\begin{tabular}{p{0.26\textwidth}p{0.30\textwidth}p{0.30\textwidth}}
-\toprule
-need & status & change \\
-\midrule
-per-bin linear bias with the memory model & the likelihood reads
-one \texttt{DESI\_B1\_}$n$ per thin bin; the shipped yamls tie them
-per group; the Fisher notebook already applies the kernel and memory
-prior precisions & a yaml grouping that samples every bin and one
-tilt per group, plus a cobaya external prior carrying the kernel
-Gaussian on the residuals (small, Python and yaml) \\
-$\btwo$ trend + offset per group & per-bin $\texttt{gb2}$ exists in
-C & likelihood only: compute per-bin values from $b_{1,i}$ and a new
-\texttt{DESI\_B2OFF} parameter per group in
-\texttt{desi\_cl.py} (small, Python) \\
-$\bs$ trend + offset & C slot exists; the interface forces
-co-evolution & add a tidal argument to \texttt{set\_nuisance\_bias},
-keeping the co-evolution default when absent; likelihood computes the
-per-bin values (small, C++ interface and Python) \\
-$\bthree$ & fixed template table & keep $\bthree = 0$ (the DESI
-baseline); make \texttt{tab\_d1d3} cosmology-dependent before ever
-freeing it \\
-$\alpha_0$ counterterm & $2\,\bone b_K k^2\pnl$ exists & reuse $b_K$
-with the stated mapping, or add a $k^2\plin$ variant for an exact
-match to the draft and DESI (small) \\
-$\mathrm{SN}_0$ per chunk & missing & new nuisance slot; the
-projection is the exact Eq.~\eqref{eq:sn-projection}, autos plus the
-overlap of Fingers-of-God-convolved adjacent kernels (small, C) \\
-non-Limber autos & low-rank engine already exact in the one-loop
-$P_g$ & none \\
-non-Limber adjacent cross pairs & \texttt{log\_fatal} with
-second-order bias & the main C task: each template separates as
-$D^2(z_1)D^2(z_2)$ (Section~\ref{sec:separability}), so one extra
-FFTLog projection per template, or an extension of the low-rank cross
-factors to the one-loop $P_g$, with the Limber subtraction rule
-unchanged \\
-classic FKEM & one-loop content Limber-only & use the low-rank engine
-on thin bins; document that classic FKEM is not valid with one-loop
-bias there \\
-covariance & linear bias only & add the one-loop $P_{gg}$ together
-with the $B_g/D(z)$ bias fix to \texttt{spectra\_cov.c} (medium) \\
-Fisher & prefix-based & none beyond the likelihood parameters \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\paragraph{Status of the gaps.}  The table records the starting
-point; the items below record the status of the code-side gaps after
-the model A work.
-\begin{itemize}
-\item \textbf{Model A: implemented end to end.}  The \texttt{desi\_cl}
-likelihood runs model A with the option \texttt{higher\_order\_bias: 1},
-and the example yamls
-\texttt{EXAMPLE\_\allowbreak EVALUATE\_\allowbreak MODEL\_\allowbreak A1}--\texttt{A4.yaml}
-set it up on the four bin layouts.  The Fisher notebook
-\texttt{EXAMPLE\_\allowbreak EVALUATE\_\allowbreak FISHER\_\allowbreak MODEL\_\allowbreak A.ipynb}
-builds its Fisher matrices, and \texttt{notes/correlated\_bias\_prior\_v2} reports the
-bias ladder and its accuracy test under model A.
-\item \textbf{Adjacent-bin cross pairs: implemented} in
-cosmolike\_core, where the pair spectra had stopped with
-\texttt{log\_fatal} under second-order bias.  The full output carries the
-bilinear one-loop pair spectrum: the auto's one-loop sum with each
-product of two biases shared between the two bins.  The density-only
-output, which the low-rank splice subtracts, is the geometric mean
-$W_i W_j\sqrt{P_{g,i}P_{g,j}}$, the high-$\ell$ limit of the low-rank
-pair term.  Checks: linear-bias vectors are bitwise unchanged with the
-low-rank, FKEM and Limber engines; a pair of two bins with identical
-$n(z)$ equals the polarization of the auto spectra (the bilinear form
-recovered from the quadratic one) to $10^{-14}$ of the one-loop
-increment; 1 and 8 threads give identical vectors.
-\item \textbf{Non-Limber autos: exact} (the cosmolike\_core change
-described in Section~\ref{sec:whitenoise}).  The
-low-rank engine projects the white-noise constant without a floor
-(Section~\ref{sec:whitenoise}).
-\item \textbf{Tidal bias: implemented.}  A new setter,
-\texttt{set\_nuisance\_bias\_fastpt\_tidal}, takes $\bs$ per bin; the
-co-evolution setter is unchanged.
-\item \textbf{$\mathrm{SN}_0$: implemented} in \texttt{desi\_cl.py} as
-the exact projection of Eq.~\eqref{eq:sn-projection} with the
-Fingers-of-God-convolved kernels, in units of each bin's Poisson
-power.  Cross pairs receive it only within one tracer sample: an LRG
-and an ELG bin at the same redshift are different galaxies and share
-no stochastic term.
-\item \textbf{$\alpha_0$: passed through the derivative-bias slot} as
-$b_K = \alpha_0/[2\bone(c/H_0)^2]$, with $c/H_0 = 2997.92\Mpch$,
-because CosmoLike's $k$ is in units of $H_0/c$.
-\item \textbf{$\alpha_0$ response: the low-rank engine is required.}
-FKEM moves every nonlinear term, the counterterm included, through its
-Limber difference, while the low-rank engine projects the counterterm
-without the Limber approximation.  On the $\Delta z = 0.05$ layout at
-$\kmax = 0.075\hMpc$ (at $z = 0$), the low-rank $\alpha_0$ response is
-$7.3$ times the Limber one at $\ell = 20$ and $1.26$ times at
-$\ell = 100$ (median over the kept autos), from the $k^2$-weighted
-radial modes of thin, sharp-edged bins.  It is converged, and the
-model A forecast uses this engine.
-\item \textbf{$\alpha_0$ beyond the cut: open.}  On the same layout
-the ultraviolet fraction of the $\alpha_0$ template on the kept bands
-is a median $0.076$
-(maximum $0.14$), above $\alpha = 0.05$ on every kept band, against a
-median $0.017$ for the fiducial model.  The cut was built on the
-linear model; whether to rebuild it on the one-loop model, templates
-included, is an open decision.
-\item \textbf{Negative $\alpha_0$ in chains: open.}  At
-$\alpha_0 = -88.9\,h^{-2}\mathrm{Mpc}^2$, one prior width below zero,
-$P_{gg} - P_\infty$ turns negative above
-$k \approx \bone/\sqrt{|\alpha_0|} \approx 0.14\hMpc$ and the
-low-rank engine floors $47\%$ of its grid, so its vector curves in
-$\alpha_0$ while FKEM's stays linear.  A Fisher forecast at
-$\alpha_0 = 0$ is unaffected; chains far from $\alpha_0 = 0$ need the
-loop taper or the positivity prior of Section~\ref{sec:whitenoise}.
-The appendix ``The counterterm: engines, scale cut and sign'' of
-\texttt{notes/correlated\_bias\_prior\_v2} gives the numbers of these
-three items.
-\item \textbf{$\bthree$: zero.}  Model A sets $\bthree = 0$ and
-requires the likelihood option \texttt{bias\_model} to be
-$[0,0,0,0,0,0]$ (a code of 1 sets $\bthree = \bone - 1$).
-CosmoLike's $\bthree$ template \texttt{tab\_d1d3} is a fixed,
-cosmology-independent table that disagrees with Python FAST-PT:
-$\Delta\chi^2 \approx 3.4$ on the $\Delta d_{\rm com} = 62$\,Mpc vector
-with $\bthree = \bone - 1$.
-\item \textbf{FAST-PT reference.}  With $\bthree = 0$, C-FAST-PT and
-Python FAST-PT agree to $\Delta\chi^2 \le 3.5\times10^{-5}$ on the
-$\Delta d_{\rm com} = 62$\,Mpc thin-bin vector, pairs included, so the
-C-FAST-PT sampling needs no retuning.  The comparison ran through the
-\texttt{fastpt} theory block (\texttt{IA\_code} 1) under the TATT
-intrinsic-alignment model (tidal alignment and tidal torquing), which
-for DESI $C_\ell^{gg}$ is equivalent to NLA (nonlinear alignment).
-Convergence: doubling the C-FAST-PT internal grid gives
-$\Delta\chi^2 \sim 10^{-8}$; \texttt{accuracyboost} 3--4 gives
-$\Delta\chi^2 \le 4.5\times10^{-3}$ on the one-loop part; the low-rank
-rank is converged at 5 (rank 5 to 12 moves $\Delta\chi^2$ by
-$10^{-10}$).  Open bug: \texttt{internal\_accuracyboost} $= 4$ breaks
-the C-FAST-PT bias tables ($\Delta\chi^2 \sim 10^{12}$).
-\item \textbf{Covariance: open.}  It still carries linear bias.
-\end{itemize}
-
-\subsection{Model B and the order of work}
-
-Model B widens the $\btwo$ and $\bs$ offset priors to the demoted
-calibrations (yaml work once model A is in) and adds the radial
-counterterm $\alpha_2$, projected with the $j_\ell''$ transfer like
-the Kaiser term, at the DESI DR1 width $12.5\,h^{-2}\mathrm{Mpc}^2$,
-the stochastic term $\mathrm{SN}_2$ at the DESI DR1 width of five
-units of $f_{\rm sat}\sigma_v^2/\bar{n}$, and the redshift-space
-one-loop terms.  CosmoLike has no redshift-space
-loop templates and FAST-PT's redshift-space terms are not in the C
-port, so the options are: absorb them in the sampled $\sigma_v$ plus
-an explicit $\alpha_2$-like counterterm and measure the Fisher bias
-against a full redshift-space model, or port the FAST-PT
-redshift-space templates (or an external $P(k,\mu)$ emulator).
-Model B is a research task, not an extension of model A.
-
-The recommended order:
-\begin{enumerate}
-\item yamls: a grouping that samples every \texttt{DESI\_B1\_}$n$
-and one tilt per group, plus the cobaya external prior carrying the
-kernel Gaussian on the residuals for chains;
-\item interface: free the tidal argument (co-evolution default), add
-the $\mathrm{SN}_0$ slot, state the $b_K$-to-$\alpha_0$ mapping;
-\item likelihood: the $\btwo$ and $\bs$ trends on $b_{1,i}$ with
-group offsets, $\alpha_0$, $\mathrm{SN}_0$, with the priors of
-Section~\ref{sec:recommendation};
-\item C: one-loop for the adjacent cross pairs through the separable
-$D^2(z_1)D^2(z_2)$ templates;
-\item validation: CosmoLike's Limber one-loop against CCL's
-\texttt{EulerianPTCalculator} with the same templates and the same
-\texttt{sub\_lowk} choice (the \texttt{ccl} conda environment carries
-pyccl and FAST-PT; \texttt{cocoapy311} carries neither), then the
-low-rank non-Limber against a brute-force Bessel integral for one
-thin pair;
-\item covariance: the one-loop $P_{gg}$ and the $B_g/D(z)$ bias fix
-together;
-\item model B only after a measured Fisher bias of the
-redshift-space loops.
-\end{enumerate}
 
 \appendix
 
@@ -1689,10 +1261,9 @@ the bias-parameter rotation in \cite{ChenVlahWhite2020}).  At linear
 order the Lagrangian bias dilutes as
 $\boneL(z) \propto 1/D(z)$, equivalently
 $\bone(z) - 1 \propto 1/D(z)$: the co-evolution statement and the
-project's constant-clustering-amplitude shape $B_g/D(z)$ coincide for
-the linear bias up to the additive 1.  At second order the evolved
-overdensity picks up, next to the gravitational $F_2$ kernel, the
-terms
+growth-tied shape $B_g/D(z)$ coincide for the linear bias up to the
+additive 1.  At second order the evolved overdensity picks up, next to
+the gravitational $F_2$ kernel, the terms
 \begin{equation}
 \delta_g^{(2)} \supset
  \left[\frac{\btwoL}{2} + \frac{4}{21}\boneL\right]\delta^2
@@ -1713,15 +1284,15 @@ DESI samples $(1+\boneL)\sigma_8(z_{\rm eff})$,
 $\btwoL\sigma_8^2$, $\bsL\sigma_8^2$ at
 $z_{\rm eff} = 0.510$.  Suppose the chain value of the first is
 $1.448$ and $\sigma_8(0.510) = 0.649$ at the fiducial cosmology.
-Then $\bone = 1.448/0.649 = 2.23$, and the co-evolution fiducials for
-the forecast are $\bs = -\tfrac{4}{7}(1.23) = -0.70$ and
-$\bthree = \tfrac{32}{315}(1.23) = +0.125$, with
+Then $\bone = 1.448/0.649 = 2.23$, and the calibrated fiducials are
+$\bs = -\tfrac{4}{7}(1.23) = -0.70$,
+$\bthree = \tfrac{32}{315}(1.23) = +0.125$ and
 $\btwo(\bone{=}2.23) = +0.34$ from Eq.~\eqref{eq:lazeyras}.  Using
-$1.448$ itself as an Eulerian bias, as the draft table does, is a
-$31\%$ error on $\bone$ and a factor $\bone^2$ error of $69\%$ on the
-leading term of $P_{gg}$, before the tidal-sign error enters.
+$1.448$ itself as an Eulerian bias, as the draft table does, puts
+$\bone$ $35\%$ low and the leading term $\bone^2\pnl$ of $P_{gg}$
+$58\%$ low, before the tidal-sign error enters.
 
-\section{The loop templates and their low-$k$ constants}
+\section{The loop templates and their low-\texorpdfstring{$k$}{k} constants}
 \label{app:loops}
 
 With $F_2$ and $S_2 = \mu_{12}^2 - \tfrac{1}{3}$ the standard
@@ -1748,17 +1319,16 @@ $P_{\delta_2\delta_2}\to 2\sigma_4$,
 $P_{\delta_2 s_2}\to \tfrac{4}{3}\sigma_4$,
 $P_{s_2 s_2}\to \tfrac{8}{9}\sigma_4$ with
 $\sigma_4 = \int_{\mathbf{q}}\plin^2(q)$, white-noise constants that
-renormalize into the stochastic sector; CCL's \texttt{sub\_lowk}
-subtracts exactly these three constants in the combinations shown in
-Eq.~\eqref{eq:pgg}.  The third-order template is
+renormalize into the stochastic sector; CCL's \texttt{sub\_lowk} and
+CosmoLike subtract exactly these three constants in the combinations
+of Eq.~\eqref{eq:pgg}.  The third-order template is
 $\sigma_3^2(k)\plin(k)$ with the filter $\sigma_3^2$ defined through
 the $I_R$ kernel of \cite{Saito2014}; its co-evolution-weighted
 contribution is the $\bone\bthree$ curve of Figure~\ref{fig:sizes}.
-The unequal-time factors quoted in Section~\ref{sec:separability}
-follow from the perturbative order of each side of the correlator:
-22-type products of two second-order fields carry
-$D^2(z_1)D^2(z_2)$, 13-type products of a third-order and a linear
-field carry the symmetrized $D^3 D$.
+The unequal-time factors of Section~\ref{sec:separability} follow from
+the perturbative order of each side of the correlator: 22-type
+products of two second-order fields carry $D^2(z_1)D^2(z_2)$, 13-type
+products of a third-order and a linear field the symmetrized $D^3 D$.
 
 \section{Numerical setup for the figures}
 \label{app:numerics}
@@ -1767,39 +1337,82 @@ Every figure of this note lives in its own folder under
 \texttt{plots/}, named after the figure, with its data
 (\texttt{data.json}) and the script that draws it from those data
 alone; \texttt{plots/make\_figure\_data.py} writes every
-\texttt{data.json}.
+\texttt{data.json}, in the group's \texttt{ccl} conda environment
+(CAMB 1.6.5 and FAST-PT 4.0; \texttt{cocoapy311} carries neither).
 
 Figures~\ref{fig:coev}, \ref{fig:draft-check}, \ref{fig:sizes} and
-\ref{fig:poisson}.  Cosmology: the project fiducial,
-$\Omega_m = 0.3$, $\Omega_b = 0.04$, $h = 0.6732$,
-$10^9 A_s = 2.1$, $n_s = 0.966$, massless neutrinos, giving
-$\sigma_8(0) = 0.843$.  Linear and halofit spectra from CAMB 1.6.5,
-halofit in the Takahashi version the likelihood uses;
-loop templates from FAST-PT 4.0 on a 1200-point logarithmic grid with
-low- and high-$k$ extrapolation and a FFTLog window of $0.75$,
-mirroring CCL's \texttt{EulerianPTCalculator} defaults; growth factors
-from the evolution of the $k = 0.05\,\mathrm{Mpc}^{-1}$ mode.  The
-packages come from the group's \texttt{ccl} conda environment (pyccl
-3.3.3 is present there for cross-checks; the \texttt{cocoapy311}
-environment has neither fastpt nor pyccl).  Thin-bin densities for
-Figure~\ref{fig:poisson}: the project files
-\texttt{data/lssty1xdesi\_desi\_dr3\_ngal.txt} (surface density per
-bin) and \texttt{\ldots\_bins.txt} (bin mean redshifts), converted to
-three-dimensional densities with
-$\bar{n} = n_{2D}\,/(\chi^2\,\Delta\chi)$ at
-$\Delta\chi = 62.28$\,Mpc.  The $\sigma_8(z_{\rm eff})$ values of
-Figure~\ref{fig:draft-check} use the same cosmology; the DESI fiducial
-differs from it by a few percent in $\sigma_8$, which moves the
-implied biases coherently by the same few percent and does not affect
-the identification.
+\ref{fig:poisson} use the project fiducial: $\Omega_m = 0.3$,
+$\Omega_b = 0.04$, $h = 0.6732$, $10^9 A_s = 2.1$ with $A_s$ the
+primordial scalar amplitude, $n_s = 0.966$, massless neutrinos, giving
+$\sigma_8(0) = 0.843$.  The linear spectrum and $\pnl$ come from CAMB,
+$\pnl$ in the Takahashi halofit the likelihood yamls set (CAMB's
+default nonlinear model, HMcode-2020, moves the percentages of
+Figures~\ref{fig:sizes} and \ref{fig:poisson} by at most $0.19$
+points).  The loop templates come from FAST-PT on a 1200-point
+logarithmic grid with low- and high-$k$ extrapolation and an FFTLog
+window of $0.75$, CCL's \texttt{EulerianPTCalculator} defaults; growth
+factors from the evolution of the $k = 0.05\,\mathrm{Mpc}^{-1}$ mode.
+The thin-bin densities of Figure~\ref{fig:poisson} come from the
+project files \texttt{data/lssty1xdesi\_desi\_dr3\_ngal.txt} (surface
+density per bin) and \texttt{\ldots\_bins.txt} (bin mean redshifts),
+converted with $\bar{n} = n_{2D}/(\chi^2\Delta\chi)$ at
+$\Delta\chi = 62.28$\,Mpc.  The DESI fiducial differs from this
+cosmology by a few percent in $\sigma_8$, which moves the implied
+biases of Figure~\ref{fig:draft-check} coherently by the same few
+percent and does not affect the identification.
 
 Figure~\ref{fig:kneg} and the $\sigma_4$ of Eq.~\eqref{eq:pinf} use
 the likelihood's evaluation cosmology instead: the same parameters
 with $n_s = 0.96605$ and one massive neutrino of $0.06$\,eV inside
 $\Omega_m$, the linear spectrum on a 2000-point logarithmic grid up to
 $40\hMpc$, and the growth factor from the ratio of the linear spectra
-at $k = 10^{-4}\hMpc$.  The massless set-up above gives a $\sigma_4$
-larger by $7\%$ and values of $k_{\rm neg}$ within $2\%$ of these.
+at $k = 10^{-4}\hMpc$.  The massless setup gives a $\sigma_4$ larger
+by $7\%$ and values of $k_{\rm neg}$ within $2\%$ of these.
+
+\section{Open issues}
+\label{app:open}
+
+\begin{itemize}
+\item \textbf{The covariance's one-loop terms are Limber.}  The
+covariance's low-$\ell$ non-Limber recompute is linear, so in the
+lowest bands of thin bins its one-loop part is the Limber one, an
+error of at most $1.3\%$ of $C_\ell$.
+\item \textbf{The scale cut was built on the linear model.}  The
+UV-fraction cut was not rebuilt on the one-loop model.  On
+$\Delta z = 0.05$ at $\kmax = 0.075\hMpc$ the UV fraction of the
+$\alpha_0$ template is a median $0.076$ (maximum $0.14$) on the kept
+bands, above the threshold of $0.05$, and about half of each bin's
+$\SNt$ kernel comes from $k_\parallel$ above the bin's own cut: part of
+what the fit learns about $\alpha_0$ and $\SNt$ comes from scales the
+cut is meant to exclude.
+\item \textbf{Positivity far from the fiducial.}  The low-rank engine
+floors $P_{gg} - P_\infty$ where it turns negative.  At
+$\alpha_0 = -88.9\aunit$, one model A width below zero, that happens
+above $k \approx \bone/\sqrt{|\alpha_0|} \approx 0.14\hMpc$ on $47\%$
+of its grid, and the vector curves in $\alpha_0$ while FKEM's stays
+linear; on the dense BGS bins at model B's cuts it happens once
+$\btwo$ sits a unit below the calibration
+(Section~\ref{sec:whitenoise}).  The Fisher forecast at the fiducial is
+unaffected, but a chain that reaches such points leaves the validated
+model.  The remedies, a taper of the loop terms above the scale where
+one-loop perturbation theory is trusted or a positivity prior on
+$P_{gg}$, are not implemented.
+\item \textbf{The $\bthree$ template is wrong.}  CosmoLike's C-FASTPT
+$\bthree$ template (\texttt{tab\_d1d3} in \texttt{pt\_cfastpt.h}) is a
+fixed, cosmology-independent table that disagrees with Python FAST-PT
+($\Delta\chi^2 \approx 3.4$ on the $62$\,Mpc vector with
+$\bthree = \bone - 1$), so the model sets $\bthree = 0$.
+\item \textbf{No redshift-space one-loop terms.}  CosmoLike has none,
+and FAST-PT's redshift-space templates are not ported to C: for the
+$\mu$-dependent loop physics model B relies on the sampled
+Fingers-of-God $\sigma_v$ and on $\alpha_2$.
+\item \textbf{Adjacent cross spectra see the shared edge.}  The cross
+spectra of adjacent thin bins are sensitive to small-scale radial
+physics at the shared edge, as $\SNt$ shows
+(Section~\ref{sec:stochastic-projection}).  Models A and B carry $\SNt$
+for that reason; any other radial physics on that scale reaches the
+cross spectra the same way.
+\end{itemize}
 
 \begin{thebibliography}{99}
 
@@ -1820,11 +1433,6 @@ arXiv:1405.1447.
 T.~Lazeyras, C.~Wagner, T.~Baldauf and F.~Schmidt,
 \emph{Precision measurement of the local bias of dark matter halos},
 arXiv:1511.01096.
-
-\bibitem{DJS2018}
-V.~Desjacques, D.~Jeong and F.~Schmidt,
-\emph{Large-scale galaxy bias},
-arXiv:1611.09787.
 
 \bibitem{ChenVlahWhite2020}
 S.-F.~Chen, Z.~Vlah and M.~White,
@@ -1866,8 +1474,14 @@ J.~Asorey, M.~Crocce, E.~Gazta\~naga and A.~Lewis,
 \emph{Recovering 3D clustering information with angular correlations},
 arXiv:1207.6487.
 
+\bibitem{FangKEM2020}
+X.~Fang, E.~Krause, T.~Eifler and N.~MacCrann,
+\emph{Beyond Limber: efficient computation of angular power spectra
+for galaxy clustering and weak lensing},
+arXiv:1911.11947.
+
 \bibitem{Saraivanov2026}
-E.~Saraivanov et al.,
+E.~Saraivanov, H.~Rubira, V.~Miranda and T.~Eifler,
 \emph{Towards the two-loop EFTofLSS in galaxy lensing surveys},
 arXiv:2603.13031.
 
