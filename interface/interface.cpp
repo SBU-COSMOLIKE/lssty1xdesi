@@ -566,6 +566,15 @@ PYBIND11_MODULE(cosmolike_lssty1xdesi_interface, m)
       py::arg("BK").none(false)
     );
 
+  m.def("set_nuisance_bias_alpha2",
+      &cosmolike_interface::set_nuisance_bias_alpha2,
+      "Set the per-bin redshift-space counterterm alpha_2 in h^-2 Mpc^2 "
+      "(DESI DR1 convention, arXiv:2404.07312: the galaxy power gains "
+      "(b1 + f mu^2) f alpha_2 mu^2 k^2 P_lin, with mu the cosine to the "
+      "line of sight and f the growth rate); zeros switch the term off",
+      py::arg("A2").none(false)
+    );
+
   m.def("set_nuisance_shear_calib",
       &cosmolike_interface::set_nuisance_shear_calib,
       "Set nuisance shear calibration amplitudes",
