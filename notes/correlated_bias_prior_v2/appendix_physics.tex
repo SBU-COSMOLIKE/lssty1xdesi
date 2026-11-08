@@ -19,18 +19,16 @@ line.  In the appendices $b_i$ is the linear bias $b_{1,i}$ of bin $i$.
 The growth-tied model sets $b_i = B_g/D(\bar{z}_i)$, with one free
 amplitude $B_g$ per group.  The kernel model multiplies it by a
 fractional deviation $\delta_i$,
-\begin{equation}
-  b_i \;=\; \frac{B_g}{D(\bar{z}_i)}\,\bigl(1 + \delta_i\bigr),
+\begin{align}
+  b_i &\;=\; \frac{B_g}{D(\bar{z}_i)}\,\bigl(1 + \delta_i\bigr),
   \label{eq:model}
-\end{equation}
-with $B_g$ still free (flat prior).  The deviations receive a Gaussian
-prior that is correlated inside a group and zero across groups,
-\begin{equation}
+  \\
   \bigl\langle \delta_i\,\delta_j \bigr\rangle
-  \;=\; \sigma_g^2\,
-  \exp\!\left(-\,\frac{|\bar{z}_i - \bar{z}_j|}{L}\right).
+  &\;=\; \sigma_g^2\,
+  \exp\!\left(-\,\frac{|\bar{z}_i - \bar{z}_j|}{L}\right),
   \label{eq:priorkernel}
-\end{equation}
+\end{align}
+with $B_g$ still free (flat prior) and the prior zero across groups.
 In the Fisher matrix the convenient parameters are the per-bin
 amplitudes
 \begin{equation}
@@ -50,28 +48,23 @@ within one group is
   \label{eq:covdef}
 \end{equation}
 with $\sigma_\beta$ the spread of one amplitude, in units of a bias, and
-$\mathsf{R}$ the dimensionless correlation matrix, with ones on the
-diagonal.
+$\mathsf{R}$ the dimensionless correlation matrix.
 
 \subsection{What $\sigma_g$ and $L$ mean}
 \label{sec:jump}
 
 The diagonal of the kernel gives the wander of a single bin,
-$\mathrm{Var}(\delta_i) = \sigma_g^2$: $\sigma_g$ sets how far any one
-bin may drift from the group's trend.  The correlation coefficient of
-two bins follows from the same kernel,
+$\mathrm{Var}(\delta_i) = \sigma_g^2$.  The correlation coefficient of
+two bins at separation $\Delta z = |\bar{z}_i - \bar{z}_j|$ is
 \begin{equation}
   r \;=\;
   \frac{\langle \delta_i \delta_j \rangle}
        {\sqrt{\langle \delta_i^2 \rangle\,\langle \delta_j^2 \rangle}}
-  \;=\; e^{-\Delta z / L},
+  \;=\; e^{-\Delta z / L} ,
   \label{eq:rdef}
 \end{equation}
-with $\Delta z = |\bar{z}_i - \bar{z}_j|$ the bin separation: $\sigma_g$
-cancels, so the correlation is set by the separation and $L$ alone.
-The jump between the two bins has variance
-$\mathrm{Var}(\delta_i) + \mathrm{Var}(\delta_j)
-- 2\,\mathrm{Cov}(\delta_i, \delta_j)$,
+set by the separation and $L$ alone.  The jump between the two bins has
+variance
 \begin{equation}
   \mathrm{Var}(\delta_i - \delta_j)
   \;=\;
@@ -81,131 +74,94 @@ $\mathrm{Var}(\delta_i) + \mathrm{Var}(\delta_j)
   \quad (\Delta z \ll L).
   \label{eq:jumpvar}
 \end{equation}
-So $L$ sets the correlation, $\sigma_g$ the wander, and together they
-set the jump a thin bin may take relative to its neighbor.  At small
-separations the jump variance grows linearly with $\Delta z$, as the
-distance walked by a random walker grows linearly in time: below $L$
-the deviation curve $\delta(z)$ looks like a random walk, and only
-beyond $L$ does the finite wander pull it back.
-
-\paragraph{Worked example.}
-Neighbors at $\Delta z = 0.02$ with $L = 0.05$ have
-$\Delta z / L = 0.4$ and $r = e^{-0.4} = 0.670$.  The exact rms jump of
-Eq.~\eqref{eq:jumpvar} is $\sigma_g \sqrt{2\,(1 - 0.670)} =
-0.81\,\sigma_g$, and the small-separation form gives
-$\sigma_g\sqrt{0.8} = 0.89\,\sigma_g$.  The approximation overestimates
-because $x = \Delta z/L = 0.4$ is not small: $x$ exceeds $1 - e^{-x}$
-already at second order ($x^2/2$), by about twenty percent here, and
-the square root halves that.
+At small separations the jump variance grows linearly with
+$\Delta z$, as for a random walk; only beyond $L$ does the finite
+wander pull the deviation back.  For neighbors at $\Delta z = 0.02$
+with $L = 0.05$, $r = e^{-0.4} = 0.670$ and the exact rms jump is
+$0.81\,\sigma_g$; the small-separation form gives $0.89\,\sigma_g$,
+because $\Delta z/L = 0.4$ is not small.
 
 \subsection{The free group amplitude and the projection}
 \label{sec:projintro}
 
-A plain Gaussian prior with covariance $\Cov$ would penalize moving all
-$\beta_i$ of a group up or down together, but that uniform shift is
-exactly the free amplitude $B_g$, which the growth-tied model never
-constrains.  The repair removes the uniform direction from the prior:
-with $\ones$ the ones vector of the group's $n$ bins, the prior
-precision of a group's amplitudes is the projection
+A plain Gaussian prior with covariance $\Cov$ would charge for moving
+all $\beta_i$ of a group together, but that uniform shift is the free
+amplitude $B_g$.  The repair removes the uniform direction: with
+$\ones$ the ones vector of the group's $n$ bins, the prior precision
+of a group's amplitudes is
 \begin{equation}
   \Prec \;=\; \Cov^{-1}
   \;-\;
   \frac{\Cov^{-1}\ones\,\ones\T \Cov^{-1}}{\ones\T \Cov^{-1} \ones}.
   \label{eq:projdef}
 \end{equation}
-Four statements carry the construction.  $\Prec\,\ones = 0$: a uniform
-shift of the whole group costs nothing.  A pure shape change keeps
-exactly the penalty the plain prior gives it.  $\Prec$ is positive
-semidefinite with rank $n - 1$: one direction is free and the other
-$n - 1$ are charged.  And $\Prec$ is precisely the prior obtained by
-sampling $B_g$ with a flat prior and marginalizing it.
-Appendix~\ref{sec:twobins} computes $\Prec$ for two bins,
-Appendix~\ref{sec:threeviews} derives it by marginalization, and
-Appendix~\ref{sec:general} treats $n$ bins.  Across groups the prior is
-zero, so the full prior precision is block diagonal, one projected
-block per group (Appendix~\ref{sec:fisher}).
+$\Prec\,\ones = 0$, so a uniform shift costs nothing; a pure shape
+change keeps the penalty of the plain prior; $\Prec$ is positive
+semidefinite with rank $n - 1$; and $\Prec$ is exactly the prior
+obtained by sampling $B_g$ with a flat prior and marginalizing it.
+Appendices~\ref{sec:twobins}, \ref{sec:threeviews} and
+\ref{sec:general} show these for two bins, by marginalization, and for
+$n$ bins.  Across groups the prior is zero, so the full prior
+precision is block diagonal.
 
 \section{Which $L$ and $\sigma_g$ are physical}
 \label{sec:physical}
 
 One case of bias evolution can be solved in closed form: a population
-whose members are conserved.  This appendix derives that case,
-measures its deviation from the growth-tied trend, lists what breaks
-conservation in a selected sample, and weighs the published
-measurements.
+whose members are conserved.  This appendix derives it, measures its
+deviation from the growth-tied trend, lists what breaks conservation in
+a selected sample, and weighs the published measurements.
 
 \subsection{A conserved population: the bias continuity equation}
 \label{sec:conserved}
 
-Take a sample whose membership never changes, assume the galaxies move
-with the matter on large scales (no velocity bias), and work in linear
-theory.  The matter overdensity $\delta_m$ and the galaxy-count
-overdensity $\delta_{\rm gal}$ then obey the same linear continuity
-equation with the same peculiar velocity field, so the excess clumping
-$\delta_{\rm gal} - \delta_m$ is frozen (Appendix~\ref{app:continuity}
-spells out every step).  With $b_c$ the linear bias
-($\delta_{\rm gal} = b\,\delta_m$) at a reference redshift $z_c$ and
-$\delta_m \propto D$, carrying the frozen difference to any other
-redshift gives~\cite{Fry1996}
+Take a sample whose membership never changes, with no velocity bias,
+in linear theory.  The matter overdensity $\delta_m$ and the
+galaxy-count overdensity $\delta_{\rm gal}$ then obey the same
+continuity equation with the same velocity field, so the excess
+clumping $\delta_{\rm gal} - \delta_m$ is frozen
+(Appendix~\ref{app:continuity}).  With $b_c$ the linear bias at a
+reference redshift $z_c$ and $\delta_m \propto D$, the frozen
+difference gives~\cite{Fry1996}
 \begin{equation}
   b(z) - 1
   \;=\;
-  \bigl(b_c - 1\bigr)\,\frac{D(z_c)}{D(z)} .
+  \bigl(b_c - 1\bigr)\,\frac{D(z_c)}{D(z)} :
   \label{eq:fry}
 \end{equation}
-The excess clumping set when the galaxies formed stays fixed while the
-matter clustering grows underneath it, so the bias decays toward one
-with time.  Tegmark and Peebles~\cite{TegmarkPeebles1998} find the same
-decay for stochastic bias (Appendix~\ref{app:continuity}).
-
-The growth-tied shape $b = B/D$ freezes a different quantity: constant
-$b\,D$ means $\delta_{\rm gal} = b\,\delta_m \propto B$, a galaxy
-clustering amplitude that does not grow.  A conserved population never
-does that.  Constant $b\,D$ instead describes a selection that picks,
-at each redshift, a different and rarer set of objects, whose stronger
-clumping compensates the smaller $D$.
+the excess set at formation stays fixed while the matter clustering
+grows, so the bias decays toward one.  The growth-tied shape freezes a
+different quantity: constant $b\,D$ means a galaxy clustering amplitude
+$b\,\delta_m$ that does not grow, which describes a selection that
+picks, at each redshift, a different and rarer set of objects.
 
 \subsection{The deviation from the growth-tied trend}
 \label{sec:tilt}
 
 Place the reference at a group's midpoint $z_c$, with
-$b_c = B/D(z_c)$ from the group's fiducial amplitude $B$.  The ratio of
-the conserved bias, Eq.~\eqref{eq:fry}, to the growth-tied bias
-$b_c\,D(z_c)/D(z)$ defines the deviation $\delta(z)$ of
-Eq.~\eqref{eq:model}:
+$b_c = B/D(z_c)$.  The ratio of Eq.~\eqref{eq:fry} to the growth-tied
+bias $b_c\,D(z_c)/D(z)$ gives the deviation of Eq.~\eqref{eq:model},
 \begin{equation}
-  1 + \delta(z)
-  \;=\;
-  \frac{D(z)/D(z_c) + b_c - 1}{b_c},
-  \qquad
   \delta(z)
   \;=\;
-  \frac{D(z)/D(z_c) - 1}{b_c} .
+  \frac{D(z)/D(z_c) - 1}{b_c} ,
   \label{eq:tilt}
 \end{equation}
-At the midpoint $\delta = 0$; at lower redshift the matter has grown,
-so $\delta > 0$, and at higher redshift $\delta < 0$.  Because $D(z)$
-is smooth, $\delta(z)$ is nearly linear across a group.
-
-In flat $\Lambda$CDM with $\Omega_m = 0.3$ and the project's fiducial
-amplitudes, Eq.~\eqref{eq:tilt} gives $\delta = +5.3\%$ and $-4.9\%$ at
-the ends of BGS ($B = 1.34$, $0.1 < z < 0.4$, $b_c = 1.5$), $+2.4\%$ and
-$-2.2\%$ at the ends of LRG1 ($B = 1.70$, $0.4 < z < 0.6$, $b_c = 2.2$),
-and $+2.6\%$ and $-2.3\%$ at the ends of LRG3 ($B = 1.70$,
-$0.8 < z < 1.1$, $b_c = 2.7$).  Between neighbors the conserved
-deviation changes by $0.3$--$0.7\%$ at $\Delta z = 0.02$ and by
-$0.8$--$1.7\%$ at $\Delta z = 0.05$.  In the language of the prior it is
-a smooth tilt: coherent over the whole group, so $L$ longer than the
-group width.  For comparison, the neighbor rms of
+zero at the midpoint, positive at lower redshift and negative at higher
+redshift, and nearly linear across a group because $D$ is smooth.  In
+flat $\Lambda$CDM with $\Omega_m = 0.3$ and the project's fiducial
+amplitudes it is $+5.3\%$ and $-4.9\%$ at the ends of BGS ($B = 1.34$,
+$0.1 < z < 0.4$, $b_c = 1.5$), $+2.4\%$ and $-2.2\%$ at the ends of LRG1
+($B = 1.70$, $0.4 < z < 0.6$, $b_c = 2.2$), and $+2.6\%$ and $-2.3\%$ at
+the ends of LRG3 ($B = 1.70$, $0.8 < z < 1.1$, $b_c = 2.7$).  Between
+neighbors it changes by $0.3$--$0.7\%$ at $\Delta z = 0.02$ and
+$0.8$--$1.7\%$ at $\Delta z = 0.05$: a smooth tilt, coherent over the
+whole group.  For comparison, the neighbor rms of
 Eq.~\eqref{eq:jumpvar} at $\Delta z = 0.02$ (and $0.05$) is $2.4\%$
 ($3.4\%$) for $\sigma_g = 3\%$ and $L = 0.05$, and $0.44\%$ ($0.67\%$)
-for $\sigma_g = 1\%$ and $L = 0.2$.
-
-Figure~\ref{fig:theorybz} draws these shapes.  In every group the
-dashed conserved curve is flatter than the solid $B_g/D$, because the
-frozen excess clumping is divided by a growing $D$.  On BGS the
-dash-dot flux-limit curve is the opposite: much steeper than $B_g/D$,
-and convex.
+for $\sigma_g = 1\%$ and $L = 0.2$.  Figure~\ref{fig:theorybz} draws
+these shapes: the conserved curve is flatter than $B_g/D$ in every
+group, while the BGS flux-limit curve is much steeper, and convex.
 
 \begin{figure}[htbp]
   \centering
@@ -220,114 +176,87 @@ and convex.
 \subsection{What breaks conservation in a selected sample}
 \label{sec:selection}
 
-\paragraph{Threshold drift.}
-A target selection holds a roughly constant comoving density until the
-flux limit bites; past that redshift the sample keeps only its brighter
-members, which sit in more massive halos and are more biased.  The
-bias change is smooth, with $L$ comparable to the group width.
-
-\paragraph{Color-selection features.}
-Selection cuts in color space can respond quickly in redshift when a
-spectral feature crosses a filter edge.  The sharpest common feature is
-the $4000$~\AA\ break: a filter edge $100$--$200$~\AA\ wide maps to
-$\Delta z \approx 0.03$--$0.05$ at that break, and photometric scatter
-smears the transition further.  The crossing is known; its amplitude in
-bias is unmeasured.
-
-\paragraph{Mergers.}
-Two members that merge become one, so the number of galaxies is not
-conserved even before any selection acts.
-
-\paragraph{Emission-line selection.}
-An ELG enters the sample while its emission lines are strong, so the
-membership follows the star-formation phase of each galaxy rather than
-one conserved set of objects.
+\begin{itemize}
+  \item \textbf{Threshold drift.}  A selection holds a roughly constant
+    comoving density until the flux limit bites; beyond, it keeps only
+    its brighter, more biased members.  The change is smooth, with $L$
+    comparable to the group width.
+  \item \textbf{Color-selection features.}  A spectral feature crossing
+    a filter edge moves a color cut quickly in redshift.  The sharpest
+    is the $4000$~\AA\ break: a filter edge $100$--$200$~\AA\ wide maps
+    to $\Delta z \approx 0.03$--$0.05$.  The crossing is known; its
+    amplitude in bias is unmeasured.
+  \item \textbf{Mergers} turn two members into one.
+  \item \textbf{Emission-line selection.}  An ELG belongs to the sample
+    while its lines are strong, so membership follows the
+    star-formation phase.
+\end{itemize}
 
 \subsection{What the measurements say}
 \label{sec:evidence}
 
-Each statement below carries a tag: \emph{measured} (read from the
-cited source), \emph{derived} (computed here from measured inputs) or
-\emph{assumed} (a judgment not backed by a measurement).
-Equation~\eqref{eq:fry} is from Fry~\cite{Fry1996}, which has no arXiv
-record; Tegmark and Peebles~\cite{TegmarkPeebles1998} (section ``After
-the galaxy formation epoch'') rederive it.
+Each statement is tagged \emph{measured} (read from the cited source),
+\emph{derived} (computed here from measured inputs) or \emph{assumed}.
+Equation~\eqref{eq:fry} is from Fry~\cite{Fry1996};
+Tegmark and Peebles~\cite{TegmarkPeebles1998} rederive it.
 
 \paragraph{Massive red galaxies follow the conserved shape.}
-\begin{itemize}
-  \item Wake et al.~\cite{Wake2008}: SDSS and 2SLAQ LRGs at
-    $0.19 < z < 0.55$, matched in color and luminosity, show no
-    significant evolution of the clustering amplitude and a merger rate
-    of $7.5 \pm 2.3\%$ over that range, about $2.4\%$ per Gyr
-    (measured).
-  \item Tojeiro et al.~\cite{Tojeiro2012}: BOSS progenitors of the SDSS
-    LRGs, weighted by their fossil record, merge at $2 \pm 1.5\%$ per
-    Gyr and cluster as the continuity equation predicts (measured).
-  \item Guo et al.~\cite{Guo2013}: CMASS samples of fixed comoving
-    density at $0.43 < z < 0.7$ cluster like a conserved population
-    under gravity (measured).
-  \item Zhou et al.~\cite{Zhou2021}: the bias of DESI-like LRGs in
-    photometric bins of $\Delta z \approx 0.1$ stays within
-    $\pm 2.3\%$ of the constant clustering amplitude $b = 1.5/D$ below
-    $z = 0.83$, with the highest bin $6.4 \pm 6.4\%$ high (measured
-    biases, residuals derived; Figure~\ref{fig:zhou}).
-\end{itemize}
+SDSS and 2SLAQ LRGs at $0.19 < z < 0.55$, matched in color and
+luminosity, show no significant evolution of the clustering amplitude
+and merge at $7.5 \pm 2.3\%$ over that range, about $2.4\%$ per
+Gyr~\cite{Wake2008} (measured).  The BOSS progenitors of the SDSS LRGs
+merge at $2 \pm 1.5\%$ per Gyr and cluster as the continuity equation
+predicts~\cite{Tojeiro2012}, and CMASS samples of fixed comoving
+density at $0.43 < z < 0.7$ cluster like a conserved
+population~\cite{Guo2013} (measured).  The bias of DESI-like LRGs in
+photometric bins of $\Delta z \approx 0.1$ stays within $\pm 2.3\%$ of
+$b = 1.5/D$ below $z = 0.83$, with the highest bin $6.4 \pm 6.4\%$
+high~\cite{Zhou2021} (measured biases, residuals derived;
+Figure~\ref{fig:zhou}).
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.56\linewidth]{plots/zhou_lrg_bias/zhou_lrg_bias.pdf}
+  \includegraphics{plots/zhou_lrg_bias/zhou_lrg_bias.pdf}
   \caption{The measured bias of DESI-like LRGs~\cite{Zhou2021} as a
-    fractional residual around the constant clustering amplitude
-    $b = 1.5/D$, with $D$ at each photometric bin's center (flat
-    $\Lambda$CDM, $\Omega_m = 0.3$); horizontal bars: the bin edges.}
+    fractional residual around $b = 1.5/D$, with $D$ at each
+    photometric bin's center (flat $\Lambda$CDM, $\Omega_m = 0.3$);
+    horizontal bars: the bin edges.}
   \label{fig:zhou}
 \end{figure}
 
 \paragraph{The selections drift.}
-\begin{itemize}
-  \item Zhou et al.~\cite{Zhou2023lrg}: the LRG cuts hold the comoving
-    density near $5 \times 10^{-4}\,(h/{\rm Mpc})^3$ at $0.4 < z < 0.8$
-    and hand over to a fixed flux limit beyond (measured).  That limit
-    raises the luminosity threshold with the distance modulus by $0.27$
-    magnitudes per $\Delta z = 0.1$ at $z \approx 1$; times the
-    threshold-bias slope below, it drifts the LRG3 bias by $6$--$11\%$
-    per $\Delta z = 0.1$ on top of the $B/D$ shape (derived, from an
-    $r$-band relation used outside its calibrated range, so only the
-    direction and order of magnitude are established).
-  \item Zehavi et al.~\cite{Zehavi2011}: the large-scale bias of SDSS
-    luminosity-threshold samples at $z < 0.25$ is
-    $b\,(\sigma_8/0.8) = 1.06 + 0.21\,(L_{\rm th}/L_*)^{1.12}$, a slope
-    of $0.5$--$1.0$ in bias per magnitude near LRG luminosities
-    (measured).  It converts a threshold drift into a bias drift.
-  \item Hahn et al.~\cite{Hahn2023}: BGS Bright is magnitude limited at
-    $r < 19.5$ (measured), which drives a $10$--$25\%$ bias drift across
-    the BGS group (derived; Appendix~\ref{app:bgsflux}).
-\end{itemize}
+The DESI LRG cuts hold the comoving density near
+$5 \times 10^{-4}\,(h/{\rm Mpc})^3$ at $0.4 < z < 0.8$ and hand over to
+a fixed flux limit beyond~\cite{Zhou2023lrg} (measured).  That limit
+raises the luminosity threshold by $0.27$ magnitudes per
+$\Delta z = 0.1$ at $z \approx 1$; times the threshold-bias slope of
+SDSS luminosity-threshold samples, $b\,(\sigma_8/0.8) = 1.06 +
+0.21\,(L_{\rm th}/L_*)^{1.12}$~\cite{Zehavi2011} ($0.5$--$1.0$ in bias
+per magnitude near LRG luminosities; measured), it drifts the LRG3 bias
+by $6$--$11\%$ per $\Delta z = 0.1$ on top of $B/D$ (derived, from an
+$r$-band relation outside its calibrated range, so only the direction
+and order of magnitude hold).  BGS Bright is magnitude limited at
+$r < 19.5$~\cite{Hahn2023} (measured), which drives a $10$--$25\%$ bias
+drift across the group (derived; Appendix~\ref{app:bgsflux}).
 
 \paragraph{The ELG bias shape is stable.}
-\begin{itemize}
-  \item Rocher et al.~\cite{Rocher2023}: HOD fits of the DESI One-Percent
-    ELGs in $0.8 < z < 1.1$ and $1.1 < z < 1.6$ agree within one sigma
-    (measured); at these host masses the halo bias depends weakly on
-    mass, so the implied drift is at the percent level (derived, slope
-    assumed).
-  \item Raichoor et al.~\cite{Raichoor2023}: the [OII] doublet that
-    carries the ELG redshift loses signal-to-noise in narrow windows,
-    $\Delta z \approx 0.001$--$0.01$ wide, where it lands on sky emission
-    lines, especially at $z > 1.5$ (measured).  This is the one
-    short-separation mechanism with a measured location; its amplitude
-    in bias is assumed, of order $1$--$2\%$, from the weak dependence of
-    ELG bias on [OII] flux.
-\end{itemize}
+HOD fits of the DESI One-Percent ELGs in $0.8 < z < 1.1$ and
+$1.1 < z < 1.6$ agree within one sigma~\cite{Rocher2023} (measured);
+at these host masses the halo bias depends weakly on mass, so the
+implied drift is at the percent level (derived, slope assumed).  The
+[OII] doublet loses signal-to-noise in windows
+$\Delta z \approx 0.001$--$0.01$ wide where it lands on sky lines,
+especially at $z > 1.5$~\cite{Raichoor2023} (measured): the one
+short-separation mechanism with a measured location, with an assumed
+bias amplitude of $1$--$2\%$.
 
 \paragraph{Nothing resolves bias below $\Delta z \approx 0.1$.}
-The lensing tomography of the same samples, White et
-al.~\cite{White2022} and Sailer et al.~\cite{Sailer2024, Sailer2025} on
-the photometric samples of Zhou et al.~\cite{Zhou2023tomo}, uses bins of
-about $0.15$ with one free bias per bin and finds smooth models that fit
-(measured context).  Below $\Delta z \approx 0.1$ the thin-bin
-statements of this note rest on the continuity equation and on the
-selection arguments.
+The CMB-lensing tomography of the same samples~\cite{White2022,
+Sailer2024, Sailer2025}, on the photometric samples of
+Zhou et al.~\cite{Zhou2023tomo}, uses bins of about $0.15$ with one
+free bias per bin and finds smooth models that fit.  Below
+$\Delta z \approx 0.1$ this note rests on the continuity equation and
+the selection arguments.
 
 \section{The memory model}
 \label{sec:memory}
@@ -335,55 +264,48 @@ selection arguments.
 \subsection{Why a second model}
 \label{sec:memwhy}
 
-Every deviation found above, except the sky-line windows, is a
-monotonic drift: the conserved-population tilt (about $1\%$ per
-$\Delta z = 0.05$), the LRG3 magnitude-limit drift ($6$--$11\%$ per
-$\Delta z = 0.1$) and the BGS flux-limit drift ($10$--$25\%$ across the
-group).  A monotonic drift is a coherent, long-correlation deformation,
-not bin-to-bin decorrelation.  The kernel model can admit such a drift
-only at a price: to pass a $20\%$ drift with $L \leq 0.1$ it takes
-$\sigma_g = 10$--$15\%$, and that width also allows roughly $10\%$
-scatter between neighbors, which no identified mechanism produces.  One
-$\sigma_g$ controls both the drift and the scatter, so the kernel
-cannot say ``large smooth drift, small local scatter''.  The memory
-model separates the two.
+Every deviation above except the sky-line windows is a monotonic drift:
+the conserved-population tilt (about $1\%$ per $\Delta z = 0.05$), the
+LRG3 magnitude-limit drift ($6$--$11\%$ per $\Delta z = 0.1$) and the
+BGS flux-limit drift ($10$--$25\%$ across the group).  The kernel model
+admits such a drift only at a price: to pass a $20\%$ drift with
+$L \leq 0.1$ it takes $\sigma_g = 10$--$15\%$, which also allows about
+$10\%$ scatter between neighbors that no identified mechanism
+produces.  One $\sigma_g$ controls both, so the kernel cannot say
+``large smooth drift, small local scatter''.  The memory model
+separates the two.
 
 \subsection{Why the kernel forgets}
 \label{sec:memforget}
 
-The kernel's correlation $e^{-|\bar{z}_i - \bar{z}_j|/L}$ decays with
-separation: at $L = 0.05$, bins $0.15$ apart share $e^{-3} \approx
-0.05$ of their deviation.  With
-$r_k = e^{-(\bar{z}_{k+1} - \bar{z}_k)/L}$ the correlation of the
-neighbors $k$ and $k+1$, the best guess of the next bin given all
-earlier ones is (Appendix~\ref{app:chain})
+At $L = 0.05$, bins $0.15$ apart share $e^{-3} \approx 0.05$ of their
+deviation.  With $r_k = e^{-(\bar{z}_{k+1} - \bar{z}_k)/L}$ the
+correlation of neighbors $k$ and $k+1$, the best guess of the next bin
+given all earlier ones is (Appendix~\ref{app:chain})
 \begin{equation}
   \mathrm{E}\bigl[\delta_{k+1} \mid \delta_1, \dots, \delta_k\bigr]
   \;=\; r_k\, \delta_k :
   \label{eq:memmarkov}
 \end{equation}
 only the nearest neighbor matters, and the influence of any one bin
-fades as the product of the neighbor correlations along the chain.
+fades along the chain.
 
 \subsection{The model, and why it remembers}
 \label{sec:memmodel}
 
-The memory model adds one number per group, a tilt, and splits the
-deviation into a line and a residual,
+The memory model adds a tilt per group and splits the deviation into a
+line and a residual,
 \begin{equation}
   \delta_i \;=\; s_g\, v_i + \varepsilon_i,
   \qquad
   v_i \;=\; \bar{z}_i - \bar{z}_g,
   \label{eq:memdef}
 \end{equation}
-with $\bar{z}_g$ the mean of the group's bin redshifts, $s_g$ a free tilt
-with a flat prior (the same status as $B_g$), and the residual
-$\varepsilon_i$ carrying the kernel of Eq.~\eqref{eq:priorkernel}.  This
-is the model of Eqs.~\eqref{eq:summodel} and \eqref{eq:sumkernel}.
-
-To see what the tilt changes, give the slope a Gaussian prior of
-variance $\tau^2$ first (the flat prior is the limit
-$\tau \to \infty$).  The deviations then have covariance
+with $s_g$ a free tilt (flat prior, like $B_g$) and $\varepsilon_i$
+carrying the kernel of Eq.~\eqref{eq:priorkernel}: the model of
+Eqs.~\eqref{eq:summodel} and \eqref{eq:sumkernel}.  Giving the slope a
+Gaussian prior of variance $\tau^2$ first (the flat prior is
+$\tau \to \infty$), the deviations have covariance
 \begin{equation}
   \mathrm{Cov}(\delta_i, \delta_j)
   \;=\;
@@ -392,10 +314,8 @@ $\tau \to \infty$).  The deviations then have covariance
   \sigma_g^2\, e^{-|\bar{z}_i - \bar{z}_j|/L} .
   \label{eq:memcov}
 \end{equation}
-The new term does not decay with separation: bins on the same side of
-the group center are positively correlated, bins on opposite sides
-negatively.  Far beyond $L$ the kernel term is gone, and the correlation
-coefficient tends to
+The new term does not decay with separation.  Far beyond $L$ the
+correlation coefficient tends to
 \begin{equation}
   \rho_{ij}
   \;\longrightarrow\;
@@ -407,8 +327,7 @@ coefficient tends to
   \label{eq:memrho}
 \end{equation}
 the two ends of a group remember each other through the shared slope.
-Prediction shows the same memory.  The best guess of the next bin
-becomes
+The best guess of the next bin becomes
 \begin{equation}
   \mathrm{E}\bigl[\delta_{k+1} \mid \delta_1, \dots, \delta_k\bigr]
   \;=\;
@@ -417,27 +336,23 @@ becomes
   r_k\,\bigl(\delta_k - \hat{c} - \hat{s}_g\, v_k\bigr),
   \label{eq:memkriging}
 \end{equation}
-where $(\hat{c}, \hat{s}_g)$ are the level and slope of the best
-straight line through all the past bins, weighted by $\Cov^{-1}$ (at
-least two past bins).  Every past bin enters through the fitted line;
-only the wiggle around the line stays Markov.  Statistics calls this
-the universal-kriging predictor; Appendix~\ref{app:memory} proves it.
-
+with $(\hat{c}, \hat{s}_g)$ the level and slope of the best straight
+line through all past bins, weighted by $\Cov^{-1}$: every past bin
+enters through the fitted line, and only the wiggle around it stays
+Markov (the universal-kriging predictor; Appendix~\ref{app:memory}).
 Figure~\ref{fig:theorydraws} shows the difference on the BGS bins at
-$\Delta z = 0.02$.  Kernel draws at $\sigma_g = 10\%$, about what the
-kernel requires to admit a drift of BGS size, zigzag and forget, and none
-looks like the flux-limit drift.  Memory draws with a tilt plus
-$\sigma_g = 2\%$ are lines with small wiggles, and the drift looks like
-a typical draw.
+$\Delta z = 0.02$: kernel draws wide enough to admit the BGS drift
+zigzag and forget, while memory draws are lines with small wiggles,
+among which the drift looks typical.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{plots/theory_draws/theory_draws.pdf}
   \caption{Random prior draws of the deviations of the 15 BGS bins at
     $\Delta z = 0.02$, each draw's mean removed ($B_g$ is free).  Thick
-    dash-dot: the BGS flux-limit drift.  Left: the kernel model.  Right:
-    the memory model, whose tilt is free in the model and drawn here,
-    for display only, from a Gaussian of width $0.6$ per unit
+    dash-dot: the BGS flux-limit drift.  Left: the kernel model.
+    Right: the memory model, whose tilt is free in the model and drawn
+    here, for display only, from a Gaussian of width $0.6$ per unit
     redshift.}
   \label{fig:theorydraws}
 \end{figure}
@@ -446,31 +361,24 @@ a typical draw.
 \label{sec:memphysics}
 
 A selected sample changes along a group in two ways.  Coherent changes
-move every bin the same way: a flux or magnitude threshold that rises
-with distance, the debiasing of a conserved population, the drift of
-the halo-mass threshold at fixed number density.  Local changes are
-features of the selection that move bins independently and are
-forgotten over a short range, such as the sky-line windows and
-filter-edge crossings of Appendix~\ref{sec:selection}.  The memory
-model gives the first kind to the tilt and the second to the kernel.
-
-One straight line is enough for the coherent kind, because the drifts
-are smooth functions of redshift, set by $D(z)$ and the distance
-modulus, which change on $\Delta z$ of order one.  The best
+move every bin the same way: a threshold that rises with distance, the
+debiasing of a conserved population.  Local changes move bins
+independently and are forgotten over a short range: the sky-line
+windows and filter-edge crossings of Appendix~\ref{sec:selection}.  The
+memory model gives the first kind to the tilt and the second to the
+kernel.  One line suffices for the coherent kind, because the drifts
+are smooth functions of $D(z)$ and the distance modulus.  The best
 equal-weight line through each group's conserved deviation at the
-$\Delta z = 0.05$ bin centers (derived; flat $\Lambda$CDM with
-$\Omega_m = 0.3$, amplitudes $1.34$ for BGS, $1.70$ for the LRGs and
-$0.84$ for the ELGs) removes deviations that span $3$--$11\%$ across a
-group and leaves a residual of $0.02$--$0.16\%$ rms, at most $0.27\%$
-(ELG2).
-
-The BGS flux-limit drift is larger and convex: it spans $22.3\%$, and
-its best line leaves $2.4\%$ rms and $3.3\%$ at most
-(Appendix~\ref{app:bgsflux}).  For BGS the residual width of the memory
-model is therefore about $2$--$3\%$, the curvature a line cannot absorb.
-Figure~\ref{fig:theorydelta} shows both statements: every conserved
-deviation is a straight line, while the BGS flux limit leaves a U shape
-that the residual must absorb.
+$\Delta z = 0.05$ bin centers (derived; amplitudes $1.34$ for BGS,
+$1.70$ for the LRGs and $0.84$ for the ELGs) removes deviations that
+span $3$--$11\%$ and leaves $0.02$--$0.16\%$ rms, at most $0.27\%$
+(ELG2).  The BGS flux-limit drift is larger and convex: it spans
+$22.3\%$, and its best line leaves $2.4\%$ rms and $3.3\%$ at most
+(Appendix~\ref{app:bgsflux}).  Figure~\ref{fig:theorydelta} shows both.
+In the memory model $\sigma_g$ is the departure from the group's own
+line, curvature plus local scatter: about $0.1\%$ for a conserved
+population, $1$--$2\%$ for local selection features, $2$--$3\%$ for the
+BGS curvature.
 
 \begin{figure}[htbp]
   \centering
@@ -483,23 +391,11 @@ that the residual must absorb.
   \label{fig:theorydelta}
 \end{figure}
 
-The two models give $\sigma_g$ different physical meanings.  In the
-kernel model it is the total departure of a bin from the $B_g/D$ trend,
-drift plus scatter; in the memory model it is the departure from the
-group's own line, curvature plus local scatter.  The plausible values
-differ accordingly: about $0.1\%$ for a conserved population, $1$--$2\%$
-for the local selection features (Appendix~\ref{sec:evidence}), and
-$2$--$3\%$ for the BGS curvature.  The memory model rests on the same
-evidence as the kernel model; it encodes that evidence in a form closer
-to the physics.
-
 \subsection{What the prior charges}
 \label{sec:memcharge}
 
-Give the line's level a Gaussian prior of width $W$ and its slope one
-of width $\tau$; the flat priors of the model are the limit
-$W, \tau \to \infty$.  In that limit the prior precision of a group's
-bin amplitudes becomes (Appendix~\ref{app:memory})
+With flat priors on the line's level and slope, the prior precision of
+a group's bin amplitudes is (Appendix~\ref{app:memory})
 \begin{equation}
   \Prec_{\rm mem}
   \;=\;
@@ -512,9 +408,8 @@ bin amplitudes becomes (Appendix~\ref{app:memory})
   \mathsf{U} = [\,\ones,\ v\,],
   \label{eq:memproj}
 \end{equation}
-the construction of Eq.~\eqref{eq:projdef} with one more column:
-$\mathsf{U}$ is the $n \times 2$ matrix whose columns are the ones
-vector and the centered redshifts $v$.  The penalty it charges is
+the construction of Eq.~\eqref{eq:projdef} with one more column.  Its
+penalty is
 \begin{equation}
   \delta\T \Prec_{\rm mem}\, \delta
   \;=\;
@@ -524,26 +419,23 @@ vector and the centered redshifts $v$.  The penalty it charges is
   \bigl(\delta - c\,\ones - s_g\, v\bigr) :
   \label{eq:memmin}
 \end{equation}
-the prior subtracts the best straight line, weighted by $\Cov^{-1}$, and
-charges only the residual.  A monotonic drift of any size costs
-nothing; bumps around the line still cost, and still forget over the
-length $L$.  $\mathsf{Q}$ is tridiagonal (Appendix~\ref{sec:general}),
-a local object that links neighbors, while the subtracted correction
-has rank two and is dense, because the fitted line listens to every
-bin.  $\Prec_{\rm mem}$ annihilates both columns,
-$\Prec_{\rm mem}\mathsf{U} = 0$, is positive semidefinite, and has rank
-$n - 2$, so a group of one or two bins has $\Prec_{\rm mem} = 0$.
+the prior subtracts the best straight line and charges only the
+residual.  A monotonic drift of any size costs nothing; bumps around
+the line still cost, and still forget over $L$.  $\mathsf{Q}$ is
+tridiagonal (Appendix~\ref{sec:general}), while the subtracted term has
+rank two and is dense, because the fitted line listens to every bin.
+$\Prec_{\rm mem}\mathsf{U} = 0$, $\Prec_{\rm mem}$ is positive
+semidefinite with rank $n - 2$, and a group of one or two bins has
+$\Prec_{\rm mem} = 0$.
 
 \section{The bias continuity equation, step by step}
 \label{app:continuity}
 
-The matter density $\rho_m(\mathbf{x}, t)$ defines the matter
-overdensity $\delta_m = (\rho_m - \bar\rho_m)/\bar\rho_m$, with
-$\bar\rho_m(t)$ the mean density; the galaxy number density defines the
-galaxy-count overdensity $\delta_{\rm gal}$ the same way.  Conservation of
-mass and of galaxy number gives each field a continuity equation.  In
-comoving coordinates, keeping only terms linear in the fluctuations
-(the convective term $\mathbf{v} \cdot \nabla \delta$ is second order),
+The matter overdensity is $\delta_m = (\rho_m - \bar\rho_m)/\bar\rho_m$,
+with $\bar\rho_m(t)$ the mean density; the galaxy-count overdensity
+$\delta_{\rm gal}$ is defined the same way.  Conservation of mass and of
+galaxy number gives, in comoving coordinates and to linear order (the
+convective term $\mathbf{v} \cdot \nabla \delta$ is second order),
 \begin{equation}
   \frac{\partial \delta_m}{\partial t}
   \;=\;
@@ -554,55 +446,38 @@ comoving coordinates, keeping only terms linear in the fluctuations
   -\,\frac{1}{a}\,\nabla \cdot \mathbf{v}_{\rm gal},
   \label{eq:continuity}
 \end{equation}
-with $t$ cosmic time and $\mathbf{v}_m$ and $\mathbf{v}_{\rm gal}$ the
-peculiar velocity fields of the matter and of the galaxies.
-
-The two velocity fields are the same.  On large scales the galaxies
-carry no pressure of their own and fall in the same gravitational
-potential as the matter, so a conserved sample rides the matter flow:
-$\mathbf{v}_{\rm gal} = \mathbf{v}_m$, the no-velocity-bias assumption
-(Tegmark and Peebles~\cite{TegmarkPeebles1998} state it as galaxies
-behaving as test particles).  Subtracting the two equations and
-integrating in time from $z_c$ leaves
+with $t$ cosmic time and $\mathbf{v}_m$, $\mathbf{v}_{\rm gal}$ the
+peculiar velocities.  On large scales galaxies fall in the same
+potential as the matter and carry no pressure of their own, so
+$\mathbf{v}_{\rm gal} = \mathbf{v}_m$ (no velocity bias; galaxies as
+test particles in Tegmark and Peebles~\cite{TegmarkPeebles1998}).
+Subtracting the two equations and integrating from $z_c$,
 \begin{equation}
-  \frac{\partial}{\partial t}\bigl(\delta_{\rm gal} - \delta_m\bigr) \;=\; 0
-  \quad\Longrightarrow\quad
   \delta_{\rm gal}(z) - \delta_m(z)
   \;=\;
   \delta_{\rm gal}(z_c) - \delta_m(z_c) :
   \label{eq:frozen}
 \end{equation}
-the excess clumping keeps its initial value forever.
-
-Now substitute the bias.  At $z_c$,
-$\delta_{\rm gal}(z_c) = b_c\,\delta_m(z_c)$, so the frozen difference is
-$(b_c - 1)\,\delta_m(z_c)$, and the matter grows as
-$\delta_m(z) = \delta_m(z_c)\, D(z)/D(z_c)$.  Then
+the excess clumping keeps its initial value.  With
+$\delta_{\rm gal}(z_c) = b_c\,\delta_m(z_c)$ and
+$\delta_m(z) = \delta_m(z_c)\, D(z)/D(z_c)$,
 \begin{equation}
   \delta_{\rm gal}(z)
-  \;=\;
-  \delta_m(z) + \bigl(b_c - 1\bigr)\,\delta_m(z_c)
   \;=\;
   \delta_m(z)
   \left[\,1 + \bigl(b_c - 1\bigr)\,\frac{D(z_c)}{D(z)}\,\right],
   \label{eq:appsub}
 \end{equation}
-and dividing by $\delta_m(z)$ gives the bias of Eq.~\eqref{eq:fry}.
-Dividing instead by the growth-tied bias $b_c\,D(z_c)/D(z)$ gives the
-deviation of Eq.~\eqref{eq:tilt}.  As $D$ grows the frozen term is
-divided by an ever larger number, so $b \to 1$, from above when
-$b_c > 1$ and from below when $b_c < 1$: gravity debiases a conserved
-sample, because the part of $\delta_{\rm gal}$ that traces the matter
-keeps growing while the frozen excess does not.
+and dividing by $\delta_m(z)$ gives Eq.~\eqref{eq:fry}; dividing by the
+growth-tied bias gives Eq.~\eqref{eq:tilt}.  As $D$ grows the frozen
+term is divided by an ever larger number, so $b \to 1$: gravity
+debiases a conserved sample.
 
-Tegmark and Peebles drop the assumption that $\delta_{\rm gal}$ is
-proportional to $\delta_m$ point by point.  They describe the pair of
-fields by the matter fluctuation amplitude, the bias $b$ (the ratio of
-the galaxy to the matter fluctuation amplitude) and the correlation
-coefficient $\rho_{gm}$ between the two fields; $\rho_{gm} < 1$ is
-stochastic bias.  The same continuity argument evolves both (their
-section ``After the galaxy formation epoch''): with $D$ normalized to
-one today and the subscript zero marking today,
+Tegmark and Peebles also allow stochastic bias, with $b$ the ratio of
+the galaxy to the matter fluctuation amplitude and $\rho_{gm}$ the
+correlation coefficient of the two fields.  The same argument evolves
+both: with $D$ normalized to one today and the subscript zero marking
+today,
 \begin{equation}
   b_0 =
   \left[(1 - D)^2 + 2 D (1 - D)\, b\, \rho_{gm}
@@ -611,46 +486,34 @@ one today and the subscript zero marking today,
   \rho_{gm,0} = \frac{(1 - D) + D\, b\, \rho_{gm}}{b_0},
   \label{eq:tpevol}
 \end{equation}
-where $b$ and $\rho_{gm}$ are the values at the epoch whose growth
-factor is $D$.  Both $b_0$ and $\rho_{gm,0}$ approach one as clustering
-grows.  For $\rho_{gm} = 1$, Eq.~\eqref{eq:tpevol} collapses to
-$b_0 - 1 = (b - 1)\,D$, which is Eq.~\eqref{eq:fry} again: the conserved
-population of this note is the perfectly correlated case of their
-model.
-
-For a DESI sample the assumption that breaks is conservation: the flux
-limit and color cuts admit and remove galaxies as redshift grows,
-mergers turn two members into one, and an ELG belongs to the sample only
-during its star-forming phase (Appendix~\ref{sec:selection}).  The
-no-velocity-bias and linear-theory assumptions hold well on the scales
-this forecast keeps.  The script of Appendix~\ref{app:verify}
-integrates Eq.~\eqref{eq:continuity} numerically and recovers
-Eq.~\eqref{eq:fry} to a relative accuracy of $2 \times 10^{-9}$.
+with $b$ and $\rho_{gm}$ the values at the epoch of growth factor $D$.
+Both approach one as clustering grows, and for $\rho_{gm} = 1$
+Eq.~\eqref{eq:tpevol} collapses to $b_0 - 1 = (b - 1)\,D$,
+Eq.~\eqref{eq:fry} again.  For a DESI sample the assumption that
+breaks is conservation (Appendix~\ref{sec:selection}); no velocity
+bias and linear theory hold well on the scales kept.  The script of
+Appendix~\ref{app:verify} integrates Eq.~\eqref{eq:continuity} and
+recovers Eq.~\eqref{eq:fry} to $2 \times 10^{-9}$.
 
 \section{The BGS flux-limit bias model, step by step}
 \label{app:bgsflux}
 
-This appendix derives the BGS drift used by the baseline prior: a
-$22.3\%$ span of the deviation, a convex shape, and a $2.4\%$ rms
-residual around the best straight line.  The model lives in the
-function \texttt{bgs\_flux\_limit\_bias} of
-\texttt{plots/make\_theory\_data.py}, and the script of
-Appendix~\ref{app:verify} checks its numbers.
+This appendix derives the BGS drift of the baseline prior: a $22.3\%$
+span, a convex shape, and a $2.4\%$ rms residual around the best line
+(the function \texttt{bgs\_flux\_limit\_bias} of
+\texttt{plots/make\_theory\_data.py}).
 
 \subsection{The four steps}
 \label{sec:bgssteps}
 
 \paragraph{Step 1: the flux limit becomes a luminosity threshold.}
-BGS Bright keeps every galaxy brighter than apparent magnitude
-$r = 19.5$ (measured limit~\cite{Hahn2023}; $r$ is the magnitude band
-here, not a correlation coefficient).  The apparent magnitude $r$ and
-the absolute magnitude $M$ are related by
+BGS Bright keeps every galaxy brighter than $r = 19.5$~\cite{Hahn2023}
+($r$ the magnitude band).  The apparent magnitude $r$ and the absolute
+magnitude $M$ are related by
 $r = M + 25 + 5\log_{10}[d_L/(h^{-1}\,{\rm Mpc})] + K(z)$, with $d_L$
-the luminosity distance, $h$ the Hubble constant in units of
-$100$~km/s/Mpc, and $K(z)$ the K-correction, the magnitude shift of a
-fixed filter sampling a redshifted spectrum~\cite{BlantonRoweis2007}.
-The model sets $K = 0$, so the faintest absolute magnitude that passes
-the cut at redshift $z$ is
+the luminosity distance and $K(z)$ the
+K-correction~\cite{BlantonRoweis2007}.  With $K = 0$ the faintest
+absolute magnitude that passes at redshift $z$ is
 \begin{equation}
   M_{\rm lim}(z) - 5\log_{10} h
   \;=\;
@@ -660,19 +523,15 @@ the cut at redshift $z$ is
   \label{eq:bgsmlim}
 \end{equation}
 with $\chi(z)$ the comoving distance of flat $\Lambda$CDM with
-$\Omega_m = 0.3$.  Every magnitude here carries the $M - 5\log_{10} h$
-convention of the $M_*$ in step 3.
+$\Omega_m = 0.3$ and $h$ the Hubble constant in units of
+$100$~km/s/Mpc.
 
-\paragraph{Step 2: each bin is a luminosity-threshold sample.}
-At redshift $z$ the sample holds every galaxy brighter than the
-threshold, $M < M_{\rm lim}(z)$, and the threshold brightens with
-distance: the one selection $r < 19.5$ becomes a different threshold
-sample in every bin.
-
-\paragraph{Step 3: the threshold sets the bias.}
-Zehavi et al.~\cite{Zehavi2011} measured the large-scale bias of
-luminosity-threshold samples in the SDSS main sample at $z < 0.25$
-(effective redshift about $0.1$) and fit it with
+\paragraph{Steps 2 and 3: each bin is a threshold sample, and the
+threshold sets the bias.}
+At redshift $z$ the sample holds every galaxy with
+$M < M_{\rm lim}(z)$, a threshold that brightens with distance.  The
+SDSS luminosity-threshold samples at $z < 0.25$~\cite{Zehavi2011}
+give
 \begin{equation}
   b(>L_{\rm th})
   \;=\;
@@ -681,18 +540,14 @@ luminosity-threshold samples in the SDSS main sample at $z < 0.25$
   L_{\rm th}/L_* \;=\; 10^{-0.4\,(M_{\rm lim} - M_*)},
   \label{eq:bgszehavi}
 \end{equation}
-where $L_{\rm th}$ is the threshold luminosity of the sample, and $L_*$
-and $M_* - 5\log_{10} h = -20.44$ are the characteristic luminosity and
-magnitude of the SDSS $r$-band luminosity function~\cite{Blanton2003}.
-The model applies the fit at every redshift of the group, without
-evolution, and reads the published left side $b\,(\sigma_8/0.8)$ as $b$,
-with $\sigma_8$ the rms matter fluctuation in spheres of
-$8\,{\rm Mpc}/h$.
+with $M_* - 5\log_{10} h = -20.44$ the characteristic magnitude of the
+SDSS $r$-band luminosity function~\cite{Blanton2003}.  The model
+applies the fit at every redshift, without evolution, and reads the
+published $b\,(\sigma_8/0.8)$ as $b$.
 
 \paragraph{Step 4: the deviation from the growth-tied shape.}
-Because $B_g$ is free, only the shape of $b(z)$ matters, and the model
-fixes the amplitude $B$ by making the mean deviation over the group's
-bin centers $\bar{z}_1, \dots, \bar{z}_n$ vanish:
+Because $B_g$ is free, only the shape of $b(z)$ matters; the amplitude
+makes the mean deviation over the group's bin centers vanish:
 \begin{equation}
   \delta(\bar{z}_i)
   \;=\;
@@ -701,80 +556,50 @@ bin centers $\bar{z}_1, \dots, \bar{z}_n$ vanish:
   B \;=\; \frac{1}{n}\sum_{j=1}^{n} b(\bar{z}_j)\,D(\bar{z}_j).
   \label{eq:bgsdelta}
 \end{equation}
-
-At the six $\Delta z = 0.05$ bin centers of BGS, from $z = 0.125$ to
-$0.375$, the threshold brightens from $-18.56$ to $-21.24$ (by $2.68$
-magnitudes), so $L_{\rm th}/L_*$ grows from $0.18$ to $2.10$ and the bias
-from $1.09$ to $1.54$, while $D$ falls from $0.937$ to $0.824$.  The
-deviation then runs from $-8.0\%$ to $+14.4\%$, the $22.3\%$ span drawn
-in Figure~\ref{fig:theorydelta}.
+At the six $\Delta z = 0.05$ bin centers of BGS, $z = 0.125$ to
+$0.375$, the threshold brightens from $-18.56$ to $-21.24$, so
+$L_{\rm th}/L_*$ grows from $0.18$ to $2.10$ and the bias from $1.09$
+to $1.54$, while $D$ falls from $0.937$ to $0.824$.  The deviation runs
+from $-8.0\%$ to $+14.4\%$, the $22.3\%$ span of
+Figure~\ref{fig:theorydelta}.
 
 \subsection{Why the drift is convex}
 \label{sec:bgsconvex}
 
-Across the bin centers the bias rises by $41\%$ while $D$ falls by
-$12\%$, so the deviation inherits the shape of the bias curve.  That
-curve is flat at low redshift and steep at high redshift because
-$L_{\rm th}/L_*$ is exponential in the threshold magnitude.  Below $L_*$
-the term $0.21\,(L_{\rm th}/L_*)^{1.12}$ is small against the constant
-$1.06$ ($0.03$ at the first bin center), so the bias stays near the
-faint-end floor of the fit.  The threshold crosses $L_*$ near
-$z = 0.27$, and past the crossing the same term dominates and rises
-exponentially ($0.48$ at the last center).  A curve that is flat on one
-side of a crossing and exponential on the other is convex.
-
-A straight line through a convex curve leaves a U-shaped residual.  The
-deviation at the six centers is almost exactly a parabola: adding a
-quadratic term cuts the residual from $2.4\%$ to $0.1\%$ rms.  The
-fitted quadratic coefficient is $3.8$ per unit redshift squared, and a
-pure parabola with that coefficient, sampled at the six centers with
-its best line removed, leaves $+3.2\%$ at the ends and $-2.6\%$ in the
-middle, rms $2.4\%$: the measured residuals
-$(+3.1, -0.5, -2.5, -2.6, -0.8, +3.3)\%$ are this U shape.  The $2.4\%$
-rms is therefore the curvature of the drift, the one part of it a free
-tilt cannot absorb.
+The bias rises by $41\%$ while $D$ falls by $12\%$, so the deviation
+inherits the shape of the bias curve, which is flat at low redshift
+and steep at high redshift: below $L_*$ the term
+$0.21\,(L_{\rm th}/L_*)^{1.12}$ is small against $1.06$ ($0.03$ at the
+first center), the threshold crosses $L_*$ near $z = 0.27$, and beyond
+it the term rises exponentially ($0.48$ at the last center).  A
+straight line through a convex curve leaves a U-shaped residual,
+$(+3.1, -0.5, -2.5, -2.6, -0.8, +3.3)\%$ here.  Adding a quadratic term
+cuts the residual from $2.4\%$ to $0.1\%$ rms, so the $2.4\%$ is the
+curvature of the drift, the one part a free tilt cannot absorb.
 
 \subsection{What the model leaves out}
 \label{sec:bgsomissions}
 
-None of the omissions below changes the qualitative shape, a smooth,
-monotonic, convex rise of the bias toward the far edge of the group;
-each states the direction in which it pushes the drift.
-
-\paragraph{The threshold-bias relation is frozen at $z \approx 0.1$.}
-Two neglected evolutions pull in opposite directions.  The bias at
-fixed luminosity grows with redshift ($b - 1 \propto 1/D$ for a conserved
-population, Eq.~\eqref{eq:fry}), which steepens the drift.  Galaxies
-were also brighter in the past: Blanton et al.~\cite{Blanton2003}
-measure a brightening of $M_*$ by $1$--$2$ magnitudes per unit
-redshift, so a fixed threshold sits lower relative to $L_*(z)$ at high
-redshift, which flattens the drift.  The flattening is a fraction of the
-effect: the brightening reaches $0.3$--$0.6$ magnitudes at the last bin
-center, against the $2.68$ magnitudes of the threshold itself.
-
-\paragraph{No K-correction.}
-The bandpass-shift part alone, for a spectrum flat in wavelength, is
-$2.5\log_{10}(1+z)$, or $0.37$ magnitudes at $z = 0.4$~\cite{BlantonRoweis2007},
-and a red spectrum makes the $r$-band correction larger still.  The
-$M_*$ of step 3 is also measured in the $r$ band shifted to
-$z = 0.1$~\cite{Blanton2003}, while Eq.~\eqref{eq:bgsmlim} produces an
-observed-band magnitude; the K-correction is the bridge the model
-omits.  A positive $K$ makes the true threshold brighter at high
-redshift, so the omission steepens the drift.
-
-\paragraph{Only $r < 19.5$ is modeled.}
-BGS Bright also imposes a fiber-magnitude cut, and BGS Faint, the
-color-selected extension at $19.5 < r < 20.175$, is absent from the
-model~\cite{Hahn2023}.  Including BGS Faint lowers the limit by $0.675$
-magnitudes at every redshift, which lowers $L_{\rm th}/L_*$ and the bias
-everywhere and moves the $L_*$ crossing to higher redshift: a flatter
-drift.  The fiber cut and the color selection change the galaxy mix in
-a way Eq.~\eqref{eq:bgszehavi} cannot follow, and the model assigns them
-no direction.
-
-\paragraph{Scope.}
+None of the omissions changes the qualitative shape, a smooth,
+monotonic, convex rise toward the far edge of the group.
+\begin{itemize}
+  \item \textbf{Evolution of the threshold-bias relation.}  The bias at
+    fixed luminosity grows with redshift (Eq.~\eqref{eq:fry}), which
+    steepens the drift; $M_*$ brightens by $1$--$2$ magnitudes per unit
+    redshift~\cite{Blanton2003}, which flattens it, but only by
+    $0.3$--$0.6$ magnitudes at the last center against the $2.68$ of
+    the threshold.
+  \item \textbf{No K-correction.}  A positive $K$, $0.37$ magnitudes at
+    $z = 0.4$ for a spectrum flat in wavelength and more for a red
+    one~\cite{BlantonRoweis2007}, makes the true threshold brighter at
+    high redshift and steepens the drift.
+  \item \textbf{Only $r < 19.5$.}  BGS Faint, at
+    $19.5 < r < 20.175$~\cite{Hahn2023}, lowers the threshold by $0.675$
+    magnitudes and flattens the drift; the fiber-magnitude cut and the
+    color selection change the galaxy mix in a way
+    Eq.~\eqref{eq:bgszehavi} cannot follow.
+\end{itemize}
 The model is an order-of-magnitude estimate, not a prediction of the
 measured DESI BGS bias.  Its reliable content is the shape of the drift
-(smooth, monotonic, convex) and its size to a factor of order unity,
-and that is the content this note uses: the baseline prior takes
-$\sigma_g = 3\%$ for BGS from the $2$--$3\%$ curvature.
+and its size to a factor of order unity, which is what the baseline
+prior uses: $\sigma_g = 3\%$ for BGS, from the $2$--$3\%$ curvature.

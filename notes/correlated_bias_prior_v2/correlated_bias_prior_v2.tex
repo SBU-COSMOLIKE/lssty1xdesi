@@ -17,9 +17,14 @@
 \newcommand{\hMpc}{\,h/{\rm Mpc}}
 \newcommand{\bstwo}{b_{s^2}}
 \newcommand{\aunit}{\,h^{-2}\,{\rm Mpc}^2}
-% The scale-cut clause of every caption that quotes k_max.
+% The two stochastic amplitudes: white noise and the k^2 mu^2 term.
+\newcommand{\SNz}{{\rm SN}_0}
+\newcommand{\SNt}{{\rm SN}_2}
+% The scale-cut clauses of the captions: one cut, and the k_max scan.
 \newcommand{\kmaxclause}{$\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin
   is cut at $\kmax/D(\bar{z}_i)$.}
+\newcommand{\kmaxscanclause}{$\kmax$ quoted at $z = 0$; each bin is cut
+  at $\kmax/D(\bar{z}_i)$.}
 
 \title{The galaxy-bias ladder across thin redshift bins}
 \date{November 2026}
@@ -34,28 +39,27 @@
 \begin{document}
 
 \begin{center}
-  {\LARGE The galaxy-bias ladder\\[0.3em] across thin redshift bins\par}
+  {\LARGE The galaxy-bias ladder across thin redshift bins\par}
+  \vspace{0.4em}
+  {\large A correlated linear-bias prior, the one-loop bias models\\
+    A and B, and the reach of DESI $C_\ell^{gg}$\par}
   \vspace{0.6em}
-  {\large A correlated linear-bias prior, one-loop bias models,\\
-    and the accuracy of DESI $C_\ell^{gg}$\par}
-  \vspace{1em}
   {\large November 2026\par}
 \end{center}
-\vspace{1em}
 
 \section{Summary}
 \label{sec:summary}
 
 \paragraph{The question.}
-Thin redshift bins measure growth only if the galaxy bias of each bin
-is tied to its neighbors.  This note sets how freely the linear bias
-of a thin bin may move within its tracer group, tests whether each
-choice still recovers the cosmology honestly, and gives the figure of
-merit (FoM) of the choices that pass.  The data are DESI angular band
-powers $C_\ell^{gg}$ alone, on four bin layouts
-(Section~\ref{sec:forecast}).
+Thin redshift bins measure growth only if each bin's galaxy bias is
+tied to its neighbors.  For DESI angular band powers $C_\ell^{gg}$
+alone on four bin layouts (Section~\ref{sec:forecast}), this note sets
+how freely a thin bin's linear bias may move within its tracer group,
+adds the one-loop bias models A and B, tests which choices recover the
+cosmology honestly, and gives the figure of merit (FoM) of those that
+pass against the scale cut $\kmax$.
 
-\paragraph{The prior.}
+\paragraph{The linear-bias prior.}
 Each bin's bias follows its group's growth-tied trend $B_g/D$ times a
 free straight line in redshift, plus a residual with a correlated
 Gaussian prior of width $\sigma_g$ and correlation length $L$
@@ -64,41 +68,43 @@ Gaussian prior of width $\sigma_g$ and correlation length $L$
 elsewhere, $L = 0.2$), pessimistic ($3\%$ everywhere, $L = 0.05$) and
 free (one free bias per bin).
 
-\paragraph{Model A.}
-The higher-order biases follow each bin's linear bias through
-calibrations, with one offset, one counterterm and one excess white
-noise per group (model A baseline); model A pessimistic also tilts the
-offsets and the counterterm in redshift.  The scale cut is
-$\kmax = 0.075\hMpc$ at $z = 0$ (Section~\ref{sec:modela}).
+\paragraph{Models A and B.}
+Both add one-loop terms to each bin's linear bias: quadratic and tidal
+biases on calibrations plus one offset per group, a $k^2$ counterterm
+$\alpha_0$, and the stochastic terms $\SNz$ and $\SNt\,k^2\mu^2$
+(Section~\ref{sec:modela}).  Adjacent thin bins share an edge across
+which the projected $\SNt$ is anticorrelated, which no white noise
+mimics; without $\SNt$, model A failed before its own cut.  Model B
+also frees the redshift-space counterterm $\alpha_2$ and doubles the
+offset widths (Section~\ref{sec:modelb}).  The baseline variants hold
+one value per group; the pessimistic ones also tilt the offsets and
+counterterms in redshift.
 
 \paragraph{The accuracy test.}
-Every prior fits $2000$ random bias histories: a drift derived from
-physics plus a residual drawn from the baseline or the pessimistic
-prior (Section~\ref{sec:accuracy}).  The growth-tied prior fails on
-every layout and is discarded.  The baseline prior is honest only when
-the truth is as smooth as it assumes: under the pessimistic residuals
-its $\Omega_m$ error bar covers the truth in only $40$--$63\%$ of
-universes instead of $68\%$ on three of the four layouts.  The pessimistic and free priors are
-honest under both.  A linear drift of the quadratic and tidal bias
-calibrations moves $(w_0, w_a)$ of model A baseline by more than a
-third of its error on the wide layouts; model A pessimistic absorbs it
-by construction.
+At $\kmax = 0.075\hMpc$ every prior fits $2000$ random bias histories
+under model A (Section~\ref{sec:accuracy}).  The growth-tied prior
+fails.  The baseline prior is honest only when the truth is as smooth
+as it assumes: under the pessimistic residuals its $\Omega_m$ error bar
+covers the truth in $40$--$63\%$ of universes instead of $68\%$.  The
+pessimistic and free priors are honest under both, and model A
+pessimistic absorbs a linear drift of the calibrations that moves
+model A baseline by more than $\sigma/3$ on the wide layouts.
 
-\paragraph{The headline.}
-Model A pessimistic on the pessimistic prior is the forecast that
-stays honest under every truth tested (Figure~\ref{fig:ladder}).
-Model A baseline on the baseline prior is what better knowledge of
-bias evolution and of the calibrations would buy, and the free prior
-is the lower limit.  On every prior, DESI $C_\ell^{gg}$ alone sits well
-below LSST Y1 3x2pt in both figures of merit at this cut.
-
-\paragraph{Limits.}
-The shifts are linear responses, the truths are theory rather than
-mocks, and model A has real-space loops with linear redshift-space
-distortions (Appendix~\ref{app:limits}).  Appendix~\ref{app:open}
-lists the open issues: the one-loop terms left out of the covariance,
-the scale cut built on the linear model, negative counterterms in
-chains, and the third-order bias template.
+\paragraph{The reach of model A and the headline.}
+Against truths that carry $\alpha_2$, $\SNt$ or the offsets at one
+prior width, model A keeps every shift below $\sigma/3$ up to
+$0.075\hMpc$ on the thin layouts, up to $0.1$--$0.15$ on
+$\Delta z = 0.05$, and at every cut on $\Delta z = 0.2$
+(Figure~\ref{fig:break}).
+Figure~\ref{fig:fomkmax} is the result: the FoM against $\kmax$ on each
+prior that passes, model A pessimistic up to its break and model B
+pessimistic at every cut.  On the pessimistic and free priors it stays
+below LSST Y1 3x2pt in ${\rm FoM}(w_0, w_a)$ up to $\kmax = 0.25\hMpc$;
+on the baseline prior it passes LSST Y1 on $\Delta z = 0.02$ beyond
+$0.15$, and model B baseline passes it on both thin layouts at the
+largest cuts.  In ${\rm FoM}(\Omega_m, 10^9 A_s)$ no DESI
+configuration approaches LSST Y1.  Appendices~\ref{app:limits} and
+\ref{app:open} give the limits and the open issues.
 
 \section{The forecast}
 \label{sec:forecast}
@@ -109,59 +115,71 @@ tracer groups (BGS, LRG1, LRG2, LRG3, ELG1 and ELG2) on four bin
 layouts: bins of equal comoving width $\Delta d_{\rm com} = 62$~Mpc,
 and bins of fixed redshift width $\Delta z = 0.02$, $0.05$ and $0.2$.
 Bin $i$ has mean redshift $\bar{z}_i$, and $D(z)$ is the linear growth
-factor, normalized to $D(0) = 1$.  The covariance is Gaussian, with
-the linear bias $B_g/D(\bar{z}_i)$ of each bin.
-
-$w(a) = w_0 + w_a(1 - a)$ is the dark-energy equation of state, with
-$a$ the scale factor; $\Omega_m$ is the matter density today in units
-of the critical density, and $A_s$ the amplitude of the primordial
-curvature power spectrum, sampled as $10^9 A_s$.  A parameter's
-marginalized one-sigma error is $\sigma$.  The figure of merit
+factor, $D(0) = 1$.  $w(a) = w_0 + w_a(1 - a)$ is the dark-energy
+equation of state, with $a$ the scale factor; $\Omega_m$ is the matter
+density today in units of the critical density, and $A_s$ the
+amplitude of the primordial curvature power spectrum, sampled as
+$10^9 A_s$.  A parameter's marginalized one-sigma error is $\sigma$.
 ${\rm FoM}(w_0, w_a) = [\det \mathrm{Cov}(w_0, w_a)]^{-1/2}$ is the
 inverse area of the marginalized $(w_0, w_a)$ error ellipse, and
-${\rm FoM}(\Omega_m, 10^9 A_s)$ is defined the same way.
+${\rm FoM}(\Omega_m, 10^9 A_s)$ is defined the same way.  The reference
+is LSST Y1 3x2pt alone~\cite{DESCSRD2018}, on the same bands, with its
+own linear-bias lens sample.
 
 \paragraph{The scale cut.}
-$\kmax$ labels one cut per bin.  Bin $i$ is cut at $\kmax/D(\bar{z}_i)$:
-matter is less nonlinear at higher redshift, so the cut moves to
-higher wavenumber $k$ as $1/D$.  The cut is the non-Limber UV-fraction
-cut of Saraivanov et al.~\cite{Saraivanov2026}, which follows DeRose
-and Chen~\cite{DeRoseChen2025}.  Each band power is split into
-$C_\ell^{\rm IR}$, computed from the power spectrum below the bin's cut
-wavenumber, and $C_\ell^{\rm UV}$, from the power above it, and a band
-is kept while
+Bin $i$ is cut at $\kmax/D(\bar{z}_i)$: matter is less nonlinear at
+higher redshift, so the cut moves to higher wavenumber $k$ as $1/D$,
+and every $\kmax$ in this note is the $z = 0$ value.  The cut is the
+non-Limber UV-fraction cut of Saraivanov et al.~\cite{Saraivanov2026},
+which follows DeRose and Chen~\cite{DeRoseChen2025}.  Each band power
+is split into $C_\ell^{\rm IR}$, from the power spectrum below the
+bin's cut wavenumber, and $C_\ell^{\rm UV}$, from the power above it,
+and a band is kept while
 \begin{equation}
   \frac{|C_\ell^{\rm UV}|}{|C_\ell^{\rm UV}| + |C_\ell^{\rm IR}|}
   \;<\; 0.05 .
   \label{eq:uvfraction}
 \end{equation}
-The kept bands are intersected with the shipped mask.  The cut was
-built on the linear-bias model.  Every $\kmax$ in this note is the
-$z = 0$ value.
+The kept bands are intersected with the shipped mask, which stops
+every bin at $k = 0.1185\,{\rm Mpc}^{-1}$.  The cut was built on the
+linear-bias model.  The scan runs over
+$\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$.
+
+\paragraph{The covariance.}
+The band-power covariance is Gaussian, computed for $14{,}000$ square
+degrees with its inverse rescaled to the survey's $12{,}300$, at the
+fiducial of model A (Section~\ref{sec:modela}):
+$b_{1,i} = B_g/D(\bar{z}_i)$, $b_2$ and $\bstwo$ on their calibrations,
+every other term zero.  Models A and B share this fiducial, so one
+covariance serves both.  Its one-loop terms come from CosmoLike's
+C-FAST-PT tables, through the data vector's pair formula, in the
+Limber approximation; its low-$\ell$ non-Limber recompute is linear
+(Appendix~\ref{app:open}).  Its non-Limber grid converges the adjacent
+thin-bin cross spectra to $2\%$ and the diagonal to $0.4\%$.  It takes
+massless neutrinos, so its signal sits $3\%$ above the data vector
+($m_\nu = 0.06$~eV) at every redshift.  Against a linear-bias
+covariance the FoMs move by $-0.4\%$ to $+1.2\%$.
 
 \paragraph{The linear-bias run.}
-The notebook \texttt{EXAMPLE\_EVALUATE\_FISHER.ipynb}, called v1 in the
-notebooks, runs the same ladder with linear bias only; this note calls
-it the linear-bias run.  It built the mechanics, and model A runs on
-its kept band powers, so every difference from it is the bias model.
+The notebook \texttt{EXAMPLE\_EVALUATE\_FISHER.ipynb}, the linear-bias
+run, fits the same priors with linear bias on the same kept band
+powers, so every difference from it is the bias model.
 
 \section{The linear-bias prior}
 \label{sec:prior}
 
 The default model ties all bins of a group to one amplitude,
 $b_{1,i} = B_g/D(\bar{z}_i)$, with $b_{1,i}$ the linear bias of bin $i$
-and $B_g$ one free amplitude per group $g$.  This growth-tied model
-keeps the clustering amplitude $b_1 D$ of a group constant, as measured
-for DESI-like luminous red galaxies~\cite{Zhou2021}.  The tying is what
-makes thin bins powerful, and it fails in two ways.  It is too rigid:
+and $B_g$ one free amplitude per group $g$: a constant clustering
+amplitude $b_1 D$, as measured for DESI-like luminous red
+galaxies~\cite{Zhou2021}.  The tying makes thin bins powerful, but
 known physics moves each bin away from the group trend at the percent
-level (Appendix~\ref{sec:physical}).  And it is inaccurate: a drift
-the model cannot express displaces the fitted cosmology by several
-times its own error (Section~\ref{sec:accuracy}).  One free bias per
-bin is accurate by construction but spends part of the data measuring
-the biases, $76$ of them on $\Delta d_{\rm com} = 62$~Mpc.  The prior
-below sits between the two: bins may deviate from the group trend, but
-neighboring bins deviate together.
+level (Appendix~\ref{sec:physical}), and a drift the model cannot
+express displaces the fitted cosmology by several $\sigma$
+(Section~\ref{sec:accuracy}).  One free bias per bin is accurate but
+spends data on the biases, $76$ of them on
+$\Delta d_{\rm com} = 62$~Mpc.  The prior below sits between the two:
+bins may leave the group trend, but neighbors move together.
 
 The linear bias of bin $i$ in group $g$ is
 \begin{equation}
@@ -173,111 +191,91 @@ The linear bias of bin $i$ in group $g$ is
 with $B_g$ a free amplitude and $s_g$ a free tilt per group (flat
 priors), $\bar{z}_g$ the mean of the group's bin redshifts, $\delta_i$
 the fractional deviation from the group trend, and $\varepsilon_i$ the
-residual around the group's straight line.  The residuals carry a
-Gaussian prior correlated within a group and zero across groups,
+residual around the group's line.  The residuals carry a Gaussian
+prior correlated within a group and zero across groups,
 \begin{equation}
   \bigl\langle \varepsilon_i\,\varepsilon_j \bigr\rangle
   \;=\; \sigma_g^2\,
   \exp\!\left(-\,\frac{|\bar{z}_i - \bar{z}_j|}{L}\right),
   \label{eq:sumkernel}
 \end{equation}
-with $\sigma_g$ the prior width of one bin's residual in group $g$ and
-$L$ the correlation length in redshift.  The tilt is free for two
-reasons: the shape $B_g/D$ is not the evolution of a conserved
+with $\sigma_g$ the prior width of one bin's residual and $L$ the
+correlation length in redshift.  $\sigma_g$ sets how far one bin may
+wander from its group's line, $L$ how far apart two bins must be
+before their residuals are independent, and together they set the rms
+jump between neighbors at separation $\Delta z$,
+$\sigma_g[2(1 - e^{-\Delta z/L})]^{1/2}$ (Appendix~\ref{sec:jump}).
+
+The tilt is free because $B_g/D$ is not the evolution of a conserved
 population, whose bias obeys $b - 1 \propto 1/D$~\cite{Fry1996}
 (Appendix~\ref{sec:conserved}), and every derived drift is close to a
-straight line across its group (Appendix~\ref{sec:memory}).  In the
-Fisher matrix the prior becomes one projected precision block per
-group that charges only the residual, never the level or the line
-(Appendix~\ref{sec:memcharge}).  A group of one or two bins is
-therefore free, since a level and a line fix every bin.  Every group
-of the $\Delta z = 0.2$ layout is of this kind, so on that layout the
-baseline, pessimistic and free priors coincide.
-
-\paragraph{What $\sigma_g$ and $L$ mean.}
-$\sigma_g$ sets how far one bin may wander from its group's line.  $L$
-sets how far apart two bins must be before their residuals are
-independent: their correlation is $e^{-\Delta z/L}$ at a separation
-$\Delta z$.  Together they set the rms jump of the residual
-$\varepsilon$ between neighbors,
-$\sigma_g\sqrt{2\,(1 - e^{-\Delta z/L})}$ (Appendix~\ref{sec:jump}).
-Physically, the line absorbs the coherent evolution of a selected
-sample, such as a flux threshold that rises with distance or the
-debiasing of a conserved population.  The residual holds what a line
-cannot: the curvature of such a drift, and local features of the
-selection (Appendix~\ref{sec:memphysics}).
+straight line across its group (Appendix~\ref{sec:memory}): the line
+absorbs coherent evolution, and the residual the curvature of a drift
+and local features of the selection (Appendix~\ref{sec:memphysics}).
+In the Fisher matrix the prior is one projected precision block per
+group that charges only the residual (Appendix~\ref{sec:memcharge}), so
+a group of one or two bins is free.  Every group of the
+$\Delta z = 0.2$ layout is of this kind, and there the baseline,
+pessimistic and free priors coincide.
 
 \paragraph{The four priors.}
 \begin{itemize}
   \item \textbf{Growth-tied}: $b_{1,i} = B_g/D(\bar{z}_i)$, with no
     tilt and no residual; the default of the shipped yamls.
   \item \textbf{The baseline prior}: $\sigma_g = 3\%$ for BGS, $1\%$
-    for the other five groups, and $L = 0.2$.  The BGS width holds the
-    curvature of its flux-limit drift.  The $r < 19.5$ magnitude limit
-    becomes a luminosity threshold that rises with redshift and moves
-    the bias $22\%$ away from the growth-tied shape across the group;
-    a straight line removes all of that except a $2.4\%$ rms curvature
-    (Appendix~\ref{app:bgsflux}).  The $1\%$ of the other groups is a
-    stated hedge for selection curvature not modeled here, at least six
-    times the residual a conserved population leaves after its line
-    (at most $0.16\%$ rms, Appendix~\ref{sec:memphysics}).  $L = 0.2$
-    is comparable to the group spans, so the residual is smooth across
-    a group.
+    elsewhere, and $L = 0.2$.  The BGS width holds the $2.4\%$ rms
+    curvature that a straight line leaves of the $22\%$ drift of its
+    $r < 19.5$ flux limit (Appendix~\ref{app:bgsflux}); the $1\%$ is a
+    stated hedge for unmodeled selection curvature, at least six times
+    the $0.16\%$ rms a conserved population leaves after its line
+    (Appendix~\ref{sec:memphysics}).  $L = 0.2$, comparable to the
+    group spans, keeps the residual smooth across a group.
   \item \textbf{The pessimistic prior}: $\sigma_g = 3\%$ in every group
-    and $L = 0.05$.  It places local selection features in every group,
-    as large as the largest derived curvature, on the redshift scale
-    over which the $4000$~\AA\ break crosses a filter edge.  That
-    crossing is known, but its amplitude in bias is not measured
-    (Appendix~\ref{sec:selection}), so this prior grants it the largest
-    derived size everywhere.
+    and $L = 0.05$: local selection features as large as the largest
+    derived curvature, on the redshift scale over which the
+    $4000$~\AA\ break crosses a filter edge.  That crossing is known,
+    but its amplitude in bias is not measured
+    (Appendix~\ref{sec:selection}).
   \item \textbf{Free}: one $b_{1,i}$ per bin, each with a flat prior;
     the lower limit.
 \end{itemize}
 
-Figure~\ref{fig:priordraws} draws both stated priors around the known
+Figure~\ref{fig:priordraws} draws both priors around the known
 drifts.  Under the baseline prior the neighbor rms of the residual at
-$\Delta z = 0.02$ is $0.44\%$ ($1.31\%$ for BGS), the draws are
-smooth, and the known drifts sit well inside the family: the curvature
-the BGS line leaves costs a prior penalty of about $0.8$ per charged
-direction on the $\Delta d_{\rm com} = 62$~Mpc bins.  Under the
-pessimistic prior the neighbor rms is $2.44\%$ in every group: the
-histories keep their lines but gain local features nobody has
-measured, which is the point of that prior.
+$\Delta z = 0.02$ is $0.44\%$ ($1.31\%$ for BGS), and the known drifts
+sit well inside the smooth family; under the pessimistic prior it is
+$2.44\%$ in every group: the histories keep their lines but gain local
+features nobody has measured.
 
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=\linewidth]{plots/prior_draws/prior_draws.pdf}
-  \caption{Draws of the two stated priors on the $\Delta z = 0.02$
-    bins, one column per group: the baseline prior (top row;
-    $\sigma_g = 3\%$ for BGS and $1\%$ elsewhere, $L = 0.2$) and the
-    pessimistic prior (bottom row; $\sigma_g = 3\%$, $L = 0.05$).  Each
-    column is divided by the round constant $\delta_g$ in its top panel,
-    so all panels share one axis.  Thick dashed: the conserved-population
-    drift; thick dash-dot (BGS): the $r < 19.5$ flux-limit drift.  Thin
-    curves: four draws of $\delta(z)$, each on the line of the group's
-    reference drift (the flux limit in BGS, the conserved population
-    elsewhere), so draw and drift differ by the residual
-    $\varepsilon$.}
+  \caption{Draws of the baseline prior (top row) and the pessimistic
+    prior (bottom row) on the $\Delta z = 0.02$ bins, one column per
+    group, each column divided by the round constant $\delta_g$ of its
+    top panel.  Thick dashed: the conserved-population drift; thick
+    dash-dot (BGS): the $r < 19.5$ flux-limit drift.  Thin curves: four
+    draws of $\delta(z)$ on the line of the group's reference drift, so
+    draw and drift differ by the residual $\varepsilon$.}
   \label{fig:priordraws}
 \end{figure}
 
 \section{Model A}
 \label{sec:modela}
 
-Linear bias alone is not enough at this cut: in the companion note
-\texttt{notes/linear\_bias\_kmax}, a linear-bias fit to a one-loop truth
-at $\kmax = 0.075\hMpc$ moves $\Omega_m$ by $1.5$--$1.8\sigma$ and
-$(w_0, w_a)$ by $0.28$--$0.55\sigma$ on the
-$\Delta d_{\rm com} = 62$~Mpc layout under the four linear-bias priors,
-and linear bias is safe only at $\kmax = 0.05\hMpc$.
-Model A, of \texttt{notes/higher\_order\_bias}, keeps the per-bin
-linear bias of Eq.~\eqref{eq:summodel} and adds the one-loop terms.  As
-computed here, the real-space galaxy power spectrum of bin $i$ is
+Linear bias alone is not enough at $\kmax = 0.075\hMpc$: a
+linear-bias fit to a one-loop truth moves $\Omega_m$ by
+$1.5$--$1.8\sigma$ on $\Delta d_{\rm com} = 62$~Mpc under every
+linear-bias prior, and is safe only at $\kmax = 0.05\hMpc$
+(\texttt{notes/linear\_bias\_kmax}).  Model A
+(\texttt{notes/higher\_order\_bias}) keeps the per-bin linear bias of
+Eq.~\eqref{eq:summodel} and adds the one-loop terms; the real-space
+galaxy power spectrum of bin $i$ is
 \begin{equation}
   P_{gg,i}(k) \;=\; b_{1,i}^2\,P_{\rm mm}(k)
   \;+\; P_{\rm loop}(k;\, b_{1,i}, b_{2,i}, b_{s^2,i})
   \;+\; \alpha_0\,k^2 P_{\rm mm}(k)
-  \;+\; \frac{{\rm SN}_0}{\bar{n}_i} ,
+  \;+\; \frac{\SNz}{\bar{n}_i} ,
   \label{eq:modela}
 \end{equation}
 where $P_{\rm mm}$ is the nonlinear matter power spectrum and
@@ -287,11 +285,11 @@ matter density contrast $\delta_m$ (the galaxy density contrast
 contains $b_2\,\delta_m^2/2$), and the tidal bias $\bstwo$, its
 response to the squared tidal field; the third-order bias $b_3$ is
 zero.  $\alpha_0$ is the $k^2$ counterterm, in $h^{-2}\,{\rm Mpc}^2$,
-which absorbs the sensitivity of the loops to small scales.
-${\rm SN}_0$ is the white-noise power beyond Poisson, in units of the
-bin's Poisson power $1/\bar{n}_i$, with $\bar{n}_i$ the bin's number
-density.  The higher-order biases follow each bin's own linear bias
-through calibrations, plus one offset per group:
+which absorbs the sensitivity of the loops to small scales, and $\SNz$
+the white-noise power beyond Poisson, in units of the bin's Poisson
+power $1/\bar{n}_i$, with $\bar{n}_i$ the bin's number density.  The
+higher-order biases follow each bin's own linear bias through
+calibrations, plus one offset per group:
 \begin{equation}
   b_{2,i} \;=\; b_2^{\rm L}(b_{1,i}) + \Delta_{2,g},
   \qquad
@@ -302,63 +300,206 @@ with $b_2^{\rm L}$ the separate-universe fit of Lazeyras et
 al.~\cite{Lazeyras2016} and the second relation the co-evolution of a
 population formed with local bias~\cite{Saito2014}.
 
-The priors are Gaussian and centered on zero: widths $1$ on
-$\Delta_2$, $0.5$ on $\Delta_s$, $2$ on ${\rm SN}_0$ and
-$0.5/\kmax^2 = 88.9\aunit$ on $\alpha_0$.  The $\alpha_0$ width is the
-rule of the DESI 2024 full-shape analysis~\cite{DESI2024V,Maus2024}
-moved to this cut: $\alpha_0 k^2 = 0.5$ at $k = \kmax$, a $50\%$
-correction relative to $P_{\rm mm}$ at the $z = 0$ cut.  At bin $i$'s
-own cut, $\kmax/D(\bar{z}_i)$, the same width gives
-$\alpha_0 k^2 = 0.5/D(\bar{z}_i)^2$.  Relative to the linear galaxy
-power $b_{1,i}^2 P_{\rm mm}$ both are smaller by a further factor
-$b_{1,i}^2$.  Redshift-space distortions are linear (Kaiser), with
-each bin's redshift distribution convolved by the sampled velocity
-dispersion $\sigma_v$ (the Fingers-of-God smearing), as in the
-linear-bias run.
+\paragraph{Redshift space.}
+Redshift-space distortions are linear (Kaiser), with each bin's
+redshift distribution convolved by the sampled velocity dispersion
+$\sigma_v$ (the Fingers-of-God smearing).  Two more terms depend on
+$\mu$, the cosine of the angle to the line of sight.  The counterterm
+$\alpha_2$ adds, in the convention of the DESI DR1 full-shape
+analysis~\cite{Maus2024},
+\begin{equation}
+  P_{\rm CT} \;=\; (b_1 + f\mu^2)\,f\,\alpha_2\,\mu^2 k^2 P_{\rm lin} ,
+  \label{eq:alpha2}
+\end{equation}
+with $f$ the linear growth rate and $P_{\rm lin}$ the linear matter
+power spectrum; model A fixes $\alpha_2 = 0$.  The stochastic power
+$\SNt\,k^2\mu^2$ is counted in units of
+$f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}_i$, with $f_{\rm sat}$ the
+satellite fraction and $\sigma_{\rm sat}$ the satellites' velocity
+dispersion in distance units: $(0.1, 7.8\,h^{-1}{\rm Mpc})$ for LRG,
+$(0.1, 2.9\,h^{-1}{\rm Mpc})$ for ELG, and the LRG values for BGS.
+Both stochastic terms project exactly, without the Limber
+approximation:
+\begin{equation}
+  C^{ij}_\ell\big|_{\SNz} = \SNz\,P_{ij} \int d\chi\,
+  \frac{W_i\,W_j}{\chi^2} ,
+  \qquad
+  C^{ij}_\ell\big|_{\SNt} = \SNt\,f_{\rm sat}\sigma_{\rm sat}^2\,P_{ij}
+  \int d\chi\, \frac{W_i'\,W_j'}{\chi^2} ,
+  \label{eq:snproj}
+\end{equation}
+with $\chi$ the comoving distance, $W_i(\chi)$ the
+Fingers-of-God-convolved kernel of bin $i$, $W_i' = dW_i/d\chi$, and
+$P_{ij}$ the Poisson power of the pair (Appendix~\ref{sec:likelihood}).
+Because $k^2\mu^2$ is the squared line-of-sight wavenumber, $\SNt$ is
+white noise differentiated along the line of sight, and its projection
+is that of $\SNz$ with each kernel replaced by its radial derivative.
 
-Two variants of the higher-order sector sit on every linear-bias prior.
-\textbf{Model A baseline} has one $\Delta_2$, $\Delta_s$, $\alpha_0$
-and ${\rm SN}_0$ per group, $24$ parameters.  \textbf{Model A
-pessimistic} also tilts the $\Delta_2$, $\Delta_s$ and $\alpha_0$ of
-each group linearly in redshift, with flat priors on the tilts, up to
-$42$ parameters.  ${\rm SN}_0$ is not tilted, by choice: its Poisson
-part is known bin by bin, and the excess is kept at one number per
-group.  Appendix~\ref{app:impl} describes the implementation and the
-Fisher matrices.
+\paragraph{Why model A carries $\SNt$.}
+A thin bin's kernel derivative peaks at its two edges, with opposite
+signs.  Adjacent bins share an edge, where one kernel rises as the
+other falls, so the projected $\SNt$ is anticorrelated between
+neighbors: normalized by the two autos, its cross term has a median of
+$-0.50$ over the $73$ adjacent pairs of one tracer sample on
+$\Delta d_{\rm com} = 62$~Mpc, against $+0.05$ for $\SNz$.  No white
+noise, per group or per bin, can mimic it.  Without $\SNt$, model A
+broke at $\kmax = 0.05\hMpc$ on $\Delta d_{\rm com} = 62$~Mpc and
+before the first fitted cut on $\Delta z = 0.02$: an $\SNt$ truth at
+one prior width moved $\Omega_m$ by $1.3$--$1.7\sigma$ at $0.075$,
+mostly through the adjacent cross spectra.  The LRG groups carried
+that shift; $\SNt$ in BGS alone moved nothing, so the BGS unit does
+not matter, and in the ELG groups alone at most $0.23\sigma$.
+
+\paragraph{Priors and variants.}
+The priors are Gaussian and centered on zero: widths $1$ on
+$\Delta_2$, $0.5$ on $\Delta_s$, $2$ on $\SNz$, $5$ on $\SNt$ (the DESI
+DR1 widths), and $0.5/\kmax^2 = 88.9\aunit$ on $\alpha_0$, the rule of
+the DESI 2024 full-shape analysis~\cite{DESI2024V,Maus2024} moved to
+this cut: $\alpha_0 k^2 = 0.5$ at $k = \kmax$.  Since $\alpha_0$
+multiplies $P_{\rm mm}$, at bin $i$'s own cut the width is a correction
+of $0.5/B_g^2$ to the linear galaxy power, the same in every bin of a
+group.
+\textbf{Model A baseline} has one $\Delta_2$, $\Delta_s$, $\alpha_0$,
+$\SNz$ and $\SNt$ per group, $30$ parameters.  \textbf{Model A
+pessimistic} also tilts $\Delta_2$, $\Delta_s$ and $\alpha_0$ linearly
+in redshift within each group, with flat priors on the tilts, up to
+$48$ parameters.  $\SNz$ and $\SNt$ never tilt: their Poisson part is
+known bin by bin.  Appendix~\ref{app:impl} gives the implementation.
+
+\section{Model B and the reach of model A}
+\label{sec:modelb}
+
+\paragraph{Model B.}
+Model B keeps model A's linear sector, calibrations and stochastic
+terms and adds the freedom a larger $\kmax$ calls for: $\alpha_2$
+(Eq.~\eqref{eq:alpha2}) is free per group, and the offset widths double
+to $2$ on $\Delta_2$ and $1$ on $\Delta_s$.  Model B pessimistic tilts
+$\alpha_2$ as well: $36$ parameters for model B baseline, up to $60$
+for model B pessimistic.  In the scan the counterterm widths of both
+models follow $0.5/\kmax^2$ at every cut, DESI's $12.5\aunit$ at
+$0.2\hMpc$.  $\alpha_2$ projects exactly, through the linear Kaiser
+transfer and its redshift-space row: it is linear to $10^{-12}$, a
+brute-force integral over $j_\ell$ and $j_\ell''$ agrees with it to
+$6\times10^{-4}$, and at $\alpha_2 = 12.5\aunit$ it is $0.6$--$2.9\%$ of
+the kept auto spectra.  CosmoLike has no redshift-space one-loop terms;
+model B relies on the sampled $\sigma_v$ and on $\alpha_2$ for them.
+
+\paragraph{Where model A breaks.}
+A model A fit is given a truth that carries one term at one prior
+width, the same in every bin: $\alpha_2 = \pm 12.5\aunit$, the term
+model A lacks, at DESI's width; $\SNt = \pm 5$; or the offsets
+$(\Delta_2, \Delta_s) = \pm(1, 0.5)$.  The shift of the fit is the
+linear response of Appendix~\ref{sec:biasformula}, exact for $\alpha_2$
+and $\SNt$, whose terms are linear, and first order for the offsets.
+Model A holds at a cut when no truth moves $(w_0, w_a)$, $\Omega_m$ or
+$A_s$ by more than $\sigma/3$, there and at every smaller fitted cut;
+it breaks at the next cut.  Figure~\ref{fig:break} draws the largest
+shift.  The break point is the same under the three linear-bias priors
+that pass the accuracy test of Section~\ref{sec:accuracy}:
+\begin{itemize}
+  \item $\Delta d_{\rm com} = 62$~Mpc and $\Delta z = 0.02$: model A
+    holds to its own cut, $0.075\hMpc$, in both variants, and breaks
+    at $0.1$, mostly through $\alpha_2$: in $A_s$ on the first layout
+    and in $(w_0, w_a)$ on the second;
+  \item $\Delta z = 0.05$: model A baseline holds to $0.1$ and model A
+    pessimistic to $0.15$;
+  \item $\Delta z = 0.2$: model A holds at every cut; its wide bins
+    barely see $\alpha_2$.
+\end{itemize}
+With $\SNt$ in the fit, an $\SNt$ truth at one prior width moves no
+parameter by more than $0.3\sigma$ at any cut.
+
+The offset truth stays inside model A's priors.  If the calibrations
+instead scatter as widely as model B allows, $\pm(2, 1)$, model A's
+tighter offset priors shift its largest score by $0.23$--$0.44\sigma$
+at $0.075$ and by $0.31$--$0.75\sigma$ from $0.1$ up: a diagnostic of
+the prior, outside the break point.  Likewise, when $\alpha_2$
+scatters over model B's whole prior, seven times $12.5\aunit$ at
+$0.075$, model A's error bars on the two thin layouts at that cut are
+too small by factors of $2.1$--$3.7$ and cover the truth in
+$15$--$36\%$ of universes instead of $68\%$; they recover as the prior
+narrows with $\kmax$, and on the wide layouts they are too small by
+at most $12\%$ at every cut.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics{plots/model_a_break/model_a_break.pdf}
+  \caption{The largest shift of a model A fit, over $(w_0, w_a)$,
+    $\Omega_m$ and $A_s$, under truths that carry $\alpha_2$, $\SNt$ or
+    the offsets at one prior width, against $\kmax$; one panel per
+    linear-bias prior.  Solid: model A pessimistic; dashed: model A
+    baseline; colors: the layouts; dotted: $\sigma/3$.
+    \kmaxscanclause}
+  \label{fig:break}
+\end{figure}
+
+\paragraph{The FoM against $\kmax$.}
+Figures~\ref{fig:fomkmax} and \ref{fig:fomkmaxomas} are the forecast:
+the FoM against $\kmax$ under the baseline, pessimistic and free
+priors, model A pessimistic up to its break and model B pessimistic at
+every cut, with LSST Y1 3x2pt for reference.  They draw the
+pessimistic variants, which absorb a linear drift of the calibrations
+(Section~\ref{sec:accuracy}).  Model B baseline on the baseline prior,
+the forecast for better-known bias evolution and calibrations, passes
+LSST Y1 on the thin layouts at the largest cuts, with
+${\rm FoM}(w_0, w_a) = 19.0$ ($\Delta d_{\rm com} = 62$~Mpc) and $25.7$
+($\Delta z = 0.02$) at $\kmax = 0.25\hMpc$; its
+${\rm FoM}(\Omega_m, 10^9 A_s)$ reaches at most $125$.  The model A FoMs beyond the break, which extending model A
+would claim, are in \texttt{plots/fom\_kmax\_models/data.json}.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics{plots/fom_kmax_models/fom_kmax_models.pdf}
+  \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone against
+    $\kmax$ under the baseline, pessimistic and free priors (top to
+    bottom).  Solid with points: model A pessimistic, up to its break
+    (Figure~\ref{fig:break}); dashed: model B pessimistic; colors: the
+    layouts; gray long-dashed: LSST Y1 3x2pt.  On $\Delta z = 0.02$ the
+    cut at $0.05$ keeps no band.  \kmaxscanclause}
+  \label{fig:fomkmax}
+\end{figure}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics{plots/fom_kmax_models/fom_kmax_models_om_as.pdf}
+  \caption{As Figure~\ref{fig:fomkmax}, for
+    ${\rm FoM}(\Omega_m, 10^9 A_s)$.  The LSST Y1 3x2pt value, far
+    above the DESI curves, is quoted in the top panel.
+    \kmaxscanclause}
+  \label{fig:fomkmaxomas}
+\end{figure}
 
 \section{The accuracy test}
 \label{sec:accuracy}
 
 No mock catalogs and only two derived drift laws are available, so
 this note does not defend one prior.  It tests each prior against
-random truths and quotes the FoM only for the priors that pass.
+random truths at $\kmax = 0.075\hMpc$ under model A and quotes the FoM
+only for the priors that pass.
 
 \paragraph{Random truths.}
 Each truth sets every bin's linear bias to its group's known drift
 (the $r < 19.5$ flux limit in BGS, a conserved galaxy population
 elsewhere; Appendix~\ref{sec:driftlaws}) plus a residual drawn from
-the baseline or the pessimistic prior, $2000$ truths per family
-(Appendix~\ref{sec:randomtruths}).  The truth's $b_2$ and $\bstwo$
-follow its $b_1$ through Eq.~\eqref{eq:calibrations}.  Every
-linear-bias prior fits every truth under both variants, centered on the
-growth-tied shape, to first order in the truth
-(Appendix~\ref{sec:biasformula}).  Figure~\ref{fig:scatter} draws the
-$(w_0, w_a)$ shift of each fit in units of its own ellipse, without
-data noise.  Where a fit's prior equals the truth's scatter, the mean
-shift is not a bias: that fit's ellipse already includes this scatter
-(Appendix~\ref{sec:inflation}).
+the baseline or the pessimistic prior, $2000$ truths per family, with
+$b_2$ and $\bstwo$ following $b_1$ through
+Eq.~\eqref{eq:calibrations}.  Every prior fits every truth under both
+variants, centered on the growth-tied shape, to first order in the
+truth (Appendix~\ref{app:bias}).  Figure~\ref{fig:scatter} draws the
+$(w_0, w_a)$ shifts.  Where a fit's prior equals the truth's scatter,
+the mean shift is not a bias: that fit's ellipse already includes this
+scatter (Appendix~\ref{sec:inflation}).
 
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.62\linewidth]{plots/ladder_bias_scatter/ladder_bias_scatter.pdf}
+  \includegraphics{plots/ladder_bias_scatter/ladder_bias_scatter.pdf}
   \caption{The $(w_0, w_a)$ shift of each fit in units of its own
-    marginalized ellipse, under model A, for $2000$ truths: the known
-    drifts plus a residual drawn from the baseline prior (top) or the
-    pessimistic prior (bottom), without data noise.  Filled: model A
-    baseline; open: model A pessimistic; colors: the layouts.  Points:
-    the mean shift; bars: the 16th--84th percentiles.  Gray columns: the
-    baseline and pessimistic priors.  Dashed line: $\sigma/3$.  Points
-    at $10^{-3}$: exact zeros.  \kmaxclause}
+    ellipse, for truths with a residual drawn from the baseline prior
+    (top) or the pessimistic prior (bottom), without data noise.
+    Filled: model A baseline; open: model A pessimistic; colors: the
+    layouts.  Points: the mean shift; bars: 16th--84th percentiles.
+    Gray columns: the baseline and pessimistic priors.  Dashed:
+    $\sigma/3$.  Points at $10^{-3}$: exact zeros.  \kmaxclause}
   \label{fig:scatter}
 \end{figure}
 
@@ -371,35 +512,28 @@ Each fit is scored by
   \label{eq:gof}
 \end{equation}
 with $\Delta p$ the recovered minus the true parameters,
-$\mathsf{C}_p$ the fit's marginalized covariance, $n_{\rm dof} = 2$ for
-$p = (w_0, w_a)$ and $1$ for $\Omega_m$ or $A_s$, and
+$\mathsf{C}_p$ the fit's marginalized covariance, $n_{\rm dof} = 2$
+for $p = (w_0, w_a)$ and $1$ for $\Omega_m$ or $A_s$, and
 $\langle\cdot\rangle$ the exact average over the data noise and the
-bias history (the known drift plus a random residual).  Its value,
-written $\eta$, is $1$ for error bars that cover the truth as often as
-they claim; above $1$ they are too small, and below $1$ conservative.
-It scores the recovery of the parameters, not the $\chi^2$ of the
-data: a biased fit can match the band powers while its cosmology is
-wrong.  Appendix~\ref{app:bias} derives it and converts it into the
-fraction of universes in which a one-parameter $1\sigma$ bar covers the
-truth; the percentages below come from that conversion.
+bias history.  It measures how well each fit's quoted error bar covers
+where the fit actually lands.  Its value, written $\eta$, is $1$ for
+error bars that cover the truth as often as they claim; above $1$ they
+are too small by that factor, and below $1$ conservative.  It scores
+the parameters, not the $\chi^2$ of the data, and for one parameter it
+converts into the fraction of universes in which the $1\sigma$ bar
+covers the truth (Appendix~\ref{sec:inflation}).
 
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.62\linewidth]{plots/goodness_of_fit/goodness_of_fit.pdf}
+  \includegraphics{plots/goodness_of_fit/goodness_of_fit.pdf}
   \caption{How well each fit's quoted error bar covers where the fit
-    actually lands, measured by $\eta = \chidof$:
-    $\chi^2 = \Delta p\T \mathsf{C}_p^{-1} \Delta p$, with $\Delta p$
-    the recovered minus the true parameters and $\mathsf{C}_p$ the
-    fit's marginalized covariance; $n_{\rm dof} = 2$ for $(w_0, w_a)$,
-    $1$ for $\Omega_m$ or $A_s$; $\langle\cdot\rangle$ averages over the
-    data noise and the bias history (the known drifts plus a residual
-    from the pessimistic prior).  For one parameter, the $1\sigma$ bar
-    covers the truth in a fraction $2\Phi(1/\eta) - 1$ of the universes
-    ($\Phi$ the Gaussian cumulative distribution): $68\%$ at $\eta = 1$
-    (dashed line), $38\%$ at $\eta = 2$.  Model A baseline; squares:
-    the growth-tied prior; circles: the baseline prior.  Omitted: the
-    free prior (exactly $1$) and the pessimistic prior (at most
-    $1.05$).  \kmaxclause}
+    actually lands: $\eta = \chidof$ of $(w_0, w_a)$, $\Omega_m$ and
+    $A_s$ under the pessimistic scatter, model A baseline.  Squares:
+    the growth-tied prior; circles: the baseline prior; dashed:
+    $\eta = 1$.  A one-parameter $1\sigma$ bar covers the truth in a
+    fraction $2\Phi(1/\eta) - 1$ of universes, $\Phi$ the Gaussian
+    cumulative distribution.  Omitted: the free prior (exactly $1$) and
+    the pessimistic prior (at most $1.05$).  \kmaxclause}
   \label{fig:gof}
 \end{figure}
 
@@ -409,80 +543,63 @@ Figures~\ref{fig:scatter} and \ref{fig:gof} order the priors.
   \item \emph{The growth-tied prior fails under every truth and is
     discarded.}  The conserved-population drift alone moves its
     $(w_0, w_a)$ by several $\sigma$ (Appendix~\ref{sec:tabdrifts}),
-    and its error bars are far too small under both scatters; under the
-    pessimistic scatter its $\Omega_m$ bar covers the truth in only
-    $5$--$39\%$ of universes.
-    Under model A pessimistic, whose flat-prior tilts follow part of a
-    linear-bias drift, $\eta$ falls to $1.4$--$2.3$ in $(w_0, w_a)$,
-    still far from honest.  A prior whose error bars do not cover the
-    truth has no meaningful FoM.
-  \item \emph{The baseline prior is honest only if the bias residual is
-    as smooth as it assumes.}  Under its own scatter $\eta$ is
+    and under the pessimistic scatter its $\Omega_m$ bar covers the
+    truth in only $5$--$40\%$ of universes.  Under model A
+    pessimistic, whose flat-prior tilts follow part of a drift, $\eta$
+    of $(w_0, w_a)$ is still $1.4$--$2.3$.
+  \item \emph{The baseline prior is honest only if the residual is as
+    smooth as it assumes.}  Under its own scatter $\eta$ is
     $1.00$--$1.02$.  Under the pessimistic scatter it fails on every
-    layout but $\Delta z = 0.2$ (Section~\ref{sec:prior}): the $\Omega_m$ bar
-    covers the truth in only $56$, $63$ and $40\%$ of universes on
-    $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$ and $0.05$, and the
-    $A_s$ bar in $57$, $65$ and $54\%$.  Because the noise term of
-    $\langle\chi^2\rangle$ is at most one, the rms displacement beyond
-    the noise is at least $(\eta^2 - 1)^{1/2}$ error bars
-    (Appendix~\ref{sec:inflation}).  Model A pessimistic does not change
-    this.
+    layout but $\Delta z = 0.2$, where the priors coincide: the
+    $\Omega_m$ bar covers the truth in $55$, $63$ and $40\%$ of
+    universes on $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$ and
+    $0.05$, and the $A_s$ bar in $56$, $64$ and $54\%$.  Model A
+    pessimistic does not change this.
   \item \emph{The pessimistic prior is honest under both scatters}:
     $\eta \le 1.05$ in every score, and $0.89$--$1.00$ in $(w_0, w_a)$
-    (conservative) under baseline scatter.  The $1.05$ comes from the BGS
-    flux-limit drift on $\Delta z = 0.05$, which this prior leaves just
-    above $\sigma/3$ (Appendix~\ref{sec:tabdrifts}).  The free prior
-    gives exactly $1$.
+    under baseline scatter.  The $1.05$ is the BGS flux-limit drift on
+    $\Delta z = 0.05$, which this prior leaves just above $\sigma/3$
+    (Appendix~\ref{sec:tabdrifts}).  The free prior gives exactly $1$.
 \end{itemize}
 
 \paragraph{A drift of the calibrations.}
-The random truths move only the linear bias; the higher-order biases
-follow it through calibrations assumed exact up to one constant offset
-per group.  A third truth tests that assumption.  It drifts the offsets
-linearly with the bin redshift across each group, $\Delta_2$ from
-about $-0.5$ to $+0.5$ and $\Delta_s$ from about $-0.25$ to $+0.25$
-(half the prior width at each end), and keeps $b_1$ at its fiducial
+The random truths move only the linear bias.  A third truth tests the
+calibrations: it drifts the offsets linearly across each group,
+$\Delta_2$ from about $-0.5$ to $+0.5$ and $\Delta_s$ from about
+$-0.25$ to $+0.25$, with $b_1$ at its fiducial
 (Appendix~\ref{sec:ladderimpl}).  Under model A baseline
-(Figure~\ref{fig:caldrift}) the shift of $(w_0, w_a)$ exceeds
-$\sigma/3$ under every prior on the two wide layouts, $\Delta z = 0.05$
-and $0.2$, and the $A_s$ shift of the baseline, pessimistic and free
-priors reaches $\sigma/3$ on $\Delta z = 0.05$.
-On the two thin layouts only the growth-tied prior exceeds $\sigma/3$.
-Model A pessimistic absorbs this drift exactly, by construction: its
-tilts have the drift's shape.  The test shows only that the tilts work
-for a linear drift; a nonlinear drift of the calibrations within a
-group is untested.
+(Figure~\ref{fig:caldrift}) it moves $(w_0, w_a)$ by more than
+$\sigma/3$ under every prior on the wide layouts, $\Delta z = 0.05$ and
+$0.2$, and $A_s$ as well on $\Delta z = 0.05$; on the thin layouts
+only the growth-tied prior exceeds $\sigma/3$.  Model A pessimistic
+absorbs the drift exactly, since its tilts have the drift's shape; a
+nonlinear drift of the calibrations within a group is untested.
 
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.62\linewidth]{plots/calibration_drift/calibration_drift.pdf}
+  \includegraphics{plots/calibration_drift/calibration_drift.pdf}
   \caption{The shift of a model A baseline fit under the calibration
     drift ($\Delta_2$ and $\Delta_s$ changing linearly by $1$ and $0.5$
     across each group): $(w_0, w_a)$ in units of the fit's ellipse,
-    $\Omega_m$ and $A_s$ in their own $\sigma$, per layout.  Markers:
-    the four linear-bias priors.  Dashed line: $\sigma/3$.  Omitted:
-    model A pessimistic, which absorbs the drift exactly by
-    construction.  \kmaxclause}
+    $\Omega_m$ and $A_s$ in their own $\sigma$.  Markers: the four
+    linear-bias priors; dashed: $\sigma/3$.  Omitted: model A
+    pessimistic, which absorbs the drift exactly.  \kmaxclause}
   \label{fig:caldrift}
 \end{figure}
 
-\section{The figure of merit}
+\section{The figure of merit at $\kmax = 0.075\hMpc$}
 \label{sec:fom}
 
 A FoM means something only for a prior that passes the accuracy test:
-the pessimistic and free priors under both truths, the baseline prior
-only if the bias residual is as smooth as it assumes.
-Figure~\ref{fig:ladder} therefore draws these three priors, with
-${\rm FoM}(w_0, w_a)$ in panel (a) and
-${\rm FoM}(\Omega_m, 10^9 A_s)$ in panel (b), both from the same Fisher
-inverse.  Both fall from the baseline prior to free under each
-variant, except on $\Delta z = 0.2$, where the three priors coincide.
-The two thin layouts carry most of the information.  Model A
-pessimistic costs little against model A baseline on the thin layouts
-and more on the wide ones.  DESI $C_\ell^{gg}$ alone sits well below
-LSST Y1 3x2pt~\cite{DESCSRD2018} in both figures of merit at this cut.
-Appendix~\ref{app:comparison} sets these FoMs next to the linear-bias
-run and to exact calibrations, neither of which is a result here.
+the pessimistic and free priors, and the baseline prior only if the
+bias residual is as smooth as it assumes.  Figure~\ref{fig:ladder}
+draws these three priors under both variants of model A.  Both FoMs
+fall from the baseline prior to free, except on $\Delta z = 0.2$; the
+thin layouts carry most of the information, and model A pessimistic
+costs little against model A baseline on them and more on the wide
+layouts.  DESI $C_\ell^{gg}$ alone sits well below LSST Y1 3x2pt in
+both FoMs.  Appendix~\ref{app:comparison} sets these FoMs next to
+linear bias and exact calibrations, neither of which is a result.
 
 \begin{figure}[tbp]
   \centering
@@ -497,27 +614,23 @@ run and to exact calibrations, neither of which is a result here.
     {\small (b)}
   \end{minipage}
   \caption{\textbf{(a)} ${\rm FoM}(w_0, w_a)$ and \textbf{(b)}
-    ${\rm FoM}(\Omega_m, 10^9 A_s)$ of DESI $C_\ell^{gg}$ alone under the
-    baseline, pessimistic and free priors.  Colors: the bin layouts.
+    ${\rm FoM}(\Omega_m, 10^9 A_s)$ of DESI $C_\ell^{gg}$ alone under
+    the baseline, pessimistic and free priors.  Colors: the layouts.
     Solid: model A baseline; dashed: model A pessimistic.  The text in
-    each panel quotes the LSST Y1 3x2pt value of the same figure of
-    merit, which lies far above the DESI points.  \kmaxclause}
+    each panel quotes the LSST Y1 3x2pt value, far above the DESI
+    points.  \kmaxclause}
   \label{fig:ladder}
 \end{figure}
 
 \paragraph{Result.}
-The headline is model A pessimistic on the pessimistic prior: it is
-honest under both families of random truths and absorbs a linear
-calibration drift exactly.  Model A baseline on the baseline prior
-shows what better knowledge of bias evolution would buy.  It holds
-only under two assumptions: each bin's linear-bias residual is no
-larger and no rougher than the baseline prior, and the calibrations of
-$b_2$ and $\bstwo$ hold within a group up to one constant offset.  If
-the first fails at the pessimistic size, the $\Omega_m$ bar covers the
-truth in only $40$--$63\%$ of universes; if the second fails by the
-linear drift above, $(w_0, w_a)$ moves by more than $\sigma/3$ on the
-wide layouts.  The free prior under model A pessimistic is the lower
-limit, and the growth-tied prior is discarded.
+At this cut, model A pessimistic on the pessimistic prior is the
+forecast that stays honest under every truth tested, and the free
+prior is the lower limit.  Model A baseline on the baseline prior
+shows what better knowledge of bias evolution would buy, if each bin's
+residual is no larger and no rougher than the baseline prior and the
+calibrations hold within a group up to one constant offset.
+Figures~\ref{fig:fomkmax} and \ref{fig:fomkmaxomas} carry the forecast
+to other cuts.
 
 \clearpage
 
@@ -529,86 +642,66 @@ limit, and the growth-tied prior is discarded.
 \section{Implementation and the Fisher construction}
 \label{app:impl}
 
-\subsection{Model A in the likelihood}
+\subsection{Models A and B in the likelihood}
 \label{sec:likelihood}
 
-Model A runs in the project likelihood
-(\texttt{likelihood/desi\_cl.py}) when its option
-\texttt{higher\_order\_bias} is $1$; the example yamls
-\texttt{EXAMPLE\_EVALUATE\_MODEL\_A1}--\texttt{A4.yaml} set it up on the
-four layouts, in the order $\Delta d_{\rm com} = 62$~Mpc,
-$\Delta z = 0.02$, $0.05$, $0.2$.  Every model A parameter is per bin in
-the likelihood; the grouping, one value per group or a value plus a
-tilt, is a statement of the parameter yamls, generated by
-\texttt{scripts/make\_desi\_params.py --model-a}.
+The project likelihood (\texttt{likelihood/desi\_cl.py}) has two bias
+options, \texttt{higher\_order\_bias}: $0$ is linear bias, and $1$ the
+one-loop model with every term per bin ($b_{1,i}$, $\Delta_2$,
+$\Delta_s$, $\alpha_0$, $\alpha_2$, $\SNz$, $\SNt$; $b_3 = 0$), in
+which a zero amplitude switches a term off at no cost.  Models A and B
+are two parameter files of option $1$, which state the grouping
+(\texttt{scripts/make\_desi\_params.py --model-a} or
+\texttt{--model-b}); the example yamls
+\texttt{EXAMPLE\_EVALUATE\_MODEL\_A1}--\texttt{A4} and
+\texttt{B1}--\texttt{B4} run them on the four layouts, in layout order.
+The likelihood computes $b_{2,i}$ and $b_{s^2,i}$ from $b_{1,i}$ with
+Eq.~\eqref{eq:calibrations} and passes them to CosmoLike per bin.
 \begin{itemize}
-  \item \textbf{Quadratic and tidal bias.}  The likelihood computes
-    $b_{2,i}$ and $b_{s^2,i}$ from $b_{1,i}$ with
-    Eq.~\eqref{eq:calibrations} and passes them to CosmoLike through
-    the setter that takes the tidal bias per bin.
-  \item \textbf{Counterterm.}  CosmoLike's $k^2$ slot is
+  \item \textbf{Counterterms.}  CosmoLike's $k^2$ slot is
     $2\,b_1 b_K\,k^2 P_{\rm mm}$, with $b_K$ its per-bin
-    derivative-bias coefficient and $k$ in units of $H_0/c$.  The
+    derivative-bias coefficient and $k$ in units of $H_0/c$, so the
     likelihood sets $b_K = \alpha_0/[2\,b_1 (c/H_0)^2]$, with
-    $c/H_0 = 2997.92\,h^{-1}{\rm Mpc}$.  The counterterm therefore
-    multiplies the nonlinear matter spectrum, CosmoLike's convention,
-    where DESI's definition multiplies the linear one (subsection
-    ``The draft's data vector against CosmoLike'' of
-    \texttt{notes/higher\_order\_bias}).
-  \item \textbf{Stochastic term.}  A constant three-dimensional power
-    projects exactly, without the Limber approximation, to an
-    $\ell$-independent spectrum,
-    \begin{equation}
-      C^{ij}_\ell\big|_{\rm stoch} = {\rm SN}_0\,P_{ij}\,K_{ij},
-      \qquad
-      K_{ij} = \int dz\, n_i(z)\, n_j(z)\,\frac{dz/d\chi}{\chi^2},
-      \label{eq:snproj}
-    \end{equation}
-    with $n_i$ the normalized Fingers-of-God-convolved redshift
-    distribution of bin $i$, $\chi$ the comoving distance, and $P_{ij}$
-    the Poisson power of the pair.  For one bin, $P_{ii} = 1/\bar{n}_i$,
-    fixed by the bin's surface density so that the projection with the
-    raw distribution gives the angular shot noise.  A cross pair of two
-    bins of one tracer sample takes the mean of their two powers; a pair
-    of two samples takes none, because different galaxies share no
-    stochastic term.
+    $c/H_0 = 2997.92\,h^{-1}{\rm Mpc}$.  $\alpha_0$ therefore
+    multiplies the nonlinear matter spectrum, where DESI's definition
+    multiplies the linear one (\texttt{notes/higher\_order\_bias},
+    subsection ``One likelihood option, every term per bin'').
+    $\alpha_2$, in $h^{-2}\,{\rm Mpc}^2$, has its own setter and
+    multiplies the linear spectrum, as in Eq.~\eqref{eq:alpha2}.
+  \item \textbf{Stochastic terms.}  In Eq.~\eqref{eq:snproj},
+    $P_{ii} = 1/\bar{n}_i$ is fixed by the bin's surface density, so
+    that the projection with the raw distribution gives the angular
+    shot noise.  A cross pair of two bins of one tracer sample takes
+    the mean of their two powers; a pair of two samples takes none,
+    because different galaxies share no stochastic term.
   \item \textbf{Projection.}  The low-rank non-Limber engine projects
     each bin's full one-loop $P_{gg,i}$, counterterm included, and the
     adjacent cross pairs carry the bilinear one-loop pair spectrum
-    (subsection ``Gaps against model A'' of
-    \texttt{notes/higher\_order\_bias}).  Appendix~\ref{app:counterterm}
-    shows why the counterterm requires this engine.
+    (\texttt{notes/higher\_order\_bias}, subsection ``Separability and
+    the $D^4$ rule'').  Appendix~\ref{app:counterterm} shows why the
+    counterterm requires this engine.
 \end{itemize}
 
 \subsection{The derivatives}
 \label{sec:derivs}
 
-The Fisher matrix is built from the derivatives of the data vector $m$ (the
-band powers) with respect to every parameter.  The notebook
-\texttt{EXAMPLE\_EVALUATE\_FISHER\_MODEL\_A.ipynb} builds them in three
-groups.
-
-\emph{Stencil derivatives.}  The seven cosmological parameters
+The derivatives of the data vector $m$ (the band powers) come in
+three kinds.  \emph{Stencil derivatives}, from a five-point stencil of
+the model A likelihood: the seven cosmological parameters
 ($10^9 A_s$, the spectral index $n_s$, the Hubble constant $H_0$, the
 baryon density $\Omega_b$, $\Omega_m$, $w_0$, $w_a$), the six group
-amplitudes $B_g$ and the velocity dispersions come from a five-point
-stencil of the model A likelihood.
-
-\emph{Per-bin operator columns.}  The four columns
-$\partial m/\partial b_{1,i}$, $\partial m/\partial b_{2,i}$,
-$\partial m/\partial b_{s^2,i}$ and $\partial m/\partial \alpha_{0,i}$
-of every bin, each at fixed values of the other three, come from
-central differences through the likelihood's bias setter, with steps
-of $1\%$ of $b_1$, $0.02$ in $b_2$ and $\bstwo$, and $5\aunit$ in
-$\alpha_0$.  A wrapper shifts one bias for a set of bins: one color of
-a greedy coloring of the cross-pair graph, in which two bins joined by
-a measured cross pair never share a color.  Each spectrum then
-involves at most one shifted bin, so one pair of evaluations gives the
-columns of every bin of that color.  Every layout takes four colors,
-so each operator costs eight evaluations instead of two per bin.
-
-\emph{Stochastic columns.}  The ${\rm SN}_0$ columns are the exact
-templates $P_{ij}K_{ij}$ of Eq.~\eqref{eq:snproj}.
+amplitudes $B_g$ and the velocity dispersions.  \emph{Per-bin operator
+columns} $\partial m/\partial b_{1,i}$, $\partial m/\partial b_{2,i}$,
+$\partial m/\partial b_{s^2,i}$, $\partial m/\partial \alpha_{0,i}$ and,
+for model B, $\partial m/\partial \alpha_{2,i}$, each at fixed values of
+the others, from central differences through the likelihood's setters
+(steps of $1\%$ of $b_1$, $0.02$ in $b_2$ and $\bstwo$, $5\aunit$ in
+$\alpha_0$).  The bins shifted together form one color of a greedy
+coloring of the cross-pair graph, in which two bins joined by a
+measured cross pair never share a color, so each spectrum involves at
+most one shifted bin; with four colors per layout each operator costs
+eight evaluations instead of two per bin.  \emph{Stochastic columns}:
+the exact templates of Eq.~\eqref{eq:snproj}.
 
 Model A ties $b_2$ and $\bstwo$ to $b_1$, so the derivative with
 respect to a bin's linear bias is the chain-rule sum
@@ -626,13 +719,12 @@ stencil derivative of the amplitude $B_g$ (Appendix~\ref{app:checks}).
 \subsection{The variants and the Fisher matrices}
 \label{sec:variants}
 
-The parameters are, in order: the cosmological parameters and the
-velocity dispersions (with the Gaussian priors of the linear-bias
-run), the variant's higher-order parameters, and one amplitude
-$\beta_i = b_{1,i}\,D(\bar{z}_i)$ per bin, fiducial $\beta_i = B_g$
-(Eq.~\eqref{eq:beta}).  The column of $\beta_i$ is Eq.~\eqref{eq:chain}
-divided by $D(\bar{z}_i)$.  The higher-order columns of group $g$ are
-sums over its bins,
+The parameters are the cosmology and the velocity dispersions (with
+the Gaussian priors of the linear-bias run), the variant's
+higher-order parameters, and one amplitude
+$\beta_i = b_{1,i}\,D(\bar{z}_i)$ per bin (Eq.~\eqref{eq:beta}), whose
+column is Eq.~\eqref{eq:chain} divided by $D(\bar{z}_i)$.  The
+higher-order columns of group $g$ are sums over its bins,
 \begin{equation}
   \frac{\partial m}{\partial \Delta_{2,g}}
   = \sum_{i \in g} \frac{\partial m}{\partial b_{2,i}} ,
@@ -642,67 +734,64 @@ sums over its bins,
     \frac{\partial m}{\partial b_{2,i}} ,
   \label{eq:hocolumns}
 \end{equation}
-and likewise for $\Delta_s$ and $\alpha_0$, with $t_{2,g}$ the tilt of
-$\Delta_2$ in group $g$; the ${\rm SN}_0$ column sums the group's
-stochastic templates.  The exact-calibration configuration of
-Appendix~\ref{app:comparison} has no higher-order column, model A
-baseline has the offset columns with their Gaussian priors, and model A
-pessimistic adds the tilt columns, with flat priors, for every group of
-more than one bin.
+and likewise for the other terms, with $t_{2,g}$ the tilt of
+$\Delta_2$ in group $g$.  The pessimistic variants add the tilt
+columns, with flat priors, in every group of more than one bin; the
+exact-calibration configuration of Appendix~\ref{app:comparison} has
+no higher-order column.
 
 The data Fisher matrix is
 $F_{\rm data} = \mathsf{D}\T \mathsf{C}_d^{-1} \mathsf{D}$ on the kept
-entries, with $\mathsf{D}$ the matrix of the columns above and
-$\mathsf{C}_d$ the band-power covariance: Gaussian, with linear bias
-$B_g/D(\bar{z}_i)$, computed for $14{,}000$ square degrees, its inverse
-rescaled to the survey's $12{,}300$.  The Gaussian priors add to its
-diagonal.  The higher-order parameters are marginalized like the
-cosmology, so the ladder code of the linear-bias run acts unchanged on
-the amplitude block.  Every Fisher matrix is inverted through a
-pseudo-inverse (Appendix~\ref{app:checks}).
+entries, with $\mathsf{D}$ the matrix of the columns and $\mathsf{C}_d$
+the covariance of Section~\ref{sec:forecast}; the Gaussian priors add
+to its diagonal, and the linear-bias prior adds its projected
+precision to the amplitude block (Appendix~\ref{sec:fisher}).  In the
+$\kmax$ scan each variant's derivatives are a fixed combination
+$\mathsf{D} = \mathsf{B}\mathsf{M}$ of the base columns $\mathsf{B}$,
+so $F_{\rm data} = \mathsf{M}\T (\mathsf{B}\T \mathsf{C}_d^{-1}
+\mathsf{B})\,\mathsf{M}$ on the entries each cut keeps: $432$ systems
+(four layouts, nine cuts, four variants, three priors), $420$ with a
+fit and $12$ without any band.  Every Fisher matrix is inverted
+through a pseudo-inverse (Appendix~\ref{app:checks}).
 
-\subsection{The ladder, the response and the truths}
+\subsection{The priors, the response and the truths}
 \label{sec:ladderimpl}
 
 \begin{itemize}
   \item \textbf{Linear-bias priors.}  Growth-tied sums the amplitude
     columns of each group into one; the baseline and pessimistic priors
-    add the projected precision of the residual prior,
-    Eq.~\eqref{eq:memproj}, to the amplitude block
-    (Appendices~\ref{sec:fisher} and \ref{app:memory}); free adds
-    nothing.
-  \item \textbf{Response.}  A truth that moves the data by $\delta m$
-    moves the best fit by
-    $\delta p = F^{-1}\mathsf{D}\T \mathsf{C}_d^{-1}\delta m$, to first
-    order (Appendix~\ref{sec:biasformula}).
-  \item \textbf{Known drifts.}  The two drift laws of
-    Appendix~\ref{sec:driftlaws}.  Under model A a drift $\delta_i$ of
-    the linear bias moves $b_2$ and $\bstwo$ as well:
+    add the projected precision of Eq.~\eqref{eq:memproj} to the
+    amplitude block; free adds nothing.
+  \item \textbf{Known drifts and random truths.}  The two drift laws of
+    Appendix~\ref{sec:driftlaws} and the $2000$ draws per scatter
+    family of the linear-bias run, with its seed and order; a drift
+    $\delta_i$ of the linear bias gives
     $\delta m = \sum_i (\partial m/\partial \beta_i)_{\rm A}\,
-    \beta_i\,\delta_i$, with the model A column of
-    Eq.~\eqref{eq:chain}.
-  \item \textbf{Random truths and $\chidof$.}  The $2000$ draws per
-    scatter family of the linear-bias run, with its seed and order
-    (Appendix~\ref{sec:randomtruths}), and the statistic of
-    Eq.~\eqref{eq:gof} (Appendices~\ref{sec:inflation} and
-    \ref{sec:inflationomas}).
+    \beta_i\,\delta_i$, with the column of Eq.~\eqref{eq:chain}, and the
+    fit moves by Eq.~\eqref{eq:fisherbias}.
   \item \textbf{Calibration drift.}  One deterministic truth that moves
-    only the offsets:
+    only the offsets,
     $\delta m = \sum_i [(\partial m/\partial b_{2,i})\,\Delta_{2,i}
     + (\partial m/\partial b_{s^2,i})\,\Delta_{s,i}]$, with
     $\Delta_{2,i} = (\bar{z}_i - \bar{z}_g)/(\bar{z}_{\max} - \bar{z}_{\min})$
     and $\Delta_{s,i} = \Delta_{2,i}/2$, where $\bar{z}_{\max}$ and
     $\bar{z}_{\min}$ are the largest and smallest mean redshifts of the
-    group's bins.  The drift changes by $1$ in $\Delta_2$ and $0.5$ in
-    $\Delta_s$ from the group's first bin to its last and has zero mean
-    over the group's bins; in a one-bin group, where the ratio is
-    undefined, $\Delta_{2,i}$ is set to zero.
+    group's bins.  It changes by $1$ in $\Delta_2$ and $0.5$ in
+    $\Delta_s$ across the group and has zero mean over its bins; a
+    one-bin group gets zero.
+  \item \textbf{Break truths.}  $\delta m$ is the $\alpha_2$ or $\SNt$
+    column times the truth's value, or, for the offsets, the $b_2$ and
+    $\bstwo$ columns times $\pm(1, 0.5)$, summed over every bin.  The
+    random $\alpha_2$ truths draw one value per group from model B
+    baseline's prior, with the same $2000$ standard normal vectors at
+    every cut.
 \end{itemize}
 
-Every figure lives in its own folder under \texttt{plots/}, named after
-the figure, with its data (\texttt{data.json}), the Python script that
-draws it, and the PDF the note includes; each figure redraws from its
-folder alone.
+Each figure has its own folder under \texttt{plots/}, with its data
+(\texttt{data.json}), the script that draws it from that file alone,
+and the PDF.  The data come from the notebooks
+\texttt{EXAMPLE\_EVALUATE\_FISHER\_MODEL\_A.ipynb} and
+\texttt{EXAMPLE\_EVALUATE\_FISHER\_MODEL\_B.ipynb}.
 
 \section{The known drifts}
 \label{sec:tabdrifts}
@@ -710,32 +799,27 @@ folder alone.
 Figure~\ref{fig:driftshifts} draws the shift of each known drift alone
 under model A baseline.  The free prior absorbs both drifts exactly.
 The growth-tied prior stays excluded: the conserved-population drift
-moves its $(w_0, w_a)$ by several $\sigma$, and by $1.2$--$1.8\sigma$
-under model A pessimistic.  The baseline and pessimistic priors absorb
-both drifts below $\sigma/3$ in every score but one case: the BGS flux
-limit on $\Delta z = 0.05$, a layout that resolves BGS into only six
-bins.  There the baseline prior sits just below $\sigma/3$, and the
-pessimistic prior no longer absorbs the drift: it lands just above
-$\sigma/3$ in $(w_0, w_a)$ and in $\Omega_m$.  This residual drift is
-what lifts the pessimistic prior's $\eta$ on that layout to its maximum
-of $1.05$ (Appendix~\ref{sec:inflation}).  Under model A pessimistic
-both priors stay below $\sigma/10$.  The full numbers, every prior, both
-variants and both truths, are in the \texttt{data.json} of each figure
-and in the printed tables of
-\texttt{EXAMPLE\_EVALUATE\_FISHER\_MODEL\_A.ipynb}.
+moves its $(w_0, w_a)$ by several $\sigma$, and still by
+$1.2$--$1.8\sigma$ under model A pessimistic.  The baseline and
+pessimistic priors absorb both drifts below $\sigma/3$ in every score
+but one: the BGS flux limit on $\Delta z = 0.05$, a layout that
+resolves BGS into only six bins.  There the baseline prior lands just
+below $\sigma/3$ and the pessimistic prior just above it, in
+$(w_0, w_a)$ and in $\Omega_m$; this residual drift lifts the
+pessimistic prior's $\eta$ on that layout to its maximum of $1.05$
+(Appendix~\ref{sec:inflation}).  Under model A pessimistic both priors
+stay below $\sigma/10$.
 
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.62\linewidth]{plots/drift_shifts/drift_shifts.pdf}
+  \includegraphics{plots/drift_shifts/drift_shifts.pdf}
   \caption{The shift of a model A baseline fit under each known drift
-    alone: the conserved-population drift (left) and the BGS
-    $r < 19.5$ flux limit (right); $(w_0, w_a)$ in units of the fit's
-    ellipse, $\Omega_m$ and $A_s$ in their own $\sigma$.  Markers: the
-    linear-bias prior of the fit; colors: the layouts.  Dashed line:
-    $\sigma/3$.  Points on the bottom axis: values below $10^{-3}$,
-    among them the exact zeros of the baseline and pessimistic priors
-    on $\Delta z = 0.2$.  Omitted: the free prior, which absorbs both
-    drifts exactly, and model A pessimistic.  \kmaxclause}
+    alone, the conserved population (left) and the BGS $r < 19.5$ flux
+    limit (right): $(w_0, w_a)$ in units of the fit's ellipse,
+    $\Omega_m$ and $A_s$ in their own $\sigma$.  Markers: the
+    linear-bias prior; colors: the layouts; dashed: $\sigma/3$.  Points
+    on the bottom axis: values below $10^{-3}$.  Omitted: the free
+    prior, which absorbs both drifts exactly.  \kmaxclause}
   \label{fig:driftshifts}
 \end{figure}
 
@@ -748,45 +832,51 @@ and in the printed tables of
     reproduce the stencil derivative of the group amplitude $B_g$ to
     $9.8\times10^{-8}$, $1.2\times10^{-7}$, $4.0\times10^{-8}$ and
     $1.3\times10^{-8}$ of the stencil column's largest entry (layout
-    order): the operator columns through the bias setter and the full
-    likelihood through the stencil agree.
+    order).
+  \item \textbf{The stochastic templates.}  The order-$0$ templates of
+    the $\SNt$ run equal the cached $\SNz$ templates exactly, and its
+    fiducial vector has $\Delta\chi^2 = 0$ against the derivative
+    cache.  $\SNt$ is linear to $3\times10^{-14}$.
+  \item \textbf{The $\alpha_2$ columns.}  The forward and backward
+    differences agree to $3.1\times10^{-10}$ of each column, and the
+    vector after the steps equals the one before bit for bit.  The
+    model A FoMs of the $\kmax$ scan equal those of the model A
+    notebook at $0.075\hMpc$ to $7.9\times10^{-10}$.
   \item \textbf{The matched-prior identity.}  When a fit's prior equals
     the truth's scatter, the identity $\Prec\Sigma\Prec = \Prec$ of
     Appendix~\ref{sec:inflation} makes the scatter and noise terms of
-    $\langle\chi^2_w\rangle$ sum to exactly $2$.  Over every layout and
-    variant, $\max|\langle\chi^2_w\rangle - \Delta_{\rm drift}^2 - 2|
-    = 9.4\times10^{-10}$.
+    $\langle\chi^2_w\rangle$ sum to exactly $2$:
+    $\max|\langle\chi^2_w\rangle - \Delta_{\rm drift}^2 - 2|
+    = 5.7\times10^{-10}$ over every layout and variant.  The random
+    $\alpha_2$ truths with $\alpha_2$ removed give $\eta = 1$ to
+    $4.1\times10^{-9}$.
   \item \textbf{Exact recovery.}  The free prior must absorb any truth
-    of the linear bias.  Its largest mean $(w_0, w_a)$ shift over the
-    random truths is $1.9\times10^{-11}$.
-  \item \textbf{One direction without information.}  On
-    $\Delta d_{\rm com} = 62$~Mpc at this cut only $7$ of the $18$ BGS
-    bins keep any band.  Under model A pessimistic on the free prior,
-    the flat-prior BGS tilts of $\Delta_2$, $\Delta_s$ and $\alpha_0$
-    then leave one combination of parameters with no information, and a
-    plain matrix inverse amplified round-off along it into a spurious
-    $2\sigma$ shift.  The notebook therefore scales every Fisher matrix
-    to unit diagonal, diagonalizes it, and drops the directions whose
-    eigenvalue is below $10^{-12}$ of the largest.  Exactly one of the
-    $48$ systems (four layouts, four linear-bias priors, and three
-    higher-order configurations: model A baseline, model A pessimistic
-    and the exact calibrations of Appendix~\ref{app:comparison}) drops
-    one direction, whose largest component on $(w_0, w_a)$, $\Omega_m$
-    and $A_s$ is $6.3\times10^{-12}$: a pure nuisance combination.
-  \item \textbf{The $\alpha_0$ step.}  At the negative stencil point,
-    $\alpha_0 = -5\aunit$, the factor $b_1^2 + \alpha_0 k^2$ of the
-    linear and counterterm pieces turns negative above
-    $k \approx 0.6\hMpc$, where the low-rank engine floors
-    $\sqrt{P_{gg}}$.  On $\Delta z = 0.05$, a step of $5$ against a step
-    of $1$ changes the $\alpha_0$ columns by at most
-    $3.5\times10^{-4}$ of each column's largest entry.
-  \item \textbf{Reproducibility.}  A recomputation of the
-    $\Delta z = 0.05$ derivatives is bitwise identical to the cache.
+    of the linear bias; its largest mean $(w_0, w_a)$ shift over the
+    random truths is $8.4\times10^{-12}$.
+  \item \textbf{Directions without information.}  On
+    $\Delta d_{\rm com} = 62$~Mpc at $\kmax = 0.075\hMpc$ only $7$ of
+    the $18$ BGS bins keep any band, and under model A pessimistic on
+    the free prior the flat-prior BGS tilts leave one combination of
+    parameters with no information, along which a plain inverse
+    amplified round-off into a spurious $2\sigma$ shift.  The notebooks
+    therefore scale every Fisher matrix to unit diagonal, diagonalize
+    it, and drop the directions below $10^{-12}$ of the largest
+    eigenvalue: one of the $48$ systems at this cut and $20$ of the
+    $432$ of the scan, with largest components on $(w_0, w_a)$,
+    $\Omega_m$ and $A_s$ of $7.2\times10^{-12}$ and
+    $7.0\times10^{-10}$, pure nuisance combinations.
+  \item \textbf{The $\alpha_0$ step.}  At $\alpha_0 = -5\aunit$ the
+    factor $b_1^2 + \alpha_0 k^2$ turns negative above
+    $k \approx 0.6\hMpc$, where the low-rank engine floors the
+    spectrum it factorizes; on $\Delta z = 0.05$, a step of $5$ against $1$
+    changes the $\alpha_0$ columns by at most $3.5\times10^{-4}$ of
+    their largest entry, and a recomputation of the derivatives is
+    bitwise identical to the cache.
   \item \textbf{The loop templates.}  With $b_3 = 0$, CosmoLike's
     C-FAST-PT loop templates and Python FAST-PT agree on the
-    $\Delta d_{\rm com} = 62$~Mpc vector, pairs included, to a
-    $\Delta\chi^2$ far below one (subsection ``Gaps against model A'' of
-    \texttt{notes/higher\_order\_bias}).
+    $\Delta d_{\rm com} = 62$~Mpc vector, pairs included, to
+    $\Delta\chi^2 \le 3.5\times10^{-5}$
+    (\texttt{notes/higher\_order\_bias}, section ``Validation'').
 \end{itemize}
 
 \section{The counterterm requires the low-rank engine}
@@ -795,68 +885,57 @@ and in the printed tables of
 CosmoLike has two non-Limber engines for $C_\ell^{gg}$.  FKEM, the
 FFTLog method of Fang et al.~\cite{FangKEM2020}, projects the linear
 term exactly and moves everything nonlinear, the counterterm included,
-through its Limber difference, so its one-loop content is Limber.  The
-low-rank engine factorizes each bin's full one-loop $P_{gg}$, less the
-white-noise constant of the loops (which Limber projects exactly), and
-projects it without the Limber approximation.
+through its Limber difference.  The low-rank engine factorizes each
+bin's full one-loop $P_{gg}$, less the white-noise constant of the
+loops (which Limber projects exactly), and projects it without the
+Limber approximation.
 
-For the counterterm the difference is large.  On the $\Delta z = 0.05$
-layout the low-rank $\alpha_0$ response, $\partial C_\ell/\partial\alpha_0$,
-is $7.3$ times the Limber one at $\ell = 20$, $1.8$ times at
-$\ell = 50$, $1.26$ times at $\ell = 100$ and about $1.05$ times at
-$\ell = 200$--$400$ (median over the kept auto spectra).  The reason
-is the radial modes of thin bins.  Limber evaluates the power at the
-transverse wavenumber $k = (\ell + 1/2)/\chi$ only.  A thin bin with
-sharp edges also passes radial modes of higher $k$, and the $k^2$
-weight of the counterterm amplifies them; at low $\ell$, where the
-transverse wavenumber is small, they dominate the response.  The
-low-rank response is converged: raising
+On $\Delta z = 0.05$ the low-rank response
+$\partial C_\ell/\partial\alpha_0$ is $7.3$ times the Limber one at
+$\ell = 20$, $1.8$ times at $\ell = 50$, $1.26$ times at $\ell = 100$
+and about $1.05$ times at $\ell = 200$--$400$ (median over the kept
+autos).  Limber evaluates the power at the transverse wavenumber
+$k = (\ell + 1/2)/\chi$ only, while a thin bin with sharp edges also
+passes radial modes of higher $k$, which the $k^2$ weight amplifies.
+The low-rank response is converged: raising
 \texttt{nonlimber\_accuracyboost} from $32$ to $128$, the rank from $5$
 to $10$, or the overall accuracy boost from $1$ to $2$ changes it by a
 $\Delta\chi^2$ far below one.  For a one-sigma $\alpha_0$ the two
-engines' responses differ by tens of units of $\chi^2$, while at
-$\alpha_0 = 0$ they agree on the full vector to a few units.  The
-forecast uses the low-rank engine.
+engines' responses differ by tens of units of $\chi^2$.
 
 \section{Comparison with linear bias and with exact calibrations}
 \label{app:comparison}
 
-Neither comparison in this appendix is a result of this note.  The
-linear-bias run uses a model that \texttt{notes/linear\_bias\_kmax}
-shows is already biased at this cut, and exact calibrations assume
-that $b_2$ and $\bstwo$ are known exactly.  Both sets of FoMs are in
-\texttt{plots/baseline\_ladder/data.json} and in the notebook's printed
-ladder table.
+Neither comparison is a result of this note: the linear-bias run uses
+a model that \texttt{notes/linear\_bias\_kmax} shows is biased at
+$\kmax = 0.075\hMpc$, and exact calibrations assume that $b_2$ and
+$\bstwo$ are known exactly.  Both sets of FoMs are in
+\texttt{plots/baseline\_ladder/data.json}.
 
 \paragraph{Linear bias.}
-Model A baseline keeps about $88$, $93$, $74$ and $50\%$ of the
-linear-bias run's ${\rm FoM}(w_0, w_a)$ on the baseline prior, and model
-A pessimistic about $82$, $81$, $55$ and $30\%$ on the pessimistic prior
-(layouts in the order $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$,
-$0.05$, $0.2$).  The loss grows as the bins widen.  A likely reason: on
-the wide layouts a group holds few bins, so one offset per group is
-close to one offset per bin, and the new parameters compete with each
-bin's linear bias for the same band powers.
+Model A baseline keeps about $85$, $86$, $73$ and $50\%$ of the
+linear-bias run's ${\rm FoM}(w_0, w_a)$ on the baseline prior, and
+model A pessimistic about $77$, $76$, $55$ and $30\%$ on the
+pessimistic prior (layout order).  The loss grows as the bins widen,
+likely because a wide-layout group holds few bins, so one offset per
+group is close to one per bin and competes with each bin's linear
+bias.
 
 \paragraph{Exact calibrations.}
-With the calibrations taken as exact, the FoM exceeds that of the
-linear-bias run under every prior and on every layout: on the baseline
-prior about $1.4$ times on $\Delta d_{\rm com} = 62$~Mpc and $2.0$ times
-on $\Delta z = 0.05$.  The loop terms are then not free: with $b_{2,i}$
-and $b_{s^2,i}$ fixed by the calibrations at $b_{1,i}$, and
-$\alpha_0 = {\rm SN}_0 = 0$, the one-loop correction is a known function
-of $b_{1,i}$ and of the matter power spectrum.  The loop terms grow as
-the fourth power of the growth factor and the linear term as $b_1^2$
-times its square, so the size of the correction relative to the linear
-term carries information on the amplitude of the matter fluctuations
-that a linear-bias model does not have.  That information is only as
-good as the calibrations: with exact calibrations the calibration drift
-shifts $(w_0, w_a)$ by $0.8$--$1.9\sigma$ under the growth-tied prior
-and by $0.06$--$0.48\sigma$ under the other three.  The offsets of
-model A baseline, with widths set by the known scatter of the
-calibrations, and its $\alpha_0$ and ${\rm SN}_0$ remove this
-information, and model A baseline sits below the linear-bias run under
-every prior and on every layout.
+With the calibrations exact and $\alpha_0 = \SNz = \SNt = 0$, the FoM
+exceeds that of the linear-bias run under every prior and on every
+layout, on the baseline prior about $1.4$ times on
+$\Delta d_{\rm com} = 62$~Mpc and $2.0$ times on $\Delta z = 0.05$.  The
+one-loop correction is then a known function of $b_{1,i}$ and of the
+matter power spectrum; the loops grow as the fourth power of the
+growth factor and the linear term as $b_1^2$ times its square, so
+their ratio carries information on the amplitude of the matter
+fluctuations.  That information is only as good as the calibrations:
+the calibration drift then shifts $(w_0, w_a)$ by $0.8$--$2.0\sigma$
+under the growth-tied prior and $0.06$--$0.48\sigma$ under the other
+three.  The offsets, counterterm and stochastic terms of model A
+baseline remove it, and model A baseline sits below the linear-bias
+run under every prior and on every layout.
 
 \section{Limitations}
 \label{app:limits}
@@ -867,47 +946,51 @@ every prior and on every layout.
     second-order term is a few percent of the shift for $1$--$3\%$
     residuals and perhaps $10$--$20\%$ for the $22\%$ BGS drift
     (Appendix~\ref{sec:randomtruths}).
-  \item \textbf{Theory truths, not mocks.}  The project is a theory
-    paper.  The truths are the derived drifts, Gaussian residuals of the
-    two stated sizes, and one linear drift of the calibrations.
-    Residuals rougher than the pessimistic prior, and calibrations that
-    drift nonlinearly within a group, are untested.
-  \item \textbf{Real-space loops.}  Model A adds the real-space one-loop
-    terms to linear Kaiser distortions.
+  \item \textbf{Theory truths, not mocks.}  Residuals rougher than the
+    pessimistic prior, and calibrations that drift nonlinearly within a
+    group, are untested.
 \end{itemize}
 
 \section{Open issues}
 \label{app:open}
 
 \begin{itemize}
-  \item \textbf{One-loop terms in the covariance.}  The covariance is
-    Gaussian with linear bias $B_g/D(\bar{z}_i)$; it leaves out the
-    one-loop terms of model A, which make up about $2\%$ of the kept
-    spectra (median $1.6$--$2.3\%$ over the layouts).
+  \item \textbf{One-loop terms of the covariance in Limber.}  The
+    covariance carries the one-loop terms of model A through the Limber
+    approximation, and its low-$\ell$ non-Limber recompute is linear.
+    In the lowest bands of thin bins that leaves an error of at most
+    $1.3\%$ of $C_\ell$.
   \item \textbf{The scale cut was not rebuilt on the one-loop model.}
-    Applied to the $\alpha_0$ template $\partial C_\ell/\partial\alpha_0$,
-    the UV fraction of Eq.~\eqref{eq:uvfraction} is a median $0.076$ and
-    a maximum $0.14$ on the kept bands, all above $0.05$, against a
-    median $0.017$ and a maximum $0.052$ for the fiducial model A
-    vector.  Part of what the forecast learns about $\alpha_0$ therefore
+    On $\Delta z = 0.05$ at $\kmax = 0.075\hMpc$ the UV fraction of
+    Eq.~\eqref{eq:uvfraction}, applied to the $\alpha_0$ template
+    $\partial C_\ell/\partial\alpha_0$, is a median $0.076$ and a
+    maximum $0.14$ on the kept bands, against $0.017$ and $0.052$ for
+    the fiducial model A vector, and about half of each bin's $\SNt$
+    auto kernel comes from line-of-sight wavenumbers above the bin's own
+    cut: part of what the forecast learns about $\alpha_0$ and $\SNt$
     comes from scales the cut is meant to exclude.
-  \item \textbf{Negative $\alpha_0$ in chains.}  The linear and
-    counterterm pieces combine to $(b_1^2 + \alpha_0 k^2)\,P_{\rm mm}$,
-    negative above $k \approx b_1/\sqrt{|\alpha_0|}$.  At
+  \item \textbf{Negative $\alpha_0$ in chains.}  At
     $\alpha_0 = -88.9\aunit$, one prior width below zero, the spectrum
-    the low-rank engine factorizes turns negative above
-    $k \approx 0.14\hMpc$, the engine floors $47\%$ of its grid, and the
-    vector curves in $\alpha_0$, which is harmless for the Fisher forecast
-    at $\alpha_0 = 0$, but not for chains that explore negative
-    $\alpha_0$.  The two remedies, a loop taper above the scale where
-    one-loop perturbation theory is trusted and a positivity prior on
-    $P_{gg}$ (subsection ``The white-noise limit of the renormalized
-    loops'' of \texttt{notes/higher\_order\_bias}), are not
-    implemented.
-  \item \textbf{The $b_3$ template is broken.}  CosmoLike's third-order
-    bias template is a fixed table that is wrong even at the fiducial;
-    model A sets $b_3 = 0$, as in DESI's baseline, where the template
-    drops out (\texttt{notes/higher\_order\_bias}).
+    the low-rank engine factorizes, $P_{gg}$ less its white-noise
+    constant, turns negative above $k \approx 0.14\hMpc$; the engine
+    floors $47\%$ of its grid, and the vector curves in $\alpha_0$.
+    The Fisher forecast at $\alpha_0 = 0$ does not see this, but a
+    chain that explores negative $\alpha_0$ does.  Neither remedy, a
+    loop taper or a positivity prior on $P_{gg}$
+    (\texttt{notes/higher\_order\_bias}, subsection ``The white-noise
+    limit of the renormalized loops''), is implemented.
+  \item \textbf{The $b_3$ template is wrong.}  CosmoLike's third-order
+    bias template (\texttt{tab\_d1d3} of C-FAST-PT) is a fixed,
+    cosmology-independent table that disagrees with Python FAST-PT, so
+    both models set $b_3 = 0$, as DESI's baseline does.
+  \item \textbf{No redshift-space one-loop terms.}  Both models add
+    real-space loops to linear Kaiser distortions; model B relies on
+    the sampled $\sigma_v$ and on $\alpha_2$ for the rest.
+  \item \textbf{Adjacent cross spectra see the shared edge.}  The
+    cross spectra of adjacent thin bins are sensitive to small-scale
+    radial physics at their common edge, as $\SNt$ shows; models A and
+    B carry $\SNt$ for that reason, and any other radial physics on
+    that scale reaches the cross spectra the same way.
 \end{itemize}
 
 \begin{thebibliography}{99}
