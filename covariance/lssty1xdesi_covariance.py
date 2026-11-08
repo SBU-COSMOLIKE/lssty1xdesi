@@ -25,11 +25,21 @@ The shipped covariance (data/lssty1xdesi_desi_dr3_cov) is imported from
 the source forecast's sacc file; this module computes an independent one
 with cosmolike's own kernels, so the two can be compared entry by entry.
 
-The Gaussian term's spectra model linear per-bin galaxy bias over the
-nonlinear matter power. Each bin's bias is the likelihood's fiducial
-b_i = B_g/D(zbar_i): the sample amplitude B_g (CHUNK_BIAS) divided by
+The Gaussian term's galaxy spectra use the one-loop galaxy bias of the
+likelihood's model A (likelihood/desi_cl.py, higher_order_bias: 1) at
+its fiducial point. Each bin's linear bias is the likelihood's fiducial
+b1_i = B_g/D(zbar_i): the sample amplitude B_g (CHUNK_BIAS) divided by
 the linear growth at the bin's mean redshift, computed as the
-likelihood computes it (_lens_growth). The spectra carry the lens
+likelihood computes it (_lens_growth). The quadratic and tidal biases
+follow b1_i through model A's calibrations with zero offsets,
+b2_i = 0.412 - 2.143 b1_i + 0.929 b1_i^2 + 0.008 b1_i^3 (Lazeyras et
+al., arXiv:1511.01096) and bs2_i = -(4/7)(b1_i - 1) (_model_a_biases);
+model A's other terms (b3, the k^2 counterterm alpha_0 and the
+stochastic SN0) are zero at its fiducial. The galaxy spectra are b1^2
+times the nonlinear matter power plus the one-loop b2 and bs2 terms of
+cosmolike's C-FAST-PT, projected in Limber; the non-Limber recompute
+corrects the linear part only. SSC and cNG keep their linear-bias
+halo-model galaxies. The spectra carry the lens
 redshift-space distortions in
 both the Limber window and the non-Limber recompute's j_l'' transfer
 (gaussian rsd = nonlimber = true): the exact distortion term lands
@@ -39,11 +49,7 @@ covariance/README.md). The lens kernels carry the fiducial
 finger-of-god smearing: each thin bin's n(z) is convolved once, at
 the fixed fiducial dispersions, matching what the data vector's
 sampled convolution computes at its fiducial point
-(_fog_convolved_lens_file). The one-loop bias terms of model A
-(b2 and bs2 at their calibrations) remain outside the covariance
-model: on the bands kept at k_max = 0.075 h/Mpc they change the
-clustering spectra by about 2%, and covariance accuracy targets are
-parameter-error level, far looser than the data-vector chi2 rule.
+(_fog_convolved_lens_file).
 
 Cases. The layout above is the default case, "dr3" (the comoving bins
 of the source forecast's sacc file). The fixed-width Delta z binnings
@@ -341,6 +347,33 @@ def _lens_bias(case, cosmology):
     return [CHUNK_BIAS[str(name)]/float(d) for name, d in zip(chunk_names, growth)]
 
 
+def _model_a_biases(b1):
+    """Return model A's fiducial quadratic and tidal biases of each bin.
+
+    The relations of likelihood/desi_cl.py (lazeyras_b2 and
+    model_a_biases), at their fiducial offsets DESI_DB2 = DESI_DBS = 0;
+    keep the two in sync. Both follow the bin's full linear bias b1:
+
+      b2  = 0.412 - 2.143 b1 + 0.929 b1^2 + 0.008 b1^3,
+      bs2 = -(4/7) (b1 - 1),
+
+    the separate-universe fit of Lazeyras et al. (arXiv:1511.01096) and
+    the co-evolution tidal bias, in the normalization
+    delta_g = b1 delta + (b2/2) delta^2 + (bs2/2) s^2 that cosmolike's
+    C-FAST-PT templates use.
+
+    Arguments:
+      b1 = float sequence, the per-bin linear biases (_lens_bias).
+
+    Returns:
+      (b2, bs2): two float lists, one entry per lens bin.
+    """
+    b1 = np.asarray(b1, dtype=float)
+    b2 = 0.412 - 2.143*b1 + 0.929*b1**2 + 0.008*b1**3
+    bs2 = -4.0/7.0*(b1 - 1.0)
+    return b2.tolist(), bs2.tolist()
+
+
 def _fog_convolved_lens_file(case="dr3"):
     """Write and return the fiducial-FoG-convolved lens n(z) of a case.
 
@@ -510,6 +543,14 @@ def configuration(accuracy_boost=None, gaussian=None, case="dr3",
     }
     # the per-bin bias needs the growth of the cosmology above
     settings["bias"] = _lens_bias(case, settings["cosmology"])
+    # The DESI cases model the galaxies with model A's one-loop bias at its
+    # fiducial: the quadratic and tidal biases of each bin follow its b1
+    # (_model_a_biases). The shared code adds their one-loop terms to the
+    # Gaussian spectra only. The LSST photometric case keeps linear bias,
+    # the model of its likelihood.
+    if not _lsst(case):
+        settings["bias2"], settings["bias_s2"] = _model_a_biases(
+            settings["bias"])
     settings.update(numerical)
     if gaussian is None:
         # the project default: redshift distortions on, in both the

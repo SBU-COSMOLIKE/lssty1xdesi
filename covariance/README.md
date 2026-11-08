@@ -197,20 +197,21 @@ $`[15+10b,\ 24+10b]`$ for $`b = 0..52`$ - the supports read from
 
 ## FAQ: What does the Gaussian term include? <a name="gaussian"></a>
 
-Linear per-bin galaxy bias over the nonlinear matter power, the lens
-redshift-space distortions (exact non-Limber for the linear field,
-the Limber window for its nonlinear excess), shot and shape noise,
-and the exact per-band mode counting. The data vector's
-finger-of-god dispersion and one-loop bias terms are not part of the
-covariance model: covariance accuracy targets are parameter-error
-level, far looser than the data-vector $\chi^2$ rule.
+The galaxy model of the likelihood's model A at its fiducial: the
+per-bin linear bias $`b_1`$ over the nonlinear matter power plus the
+one-loop terms of the quadratic and tidal biases $`b_2`$ and
+$`b_{s^2}`$, which follow each bin's $`b_1`$ through model A's
+calibrations (`_model_a_biases` in the adapter). Also included are the
+lens redshift-space distortions (exact non-Limber for the linear
+field, the Limber window for its nonlinear excess), the fiducial
+finger-of-god smearing of the lens kernels, shot and shape noise, and
+the exact per-band mode counting. SSC and cNG keep linear bias.
 
 One engine limit shapes the remaining gap: the non-Limber correction
 projects the separable linear field (FKEM's split), so the nonlinear
-excess of the density and distortion terms stays Limber, and the
-data-vector's finger-of-god damping and one-loop bias terms are not
-modeled at all. Supplying the Gaussian assembly with the data-vector
-engine's exact spectra would close both at once.
+excess of the density and distortion terms and the one-loop bias terms
+stay Limber. Supplying the Gaussian assembly with the data-vector
+engine's exact spectra would close that gap.
 
 ## FAQ: Which accuracy settings are available? <a name="accuracy-settings"></a>
 
@@ -218,4 +219,8 @@ engine's exact spectra would close both at once.
 accepts single-entry overrides (for example
 `integration_accuracy=1`). The non-Limber controls
 (`nonlimber_lmax`, `nonlimber_accuracyboost`) are read when
-`gaussian: nonlimber` is true, this project's default.
+`gaussian: nonlimber` is true, this project's default. The thin bins
+set `nonlimber_accuracyboost: 2` (8193 log-distance samples): with the
+4097 samples of boost 1, adjacent-bin cross bandpowers miss by up to
+15-30% (5-95% range), while finer grids move them by less than 0.4%
+(`default.yaml` states the measured convergence).

@@ -24,12 +24,15 @@ integration_accuracy: 0
 
 # Gaussian gg/gs non-Limber resolution, separate from GSL quadrature.
 # The global boost multiplies both this cutoff and the radial intervals.
-# The 0.05-wide comoving lens bins need a finer radial grid than wide
-# photometric bins; the value here comes from the project convergence
-# scan (boost 1 to 16 on representative gg blocks, measured as relative
-# covariance-entry changes), recorded in covariance/README.md.
+# The thin comoving lens bins need a finer log-distance grid than wide
+# photometric bins: the cross spectrum of two adjacent bins comes from
+# the overlap of their smeared edges. nonlimber_accuracyboost = 2 (8193
+# log-distance samples) is the smallest value that resolves it. Against
+# 8x finer grids, the kept cross bandpowers then agree to 0.4% (5-95%)
+# in all four DESI cases, the masked Gaussian diagonal to 0.4% and
+# FoM(w0, wa) to 1e-4. With 4097 samples the crosses were off by up to
+# 15-30% (5-95% range), the diagonal by up to 10% and FoM by up to 0.3%.
+# Raising the GSL radial rule (integration_accuracy 1 to 3) moved these
+# quantities by less than 1%.
 nonlimber_lmax: 1000
-nonlimber_accuracyboost: 1
-# Doubling both controls changed complete Gaussian variance modes by
-# less than 0.02% in the zero-IA real/Fourier example. Other numerical
-# controls were fixed; this is not full integration or Fisher convergence.
+nonlimber_accuracyboost: 2
