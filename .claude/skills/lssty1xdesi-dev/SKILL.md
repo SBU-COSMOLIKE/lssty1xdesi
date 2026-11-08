@@ -308,6 +308,27 @@ never Fisher matrices; priors from the yamls, never from a cached
 Fisher matrix; invert through `stable_inverse`; wrap the setters the
 likelihood calls instead of calling them directly.
 
+**Derivative accuracy has two tiers.** Every derivative is a five-point
+stencil, or an exact template for a term linear in its amplitude (SN0,
+SN2, alpha_2); central differences are never used, because their noise
+enters the Fisher matrix at full strength. Exploration runs may use the
+fast settings the exploration notebooks used. Every figure and number of
+a paper, and of a note's final version, uses the final tier: the
+settings converged by the derivative convergence study in
+`tests/studies/`, above the MCMC settings (which only need
+|Delta chi2| < 0.2) and including CAMB's accuracy and k sampling. The
+criterion is the stability of the FoMs, the marginalized errors and the
+bias shifts under further refinement of the stencil step, the
+non-Limber chi grid, cosmolike's accuracy boosts and CAMB's settings.
+Runtime is not a criterion: a final recompute may take many hours.
+Noisy derivative columns add spurious information and bias the FoM high.
+At the MCMC settings the paper model's FoM(w0, wa) on Delta z = 0.05
+moved by 57% at k_max = 0.075 and 10% at 0.2, although the fiducial
+vector moved by only Delta chi2 = 0.015. Each cache records its tier and
+settings in its fingerprint. DerivKit (Cocoa's `DERIVKIT_*` keys;
+`get_ddv_dkit` in `cosmolike_notebook_utils/fisher.py`, as used in
+roman_real's EXAMPLE_EVALUATE1.ipynb) is the cross-check of the stencil.
+
 The scale cut is the non-Limber UV-fraction criterion (arXiv:2603.13031):
 bin i is cut at k_max/D(zbar_i), a band kept while
 |C_UV|/(|C_UV| + |C_IR|) < 0.05, intersected with the shipped mask
