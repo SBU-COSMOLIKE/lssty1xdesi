@@ -76,8 +76,8 @@ ax.set_title(rf'DESI $C_\ell^{{gg}}$ alone (non-Limber), UV-fraction cut at '
 ax.text(0.5, 0.97, 'PRELIMINARY: LINEAR BIAS ONLY', transform=ax.transAxes, ha='center',
         va='top', fontsize=13, fontweight='bold', color='firebrick')
 handles = [
-    Line2D([], [], color='0.1', lw=2.5, label='biases tied per group'),
-    Line2D([], [], color='0.55', lw=2.5, label='independent biases, flat priors'),
+    Line2D([], [], color='0.1', lw=2.5, label='growth-tied biases'),
+    Line2D([], [], color='0.55', lw=2.5, label='free biases, flat priors'),
     Patch(facecolor='0.6', alpha=0.4,
           label=rf'plausible: $L$ = {plausible_L[0]:g}–{plausible_L[1]:g}, '
                 rf'$\sigma_b$ = {plausible_sigma[0]:.0%}–{plausible_sigma[1]:.0%}'),

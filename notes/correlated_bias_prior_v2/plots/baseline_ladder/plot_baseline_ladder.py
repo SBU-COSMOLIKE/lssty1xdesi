@@ -1,9 +1,12 @@
 """Redraw baseline_ladder.pdf from data.json: the FoM(w0, wa) of each DESI
-layout down the ladder of linear-bias assumptions, from the tied bias of
-every group to one free bias per bin, under model A (one-loop bias,
-notes/higher_order_bias) with three higher-order variants, next to the v1
-linear-bias values. One panel per layout. data.json is written by
-EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb.
+layout down the linear-bias priors, from growth-tied (one amplitude per
+group, b = B/D(z)) to one free bias per bin, under model A (one-loop bias,
+notes/higher_order_bias) in its two forecast variants, model A baseline
+and model A pessimistic. One wide panel per layout, stacked with a thin
+gap, all on the same y range, for one column of a two-column paper.
+data.json is written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb; it also
+holds the v1 linear-bias and the exact-calibration FoMs, which this figure
+does not draw.
 Run from any folder: python plot_baseline_ladder.py
 """
 import json
@@ -37,51 +40,54 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# the line style of each bias model; v1 is the linear-bias ladder of the
-# first note
+# the line style of each drawn variant: the two forecast variants of model A
 STYLES = {
-    'v1 linear': {'ls': ':', 'lw': 1.4, 'marker': 's', 'ms': 4.5, 'mfc': 'white',
-                  'label': 'v1: linear bias'},
-    'A calibrated': {'ls': '-.', 'lw': 1.3, 'marker': 'v', 'ms': 5.0, 'mfc': 'white',
-                     'label': 'model A, calibrations exact'},
-    'A baseline': {'ls': '-', 'lw': 1.9, 'marker': 'o', 'ms': 6.0, 'mfc': None,
-                   'label': 'model A baseline'},
-    'A pessimistic': {'ls': '--', 'lw': 1.6, 'marker': 'D', 'ms': 5.0, 'mfc': None,
+    'A baseline': {'ls': '-', 'lw': 1.7, 'marker': 'o', 'ms': 5.0, 'label': 'model A baseline'},
+    'A pessimistic': {'ls': '--', 'lw': 1.4, 'marker': 'D', 'ms': 4.5,
                       'label': 'model A pessimistic'},
 }
+# the names the figure prints for the linear-bias priors (the data keys
+# keep the notebook's names)
+DISPLAY = {'tied': 'growth-tied', 'baseline': 'baseline',
+           'pessimistic': 'pessimistic', 'independent': 'free'}
 
 with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
 rungs = [r['key'] for r in data['rungs']]
 x = np.arange(len(rungs))
+layouts = data['layouts']
+lsst = data['lsst_y1_3x2pt_fom']
 
-fig, axes = plt.subplots(2, 2, figsize=(9.0, 6.6), sharex=True,
-                         gridspec_kw={'hspace': 0.16, 'wspace': 0.22})
-for ax, lay in zip(axes.ravel(), data['layouts']):
+# One y range for every panel, so heights compare across layouts, with
+# room at the top for the layout label. Labeled ticks only at decades well
+# inside the range, where no label runs into the next panel.
+values = [v for lay in layouts for name in STYLES for v in lay['fom'][name].values()]
+y_range = (min(values)/3.0, max(max(values), lsst)*12.0)
+decades = 10.0**np.arange(np.floor(np.log10(y_range[0])), np.ceil(np.log10(y_range[1])) + 1)
+y_ticks = decades[(decades > 1.6*y_range[0]) & (decades < y_range[1]/1.6)]
+
+# one column of a two-column paper: wide, short panels with a thin gap
+fig, axes = plt.subplots(len(layouts), 1, figsize=(3.5, 1.15*len(layouts)), sharex=True,
+                         sharey=True, gridspec_kw={'hspace': 0.06})
+for ax, lay in zip(axes, layouts):
     for k in ('baseline', 'pessimistic'):
-        ax.axvspan(rungs.index(k) - 0.18, rungs.index(k) + 0.18, color='0.93', zorder=0)
-    series = {'v1 linear': lay['v1_linear']}
-    series.update({v: lay['fom'][v] for v in data['variants']})
-    for name, fom in series.items():
-        st = STYLES[name]
-        y = np.array([fom[k] for k in rungs])
+        ax.axvspan(rungs.index(k) - 0.22, rungs.index(k) + 0.22, color='0.93', zorder=0)
+    for name, st in STYLES.items():
+        y = np.array([lay['fom'][name][k] for k in rungs])
         ax.plot(x, y, color=lay['color'], ls=st['ls'], lw=st['lw'], marker=st['marker'],
-                ms=st['ms'], mfc=st['mfc'] or lay['color'], mec=lay['color'])
-    ax.axhline(data['lsst_y1_3x2pt_fom'], color='0.3', ls='--', lw=1.0)
+                ms=st['ms'])
+    ax.axhline(lsst, color='0.3', ls='--', lw=1.0)
     ax.set_yscale('log')
-    ax.set_title(lay['label'], fontsize=11.5)
-    ax.set_xlim(-0.4, x[-1] + 0.4)
-    # room below the lowest point for the headline numbers
-    lowest = min(min(s.values()) for s in series.values())
-    ax.set_ylim(bottom=lowest/3.5)
-
-# The headline numbers of each panel, model A baseline at the baseline rung
-# and model A pessimistic at the pessimistic rung, as a two-line block that
-# names them. Four series share each panel, so a label beside a point would
-# either sit on a line or read as the value of a neighboring point; the
-# block takes the first panel corner where its box crosses no drawn line.
-CORNERS = [((0.03, 0.03), 'left', 'bottom'), ((0.97, 0.97), 'right', 'top'),
-           ((0.97, 0.03), 'right', 'bottom'), ((0.03, 0.97), 'left', 'top')]
+    ax.set_ylim(*y_range)
+    ax.set_yticks(y_ticks)
+    ax.grid(False, axis='x')
+    # the layout's label inside the panel, top right
+    ax.text(0.97, 0.92, lay['label'], transform=ax.transAxes, ha='right', va='top',
+            fontsize=10)
+axes[-1].set_xlim(-0.4, x[-1] + 0.4)
+axes[-1].set_xticks(x)
+axes[-1].set_xticklabels([DISPLAY[r['key']] for r in data['rungs']], fontsize=9.5)
+fig.supylabel(r'FoM$(w_0, w_a)$, DESI $C_\ell^{gg}$ alone', x=-0.03, fontsize=10)
 
 
 def line_points(ax):
@@ -103,40 +109,21 @@ def line_points(ax):
     return np.vstack(pts)
 
 
+# A label must never sit on the data: stop if one does.
 fig.canvas.draw()
 renderer = fig.canvas.get_renderer()
-for ax, lay in zip(axes.ravel(), data['layouts']):
+for ax, lay in zip(axes, layouts):
     pts = line_points(ax)
-    text = (f'model A baseline, baseline rung: {lay["fom"]["A baseline"]["baseline"]:.3g}\n'
-            f'model A pessimistic, pessimistic rung: '
-            f'{lay["fom"]["A pessimistic"]["pessimistic"]:.3g}')
-    for xy, ha, va in CORNERS:
-        block = ax.text(*xy, text, transform=ax.transAxes, ha=ha, va=va, fontsize=8.5,
-                        color=lay['color'], linespacing=1.3)
-        box = block.get_window_extent(renderer).expanded(1.04, 1.1)
-        hits = np.sum((pts[:, 0] > box.x0) & (pts[:, 0] < box.x1)
-                      & (pts[:, 1] > box.y0) & (pts[:, 1] < box.y1))
-        if hits == 0:
-            break
-        block.remove()
-    else:
-        raise RuntimeError(f'{lay["label"]}: no free corner for the headline numbers')
-for ax in axes[:, 0]:
-    ax.set_ylabel(r'FoM$(w_0, w_a)$, DESI $C_\ell^{gg}$ alone')
-for ax in axes[1]:
-    ax.set_xticks(x)
-    ax.set_xticklabels([r['label'] for r in data['rungs']])
+    box = ax.texts[0].get_window_extent(renderer).expanded(1.05, 1.15)
+    if np.any((pts[:, 0] > box.x0) & (pts[:, 0] < box.x1)
+              & (pts[:, 1] > box.y0) & (pts[:, 1] < box.y1)):
+        raise RuntimeError(f'{lay["name"]}: the panel label touches a line')
+
 handles = [Line2D([], [], color='0.25', ls=st['ls'], lw=st['lw'], marker=st['marker'],
-                  ms=st['ms'], mfc=st['mfc'] or '0.25', mec='0.25', label=st['label'])
-           for st in STYLES.values()]
-handles.append(Line2D([], [], color='0.3', ls='--', lw=1.0,
-                      label=f'LSST Y1 3x2pt ({data["lsst_y1_3x2pt_fom"]:g})'))
-fig.legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 0.94), ncol=3,
-           frameon=False, fontsize=9.5, handlelength=2.4, columnspacing=1.4)
-# k_max is the z = 0 value of the per-bin cut at k_max/D(z) (the caption
-# explains the UV-fraction criterion and the shipped mask)
-fig.suptitle(rf'Linear bias assumptions from rigid to free under model A '
-             rf'($k_\mathrm{{max}} = {data["kmax_h_per_Mpc"]:g}\,h\,\mathrm{{Mpc}}^{{-1}}$ at $z = 0$)',
-             fontsize=12.5, y=1.04)
+                  ms=st['ms'], label=st['label']) for st in STYLES.values()]
+handles.append(Line2D([], [], color='0.3', ls='--', lw=1.0, label=f'LSST Y1 3x2pt ({lsst:g})'))
+axes[0].legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=2,
+               frameon=False, fontsize=9, handlelength=2.4, columnspacing=1.2,
+               handletextpad=0.5)
 fig.savefig(os.path.join(HERE, 'baseline_ladder.pdf'))
 fig.savefig(os.path.join(HERE, 'baseline_ladder.png'), dpi=300)

@@ -58,10 +58,10 @@ for n, (ax, layout) in enumerate(zip(axes.ravel(), data['layouts'])):
     if n % 2 == 0:
         ax.set_ylabel(r'$\sigma_b$')
     ax.set_title(f'{layout["title"]}\n'
-                 f'tied {layout["fom_tied"]:.3g}, independent {layout["fom_independent"]:.3g}',
+                 f'growth-tied {layout["fom_tied"]:.3g}, free {layout["fom_independent"]:.3g}',
                  fontsize=10)
-fig.colorbar(image, ax=axes, label=r'FoM / FoM$_\mathrm{tied}$', shrink=0.8)
-fig.suptitle('Fraction of the tied FoM kept with correlated bin biases '
+fig.colorbar(image, ax=axes, label='FoM / FoM(growth-tied)', shrink=0.8)
+fig.suptitle('Fraction of the growth-tied FoM kept with correlated bin biases '
              rf'($k_\mathrm{{max}} = {data["kmax_h_per_Mpc"]:g}\,h$ Mpc$^{{-1}}$)', fontsize=12)
 fig.text(0.45, 0.955, 'PRELIMINARY: LINEAR BIAS ONLY', ha='center', va='top', fontsize=12,
          fontweight='bold', color='firebrick')

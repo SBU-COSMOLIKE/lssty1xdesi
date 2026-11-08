@@ -47,6 +47,10 @@ with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
 rungs = data['rungs']
 x = np.arange(len(rungs))
+# the names the figures print for the linear-bias priors (the data keys
+# keep the notebook's names)
+DISPLAY = {'tied': 'growth-tied', 'baseline': 'baseline',
+           'pessimistic': 'pessimistic', 'independent': 'free'}
 
 fig, axes = plt.subplots(len(data['params']), len(data['truths']),
                          figsize=(4.6*len(data['truths']), 2.6*len(data['params'])),
@@ -79,7 +83,7 @@ for col, truth in enumerate(data['truths']):
             ax.set_ylabel(PARAM_LABELS[what])
         if row == len(data['params']) - 1:
             ax.set_xticks(x)
-            ax.set_xticklabels([f'fit:\n{r}' for r in rungs])
+            ax.set_xticklabels([f'fit:\n{DISPLAY[r]}' for r in rungs])
 handles = [Line2D([], [], color=lay['color'], ls='none', marker='o', ms=4.5, label=lay['label'])
            for lay in data['layouts']]
 handles.append(Line2D([], [], color='firebrick', lw=1.0, ls='--', label=r'$\sigma/3$'))

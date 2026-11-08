@@ -48,6 +48,10 @@ with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
 rungs = [r['key'] for r in data['rungs']]
 x = np.arange(len(rungs))
+# the names the figures print for the linear-bias priors (the data keys
+# keep the notebook's names)
+DISPLAY = {'tied': 'growth-tied', 'baseline': 'baseline',
+           'pessimistic': 'pessimistic', 'independent': 'free'}
 
 fig, axes = plt.subplots(2, 1, figsize=(5.4, 6.0), sharex=True, gridspec_kw={'hspace': 0.14})
 for ax, truth in zip(axes, data['truths']):
@@ -73,7 +77,7 @@ for ax, truth in zip(axes, data['truths']):
     ax.set_ylabel(r'$(w_0, w_a)$ shift [$\sigma$]')
     ax.set_title(f'truth: known drifts + {truth} scatter', fontsize=11.5)
 axes[1].set_xticks(x)
-axes[1].set_xticklabels([f'fit:\n{r["label"]}' for r in data['rungs']])
+axes[1].set_xticklabels([f'fit:\n{DISPLAY[r["key"]]}' for r in data['rungs']])
 axes[1].set_xlim(-0.45, x[-1] + 0.75)
 handles = [Line2D([], [], color=lay['color'], lw=1.0, marker='o', ms=5.5, label=lay['label'])
            for lay in data['layouts']]

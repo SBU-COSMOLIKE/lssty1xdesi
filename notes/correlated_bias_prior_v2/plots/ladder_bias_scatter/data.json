@@ -1,5 +1,5 @@
 {
- "about": "the random-truth accuracy test of the v1 note under model A: truths = known drifts plus a baseline or pessimistic residual (same draws as v1, b2 and bs2 following b1), fitted with every linear rung and higher-order variant; mean and 16-84 percentiles of the (w0, wa) shift in units of each fit's ellipse, and the error inflation sqrt(E[chi2_w]/2); plus the shift of a calibration drift of the b2 and bs2 offsets. Written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb.",
+ "about": "the random-truth accuracy test of the v1 note under model A: truths = known drifts plus a baseline or pessimistic residual (same draws as v1, b2 and bs2 following b1), fitted with every linear rung and higher-order variant; mean and 16-84 percentiles of the (w0, wa) shift in units of each fit's ellipse, and the goodness of fit sqrt(E[chi2_w]/2) (stored as error_inflation); plus the shift of a calibration drift of the b2 and bs2 offsets. Written by EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb.",
  "kmax_h_per_Mpc": 0.075,
  "lsst_y1_3x2pt_fom": 17.26,
  "shift_threshold": 0.3333333333333333,

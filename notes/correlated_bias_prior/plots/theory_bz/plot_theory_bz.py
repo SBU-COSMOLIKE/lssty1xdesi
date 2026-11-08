@@ -58,7 +58,7 @@ ax.set_xlabel(r'redshift $z$')
 ax.set_ylabel(r'linear bias $b(z)$')
 ax.set_xlim(0.05, 1.75)
 handles = [
-    Line2D([], [], color='0.25', lw=2.0, label=r'tied: $B_g/D(z)$'),
+    Line2D([], [], color='0.25', lw=2.0, label=r'growth-tied: $B_g/D(z)$'),
     Line2D([], [], color='0.25', lw=2.0, ls='--',
            label=r'conserved: $1 + (b_c - 1)\,D(z_c)/D(z)$'),
     Line2D([], [], color='0.25', lw=2.0, ls='-.', label=r'BGS flux limit $r < 19.5$'),

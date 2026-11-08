@@ -49,8 +49,8 @@ too rigid: known physics moves each bin away from the group trend at
 the percent level.  And it is inaccurate: a drift the model cannot
 express does not average away, it displaces the fitted cosmology.
 Fitting data that carry the gentlest drift physics supplies, the slow
-debiasing of a conserved galaxy population, with the tied model
-shifts $(w_0, w_a)$ by 11 to 21 times the model's own error ellipse,
+debiasing of a conserved galaxy population, with the growth-tied
+model shifts $(w_0, w_a)$ by 11 to 21 times the model's own error ellipse,
 depending on the layout (Appendix~\ref{app:bias}).  The opposite
 extreme, one free bias per bin, is accurate by construction but
 spends part of the data measuring 76 biases.
@@ -90,9 +90,10 @@ Appendices~\ref{sec:twobins}--\ref{app:memory} derive the projection.
 \paragraph{The ladder.}
 The paper reports four nested assumptions, from rigid to free.
 \begin{itemize}
-  \item \textbf{Tied}: $b_i = B_g/D(z_i)$, one free amplitude per
-    group and nothing else.  The upper limit of the FoM.
-  \item \textbf{Baseline}: the model of Eq.~\eqref{eq:summodel} with
+  \item \textbf{Growth-tied}: $b_i = B_g/D(z_i)$, one free amplitude
+    per group, the bias following $1/D(z)$, and nothing else.  The
+    upper limit of the FoM.
+  \item \textbf{Baseline prior}: the model of Eq.~\eqref{eq:summodel} with
     $\sigma_g = 3\%$ for BGS, $\sigma_g = 1\%$ for the other five
     groups, and $L = 0.2$.  Each number has a stated physical source.
     The BGS width is sized to the curvature of its flux-limit drift:
@@ -107,15 +108,15 @@ The paper reports four nested assumptions, from rigid to free.
     Appendix~\ref{sec:memphysics}).
     $L = 0.2$ is comparable to the group spans, so the residual is
     smooth across a group.
-  \item \textbf{Pessimistic}: the same model with $\sigma_g = 3\%$ in
+  \item \textbf{Pessimistic prior}: the same model with $\sigma_g = 3\%$ in
     every group and $L = 0.05$: local selection features in every
     group, as large as the largest known curvature, on the scale over
     which the 4000~\AA\ break crosses a filter edge
     ($\Delta z \approx 0.03$--$0.05$).  The selection discussion of
     Appendix~\ref{sec:selection} finds that mechanism but no
-    measurement of its amplitude, so this rung grants it the largest
+    measurement of its amplitude, so this prior grants it the largest
     measured size everywhere.
-  \item \textbf{Independent}: one free bias per bin, flat priors.
+  \item \textbf{Free}: one free bias per bin, flat priors.
     The lower limit.
 \end{itemize}
 
@@ -126,21 +127,21 @@ and it needs trusted histories; this note has a few derived drift
 laws and no mock catalogs.  So the paper does not defend a single
 choice.  It reports a reasonable case and a pessimistic case, and
 shows how the figure of merit depends on the assumption, inside two
-absolute limits.  A referee who rejects the baseline moves down one
-rung; nothing needs retracting.
+absolute limits.  A referee who rejects the baseline prior moves one
+step down the ladder; nothing needs retracting.
 
 \paragraph{The cost of freedom.}
 Figure~\ref{fig:baselineladder} and Table~\ref{tab:ladder} give the
-FoM of every rung on every layout.  On the thin layouts the baseline
-keeps roughly half of the tied FoM and stays above the LSST Y1 3x2pt
+FoM of every prior on every layout.  On the thin layouts the baseline
+prior keeps roughly half of the growth-tied FoM and stays above the LSST Y1 3x2pt
 reference of $17.26$ on the $\Delta d_{\rm com} = 62$~Mpc layout.
 The pessimistic prior costs another third to half.  On
 $\Delta z = 0.2$ every group holds one or two bins, so the free
-amplitude and tilt already free every bin and the three lower rungs
-coincide.  The absolute values inherit a known mismatch between the
+amplitude and tilt already free every bin and the baseline,
+pessimistic and free priors coincide.  The absolute values inherit a known mismatch between the
 data vector's biases and the covariance's, which inflates every
 layout's FoM by a factor of about $2.4$--$3.2$
-(Appendix~\ref{sec:results}); the comparison between rungs on a fixed
+(Appendix~\ref{sec:results}); the comparison between priors on a fixed
 layout holds the data vector and covariance fixed and changes only
 the prior.
 
@@ -148,21 +149,21 @@ the prior.
   \centering
   \includegraphics[width=0.88\linewidth]{plots/baseline_ladder/baseline_ladder.pdf}
   \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone at
-    $k_{\rm max} = 0.075\,h/{\rm Mpc}$ on the four rungs of the
+    $k_{\rm max} = 0.075\,h/{\rm Mpc}$ under the four priors of the
     linear-bias ladder, one line per bin layout.  $k_{\rm max}$ is
     quoted at $z = 0$: each bin is cut by the ultraviolet-fraction
     criterion at $k_{\rm max}/D(\bar{z}_i)$ ($\alpha = 0.05$,
     $\bar{z}_i$ the bin's mean redshift) within the shipped mask.
-    The rungs: tied,
+    The priors: growth-tied,
     $b_i = B_g/D(z_i)$ with one free amplitude per group; baseline,
     the model of Eq.~\eqref{eq:summodel}, a free amplitude and tilt
     per group plus a correlated residual with $\sigma_g = 3\%$ for
     BGS, $1\%$ for the other groups and $L = 0.2$; pessimistic, the
     same model with $\sigma_g = 3\%$ in every group and $L = 0.05$;
-    independent, one free bias per bin.  The dashed line is the LSST
+    free, one free bias per bin.  The dashed line is the LSST
     Y1 3x2pt reference at $17.26$.  On $\Delta z = 0.2$ the free
     amplitude and tilt already free every one- and two-bin group, so
-    the three lower rungs coincide at $0.515$.}
+    the baseline, pessimistic and free priors coincide at $0.515$.}
   \label{fig:baselineladder}
 \end{figure}
 
@@ -170,7 +171,7 @@ the prior.
   \centering
   \begin{tabular}{lcccc}
     \hline
-    Layout & tied & baseline & pessimistic & independent \\
+    Layout & growth-tied & baseline & pessimistic & free \\
     \hline
     $\Delta d_{\rm com} = 62$~Mpc & $32.94$ & $18.19$ & $11.45$ & $10.69$ \\
     $\Delta z = 0.02$ & $19.93$ & $12.47$ & $7.41$ & $4.02$ \\
@@ -179,7 +180,7 @@ the prior.
     \hline
   \end{tabular}
   \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone at
-    $k_{\rm max} = 0.075\,h/{\rm Mpc}$ on the four rungs of the
+    $k_{\rm max} = 0.075\,h/{\rm Mpc}$ under the four priors of the
     ladder, per layout.  $k_{\rm max}$ is quoted at $z = 0$: each bin
     is cut by the ultraviolet-fraction criterion at
     $k_{\rm max}/D(\bar{z}_i)$ ($\alpha = 0.05$) within the shipped
@@ -188,28 +189,29 @@ the prior.
 \end{table}
 
 \paragraph{The accuracy test.}
-Each rung is tested against truths it may not be able to express.  A
+Each prior is tested against truths it may not be able to express.  A
 truth sets every bin's bias to its group's known drift (the
 $r < 19.5$ flux limit in BGS, a conserved population elsewhere) plus
 a residual drawn from the baseline or the pessimistic prior; every
-rung fits $2000$ truths per case with its bias prior centered on the
-tied shape.  Figure~\ref{fig:ladderbiasscatter} draws the figure of
+prior fits $2000$ truths per case, centered on the growth-tied
+shape.  Figure~\ref{fig:ladderbiasscatter} draws the figure of
 bias $\Delta_w$, the distance of the fitted $(w_0, w_a)$ from the
-truth in units of the rung's own ellipse, one panel per truth and one
-column per rung.  A point above the dashed line $\Delta_w = 1/3$ is a
+truth in units of the fit's own ellipse, one panel per truth and one
+column per prior.  A point above the dashed line $\Delta_w = 1/3$ is a
 biased fit, except in the column labeled ``fit prior = truth
 scatter'', whose ellipse already covers that shift.  The verdict is
-the error inflation $\sqrt{\mathrm{E}[\chi^2_w]/2}$, where
+the goodness of fit of the parameter recovery,
+$\sqrt{\mathrm{E}[\chi^2_w]/2}$, where
 $\chi^2_w$ is $\Delta_w^2$ with the data noise added and
 $\mathrm{E}$ averages over truths and noise: it is $1$ when the
 ellipse covers the truth as it claims, and above $1$ it is the factor
-by which the ellipse is too small.  The tied model is wrong under
-either truth: its ellipse is $8.5$--$18$ times too small.  The
-baseline is correct ($1.00$) when nature's local bias features stay
-within its own prior, but its ellipse is $1.5$--$2.3$ times too small
-if they reach the pessimistic size; the baseline FoM rests on that
-assumption, and the pessimistic FoM is the safe statement.  The
-pessimistic rung is correct ($1.00$) or conservative ($0.87$--$0.99$)
+by which the ellipse is too small.  The growth-tied model is wrong
+under either truth: its ellipse is $8.5$--$18$ times too small.  The
+baseline prior is correct ($1.00$) when nature's local bias features
+stay within it, but its ellipse is $1.5$--$2.3$ times too small if
+they reach the pessimistic size; the baseline-prior FoM rests on that
+assumption, and the pessimistic-prior FoM is the safe statement.  The
+pessimistic prior is correct ($1.00$) or conservative ($0.87$--$0.99$)
 under both truths.  Appendix~\ref{app:bias} derives both statistics.
 Scored for the matter density $\Omega_m$ and the primordial amplitude
 $A_s$, the truths give the same verdict
@@ -229,34 +231,35 @@ $A_s$, the truths give the same verdict
     groups, drawn from the baseline prior ($\sigma_g = 3\%$ for BGS,
     $1\%$ otherwise, $L = 0.2$; top) or the pessimistic prior
     ($\sigma_g = 3\%$ everywhere, $L = 0.05$; bottom).  The $2000$
-    truths per panel are each fitted with every rung, every rung's
-    bias prior centered on the tied shape $\delta = 0$: the baseline
-    is here a model under test, not the truth.  Points: the mean
+    truths per panel are each fitted under every prior, each centered
+    on the growth-tied shape $\delta = 0$: the baseline prior is here
+    a model under test, not the truth.  Points: the mean
     figure of bias $\Delta_w$, the fitted $(w_0, w_a)$ shift in
-    units of that rung's own error ellipse; bars: the
+    units of that fit's own error ellipse; bars: the
     16th--84th percentiles; colors: the four bin
     layouts; dashed line: the $\sigma/3$ threshold.  The axis is
     logarithmic; shifts below $10^{-3}$ are drawn at $10^{-3}$ and
-    labeled ``zero'': the independent rung absorbs any truth
+    labeled ``zero'': the free prior absorbs any truth
     exactly, and on $\Delta z = 0.2$ every group holds one or two
-    bins, so the free amplitude and tilt do the same for every rung
-    below tied.  The gray columns mark the baseline and the
-    pessimistic rung; ``fit prior = truth scatter'' marks the rung
-    whose prior equals the truth's residual distribution.  There the
-    mean shift is not a bias, since that rung's ellipse already
-    covers exactly this scatter; its error inflation
+    bins, so the free amplitude and tilt do the same for every prior
+    except growth-tied.  The gray columns mark the baseline and the
+    pessimistic prior; ``fit prior = truth scatter'' marks the prior
+    that equals the truth's residual distribution.  There the
+    mean shift is not a bias, since that fit's ellipse already
+    covers exactly this scatter; its goodness of fit
     (Table~\ref{tab:inflation}) is $1.00$.  Reading the
-    panels: the tied model fails both truths by more than an order
-    of magnitude; the baseline absorbs its own scatter (top) but
+    panels: the growth-tied model fails both truths by more than an
+    order of magnitude; the baseline prior absorbs its own scatter
+    (top) but
     fails the pessimistic truth (bottom), where its ellipse is
-    $1.5$--$2.3$ times too small; the pessimistic rung passes
+    $1.5$--$2.3$ times too small; the pessimistic prior passes
     both.}
   \label{fig:ladderbiasscatter}
 \end{figure}
 
 \paragraph{What the two priors look like.}
 Figures~\ref{fig:baselinedraws} and \ref{fig:pessimisticdraws} draw
-both priors next to the known drifts.  Under the baseline the
+both priors next to the known drifts.  Under the baseline prior the
 neighbor residual rms at $\Delta z = 0.02$ is $0.44\%$ ($1.31\%$ for
 BGS), the draws are smooth, and the known drifts look like ordinary
 members of the family; the curvature the BGS line leaves costs a
@@ -264,7 +267,7 @@ $\chi^2$ per degree of freedom of about $0.8$ under the residual
 prior on the $\Delta d_{\rm com} = 62$~Mpc bins.  Under the
 pessimistic prior the neighbor rms is $2.44\%$ in every group: the
 histories keep their lines but gain local features nobody has
-measured, which is the point of that rung.
+measured, which is the point of that prior.
 
 \begin{figure}[tp]
   \centering
@@ -290,7 +293,7 @@ measured, which is the point of that rung.
     and $L = 0.05$, drawn around the known drifts' lines.  The
     neighbor residual rms is $2.44\%$ at $\Delta z = 0.02$.  The
     histories keep the drift lines but add local selection features
-    of the size and length this rung assumes.}
+    of the size and length this prior assumes.}
   \label{fig:pessimisticdraws}
 \end{figure}
 
@@ -312,15 +315,16 @@ truth at the same cut is already biased: the truth is model A of
 its calibration $b_2(b_1)$ and the tidal bias $b_{s^2}$ on
 co-evolution.  On the $\Delta d_{\rm com} = 62$~Mpc layout the fit
 moves $\Omega_m$ by $2.0$--$2.4\sigma$, $(w_0, w_a)$ by
-$0.7$--$1.1\sigma$ and $A_s$ by $0.9$--$1.2\sigma$ on every rung, in
-units of the rung's own marginalized errors.  The rerun with the
+$0.7$--$1.1\sigma$ and $A_s$ by $0.9$--$1.2\sigma$ under every prior,
+in units of the fit's own marginalized errors.  The rerun with the
 exact projection of the one-loop white-noise constant reproduces
 these numbers, and the companion note
 \texttt{notes/linear\_bias\_kmax} gives the full scan over
 $k_{\rm max} = 0.05$--$0.25\,h/{\rm Mpc}$.  Only
 $k_{\rm max} = 0.05\,h/{\rm Mpc}$ keeps every shift below $\sigma/3$,
-and only on the $\Delta d_{\rm com} = 62$~Mpc layout on every rung;
-on $\Delta z = 0.05$ it passes only for the tied and baseline rungs
+and only on the $\Delta d_{\rm com} = 62$~Mpc layout under every prior;
+on $\Delta z = 0.05$ it passes only for the growth-tied and baseline
+priors
 and only for the truth on the calibrations; on $\Delta z = 0.02$ that
 cut keeps no band at all, and on $\Delta z = 0.2$ it already fails.
 The forecast with the one-loop model is
@@ -342,8 +346,9 @@ selected the same way, so their biases are expected to be similar but not
 identical.
 
 The default model ties all bins of a group to a single amplitude.  If
-$D(z)$ is the linear growth factor, normalized to $D(0) = 1$, the tied
-model sets
+$D(z)$ is the linear growth factor, normalized to $D(0) = 1$, the
+growth-tied model (one amplitude per group, the bias following
+$1/D(z)$) sets
 \begin{equation}
   b_i \;=\; \frac{B_g}{D(z_i)},
   \label{eq:tied}
@@ -358,7 +363,7 @@ Appendix~\ref{sec:conserved} derives that law and the small
 difference between the two.
 
 The opposite extreme frees one bias per bin, with flat priors and no
-connection between neighbors (``independent'').  The dark-energy figure of
+connection between neighbors (``free'').  The dark-energy figure of
 merit of the forecast depends on which extreme is chosen, and the
 question is how much of it rests on the tying itself.  To answer that,
 this note builds the intermediate model: bins may deviate from the
@@ -367,10 +372,10 @@ group's trend, but neighboring bins must deviate \emph{together}.
 \section{The models}
 \label{sec:models}
 
-\subsection{Tied, independent, and correlated biases}
+\subsection{Growth-tied, free, and correlated biases}
 \label{sec:defs}
 
-The model multiplies the tied bias by a fractional deviation
+The model multiplies the growth-tied bias by a fractional deviation
 $\delta_i$,
 \begin{equation}
   b_i \;=\; \frac{B_g}{D(z_i)}\,\bigl(1 + \delta_i\bigr),
@@ -502,9 +507,9 @@ overestimated by about ten percent.
 
 A plain Gaussian prior with covariance $\Cov$ would penalize moving
 all $\beta_i$ of a group up or down together, but that uniform shift
-is exactly the free amplitude $B_g$, which the tied model never
+is exactly the free amplitude $B_g$, which the growth-tied model never
 constrains.  Keeping the penalty would make every comparison against
-the tied model unfair.  The repair removes the uniform direction from
+the growth-tied model unfair.  The repair removes the uniform direction from
 the prior: with $\ones = (1, \dots, 1)\T$ the ones vector with $n$
 entries ($n$ the number of bins in the group), the prior precision of
 a group's amplitudes is the projection
@@ -517,7 +522,7 @@ a group's amplitudes is the projection
 
 Four statements, proven in the appendices, carry the construction.
 $\Prec\,\ones = 0$: a uniform shift of the whole group costs nothing,
-so $B_g$ stays as free as in the tied model.  A pure shape change
+so $B_g$ stays as free as in the growth-tied model.  A pure shape change
 keeps exactly the penalty the plain prior gives it.  $\Prec$ is
 positive semidefinite with rank $n - 1$: of a group's $n$ directions,
 one is free and the other $n - 1$ are charged.  And $\Prec$ is
@@ -525,7 +530,7 @@ precisely the prior obtained by sampling $B_g$ with a flat prior and
 marginalizing it.  Appendix~\ref{sec:twobins} computes $\Prec$ for two
 bins, Appendix~\ref{sec:threeviews} derives these statements three
 ways, and Appendix~\ref{sec:general} treats $n$ bins, including the
-tied and independent limits.
+growth-tied and free limits.
 
 Across groups the prior of Eq.~\eqref{eq:priorkernel} is zero, so the
 full prior precision is block diagonal: one projected block per
@@ -535,10 +540,10 @@ the Fisher matrix is Appendix~\ref{sec:fisher}.
 \section{Which $L$ and $\sigma_b$ are physical}
 \label{sec:physical}
 
-Which deviations from the tied trend does known galaxy-bias physics
+Which deviations from the growth-tied trend does known galaxy-bias physics
 produce?  One case of bias evolution can be solved in closed form: a
 population whose members are conserved.  This section derives that
-case, measures its deviation from the tied trend, compares the
+case, measures its deviation from the growth-tied trend, compares the
 deviation with what the prior permits, weighs the published
 measurements, and ends at the scanned grid and the range it covers.
 
@@ -577,7 +582,7 @@ traces the matter imperfectly (correlation $\rho_{gm} < 1$), and find
 the same decay of $b$ toward one;
 Appendix~\ref{app:continuity} summarizes their result.
 
-The tied shape $b = B/D$ freezes a different quantity.  Constant
+The growth-tied shape $b = B/D$ freezes a different quantity.  Constant
 $b\,D$ means $\delta_g = b\,\delta_m \propto (B/D)\,D = B$: the galaxy
 clustering amplitude itself does not grow.  A conserved population
 never does that; its $\delta_g$ keeps growing with the matter piece
@@ -585,14 +590,15 @@ $\delta_m(z)$ (Appendix~\ref{app:continuity}).  Constant $b\,D$ instead describe
 selection: at each redshift it picks a different and rarer set of
 objects, whose stronger clumping compensates the smaller $D$.
 
-\subsection{The deviation from the tied trend}
+\subsection{The deviation from the growth-tied trend}
 \label{sec:tilt}
 
 Place the reference at a group's midpoint, $z_c$, with
-$b_c = B/D(z_c)$ from the group's fiducial amplitude $B$.  The tied
-bias is $b_{\rm tied}(z) = b_c\, D(z_c)/D(z)$ and the conserved bias is
-Eq.~\eqref{eq:fry}.  Their ratio defines the deviation $\delta(z)$ of
-Eq.~\eqref{eq:model}, $b = b_{\rm tied}(1 + \delta)$:
+$b_c = B/D(z_c)$ from the group's fiducial amplitude $B$.  The
+growth-tied bias is $b_{\rm gt}(z) = b_c\, D(z_c)/D(z)$ (gt for
+growth-tied) and the conserved bias is Eq.~\eqref{eq:fry}.  Their ratio
+defines the deviation $\delta(z)$ of Eq.~\eqref{eq:model},
+$b = b_{\rm gt}(1 + \delta)$:
 \begin{equation}
   1 + \delta(z)
   \;=\;
@@ -630,7 +636,7 @@ a step of $0.3$--$0.7\%$ between neighbors at $\Delta z = 0.02$.
     \hline
   \end{tabular}
   \caption{The conserved-population deviation $\delta(z)$ of
-    Eq.~\eqref{eq:tilt} from the tied trend, for flat $\Lambda$CDM with
+    Eq.~\eqref{eq:tilt} from the growth-tied trend, for flat $\Lambda$CDM with
     $\Omega_m = 0.3$, the reference $z_c$ at the group midpoint, and
     $b_c = B/D(z_c)$ from the project fiducials.  The last column is
     the change of $\delta$ across one $\Delta z = 0.05$ step at the
@@ -648,7 +654,7 @@ than $B_g/D$, and convex.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{plots/theory_bz/theory_bz.pdf}
-  \caption{The bias $b(z)$ of every group.  Solid: the tied shape
+  \caption{The bias $b(z)$ of every group.  Solid: the growth-tied shape
     $B_g/D(z)$.  Dashed: a conserved population anchored at the group
     midpoint, $b(z) = 1 + (b_c - 1)\,D(z_c)/D(z)$
     (Eq.~\eqref{eq:fry}).  Dash-dot, on BGS only: the $r < 19.5$
@@ -808,7 +814,8 @@ and the figures of Appendix~\ref{sec:results} mark two of its
 elements: the kernel scan's reference point, $L = 0.05$ and
 $\sigma_b = 3\%$ (the diamond their legends label ``baseline''), and
 the scanned range $L = 0.02$--$0.1$, $\sigma_b = 1$--$5\%$ (the band
-their legends label ``plausible'').  Neither is this note's baseline.
+their legends label ``plausible'').  Neither is this note's baseline
+prior.
 The stated assumptions of Section~\ref{sec:summary} set that, on the
 memory model, and the roughness analysis of
 Appendix~\ref{app:roughness} explains why a region in
@@ -864,7 +871,7 @@ ${\rm FoM} = [\det \mathrm{Cov}(w_0, w_a)]^{-1/2}$: larger is better.
 Four thin-bin layouts are scanned: the $\Delta d_{\rm com} = 62$~Mpc
 layout (bins of equal comoving width) and the fixed-width layouts
 with $\Delta z = 0.02$, $0.05$ and $0.2$.  In each layout the grid of
-Eq.~\eqref{eq:scan} is bracketed by the tied and independent models.
+Eq.~\eqref{eq:scan} is bracketed by the growth-tied and free models.
 
 \paragraph{Forecast setup.}
 The survey covers $12{,}300$ square degrees.  The data vector is the
@@ -907,10 +914,10 @@ Figure~\ref{fig:range} places every scanned $(L, \sigma_b)$ between
 its layout's two caps.  At the reference point ($\sigma_b = 3\%$,
 $L = 0.05$) the four layouts give ${\rm FoM} = 11.8$, $8.05$, $2.01$
 and $0.779$, which is $0.36$, $0.40$, $0.24$ and $0.41$ of the
-respective tied values.  At $\sigma_b = 1\%$ the tied fraction spans
+respective growth-tied values.  At $\sigma_b = 1\%$ the growth-tied fraction spans
 $0.45$--$0.79$ across layouts and correlation lengths.  At
 $\sigma_b \geq 5\%$ the $\Delta d_{\rm com} = 62$~Mpc and
-$\Delta z = 0.05$ layouts sit near their independent values: most of
+$\Delta z = 0.05$ layouts sit near their free values: most of
 the information the tying provided is already spent.  Two scanned
 points exceed the LSST Y1 3x2pt reference of $17.3$ (the dashed
 line), both on the $\Delta d_{\rm com} = 62$~Mpc layout at
@@ -923,14 +930,15 @@ here.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{plots/fom_range/fom_range.pdf}
-  \caption{The ${\rm FoM}(w_0, w_a)$ of each thin-bin layout: the
-    tied model (black cap), independent biases (gray cap), every
+  \caption{The ${\rm FoM}(w_0, w_a)$ of each thin-bin layout:
+    growth-tied biases (black cap), free biases with flat priors (gray
+    cap), every
     scanned $(L, \sigma_b)$ point (dots), the scanned range
     ($\sigma_b = 1$--$5\%$, $L = 0.02$--$0.1$; the band the legend
     labels ``plausible''), the kernel scan's reference point
     (the diamond the legend labels ``baseline''), and the LSST Y1
-    3x2pt reference at $17.3$ (dashed).  The note's baseline is the
-    memory model of Section~\ref{sec:summary}, not a point of this
+    3x2pt reference at $17.3$ (dashed).  The note's baseline prior is
+    the memory model of Section~\ref{sec:summary}, not a point of this
     scan.}
   \label{fig:range}
 \end{figure}
@@ -948,7 +956,7 @@ $\Delta z = 0.02$ FoM rises from $13.5$ to $15.7$ across the $L$
 grid, and the $\Delta d_{\rm com}$ FoM by $28\%$, from $16.3$ to
 $20.8$.  At $\sigma_b \geq 3\%$ the $\Delta z = 0.02$ layout keeps a
 strong response ($6.8$ to $10.9$ at $3\%$) while
-$\Delta d_{\rm com} = 62$~Mpc sits close to its independent floor of
+$\Delta d_{\rm com} = 62$~Mpc sits close to its free floor of
 $10.69$, which no prior choice moves.  In the two wide layouts the
 bins are as far apart as $L$ or farther, the neighbor correlation is
 low everywhere on the grid, and $L$ moves the FoM only weakly.
@@ -956,7 +964,7 @@ low everywhere on the grid, and $L$ moves the FoM only weakly.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{plots/fom_heatmap/fom_heatmap.pdf}
-  \caption{${\rm FoM}/{\rm FoM}_{\rm tied}$ across the scanned
+  \caption{${\rm FoM}/{\rm FoM}(\mbox{growth-tied})$ across the scanned
     $(L, \sigma_b)$ grid, one panel per layout, with the absolute FoM
     in parentheses.}
   \label{fig:heatmap}
@@ -976,14 +984,14 @@ single-variable description of the grid should be expected.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{plots/fom_collapse/fom_collapse.pdf}
-  \caption{${\rm FoM}/{\rm FoM}_{\rm tied}$ against the roughness
+  \caption{${\rm FoM}/{\rm FoM}(\mbox{growth-tied})$ against the roughness
     combination $\sqrt{2}\,\kappa = \sigma_b \sqrt{2/L}$, which sets
     the rms neighbor change at small separations,
     $\sigma_b \sqrt{2\,\Delta z/L}$ (Eq.~\eqref{eq:roughness}): for
     $\sqrt{2}\,\kappa = 0.1$, the bias changes by $1\%$ between bins
     $\Delta z = 0.01$ apart, and $1.4\%$ for $\Delta z = 0.02$.  Colors
     distinguish the four layouts, with each layout's
-    independent fraction ${\rm FoM}_{\rm indep}/{\rm FoM}_{\rm tied}$
+    free fraction ${\rm FoM}(\mbox{free})/{\rm FoM}(\mbox{growth-tied})$
     dotted; marker shapes give $L$ (circle $0.02$, square $0.05$,
     triangle $0.1$, diamond $0.2$).  Markers are filled when
     $(L, \sigma_b)$ lies inside the scanned range,
@@ -1022,8 +1030,8 @@ single-variable description of the grid should be expected.
 The scan reaches its two limits numerically, as Appendix~%
 \ref{sec:limits} says it must.  At $\sigma_b = 0.01\%$ with
 $L = 0.05$ the four layouts give ${\rm FoM} = 32.93$, $19.93$,
-$8.285$ and $1.907$, against tied values $32.94$, $19.93$, $8.288$
-and $1.908$; at $\sigma_b = 1000\%$ they land on the independent
+$8.285$ and $1.907$, against growth-tied values $32.94$, $19.93$,
+$8.288$ and $1.908$; at $\sigma_b = 1000\%$ they land on the free
 values $10.69$, $4.016$, $1.225$ and $0.5154$ exactly.
 
 \section{The memory model}
@@ -1343,8 +1351,8 @@ geometric distances and the shape of the power spectrum are
 untouched; and the comparison of growth between groups survives,
 because each group gives away only its own interior tilt, a
 statement this note does not test.  This is
-why ``tied plus free tilt'' sits below the tied model, and why it
-should sit well above the independent one.  The limit
+why ``growth-tied plus free tilt'' sits below the growth-tied model,
+and why it should sit well above the free one.  The limit
 $\sigma_b \to 0$ of the memory model isolates the question: it
 measures how much of the figure of merit came from growth measured
 inside groups.
@@ -1362,10 +1370,11 @@ preliminary, linear bias only.
 
 \begin{table}[ht]
   \centering
+  \setlength{\tabcolsep}{4.5pt}
   \begin{tabular}{lccccc}
     \hline
-    Layout & tied & tied $+$ free tilt & memory, $1\%$ &
-    kernel, $1\%$ & independent \\
+    Layout & growth-tied & growth-tied $+$ free tilt & memory, $1\%$ &
+    kernel, $1\%$ & free \\
     \hline
     $\Delta d_{\rm com} = 62$~Mpc & $32.94$ & $24.35$ $(0.74)$ &
     $14.99$ & $17.12$ & $10.69$ \\
@@ -1378,8 +1387,8 @@ preliminary, linear bias only.
     \hline
   \end{tabular}
   \caption{${\rm FoM}(w_0, w_a)$ at $L = 0.05$.  The
-    tied-plus-free-tilt column is the $\sigma_b \to 0$ limit of the
-    memory model, with its fraction of the tied value in
+    growth-tied-plus-free-tilt column is the $\sigma_b \to 0$ limit of
+    the memory model, with its fraction of the growth-tied value in
     parentheses; the memory and kernel columns are both at
     $\sigma_b = 1\%$.}
   \label{tab:memside}
@@ -1387,11 +1396,11 @@ preliminary, linear bias only.
 
 The price of the tilt alone is the distance between the first two
 columns of Table~\ref{tab:memside}.  One free tilt per group costs
-$26\%$ of the tied FoM on $\Delta d_{\rm com} = 62$~Mpc, $33\%$ on
+$26\%$ of the growth-tied FoM on $\Delta d_{\rm com} = 62$~Mpc, $33\%$ on
 $\Delta z = 0.02$, $68\%$ on $\Delta z = 0.05$, and $73\%$ on
 $\Delta z = 0.2$, where the free amplitude and tilt already free
 every one- and two-bin group completely.  That is the
-information the tied model drew from the evolution of $b\,D$ inside
+information the growth-tied model drew from the evolution of $b\,D$ inside
 each group, the growth channel of Eq.~\eqref{eq:tiltcost}.
 $\Delta z = 0.05$ leans on that channel far more than the thinner
 layouts; a plausible reading, offered as interpretation rather than
@@ -1409,13 +1418,13 @@ that matters.
   \centering
   \includegraphics[width=\linewidth]{plots/memory_lines/memory_lines.pdf}
   \caption{The two models against $\sigma_b$ at $L = 0.05$, as the
-    fraction of each layout's tied FoM.  Solid lines with circles:
+    fraction of each layout's growth-tied FoM.  Solid lines with circles:
     the kernel model.  Dashed lines with triangles: the memory
-    model.  Dotted: each layout's independent value.  At
-    $\sigma_b = 0$ the kernel model sits at one (the tied model) and
-    the memory model at its tied-plus-free-tilt value.  The dashed
-    orange line of $\Delta z = 0.2$ lies on its dotted independent
-    line.}
+    model.  Dotted: each layout's free value (the legend's ``free
+    biases'').  At $\sigma_b = 0$ the kernel model sits at one (the
+    growth-tied model) and the memory model at its
+    growth-tied-plus-free-tilt value.  The dashed orange line of
+    $\Delta z = 0.2$ lies on its dotted free line.}
   \label{fig:memlines}
 \end{figure}
 
@@ -1437,8 +1446,8 @@ kernel model, $L$ matters where neighbors sit much closer than $L$:
 at $\sigma_b = 3\%$ the $\Delta z = 0.02$ FoM runs from $6.1$ at
 $L = 0.02$ to $10.0$ at $L = 0.2$, and the
 $\Delta d_{\rm com} = 62$~Mpc layout responds at $\sigma_b = 1\%$
-($14.0$ to $18.2$) before its independent floor takes over.  $\Delta z = 0.2$ is degenerate by
-construction: every cell equals the independent value $0.5154$,
+($14.0$ to $18.2$) before its free floor takes over.  $\Delta z = 0.2$ is degenerate by
+construction: every cell equals the free value $0.5154$,
 because each of its groups holds one or two bins, which the free
 amplitude and tilt free completely
 (Appendix~\ref{sec:memcharge}).
@@ -1449,14 +1458,14 @@ amplitude and tilt free completely
   \caption{The memory model across the scanned $(L, \sigma_b)$ grid,
     in the format of Figure~\ref{fig:heatmap}: one panel per layout,
     with the absolute FoM in parentheses and each panel's
-    tied-plus-free-tilt value in its title.}
+    growth-tied and growth-tied-plus-free-tilt values in its title.}
   \label{fig:memheatmap}
 \end{figure}
 
 The scan reaches its limits numerically.  At $\sigma_b = 1000\%$ the
-memory model lands on the independent values exactly ($10.69$,
+memory model lands on the free values exactly ($10.69$,
 $4.016$, $1.225$, $0.5154$), and at $\sigma_b \to 0$ on the
-tied-plus-free-tilt values of Table~\ref{tab:memside}, as
+growth-tied-plus-free-tilt values of Table~\ref{tab:memside}, as
 Appendix~\ref{sec:memlimits} says it must.
 
 \subsection{The limits}
@@ -1465,9 +1474,9 @@ Appendix~\ref{sec:memlimits} says it must.
 The memory model contains the same two endpoints as the kernel
 model, shifted by the tilt.  As $\sigma_b \to 0$ the residuals
 vanish and every group is a rigid line with a free level and a free
-slope: the tied model plus a free tilt per group.  As
+slope: the growth-tied model plus a free tilt per group.  As
 $\sigma_b \to \infty$ the prior charges nothing and the biases are
-independent.  Between the endpoints, $\sigma_b$ and $L$ keep the
+free.  Between the endpoints, $\sigma_b$ and $L$ keep the
 same meanings as before, now applied to the wiggles around each
 group's line.
 
@@ -1484,11 +1493,11 @@ neighboring amplitudes but never for a uniform shift of the group.  The
 unprojected inverse covariance links only neighboring bins directly
 (it is tridiagonal, even though the correlation itself reaches far);
 the projection adds one dense rank-one piece, the subtracted mean.
-The prior reduces to the tied model as
-$L \to \infty$ and to independent flat-prior biases as
+The prior reduces to the growth-tied model as
+$L \to \infty$ and to free flat-prior biases as
 $\sigma_b \to \infty$.  A second model adds a free tilt per group
 and reserves $\sigma_b$ for the residuals around each group's line:
-the tilt alone costs $26$--$73\%$ of the tied FoM, and at the
+the tilt alone costs $26$--$73\%$ of the growth-tied FoM, and at the
 $\sigma_b$ each model needs to admit the measured drifts (about
 $1$--$3\%$ with a tilt, about $10\%$ without), the memory model
 keeps more of the figure of merit on the thinnest layouts.
@@ -1501,9 +1510,11 @@ information they keep.  This appendix orders them by the other
 quantity that matters: whether each model's quoted error still covers
 the truth when the true biases carry structure the model cannot
 express.  It injects the two known drifts first, then random truths
-built on them, and ends at the error inflation, the factor by which
-each rung's $(w_0, w_a)$ ellipse is too small.  The result is the
-accuracy statement the summary quotes, and the reason the tied model
+built on them, and ends at the goodness of fit of the parameter
+recovery, the factor by which each fit's $(w_0, w_a)$ ellipse is too
+small.  The result is the
+accuracy statement the summary quotes, and the reason the growth-tied
+model
 is excluded rather than merely optimistic.
 
 \subsection{The shift formula}
@@ -1513,9 +1524,9 @@ Let $m$ be the expected data vector (the band powers), $\mathsf{C}_d$
 its covariance, $\mathsf{D}$ the matrix of derivatives of $m$ with
 respect to the parameters, and
 $F = \mathsf{D}\T \mathsf{C}_d^{-1} \mathsf{D} + F_{\rm priors}$ the
-Fisher matrix of one rung, priors included
+Fisher matrix of one linear-bias prior, priors included
 (Appendix~\ref{sec:fisher}).  Now let the true biases carry a known
-drift the rung's model may not be able to express: the data vector
+drift the model may not be able to express: the data vector
 moves by $\delta m$.  To first order in $\delta m$, the maximum of
 the posterior moves by
 \begin{equation}
@@ -1529,7 +1540,7 @@ curvature that converts a score into a parameter displacement is
 $F$.
 
 The quoted number compresses $\delta p$ into the plane that matters.
-With $\mathsf{C}_w$ the rung's marginalized $2 \times 2$ covariance
+With $\mathsf{C}_w$ the fit's marginalized $2 \times 2$ covariance
 of $(w_0, w_a)$ and $\delta w$ the $(w_0, w_a)$ entries of
 $\delta p$, the shift is
 \begin{equation}
@@ -1541,7 +1552,7 @@ $\Delta_w = 1$ means the fitted $(w_0, w_a)$ sits on the one-sigma
 contour of the unshifted forecast.  The threshold drawn in the
 figures is $\Delta_w = 1/3$, a shift that widens the effective error
 by a few percent.  Both the ellipse and the response use the same
-rung's $F$: a rigid model is punished twice, because it absorbs
+fit's $F$: a rigid model is punished twice, because it absorbs
 little of the drift and its ellipse is small.
 
 The drift enters through the bin biases.  With $\beta_i$ the bin
@@ -1549,10 +1560,10 @@ amplitudes of Eq.~\eqref{eq:beta} and $\delta_i$ the drift's
 fractional deviations, the data move by
 $\delta m = \sum_i (\partial m / \partial \beta_i)\, B_g\, \delta_i$,
 with each group's mean deviation removed because $B_g$ is free.  For
-the tied rung the response is evaluated in the tied parameter basis;
-for the independent rung the bias derivatives span the drift exactly,
+the growth-tied prior the response is evaluated in the growth-tied parameter basis;
+for the free prior the bias derivatives span the drift exactly,
 so the cosmology shift vanishes: the free biases absorb the drift,
-and the accuracy of that rung is bought entirely with the information
+and the accuracy of that prior is bought entirely with the information
 the ladder shows it giving up.
 
 \subsection{The drift laws}
@@ -1571,14 +1582,14 @@ matters, because the free amplitudes remove the level.
 \subsection{The drift-only shifts}
 \label{sec:biasresults}
 
-Table~\ref{tab:ladderbias} lists the shift $\Delta_w$ of every rung
+Table~\ref{tab:ladderbias} lists the shift $\Delta_w$ of every prior
 when the data carry exactly one known drift and nothing else.
 
 \begin{table}[ht]
   \centering
   \begin{tabular}{llcccc}
     \hline
-    Drift & Layout & tied & baseline & pessimistic & independent \\
+    Drift & Layout & growth-tied & baseline & pessimistic & free \\
     \hline
     conserved population & $\Delta d_{\rm com} = 62$~Mpc &
     $17.4$ & $0.027$ & $0.003$ & $0$ \\
@@ -1596,22 +1607,22 @@ when the data carry exactly one known drift and nothing else.
     \hline
   \end{tabular}
   \caption{The $(w_0, w_a)$ shift $\Delta_w$ of
-    Eq.~\eqref{eq:shiftw}, in units of each rung's own marginalized
+    Eq.~\eqref{eq:shiftw}, in units of each fit's own marginalized
     ellipse, when the data carry one of the two known drifts.  On
-    $\Delta z = 0.2$ the baseline and pessimistic rungs equal the
-    independent model (every group has one or two bins), so their
+    $\Delta z = 0.2$ the baseline and pessimistic priors equal the
+    free model (every group has one or two bins), so their
     shifts are zero.}
   \label{tab:ladderbias}
 \end{table}
 
-Two statements carry the table.  First, the tied model is excluded
+Two statements carry the table.  First, the growth-tied model is excluded
 on accuracy.  The conserved population, the gentlest drift, biases it
 by $10.9$ to $21.5$ ellipse units; its flux-limit column is smaller
 only because that drift moves one group out of six.  A model whose
 central value sits more than ten of its own sigmas from the truth
 under the mildest input is not a conservative choice, it is a wrong
 one, and this is independent of the ladder's information argument.
-Second, the baseline and the pessimistic rung absorb both known
+Second, the baseline and the pessimistic prior absorb both known
 drifts.  The largest entry of either is the BGS flux limit on
 $\Delta z = 0.05$, about $0.3$: that layout resolves BGS into only
 six bins, so the convex residual is sampled coarsely and the prior
@@ -1620,7 +1631,7 @@ has less room to absorb it between the free line and the data.
 A known drift is only half of a bias history.  The two drifts are
 the deviations this note can derive; a real sample adds residual
 structure whose shape nobody has measured.  The rest of this
-appendix makes that structure random and asks each rung the sharper
+appendix makes that structure random and asks each prior the sharper
 question: does the error ellipse you quote still cover the truth?
 
 \subsection{Random truths}
@@ -1644,9 +1655,9 @@ baseline scatter ($\sigma_g = 3\%$ for BGS, $1\%$ for the other
 groups, $L = 0.2$) and pessimistic scatter ($\sigma_g = 3\%$ in
 every group, $L = 0.05$).
 
-Every truth is fitted with every rung, and every rung's bias prior
-stays centered on the tied shape $\delta = 0$.  No rung is told
-which truth it faces: the baseline rung meets truths drawn from its
+Every truth is fitted under every prior, each centered on the
+growth-tied shape $\delta = 0$.  No fit is told which truth it
+faces: the baseline prior meets truths drawn from its
 own prior (the matched case below) and truths drawn from the
 pessimistic prior, and is judged on both.
 
@@ -1654,7 +1665,7 @@ The sampling costs one matrix product because the response is
 linear.  Eq.~\eqref{eq:fisherbias} is linear in $\delta m$, and
 $\delta m$ is linear in the bias deviations, so the $(w_0, w_a)$
 rows of the response collapse into one
-$2 \times n_{\rm bins}$ matrix $\mathsf{A}$ per rung and layout:
+$2 \times n_{\rm bins}$ matrix $\mathsf{A}$ per prior and layout:
 \begin{equation}
   \delta w \;=\; \mathsf{A}\,\delta,
   \qquad
@@ -1666,7 +1677,7 @@ reproduce,
 $\mathrm{E}[\Delta_w^2] = \Delta_{\rm drift}^2
 + \mathrm{tr}(\Cov_w^{-1} \mathsf{A} \Sigma \mathsf{A}\T)$, where
 $\Delta_{\rm drift}$ is the shift of the drift alone
-(Table~\ref{tab:ladderbias}) and $\Cov_w$ is the rung's marginalized
+(Table~\ref{tab:ladderbias}) and $\Cov_w$ is the fit's marginalized
 $(w_0, w_a)$ covariance.
 
 One caveat bounds the method.  The response is first order in
@@ -1678,26 +1689,26 @@ term.
 
 Figure~\ref{fig:ladderbiasscatter}, in the summary
 (Section~\ref{sec:summary}), draws the result; its caption is
-written to stand alone.  The one subtlety is the matched rung, the
+written to stand alone.  The one subtlety is the matched prior, the
 gray column labeled ``fit prior = truth scatter''.  Where the fit's
 prior equals the truth's scatter, the average shift is not a bias.
-That rung's ellipse is wider than the tied model's precisely because
+That fit's ellipse is wider than the growth-tied model's precisely because
 it marginalizes over the scatter the truth now actually has: the
 fitted $(w_0, w_a)$ moves from draw to draw, and the ellipse was
 built to cover those moves.  A correctly specified model therefore
 shows a nonzero average shift just by being correct, and the mean of
-$\Delta_w$ on the matched rung measures the share of the ellipse the
+$\Delta_w$ under the matched prior measures the share of the ellipse the
 bias scatter occupies, not an error of the model.  Deciding whether
 the quoted ellipse is honest needs the statistic of the next
 subsection.
 
-\subsection{The error inflation}
+\subsection{The goodness of fit}
 \label{sec:inflation}
 
-A rung is correctly specified when its quoted ellipse covers the
+A fit is correctly specified when its quoted ellipse covers the
 truth with the stated probability.  The statistic that tests exactly
 that is the squared distance $\chi^2_w$ of the fitted $(w_0, w_a)$
-from the truth in units of the rung's ellipse, with every source of
+from the truth in units of the fit's ellipse, with every source of
 displacement counted: the drift, the bias scatter, and the data
 noise.  Over the truths and the noise its expectation is
 \begin{equation}
@@ -1713,15 +1724,22 @@ noise.  Over the truths and the noise its expectation is
 where $\mathsf{N}_w$ is the share of $\Cov_w$ contributed by the
 data noise and by the Gaussian priors on the per-group velocity
 dispersions $\sigma_v$, the only priors besides the bias prior.  The
-quoted number is the error inflation
+quoted number is the goodness of fit of the parameter recovery,
 \begin{equation}
   \sqrt{\mathrm{E}[\chi^2_w]\,/\,2} .
   \label{eq:inflation}
 \end{equation}
+In general it is $\sqrt{\mathrm{E}[\chi^2]/n_{\rm dof}}$, with
+$\chi^2$ the distance of the recovered parameters from the truth in
+units of the fit's own covariance and $n_{\rm dof}$ the number of
+parameters scored: $2$ for $(w_0, w_a)$, $1$ for $\Omega_m$ or $A_s$
+(Appendix~\ref{sec:inflationomas}).  It scores the recovery of the
+parameters, not the $\chi^2$ of the data: a biased fit can match the
+band powers well while its cosmology is wrong.
 
-For each fitted rung, $\mathrm{E}[\chi^2_w]$ is the expected squared
+For each fit, $\mathrm{E}[\chi^2_w]$ is the expected squared
 distance between the fitted $(w_0, w_a)$ and the truth, in units of
-the ellipse $\Cov_w$ that the rung reports.  Eq.~\eqref{eq:chi2w}
+the ellipse $\Cov_w$ that the fit reports.  Eq.~\eqref{eq:chi2w}
 splits it into three sources, in order: the drift squared, the
 scatter the prior did not absorb, and the noise.
 
@@ -1729,12 +1747,12 @@ The drift term $\Delta_{\rm drift}^2$ is the squared shift from the
 known drift alone, the same for every truth.  The scatter term
 carries the truth's residual $\varepsilon$ into $(w_0, w_a)$ through
 the response matrix $\mathsf{A}$ of Eq.~\eqref{eq:linearmap}: it is
-the part of the scatter that the rung's bias parameters, held back by
+the part of the scatter that the fit's bias parameters, held back by
 their prior, did not follow.  The noise term counts the data noise
 and the $\sigma_v$ priors.
 
 An honest ellipse gives exactly $2$, the number of parameters.
-Suppose the rung is correctly specified: no drift remains, and the
+Suppose the fit is correctly specified: no drift remains, and the
 fitted $(w_0, w_a)$ scatters around the truth with covariance exactly
 $\Cov_w$.  The expected squared distance is then
 $\mathrm{tr}(\Cov_w^{-1}\Cov_w)$, the trace of the $2 \times 2$
@@ -1742,12 +1760,12 @@ identity matrix, so $\mathrm{E}[\chi^2_w] = 2$: one unit for $w_0$
 and one for $w_a$.  A larger value means the fit lands, on average,
 farther from the truth than the reported ellipse allows.
 
-The error inflation of Eq.~\eqref{eq:inflation} turns that excess
+The goodness of fit of Eq.~\eqref{eq:inflation} turns that excess
 into a length.  Growing both axes of the ellipse by a factor $f$
 replaces $\Cov_w$ by $f^2\,\Cov_w$ and divides $\chi^2_w$ by $f^2$, so
 $f = \sqrt{\mathrm{E}[\chi^2_w]/2}$ is the growth that brings the
-expectation back to $2$.  The inflation is the factor by which the
-axes of the reported ellipse would have to grow to cover the truth as
+expectation back to $2$.  The goodness of fit is the factor by which
+the axes of the reported ellipse would have to grow to cover the truth as
 often as the ellipse claims: $1$ for an honest ellipse, above $1$ for
 an ellipse that is too small, below $1$ for a conservative one.
 
@@ -1755,7 +1773,7 @@ The factor matches the average squared distance.  It matches the
 coverage exactly when the real scatter of the fitted $(w_0, w_a)$ has
 the shape and orientation of the reported ellipse.
 
-\paragraph{Worked case: the baseline fit of a pessimistic truth.}
+\paragraph{Worked case: the baseline-prior fit of a pessimistic truth.}
 The baseline prior states that each group's residual $\varepsilon$
 around its free line (the free amplitude $B_g$ and tilt $s_g$ of
 Eq.~\eqref{eq:summodel}) is small and smooth.  Its width, the rms
@@ -1775,23 +1793,23 @@ The push on $(w_0, w_a)$ is not one fixed offset.  The drift part
 alone is $\Delta_{\rm drift} = 0.03$ on the
 $\Delta d_{\rm com} = 62$~Mpc layout.  The rest comes from the
 residual and changes from truth to truth: over the $2000$ truths the
-shift $\Delta_w$ of Eq.~\eqref{eq:shiftw}, in units of the baseline
-ellipse, lies between $0.7$ and $4.0$ for the central $68\%$ (the
+shift $\Delta_w$ of Eq.~\eqref{eq:shiftw}, in units of the
+baseline-prior ellipse, lies between $0.7$ and $4.0$ for the central $68\%$ (the
 16th to 84th percentiles).  The observed universe is one draw: one of
-these displacements, reported with the baseline ellipse.
+these displacements, reported with the baseline-prior ellipse.
 
 Adding the noise term, Eq.~\eqref{eq:chi2w} gives
-$\mathrm{E}[\chi^2_w] = 10.4$ on $\Delta d_{\rm com} = 62$~Mpc, an
-inflation of $\sqrt{10.4/2} = 2.28$ (Table~\ref{tab:inflationcase}).
+$\mathrm{E}[\chi^2_w] = 10.4$ on $\Delta d_{\rm com} = 62$~Mpc, a
+goodness of fit of $\sqrt{10.4/2} = 2.28$ (Table~\ref{tab:inflationcase}).
 The real scatter of the best-fit $(w_0, w_a)$ around the truth is
 about $2.3$ times wider per axis than the reported ellipse.  The
-contour the baseline reports as one sigma is the $0.44\sigma$ contour
+contour the baseline prior reports as one sigma is the $0.44\sigma$ contour
 of the real scatter ($1/2.28 = 0.44$).
 
 The figure of merit follows the same factor.
 ${\rm FoM}(w_0, w_a) = [\det \Cov_w]^{-1/2}$ is proportional to the
 inverse area of the ellipse; growing both axes by $f$ multiplies the
-area by $f^2$, so the FoM scales as $1/f^2$.  The baseline FoM of
+area by $f^2$, so the FoM scales as $1/f^2$.  The baseline-prior FoM of
 $18.19$ on $\Delta d_{\rm com} = 62$~Mpc (Table~\ref{tab:ladder}),
 whose ellipse axes are $2.28$ times too small, corresponds to
 $18.19/2.28^2 \approx 3.5$.
@@ -1799,12 +1817,12 @@ $18.19/2.28^2 \approx 3.5$.
 That value is not a number to quote: it rescales an ellipse whose
 center and shape still come from a prior narrower and smoother than
 the truth's scatter.  If the pessimistic truth is possible, the fit
-to report is the pessimistic rung: its inflation on the same truth is
+to report is the pessimistic prior: its goodness of fit on the same truth is
 $1.00$, and its FoM is $11.45$.
 
 The opposite mismatch errs on the conservative side.  A truth with
-baseline scatter, fitted with the pessimistic rung, gives an
-inflation of $0.87$ to $0.99$ on the $\Delta d_{\rm com} = 62$~Mpc,
+baseline scatter, fitted with the pessimistic prior, gives a
+goodness of fit of $0.87$ to $0.99$ on the $\Delta d_{\rm com} = 62$~Mpc,
 $\Delta z = 0.02$ and $\Delta z = 0.05$ layouts
 (Table~\ref{tab:inflation}).  The real scatter is then narrower than
 the reported ellipse, which is at most $15\%$ wider per axis than
@@ -1815,7 +1833,7 @@ needed ($1/0.866 = 1.15$).
   \begin{tabular}{lcc}
     \hline
     Layout & $\mathrm{E}[\chi^2_w]$ &
-    error inflation $\sqrt{\mathrm{E}[\chi^2_w]/2}$ \\
+    goodness of fit $\sqrt{\mathrm{E}[\chi^2_w]/2}$ \\
     \hline
     $\Delta d_{\rm com} = 62$~Mpc & $10.4$ & $2.28$ \\
     $\Delta z = 0.02$ & $4.66$ & $1.53$ \\
@@ -1823,40 +1841,40 @@ needed ($1/0.866 = 1.15$).
     $\Delta z = 0.2$  & $2.00$ & $1.00$ \\
     \hline
   \end{tabular}
-  \caption{The worked case: the baseline rung fitted to truths that
+  \caption{The worked case: the baseline prior fitted to truths that
     carry the known drifts plus residual scatter drawn from the
     pessimistic prior ($\sigma_g = 3\%$ in every group, $L = 0.05$).
     $\mathrm{E}[\chi^2_w]$ is the expected squared distance of
     Eq.~\eqref{eq:chi2w} between the fitted $(w_0, w_a)$ and the
-    truth, in units of the baseline ellipse, with the data noise and
+    truth, in units of the baseline-prior ellipse, with the data noise and
     the $\sigma_v$ priors included; an honest ellipse gives $2$.  The
-    error inflation of Eq.~\eqref{eq:inflation} is the factor by
+    goodness of fit of Eq.~\eqref{eq:inflation} is the factor by
     which the ellipse axes would have to grow to cover the truth as
     often as claimed.  On $\Delta z = 0.2$ each group has one or two
     bins, so the free amplitude and tilt absorb every bias deviation
-    and the inflation is $1.00$.}
+    and the goodness of fit is $1.00$.}
   \label{tab:inflationcase}
 \end{table}
 
 The matched case lands on $1$ by an identity, not by tuning.  The
-matched rung's bias prior is the projected precision $\Prec$ of
+matched fit's bias prior is the projected precision $\Prec$ of
 Appendix~\ref{app:memory}, built from the same kernel covariance
 $\Sigma$ the truth's scatter uses, and every projection of that form
 obeys $\Prec\,\Sigma\,\Prec = \Prec$.  That identity makes the
 scatter term and the noise term of Eq.~\eqref{eq:chi2w} sum to
 exactly $2$: the widening the prior adds to the ellipse equals the
 error the scatter inflicts, and the rest of the ellipse is the noise
-the data carry anyway.  The matched inflation is then
+the data carry anyway.  The matched goodness of fit is then
 $\sqrt{1 + \Delta_{\rm drift}^2/2} \approx 1$, because the matched
-rungs absorb the known drifts to $\Delta_{\rm drift} \lesssim 0.3$
+priors absorb the known drifts to $\Delta_{\rm drift} \lesssim 0.3$
 (Table~\ref{tab:ladderbias}).
 
 \begin{table}[ht]
   \centering
   \begin{tabular}{llcccc}
     \hline
-    Truth scatter & Layout & tied & baseline & pessimistic &
-    independent \\
+    Truth scatter & Layout & growth-tied & baseline & pessimistic &
+    free \\
     \hline
     baseline & $\Delta d_{\rm com} = 62$~Mpc &
     $12.5$ & $1.00$ & $0.971$ & $1.00$ \\
@@ -1871,33 +1889,34 @@ rungs absorb the known drifts to $\Delta_{\rm drift} \lesssim 0.3$
     & $\Delta z = 0.2$  & $9.96$ & $1.00$ & $1.00$ & $1.00$ \\
     \hline
   \end{tabular}
-  \caption{The error inflation $\sqrt{\mathrm{E}[\chi^2_w]/2}$ of
-    Eq.~\eqref{eq:inflation}: the factor by which each rung's quoted
+  \caption{The goodness of fit $\sqrt{\mathrm{E}[\chi^2_w]/2}$ of
+    Eq.~\eqref{eq:inflation}: the factor by which each fit's quoted
     $(w_0, w_a)$ ellipse is too small when the truth carries the
     known drifts plus residual scatter drawn from the named prior.
     An entry of $1.00$ means the ellipse covers the truth as it
     claims; an entry below $1$ means the ellipse is conservative.
     On $\Delta z = 0.2$ every group holds one or two bins, so the
-    three lower rungs absorb any truth and sit at $1.00$.}
+    baseline, pessimistic and free priors absorb any truth and sit at
+    $1.00$.}
   \label{tab:inflation}
 \end{table}
 
-Three statements carry Table~\ref{tab:inflation}.  First, the tied
-model is wrong under any truth: its ellipse is $8.5$--$18$ times too
+Three statements carry Table~\ref{tab:inflation}.  First, the
+growth-tied model is wrong under any truth: its ellipse is $8.5$--$18$ times too
 small, the coverage form of the exclusion of
-Appendix~\ref{sec:biasresults}.  Second, the baseline is correct
-exactly when nature's local bias features are no larger than its own
-prior allows: $1.00$--$1.01$ under its own scatter, but $1.5$--$2.3$
-times too small under the pessimistic truth.  The baseline FoM of
-Table~\ref{tab:ladder} therefore rests on that assumption, and the
-pessimistic FoM is the safe statement.  Third, the pessimistic rung
+Appendix~\ref{sec:biasresults}.  Second, the baseline prior is correct
+exactly when nature's local bias features are no larger than it
+allows: $1.00$--$1.01$ under its own scatter, but $1.5$--$2.3$
+times too small under the pessimistic truth.  The baseline-prior FoM
+of Table~\ref{tab:ladder} therefore rests on that assumption, and the
+pessimistic-prior FoM is the safe statement.  Third, the pessimistic prior
 is correct ($1.00$--$1.02$) or conservative ($0.87$--$0.99$) under
 both truths: a prior wider than the truth wastes information, which
 the ladder prices, but never understates the error.  One
 qualification remains: scatter larger or rougher than the
-pessimistic prior would indict the pessimistic rung in the same way,
-and against that the ladder ends at the independent model, whose
-inflation is $1.00$ for every truth expressible through the bin
+pessimistic prior would indict the pessimistic prior in the same way,
+and against that the ladder ends at the free model, whose
+goodness of fit is $1.00$ for every truth expressible through the bin
 biases.
 
 \subsection{The same test for $\Omega_m$ and $A_s$}
@@ -1911,24 +1930,24 @@ its own marginalized error $\sigma_p$.  For one parameter $p$ the
 squared distance of the fit from the truth is
 $\chi^2_p = (\hat{p} - p_{\rm true})^2/\sigma_p^2$, with $\hat{p}$ the
 fitted value; an honest error bar gives $\mathrm{E}[\chi^2_p] = 1$, so
-the error inflation is $\sqrt{\mathrm{E}[\chi^2_p]}$: $1$ for an honest
+the goodness of fit is $\sqrt{\mathrm{E}[\chi^2_p]}$: $1$ for an honest
 error bar, above $1$ the factor by which the bar is too small.  For a
 matched case the identity $\Prec\,\Sigma\,\Prec = \Prec$ makes the
-scatter and noise terms sum to exactly $1$, so the inflation is
+scatter and noise terms sum to exactly $1$, so the goodness of fit is
 $\sqrt{1 + \Delta_{{\rm drift},p}^2}$ and departs from $1$ only through
 the known drift.  As a check that the truths are the same, the matched
-cases reproduce the $(w_0, w_a)$ inflation of
+cases reproduce the $(w_0, w_a)$ goodness of fit of
 Table~\ref{tab:inflation}, within $0.019$ of $1$.
 
 The known drifts alone, scored this way, repeat the pattern of
 Table~\ref{tab:ladderbias}.  The conserved-population drift moves the
-tied rung by $3.99$, $5.21$, $11.7$ and $6.42\,\sigma$ in $\Omega_m$
+growth-tied prior by $3.99$, $5.21$, $11.7$ and $6.42\,\sigma$ in $\Omega_m$
 and by $3.79$, $9.90$, $5.82$ and $0.58\,\sigma$ in $A_s$, in the
 layout order $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$,
-$0.05$, $0.2$.  The baseline and pessimistic rungs stay at or below
+$0.05$, $0.2$.  The baseline and pessimistic priors stay at or below
 $0.29\,\sigma$; the largest entries are the BGS flux limit on
 $\Delta z = 0.05$, at $0.26$--$0.28\,\sigma$ in $\Omega_m$.
-Table~\ref{tab:inflationomas} gives the error inflation with random
+Table~\ref{tab:inflationomas} gives the goodness of fit with random
 truths.
 
 \begin{table}[ht]
@@ -1936,9 +1955,9 @@ truths.
   \small
   \begin{tabular}{llcc}
     \hline
-    Truth scatter & Fit rung & $\Omega_m$ & $A_s$ \\
+    Truth scatter & Fit prior & $\Omega_m$ & $A_s$ \\
     \hline
-    baseline & tied &
+    baseline & growth-tied &
     $4.17$ / $4.46$ / $14.0$ / $8.15$ &
     $3.93$ / $9.48$ / $4.84$ / $1.25$ \\
     & baseline &
@@ -1947,7 +1966,7 @@ truths.
     $0.96$ / $0.87$ / $0.99$ / $1.00$ &
     $0.98$ / $0.94$ / $0.99$ / $1.00$ \\
     \hline
-    pessimistic & tied &
+    pessimistic & growth-tied &
     $5.87$ / $5.18$ / $14.5$ / $8.96$ &
     $4.61$ / $9.76$ / $5.39$ / $2.93$ \\
     & baseline &
@@ -1958,24 +1977,24 @@ truths.
     $1.00$ / $1.00$ / $1.02$ / $1.00$ \\
     \hline
   \end{tabular}
-  \caption{The error inflation $\sqrt{\mathrm{E}[\chi^2_p]}$ of
+  \caption{The goodness of fit $\sqrt{\mathrm{E}[\chi^2_p]}$ of
     $\Omega_m$ and $A_s$, each in units of its own marginalized
     error, when the truth carries the known drifts plus residual
     scatter drawn from the named prior.  An entry of $1$ means the
     error bar covers the truth as it claims.  Each cell lists the
     layouts $\Delta d_{\rm com} = 62$~Mpc / $\Delta z = 0.02$ /
     $\Delta z = 0.05$ / $\Delta z = 0.2$.  The truths are those of
-    Table~\ref{tab:inflation}.  The independent rung absorbs every
+    Table~\ref{tab:inflation}.  The free prior absorbs every
     such truth exactly and is omitted.}
   \label{tab:inflationomas}
 \end{table}
 
-The $(w_0, w_a)$ verdict holds for $\Omega_m$ and $A_s$.  The tied rung
-is excluded.  The baseline is honest under its own scatter, but its
+The $(w_0, w_a)$ verdict holds for $\Omega_m$ and $A_s$.  The growth-tied prior
+is excluded.  The baseline prior is honest under its own scatter, but its
 $\Omega_m$ error bar is up to $2.75$ times too small if local
-features reach the pessimistic size.  The pessimistic rung is honest.
+features reach the pessimistic size.  The pessimistic prior is honest.
 On some layouts $\Omega_m$ and $A_s$ react more strongly than
-$(w_0, w_a)$ (the baseline rung under pessimistic scatter on
+$(w_0, w_a)$ (the baseline prior under pessimistic scatter on
 $\Delta z = 0.05$: $2.75$ in $\Omega_m$ against $2.14$), because a bias
 error moves the clustering amplitude $b_i^2 A_s D^2(z_i)$, which $A_s$
 scales directly and $\Omega_m$ moves through the growth factor.
@@ -2019,7 +2038,7 @@ below makes that trade visible.
 Figure~\ref{fig:biasroughness} scans both models against $x$ on a
 logarithmic axis, with one width $\sigma_b$ for every group, at every
 correlation length $L$ in $\{0.05,\ 0.1,\ 0.2,\ 0.5,\ 1\}$.
-The top row is the fraction of the tied FoM kept;
+The top row is the fraction of the growth-tied FoM kept;
 the bottom row is the conserved-drift shift $\Delta_w$ of
 Appendix~\ref{app:bias}.  The left column is the exponential kernel
 alone (a free amplitude per group); the right column is the memory
@@ -2034,14 +2053,14 @@ model (a free amplitude and tilt per group).
     every group and every $L \in \{0.05, 0.1, 0.2, 0.5, 1\}$ (line
     styles).  Left: the exponential kernel (free amplitude per
     group).  Right: the memory model (free amplitude and tilt per
-    group).  Top: the fraction of the tied FoM kept, with each
-    layout's independent fraction dotted.  Bottom: the
+    group).  Top: the fraction of the growth-tied FoM kept, with each
+    layout's free fraction dotted.  Bottom: the
     conserved-drift shift $\Delta_w$ in units of each model's own
     $(w_0, w_a)$ ellipse, with the $\sigma/3$ threshold dashed;
     values below $10^{-3}$ are drawn at $10^{-3}$.  The vertical
-    marks are the stated assumptions: baseline $x = 0.71\%$ (the
-    non-BGS groups), baseline BGS $x = 2.1\%$, and pessimistic
-    $x = 4.2\%$.}
+    marks are the stated assumptions: the baseline prior, $x = 0.71\%$
+    (the non-BGS groups) and $x = 2.1\%$ (BGS), and the pessimistic
+    prior, $x = 4.2\%$.}
   \label{fig:biasroughness}
 \end{figure}
 
@@ -2050,8 +2069,9 @@ nearly the same FoM fraction and the same drift shift, because the
 free tilt owns the whole-group freedom and the residual kernel acts
 only through its small-separation behavior, which is $x$.  For the
 memory model the roughness is the model, and the stated assumptions
-are three marks on one axis: baseline $x = 0.71\%$ for the non-BGS
-groups, baseline $x = 2.1\%$ for BGS, pessimistic $x = 4.2\%$.
+are three marks on one axis: the baseline prior at $x = 0.71\%$ for
+the non-BGS groups and $x = 2.1\%$ for BGS, the pessimistic prior at
+$x = 4.2\%$.
 
 The kernel curves spread in $L$.  At fixed $x$ a longer $L$ carries
 a larger wander $\sigma_b = x\,\sqrt{L/0.1}$, so the bias may drift
@@ -2108,7 +2128,7 @@ $a$.  Working out the quadratic form with Eq.~\eqref{eq:twobinC},
   \label{eq:shiftpenalty}
 \end{equation}
 The plain prior charges for a uniform shift.  But a uniform shift of
-all $\beta_i$ is a change of $B_g$, a direction the tied model leaves
+all $\beta_i$ is a change of $B_g$, a direction the growth-tied model leaves
 completely free.  If the intermediate model kept this penalty, it would
 constrain $B_g$ and the comparison between the models would be unfair.
 
@@ -2154,7 +2174,7 @@ into Eq.~\eqref{eq:projdef} and simplifying each entry,
 \end{equation}
 The projected prior charges only for the \emph{difference} of the two
 amplitudes.  A uniform shift, $\beta_1 = \beta_2$, is now free, as in
-the tied model; a shape change keeps exactly the penalty of
+the growth-tied model; a shape change keeps exactly the penalty of
 Eq.~\eqref{eq:shapepenalty}.
 
 The denominator is not an arbitrary constant.  With
@@ -2563,12 +2583,12 @@ As $L \to \infty$, every $r_k \to 1$, so the jump variance
 $2\sigma_b^2(1 - r_k)$ of every adjacent pair goes to zero: the prior
 forces all deviations of a group to be equal.  The only freedom left is
 their common value, a uniform shift, and that is the direction the
-projection leaves free.  This is the tied model, with one free $B_g$
+projection leaves free.  This is the growth-tied model, with one free $B_g$
 per group, \emph{whatever} the value of $\sigma_b$.
 
 As $\sigma_b \to \infty$ at fixed $L$, the overall scale of $\Cov$
 diverges, so $\Cov^{-1} \to 0$ and with it $\Prec \to 0$: the prior
-penalty vanishes and every bin's amplitude is free: the independent
+penalty vanishes and every bin's amplitude is free: the free
 model with flat priors.
 
 Between the limits, $L$ and $\sigma_b$ interpolate continuously, which
@@ -2972,7 +2992,7 @@ growth factor.  Then
 \end{equation}
 and dividing by $\delta_m(z)$ gives the bias
 $b(z) = \delta_g/\delta_m$ of Eq.~\eqref{eq:fry}.  Dividing instead
-by the tied bias $b_c\,D(z_c)/D(z)$ gives the deviation of
+by the growth-tied bias $b_c\,D(z_c)/D(z)$ gives the deviation of
 Eq.~\eqref{eq:tilt}, $\delta(z) = (D(z)/D(z_c) - 1)/b_c$: positive at
 redshifts below $z_c$, where the matter has grown past its reference
 value, and negative above.
@@ -3101,9 +3121,9 @@ the group, without evolution; it also reads the published left side
 $b\,(\sigma_8/0.8)$ as $b$, with $\sigma_8$ the rms matter
 fluctuation in spheres of $8\,{\rm Mpc}/h$.
 
-\paragraph{Step 4: the deviation from the tied shape.}
+\paragraph{Step 4: the deviation from the growth-tied shape.}
 The deviation $\delta$ of Eq.~\eqref{eq:model} compares this bias
-with the tied shape $B_g/D(z)$, where $D$ is the linear growth
+with the growth-tied shape $B_g/D(z)$, where $D$ is the linear growth
 factor of Appendix~\ref{sec:intro}.  Because the group amplitude
 $B_g$ is free, only the shape of $b(z)$ matters, and the model fixes
 the amplitude $B$ by making the mean deviation over the group's bin
@@ -3147,7 +3167,7 @@ $1.08$ to $1.59$.
     (Eq.~\eqref{eq:bgsmlim}), the threshold magnitude
     $M_{\rm lim}$, the threshold luminosity $L/L_*$ and bias $b$
     (Eq.~\eqref{eq:bgszehavi}), the growth factor $D$, and the
-    deviation $\delta$ from the tied shape
+    deviation $\delta$ from the growth-tied shape
     (Eq.~\eqref{eq:bgsdelta}).}
   \label{tab:bgsflux}
 \end{table}
@@ -3458,7 +3478,7 @@ bias block.
 
 One consequence matters in practice.  Bins that lost all
 their band powers to the scale cut carry no data, so their rows of
-$F_{\rm data}$ are zero.  In the independent model such a parameter is
+$F_{\rm data}$ are zero.  In the free model such a parameter is
 completely unconstrained and must be dropped from the matrix before
 inversion.  With the correlated prior it stays: $\Prec$ ties the empty
 bin to its neighbors, which do carry data, so the matrix remains

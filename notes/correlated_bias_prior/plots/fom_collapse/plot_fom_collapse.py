@@ -72,7 +72,7 @@ for layout in data['layouts']:
 ax.set_xscale('log')
 ax.set_ylim(0.0, 1.05)
 ax.set_xlabel(r'$\sqrt{2}\,\kappa = \sigma_b\sqrt{2/L}$')
-ax.set_ylabel(r'FoM / FoM$_\mathrm{tied}$')
+ax.set_ylabel('FoM / FoM(growth-tied)')
 ax.set_title('Collapse test')
 ax.text(0.5, 0.97, 'PRELIMINARY: LINEAR BIAS ONLY', transform=ax.transAxes, ha='center',
         va='top', fontsize=12, fontweight='bold', color='firebrick')
@@ -82,7 +82,7 @@ ax.text(0.02, 0.03, r'$\mathrm{rms}(\delta_i - \delta_j) \approx \sqrt{2}\,\kapp
 # entries pad the shorter column)
 lines = [Line2D([], [], color=layout['color'], lw=2, label=layout['label'])
          for layout in data['layouts']]
-lines.append(Line2D([], [], color='0.4', ls=':', lw=1.2, label='independent biases'))
+lines.append(Line2D([], [], color='0.4', ls=':', lw=1.2, label='free biases'))
 markers = [Line2D([], [], color='0.4', marker=mk, ls='none', ms=6.5, label=rf'$L = {L:g}$')
            for L, mk in L_MARKERS.items()]
 markers.append(Line2D([], [], color='0.4', marker='o', ls='none', ms=6.5,

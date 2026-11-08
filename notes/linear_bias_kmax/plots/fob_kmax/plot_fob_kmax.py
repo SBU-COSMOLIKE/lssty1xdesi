@@ -39,10 +39,10 @@ matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SHIFT_FLOOR = 1.0e-3
-RUNG_STYLE = {'tied': {'color': '0.15', 'label': 'tied'},
-              'baseline': {'color': 'C0', 'label': 'baseline'},
-              'pessimistic': {'color': 'C3', 'label': 'pessimistic'},
-              'independent': {'color': 'C2', 'label': 'independent'}}
+RUNG_STYLE = {'tied': {'color': '0.15', 'label': 'growth-tied'},
+              'baseline': {'color': 'C0', 'label': 'baseline prior'},
+              'pessimistic': {'color': 'C3', 'label': 'pessimistic prior'},
+              'independent': {'color': 'C2', 'label': 'free'}}
 PARAM_LABELS = {'w0wa': r'$(w_0, w_a)$ shift [$\sigma$]',
                 'omegam': r'$\Omega_\mathrm{m}$ shift [$\sigma$]',
                 'As_1e9': r'$A_\mathrm{s}$ shift [$\sigma$]'}

@@ -71,7 +71,7 @@ for col, (model, title) in enumerate((('kernel', 'exponential kernel'),
     bottom.set_xscale('log')
     bottom.set_xlabel(r'roughness $x = \sigma_b\sqrt{0.1/L}$: rms change over $\Delta z = 0.05$ [%]')
 axes[0, 0].set_ylim(0.0, 1.05)
-axes[0, 0].set_ylabel(r'FoM / FoM$_\mathrm{tied}$')
+axes[0, 0].set_ylabel('FoM / FoM(growth-tied)')
 axes[1, 0].set_yscale('log')
 axes[1, 0].set_ylim(0.6*SHIFT_FLOOR, 60.0)
 axes[1, 0].set_ylabel(r'$(w_0, w_a)$ shift [$\sigma$], conserved drift')

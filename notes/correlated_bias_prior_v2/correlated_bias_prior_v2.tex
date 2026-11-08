@@ -51,8 +51,8 @@ tested against random bias histories.  The companion note
 \texttt{notes/linear\_bias\_kmax} shows that linear bias is already
 biased at v1's cut, $\kmax = 0.075\hMpc$: fitted to a one-loop truth
 on the $\Delta d_{\rm com} = 62$~Mpc layout, it moves $\Omega_m$ by
-$2.0$--$2.4\sigma$ and $(w_0, w_a)$ by $0.7$--$1.1\sigma$ on every
-rung.  This note redoes v1's two central results, the
+$2.0$--$2.4\sigma$ and $(w_0, w_a)$ by $0.7$--$1.1\sigma$ under every
+linear-bias prior.  This note redoes v1's two central results, the
 figure-of-merit ladder and the accuracy test, with the one-loop model
 A of \texttt{notes/higher\_order\_bias} on v1's kept band powers, so
 every difference from v1 is the bias model.
@@ -101,13 +101,14 @@ Gaussian prior correlated within a group,
 $\langle \varepsilon_i \varepsilon_j \rangle
 = \sigma_g^2 \exp(-|z_i - z_j|/L)$, and zero across groups, with
 $\sigma_g$ the per-bin width and $L$ the correlation length in
-redshift.  The four rungs are:
-\textbf{tied}, $b_{1,i} = B_g/D(z_i)$ with no tilt and no residual;
-the \textbf{baseline rung}, $\sigma_g = 3\%$ for BGS and $1\%$ for the
-other groups, $L = 0.2$; the \textbf{pessimistic rung},
-$\sigma_g = 3\%$ in every group, $L = 0.05$; and
-\textbf{independent}, one free $b_{1,i}$ per bin.  v1's Summary gives
-the physical source of each number.
+redshift.  The ladder has four linear-bias priors.
+\textbf{Growth-tied}: one amplitude per group, with the bias following
+$1/D(z)$, $b_{1,i} = B_g/D(z_i)$, and no tilt or residual.  The
+\textbf{baseline prior}: $\sigma_g = 3\%$ for BGS and $1\%$ for the
+other groups, $L = 0.2$.  The \textbf{pessimistic prior}:
+$\sigma_g = 3\%$ in every group, $L = 0.05$.  \textbf{Free}: one
+$b_{1,i}$ per bin, each with a flat prior.  v1's Summary gives the
+physical source of each number.
 
 \paragraph{Model A.}
 Model A keeps this per-bin linear bias and adds the one-loop terms.
@@ -149,10 +150,8 @@ with each bin's redshift distribution convolved by the sampled
 velocity dispersion $\sigma_v$ (the Fingers-of-God smearing), as in
 v1.
 
-Three variants of the higher-order sector sit on every linear rung.
-\textbf{Model A calibrated} takes the calibrations as exact, with no
-offsets and $\alpha_0 = {\rm SN}_0 = 0$ fixed: a reference, not a
-forecast (see below).  \textbf{Model A baseline} has one $\Delta_2$,
+Two variants of the higher-order sector sit on every linear-bias prior.
+\textbf{Model A baseline} has one $\Delta_2$,
 $\Delta_s$, $\alpha_0$ and ${\rm SN}_0$ per group with the priors
 above, $24$ parameters.  \textbf{Model A pessimistic} also tilts the
 $\Delta_2$, $\Delta_s$ and $\alpha_0$ of each group linearly in
@@ -162,35 +161,45 @@ bin.
 
 \paragraph{The figure of merit.}
 Figure~\ref{fig:ladder} and Table~\ref{tab:fom} give the FoM of every
-rung and variant next to v1.  The FoM falls from tied to independent
-under every variant; on $\Delta z = 0.2$ every group holds one or two
-bins, the free amplitude and tilt already free every bin, and the
-three lower rungs coincide.  Model A baseline on the baseline rung
+linear-bias prior under both variants.  The FoM falls from growth-tied
+to free under each variant; on $\Delta z = 0.2$ every group holds one
+or two bins, the free amplitude and tilt already free every bin, and
+the baseline, pessimistic and free priors coincide.  Model A baseline on the baseline prior
 gives ${\rm FoM} = 15.3$, $10.8$, $1.39$ and $0.228$ (layouts in the
 order $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$,
-$0.2$), against v1's $18.2$, $12.5$, $1.96$ and $0.515$; model A
-pessimistic on the pessimistic rung gives $8.59$, $5.40$, $0.705$ and
-$0.154$, against $11.4$, $7.41$, $1.33$ and $0.515$.
+$0.2$), and model A pessimistic on the pessimistic prior gives $8.59$,
+$5.40$, $0.705$ and $0.154$.  On $\Delta d_{\rm com} = 62$~Mpc the
+first, $15.3$, sits below the LSST Y1 3x2pt reference of
+$17.26$~\cite{DESCSRD2018}; under model A only the growth-tied prior, which
+the accuracy test below excludes, exceeds that reference.
+Appendix~\ref{app:comparison} sets these numbers next to v1's linear
+bias and to exact calibrations, neither of which is a result here.
 
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.92\linewidth]{plots/baseline_ladder/baseline_ladder.pdf}
-  \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone on the
-    four rungs of the linear-bias ladder (horizontal axis), one panel
-    per bin layout.  Dotted, open squares: v1, linear bias.
-    Dash-dot, open triangles: model A calibrated ($b_2$ and $\bstwo$
-    on their calibrations, no offsets, $\alpha_0 = {\rm SN}_0 = 0$; a
-    reference).  Solid, filled circles: model A baseline (one
+  \includegraphics[width=0.62\linewidth]{plots/baseline_ladder/baseline_ladder.pdf}
+  \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone under the
+    four linear-bias priors (the shared horizontal axis: growth-tied,
+    baseline, pessimistic, free).  The four bin layouts are stacked in
+    panels separated by a thin gap, each named at its top right, and
+    all panels share one logarithmic vertical range, so heights compare
+    directly across layouts.  Solid, filled circles: model A baseline
+    (one
     $\Delta_2$, $\Delta_s$, $\alpha_0$ and ${\rm SN}_0$ per group,
     Gaussian priors).  Dashed, filled diamonds: model A pessimistic
     (the $\Delta_2$, $\Delta_s$ and $\alpha_0$ of each group also tilt
-    in redshift, flat priors on the tilts).  Gray columns mark the
-    baseline and pessimistic rungs; each panel's text block gives the
-    two configurations the recommendation quotes.  Dashed gray line:
-    the LSST Y1 3x2pt reference, $17.26$.  On $\Delta z = 0.2$ every
-    group holds one or two bins, so the three lower rungs coincide.
-    The absolute values carry v1's covariance mismatch, a factor of
-    about $2.4$--$3.2$ (Appendix~\ref{app:limits}).
+    linearly in redshift, flat priors on the tilts).  Gray columns
+    mark the baseline and pessimistic priors.  The two configurations
+    the recommendation quotes are model A baseline on the baseline
+    prior, ${\rm FoM} = 15.3$, $10.8$, $1.39$ and $0.228$ (top to
+    bottom), and model A pessimistic on the pessimistic prior, $8.59$,
+    $5.40$, $0.705$ and $0.154$ (bold in Table~\ref{tab:fom}).  Dashed
+    gray line: the LSST Y1 3x2pt reference, $17.26$.  On
+    $\Delta z = 0.2$ every group holds one or two bins, so the
+    baseline, pessimistic and free priors coincide.  The absolute
+    values carry the
+    covariance's bias mismatch, a factor of about $2.4$--$3.2$
+    (Appendix~\ref{app:limits}).
     $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin is cut by the
     UV-fraction criterion at $\kmax/D(\bar{z}_i)$ ($\alpha = 0.05$)
     within the shipped mask.}
@@ -202,78 +211,32 @@ $0.154$, against $11.4$, $7.41$, $1.33$ and $0.515$.
   \small
   \begin{tabular}{llcccc}
     \hline
-    & & \multicolumn{4}{c}{linear rung} \\
-    Layout & Bias model & tied & baseline & pessimistic & independent \\
+    & & \multicolumn{4}{c}{linear-bias prior} \\
+    Layout & Variant & growth-tied & baseline & pessimistic & free \\
     \hline
-    $\Delta d_{\rm com} = 62$~Mpc & v1 linear & $32.94$ & $18.19$ & $11.45$ & $10.69$ \\
-    & model A calibrated & $39.42$ & $23.17$ & $15.14$ & $14.28$ \\
-    & model A baseline & $27.65$ & $\mathbf{15.28}$ & $9.507$ & $8.865$ \\
+    $\Delta d_{\rm com} = 62$~Mpc & model A baseline & $27.65$ & $\mathbf{15.28}$ & $9.507$ & $8.865$ \\
     & model A pessimistic & $21.22$ & $14.44$ & $\mathbf{8.587}$ & $7.907$ \\
     \hline
-    $\Delta z = 0.02$ & v1 linear & $19.93$ & $12.47$ & $7.413$ & $4.016$ \\
-    & model A calibrated & $20.72$ & $13.22$ & $7.759$ & $4.151$ \\
-    & model A baseline & $18.31$ & $\mathbf{10.76}$ & $6.235$ & $3.221$ \\
+    $\Delta z = 0.02$ & model A baseline & $18.31$ & $\mathbf{10.76}$ & $6.235$ & $3.221$ \\
     & model A pessimistic & $12.22$ & $9.782$ & $\mathbf{5.400}$ & $2.513$ \\
     \hline
-    $\Delta z = 0.05$ & v1 linear & $8.288$ & $1.958$ & $1.329$ & $1.225$ \\
-    & model A calibrated & $11.93$ & $3.740$ & $2.895$ & $2.774$ \\
-    & model A baseline & $5.280$ & $\mathbf{1.389}$ & $0.8912$ & $0.8065$ \\
+    $\Delta z = 0.05$ & model A baseline & $5.280$ & $\mathbf{1.389}$ & $0.8912$ & $0.8065$ \\
     & model A pessimistic & $2.029$ & $1.179$ & $\mathbf{0.7055}$ & $0.6470$ \\
     \hline
-    $\Delta z = 0.2$ & v1 linear & $1.908$ & $0.5154$ & $0.5154$ & $0.5154$ \\
-    & model A calibrated & $2.542$ & $0.8170$ & $0.8170$ & $0.8170$ \\
-    & model A baseline & $1.041$ & $\mathbf{0.2285}$ & $0.2285$ & $0.2285$ \\
+    $\Delta z = 0.2$ & model A baseline & $1.041$ & $\mathbf{0.2285}$ & $0.2285$ & $0.2285$ \\
     & model A pessimistic & $0.3255$ & $0.1536$ & $\mathbf{0.1536}$ & $0.1536$ \\
     \hline
   \end{tabular}
   \caption{${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$ alone on every
-    linear rung (columns) and bias model (rows), per layout.  Bold:
+    linear-bias prior (columns) under model A baseline and model A
+    pessimistic (rows), per layout.  Bold:
     the two configurations the recommendation quotes, model A baseline
-    on the baseline rung and model A pessimistic on the pessimistic
-    rung.  The LSST Y1 3x2pt reference is $17.26$.  $\kmax = 0.075\hMpc$
+    on the baseline prior and model A pessimistic on the pessimistic
+    prior.  The LSST Y1 3x2pt reference is $17.26$.  $\kmax = 0.075\hMpc$
     quoted at $z = 0$; each bin is cut by the UV-fraction criterion at
     $\kmax/D(\bar{z}_i)$ ($\alpha = 0.05$) within the shipped mask.}
   \label{tab:fom}
 \end{table}
-
-\paragraph{What changed against v1.}
-Two things change; the order of the ladder does not.
-\begin{itemize}
-  \item \emph{The forecast is lower.}  Model A baseline on the
-    baseline rung keeps $84\%$, $86\%$, $71\%$ and $44\%$ of v1's
-    baseline-rung FoM, in layout order; model A pessimistic on the
-    pessimistic rung keeps $75\%$, $73\%$, $53\%$ and $30\%$ of v1's
-    pessimistic-rung FoM.  The loss grows as the bins widen.  A likely
-    reason: on the wide layouts a group holds few bins, so one offset
-    per group is close to one offset per bin, and the new parameters
-    compete with each bin's linear bias for the same band powers.
-  \item \emph{LSST Y1 is no longer exceeded.}  On
-    $\Delta d_{\rm com} = 62$~Mpc the reasonable configuration gives
-    $15.3$, below the LSST Y1 3x2pt reference of
-    $17.26$~\cite{DESCSRD2018}, where v1's baseline rung ($18.2$) sat
-    above it.  Under model A only the tied rung, which is excluded
-    below, and the calibrated reference exceed $17.26$.
-\end{itemize}
-
-\paragraph{Why model A calibrated is a reference.}
-Model A calibrated exceeds v1 on every rung and layout: $23.2$
-against $18.2$ on the baseline rung of $\Delta d_{\rm com} = 62$~Mpc,
-and $3.74$ against $1.96$ on $\Delta z = 0.05$.  There the loop terms
-are not free.  With $b_{2,i}$ and $b_{s^2,i}$ fixed by the
-calibrations at $b_{1,i}$, and $\alpha_0 = {\rm SN}_0 = 0$, the
-one-loop correction is a known function of $b_{1,i}$ and of the
-matter power spectrum.  The loop terms grow as the fourth power of the
-growth factor and the linear term as $b_1^2$ times its square, so the
-size of the correction relative to the linear term carries information
-on the amplitude of the matter fluctuations that a linear-bias model
-does not have.  That information is only as good as the calibrations.
-The free offsets of model A baseline, with widths set by the known
-scatter of the calibrations, and its free $\alpha_0$ and
-${\rm SN}_0$ remove it, and with it the gain: model A baseline sits
-below v1 on every rung and layout.  The calibration
-drift below measures what a fit that trusts the calibrations pays
-when they are wrong: $1.4$--$3.5\sigma$ in $(w_0, w_a)$ on the tied
-rung and up to $1.0\sigma$ on the others.
 
 \paragraph{The accuracy test.}
 The truths are v1's: every bin's linear bias follows its group's
@@ -281,15 +244,27 @@ known drift (the $r < 19.5$ flux limit in BGS, a conserved galaxy
 population elsewhere) plus a residual drawn from the baseline or the
 pessimistic prior, $2000$ truths per case with v1's random seed.
 Under model A the truth's $b_2$ and $\bstwo$ follow its $b_1$ through
-Eq.~\eqref{eq:calibrations}.  Every rung and variant fits every truth,
-its bias prior centered on the tied shape.  Figure~\ref{fig:scatter}
+Eq.~\eqref{eq:calibrations}.  Every linear-bias prior fits every
+truth under both variants, centered on the growth-tied shape.  Figure~\ref{fig:scatter}
 draws the $(w_0, w_a)$ shift of each fit in units of its own ellipse.
-The verdict is the error inflation $\sqrt{\mathrm{E}[\chi^2_w]/2}$,
-with $\chi^2_w$ that squared shift plus the data noise and
-$\mathrm{E}$ the average over truths and noise: $1$ when the ellipse
-covers the truth as often as it claims, and above $1$ the factor by
-which its axes are too small (v1's appendix ``The accuracy test: the
-figure of bias'').
+
+The verdict is a goodness of fit of the parameter recovery,
+\begin{equation}
+  \sqrt{\langle \chi^2 \rangle / n_{\rm dof}} ,
+  \label{eq:gof}
+\end{equation}
+where $\chi^2$ is the squared distance of the recovered parameters
+from the truth in units of the fit's own covariance, with
+$n_{\rm dof} = 2$ for $(w_0, w_a)$ and $n_{\rm dof} = 1$ for
+$\Omega_m$ or $A_s$, and $\langle\cdot\rangle$ averages over the
+random truths and the data noise.  It is $1$ when the error bars
+cover the truth as often as they claim; above $1$ it is the factor by
+which they are too small, and below $1$ they are conservative.  It
+scores the recovery of the parameters, not the $\chi^2$ of the data:
+a biased fit can match the band powers well while its cosmology is
+wrong.  v1's appendix ``The accuracy test: the figure of bias''
+derives both statistics, and Figure~\ref{fig:gof} draws the goodness
+of fit of model A baseline under the pessimistic truths.
 
 \begin{figure}[p]
   \centering
@@ -297,7 +272,7 @@ figure of bias'').
   \small
   \caption{The accuracy test under model A: the $(w_0, w_a)$ shift
     of a fit in units of that fit's own marginalized ellipse, for
-    every linear rung (horizontal axis) and two variants (filled:
+    every linear-bias prior (horizontal axis) and two variants (filled:
     model A baseline; open: model A pessimistic); colors: the four
     layouts.  Top: truths carrying the known drifts (the $r < 19.5$
     flux limit in BGS, a conserved population in the other groups)
@@ -310,41 +285,67 @@ figure of bias'').
     calibration offsets drifting linearly across each group,
     $\Delta_2$ from about $-0.5$ to $+0.5$ and $\Delta_s$ from about
     $-0.25$ to $+0.25$, with $b_1$ at its fiducial.  Dashed line:
-    $\sigma/3$.  Gray columns: the baseline and pessimistic rungs.  In
-    the top panel the baseline rung's prior equals the truth's
-    scatter, and in the middle panel the pessimistic rung's: there
-    the mean shift is not a bias, because that rung's ellipse already
-    covers this scatter, and its error inflation is
+    $\sigma/3$.  Gray columns: the baseline and pessimistic priors.  In
+    the top panel the baseline prior equals the truth's scatter, and
+    in the middle panel the pessimistic prior does: there the mean
+    shift is not a bias, because that fit's ellipse already covers
+    this scatter, and its goodness of fit is
     $1.00$--$1.01$.  Points at $10^{-3}$ are exact zeros drawn on the
-    floor: the independent rung absorbs any truth of the linear bias,
-    on $\Delta z = 0.2$ so do the baseline and pessimistic rungs, and
-    model A pessimistic absorbs the linear calibration drift on every
-    rung.  $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin is cut by
+    floor: the free prior absorbs any truth of the linear bias,
+    on $\Delta z = 0.2$ so do the baseline and pessimistic priors, and
+    model A pessimistic absorbs the linear calibration drift under
+    every prior.  $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin is cut by
     the UV-fraction criterion at $\kmax/D(\bar{z}_i)$
     ($\alpha = 0.05$) within the shipped mask.}
   \label{fig:scatter}
 \end{figure}
 
-The v1 verdict repeats under model A (Tables~\ref{tab:inflw} and
-\ref{tab:inflomas}).
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.62\linewidth]{plots/goodness_of_fit/goodness_of_fit.pdf}
+  \caption{The goodness of fit of the parameter recovery,
+    $\sqrt{\langle\chi^2\rangle/n_{\rm dof}}$ of Eq.~\eqref{eq:gof},
+    under model A baseline, when the truths carry the known drifts
+    plus a residual drawn from the pessimistic prior ($\sigma_g = 3\%$
+    in every group, $L = 0.05$; $2000$ draws).  Panels: $(w_0, w_a)$
+    ($n_{\rm dof} = 2$), $\Omega_m$ and $A_s$ ($n_{\rm dof} = 1$), on
+    one shared vertical range; horizontal axis: the four layouts.
+    Squares: the growth-tied prior; circles: the baseline prior; a thin line
+    joins the two for each layout.  Dashed line at $1$: error bars
+    consistent with the truths; above it, the factor by which they are
+    too small.  Omitted: the free prior, exactly $1$, and the
+    pessimistic prior, at most $1.023$ in $(w_0, w_a)$, $1.042$ in
+    $\Omega_m$ and $1.015$ in $A_s$ under this truth.  On
+    $\Delta z = 0.2$ the baseline prior is $1$, because its groups hold
+    one or two bins and the free amplitude and tilt already free every
+    bin.  Tables~\ref{tab:inflw} and \ref{tab:inflomas} give every
+    prior, both variants and both truths.
+    $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin is cut by the
+    UV-fraction criterion at $\kmax/D(\bar{z}_i)$ ($\alpha = 0.05$)
+    within the shipped mask.}
+  \label{fig:gof}
+\end{figure}
+
+The v1 verdict repeats under model A (Figure~\ref{fig:gof} and
+Tables~\ref{tab:inflw} and \ref{tab:inflomas}).
 \begin{itemize}
-  \item \emph{Tied is excluded.}  Its ellipse is $5.6$--$10.3$ times
+  \item \emph{Growth-tied is excluded.}  Its ellipse is $5.6$--$10.3$ times
     too small under model A baseline and $2.0$--$4.4$ times under
-    model A pessimistic, against $8.5$--$18$ in v1.
-  \item \emph{The baseline rung is honest under its own scatter},
-    with inflations of $1.00$--$1.01$, but $1.55$--$2.3$ times too
+    model A pessimistic.
+  \item \emph{The baseline prior is honest under its own scatter},
+    with a goodness of fit of $1.00$--$1.01$, but $1.55$--$2.3$ times too
     small under pessimistic scatter (model A baseline;
     $1.6$--$2.35$ under model A pessimistic).  The exception is
     $\Delta z = 0.2$, at $1.00$, because its groups hold one or two
     bins and the free amplitude and tilt already free every bin.
-  \item \emph{The pessimistic rung is honest} under pessimistic
+  \item \emph{The pessimistic prior is honest} under pessimistic
     scatter (at most $1.02$) and conservative under baseline scatter
     ($0.85$--$1.00$).
   \item \emph{$\Omega_m$ and $A_s$ agree.}  Under model A baseline the
-    tied rung's $\Omega_m$ error bar is $3.9$--$10.2$ times too small;
-    under pessimistic scatter the baseline rung's is $1.29$--$2.66$
-    times too small ($A_s$: $1.15$--$1.81$; both $1$ on
-    $\Delta z = 0.2$), and the pessimistic rung's at most $1.04$
+    growth-tied fit's $\Omega_m$ error bar is $3.9$--$10.2$ times too
+    small; under pessimistic scatter the baseline-prior fit's is
+    $1.29$--$2.66$ times too small ($A_s$: $1.15$--$1.81$; both $1$ on
+    $\Delta z = 0.2$), and the pessimistic-prior fit's at most $1.04$
     ($A_s$: $1.01$).
 \end{itemize}
 
@@ -356,8 +357,8 @@ offsets linearly with the bin redshift across each group, $\Delta_2$
 from about $-0.5$ to $+0.5$ and $\Delta_s$ from about $-0.25$ to
 $+0.25$ (half the prior width at each end), and keeps $b_1$ at its
 fiducial.  Under model A baseline this drift shifts $(w_0, w_a)$ by
-$1.0$--$1.8\sigma$ on the tied rung.  On the three per-bin rungs it
-gives $0.35$--$0.57\sigma$ on $\Delta d_{\rm com} = 62$~Mpc and
+$1.0$--$1.8\sigma$ under the growth-tied prior.  Under the baseline,
+pessimistic and free priors it gives $0.35$--$0.57\sigma$ on $\Delta d_{\rm com} = 62$~Mpc and
 $0.50$--$0.53\sigma$ on $\Delta z = 0.05$ and $0.2$, all above
 $\sigma/3$, and $0.07$--$0.15\sigma$ on $\Delta z = 0.02$.
 
@@ -365,14 +366,14 @@ Model A pessimistic absorbs this drift exactly, by construction: its
 tilts have the drift's shape.  The test shows only that the tilts work
 for a linear drift.  A nonlinear drift of the calibrations within a
 group is untested.  Protecting against the linear drift costs little
-on the thin layouts: model A pessimistic on the baseline rung gives
+on the thin layouts: model A pessimistic on the baseline prior gives
 $14.4$ and $9.78$ against $15.3$ and $10.8$ for model A baseline.
 
 \paragraph{Recommendation.}
 Quote the forecast, as v1 does for linear bias, as a ladder of two
 stated configurations.
 \begin{itemize}
-  \item \textbf{Reasonable}: model A baseline on the baseline rung,
+  \item \textbf{Reasonable}: model A baseline on the baseline prior,
     ${\rm FoM} = 15.3$, $10.8$, $1.39$ and $0.228$ on
     $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$ and
     $0.2$.  It assumes two things: each bin's linear-bias residual is
@@ -383,23 +384,21 @@ stated configurations.
     the linear drift above, $(w_0, w_a)$ moves by about $0.5\sigma$ on
     three layouts.
   \item \textbf{Pessimistic}: model A pessimistic on the pessimistic
-    rung, ${\rm FoM} = 8.59$, $5.40$, $0.705$ and $0.154$.  It is
+    prior, ${\rm FoM} = 8.59$, $5.40$, $0.705$ and $0.154$.  It is
     honest under both families of random truths and absorbs a linear
     calibration drift exactly.
 \end{itemize}
 A referee who rejects either assumption of the reasonable
 configuration moves to the pessimistic one, and nothing needs
-retracting.  The tied rung is excluded under every variant; model A
-calibrated is a reference, not a forecast; the independent rung under
-model A pessimistic ($7.91$, $2.51$, $0.647$, $0.154$) is the lower
-limit.  These numbers replace v1's as the forecast at this cut, and
-v1's remain the linear-bias reference.
+retracting.  The growth-tied prior is excluded under both variants, and the
+free prior under model A pessimistic ($7.91$, $2.51$, $0.647$,
+$0.154$) is the lower limit.
 
 \paragraph{Limits.}
 The covariance carries linear bias and v1's mismatch (raw group
 biases against $B_g/D(\bar{z}_i)$ in the data vector), which inflates
-every absolute FoM by about $2.4$--$3.2$; comparisons between rungs
-and variants hold it fixed.  Shifts and inflations are linear
+every absolute FoM by about $2.4$--$3.2$; comparisons between priors
+and variants hold it fixed.  Shifts and goodness of fit are linear
 responses; the truths are theory, not mocks, and only a linear
 calibration drift is tested.  Two counterterm questions are open
 (Appendix~\ref{app:counterterm}): its template draws more signal from
@@ -538,8 +537,9 @@ columns of group $g$ are sums over its bins:
 \end{equation}
 and likewise for $\Delta_s$ and $\alpha_0$, with $t_{2,g}$ the tilt
 of $\Delta_2$ in group $g$; the ${\rm SN}_0$ column sums the group's
-stochastic templates.  Model A calibrated has no higher-order column;
-model A baseline has the offset columns with their Gaussian priors;
+stochastic templates.  The exact-calibration configuration of
+Appendix~\ref{app:comparison} has no higher-order column; model A
+baseline has the offset columns with their Gaussian priors;
 model A pessimistic adds the tilt columns, with flat priors, for
 every group of more than one bin.
 
@@ -558,11 +558,12 @@ matrix is inverted through a pseudo-inverse
 \label{sec:ladderimpl}
 
 \begin{itemize}
-  \item \textbf{Rungs.}  Tied sums the amplitude columns of each group
-    into one; the baseline and pessimistic rungs add v1's projected
-    precision of the residual prior to the amplitude block (v1's
-    appendices ``How the prior enters the Fisher matrix'' and ``The
-    memory projection, step by step''); independent adds nothing.
+  \item \textbf{Linear-bias priors.}  Growth-tied sums the amplitude
+    columns of each group into one; the baseline and pessimistic
+    priors add v1's projected precision of the residual prior to the
+    amplitude block (v1's appendices ``How the prior enters the Fisher
+    matrix'' and ``The memory projection, step by step''); free adds
+    nothing.
   \item \textbf{Response.}  A truth that moves the data by
     $\delta m$ moves the best fit by
     $\delta p = F^{-1}\mathsf{D}\T \Cov^{-1}\delta m$, to first order;
@@ -578,11 +579,12 @@ matrix is inverted through a pseudo-inverse
     $\delta m = \sum_i (\partial m/\partial \beta_i)_{\rm A}\,
     \beta_i\,\delta_i$, with the model A column of
     Eq.~\eqref{eq:chain}.
-  \item \textbf{Random truths and error inflation.}  v1's $2000$
-    draws per scatter family, with v1's seed and order; the error
-    inflations $\sqrt{\mathrm{E}[\chi^2_w]/2}$ and
-    $\sqrt{\mathrm{E}[\chi^2_p]}$ of v1's appendices ``The error
-    inflation'' and ``The same test for $\Omega_m$ and $A_s$''.
+  \item \textbf{Random truths and goodness of fit.}  v1's $2000$
+    draws per scatter family, with v1's seed and order; the goodness
+    of fit of Eq.~\eqref{eq:gof}, $\sqrt{\langle\chi^2_w\rangle/2}$
+    for $(w_0, w_a)$ and $\sqrt{\langle\chi^2_p\rangle}$ for one
+    parameter $p$ (v1's appendices ``The goodness of fit'' and ``The
+    same test for $\Omega_m$ and $A_s$'').
   \item \textbf{Calibration drift.}  One deterministic truth that
     moves only the offsets:
     $\delta m = \sum_i [(\partial m/\partial b_{2,i})\,\Delta_{2,i}
@@ -612,30 +614,52 @@ are numerical zeros and are printed as $0$.
 \label{sec:tabdrifts}
 
 Tables~\ref{tab:driftw}--\ref{tab:driftas} give the shift of each
-known drift alone.  The independent rung absorbs both drifts exactly
-and is omitted.  Two readings.  The tied rung stays excluded: the
+known drift alone.  The free prior absorbs both drifts exactly
+and is omitted.  Two readings.  The growth-tied prior stays excluded: the
 conserved-population drift moves its $(w_0, w_a)$ by $7.9$--$11\sigma$
 under model A baseline and $2.5$--$3.4\sigma$ under model A
-pessimistic, against $10.9$--$21.5\sigma$ in v1.  The baseline and
-pessimistic rungs absorb both drifts below $\sigma/3$ in every score;
+pessimistic.  The baseline and
+pessimistic priors absorb both drifts below $\sigma/3$ in every score;
 the largest entry, $0.32\sigma$, is the BGS flux limit on
 $\Delta z = 0.05$, which resolves BGS into only six bins.
+Figure~\ref{fig:driftshifts} draws the growth-tied and baseline
+priors of model A baseline in compact form.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.62\linewidth]{plots/drift_shifts/drift_shifts.pdf}
+  \caption{The shift of a model A baseline fit when the true linear
+    biases follow one known drift, with $b_2$ and $\bstwo$ following
+    $b_1$ through the calibrations: $(w_0, w_a)$ in units of the fit's
+    ellipse, $\Omega_m$ and $A_s$ in their own marginalized $\sigma$,
+    one panel each on one shared vertical range; horizontal axis: the
+    four layouts.  Squares: the growth-tied prior; circles: the baseline prior;
+    a thin line joins the two.  Filled: the conserved-population drift
+    (every group); open: the BGS $r < 19.5$ flux limit.  Dashed red
+    line: $\sigma/3$.  Points on the floor at $10^{-3}$ are values
+    below it: the exact zeros of the baseline prior on
+    $\Delta z = 0.2$, and the $2\times10^{-4}$ $A_s$ shift of the flux
+    limit on $\Delta d_{\rm com} = 62$~Mpc.  Omitted: the pessimistic
+    prior, which shifts by at most $0.318\sigma$ in $(w_0, w_a)$,
+    $0.304$ in $\Omega_m$ and $0.182$ in $A_s$, and the free
+    prior, about $10^{-11}$.  Model A pessimistic is in
+    Tables~\ref{tab:driftw}--\ref{tab:driftas}.
+    $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin is cut by the
+    UV-fraction criterion at $\kmax/D(\bar{z}_i)$ ($\alpha = 0.05$)
+    within the shipped mask.}
+  \label{fig:driftshifts}
+\end{figure}
 
 \begin{table}[ht]
   \centering
   \small
+  \setlength{\tabcolsep}{5pt}
   \begin{tabular}{lcccccc}
     \hline
-    & \multicolumn{3}{c}{conserved population (linear rung)} &
-      \multicolumn{3}{c}{BGS flux limit (linear rung)} \\
-    Layout & tied & baseline & pessimistic &
-      tied & baseline & pessimistic \\
-    \hline
-    \multicolumn{7}{l}{\emph{model A calibrated}} \\
-    $\Delta d_{\rm com} = 62$~Mpc & $15.9$ & $0.0267$ & $0.0028$ & $0.117$ & $0.00141$ & $0.00136$ \\
-    $\Delta z = 0.02$ & $12.1$ & $0.0336$ & $0.00429$ & $1.09$ & $0.0212$ & $0.0222$ \\
-    $\Delta z = 0.05$ & $19.9$ & $0.0752$ & $0.00485$ & $2.55$ & $0.227$ & $0.212$ \\
-    $\Delta z = 0.2$ & $10.9$ & $0$ & $0$ & $1.33$ & $0$ & $0$ \\
+    & \multicolumn{3}{c}{conserved population (linear-bias prior)} &
+      \multicolumn{3}{c}{BGS flux limit (linear-bias prior)} \\
+    Layout & growth-tied & baseline & pessimistic &
+      growth-tied & baseline & pessimistic \\
     \hline
     \multicolumn{7}{l}{\emph{model A baseline}} \\
     $\Delta d_{\rm com} = 62$~Mpc & $9.62$ & $0.0271$ & $0.00297$ & $0.135$ & $0.00176$ & $0.00172$ \\
@@ -652,7 +676,7 @@ $\Delta z = 0.05$, which resolves BGS into only six bins.
   \end{tabular}
   \caption{The $(w_0, w_a)$ shift $\Delta_w$ of each known drift, in
     units of the fit's own marginalized ellipse, per variant, layout
-    and linear rung.  $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin
+    and linear-bias prior.  $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin
     is cut by the UV-fraction criterion at $\kmax/D(\bar{z}_i)$
     ($\alpha = 0.05$) within the shipped mask.}
   \label{tab:driftw}
@@ -661,18 +685,13 @@ $\Delta z = 0.05$, which resolves BGS into only six bins.
 \begin{table}[ht]
   \centering
   \small
+  \setlength{\tabcolsep}{5pt}
   \begin{tabular}{lcccccc}
     \hline
-    & \multicolumn{3}{c}{conserved population (linear rung)} &
-      \multicolumn{3}{c}{BGS flux limit (linear rung)} \\
-    Layout & tied & baseline & pessimistic &
-      tied & baseline & pessimistic \\
-    \hline
-    \multicolumn{7}{l}{\emph{model A calibrated}} \\
-    $\Delta d_{\rm com} = 62$~Mpc & $5.93$ & $0.033$ & $0.00327$ & $0.081$ & $0.00112$ & $0.00111$ \\
-    $\Delta z = 0.02$ & $4.54$ & $0.0223$ & $0.00329$ & $0.693$ & $0.00202$ & $0.0113$ \\
-    $\Delta z = 0.05$ & $8.95$ & $0.0617$ & $0.00396$ & $2.11$ & $0.211$ & $0.203$ \\
-    $\Delta z = 0.2$ & $6.91$ & $0$ & $0$ & $1.28$ & $0$ & $0$ \\
+    & \multicolumn{3}{c}{conserved population (linear-bias prior)} &
+      \multicolumn{3}{c}{BGS flux limit (linear-bias prior)} \\
+    Layout & growth-tied & baseline & pessimistic &
+      growth-tied & baseline & pessimistic \\
     \hline
     \multicolumn{7}{l}{\emph{model A baseline}} \\
     $\Delta d_{\rm com} = 62$~Mpc & $9.03$ & $0.0172$ & $0.0022$ & $0.0855$ & $0.00196$ & $0.00185$ \\
@@ -698,18 +717,13 @@ $\Delta z = 0.05$, which resolves BGS into only six bins.
 \begin{table}[ht]
   \centering
   \small
+  \setlength{\tabcolsep}{5pt}
   \begin{tabular}{lcccccc}
     \hline
-    & \multicolumn{3}{c}{conserved population (linear rung)} &
-      \multicolumn{3}{c}{BGS flux limit (linear rung)} \\
-    Layout & tied & baseline & pessimistic &
-      tied & baseline & pessimistic \\
-    \hline
-    \multicolumn{7}{l}{\emph{model A calibrated}} \\
-    $\Delta d_{\rm com} = 62$~Mpc & $0.132$ & $0.0116$ & $0.00148$ & $0.02$ & $0.000278$ & $5.0\times10^{-5}$ \\
-    $\Delta z = 0.02$ & $9.49$ & $0.0202$ & $0.00248$ & $0.33$ & $0.00358$ & $0.00309$ \\
-    $\Delta z = 0.05$ & $0.565$ & $0.013$ & $0.0014$ & $0.00781$ & $0.0466$ & $0.0667$ \\
-    $\Delta z = 0.2$ & $0.628$ & $0$ & $0$ & $0.0521$ & $0$ & $0$ \\
+    & \multicolumn{3}{c}{conserved population (linear-bias prior)} &
+      \multicolumn{3}{c}{BGS flux limit (linear-bias prior)} \\
+    Layout & growth-tied & baseline & pessimistic &
+      growth-tied & baseline & pessimistic \\
     \hline
     \multicolumn{7}{l}{\emph{model A baseline}} \\
     $\Delta d_{\rm com} = 62$~Mpc & $0.107$ & $0.0239$ & $0.00272$ & $0.0291$ & $0.000191$ & $0.000419$ \\
@@ -732,14 +746,15 @@ $\Delta z = 0.05$, which resolves BGS into only six bins.
   \label{tab:driftas}
 \end{table}
 
-\subsection{The error inflation}
+\subsection{The goodness of fit}
 \label{sec:tabinflation}
 
-Table~\ref{tab:inflw} gives the $(w_0, w_a)$ error inflation of every
-variant, truth family, layout and rung; Table~\ref{tab:inflomas} gives
-the $\Omega_m$ and $A_s$ inflations in v1's format.  An entry of $1$
+Table~\ref{tab:inflw} gives the $(w_0, w_a)$ goodness of fit of
+Eq.~\eqref{eq:gof} for every variant, truth family, layout and prior;
+Table~\ref{tab:inflomas} gives that of $\Omega_m$ and $A_s$ in v1's
+format.  An entry of $1$
 means the error covers the truth as often as it claims; below $1$ the
-error is conservative.  The independent rung absorbs every random
+error is conservative.  The free prior absorbs every random
 truth exactly and is omitted from Table~\ref{tab:inflomas}.
 
 \begin{table}[ht]
@@ -747,18 +762,8 @@ truth exactly and is omitted from Table~\ref{tab:inflomas}.
   \small
   \begin{tabular}{llcccc}
     \hline
-    & & \multicolumn{4}{c}{linear rung} \\
-    Truth scatter & Layout & tied & baseline & pessimistic & independent \\
-    \hline
-    \multicolumn{6}{l}{\emph{model A calibrated}} \\
-    baseline & $\Delta d_{\rm com} = 62$~Mpc & $11.4$ & $1.00$ & $0.975$ & $1.00$ \\
-    & $\Delta z = 0.02$ & $8.41$ & $1.00$ & $0.864$ & $1.00$ \\
-    & $\Delta z = 0.05$ & $16.2$ & $1.01$ & $0.996$ & $1.00$ \\
-    & $\Delta z = 0.2$ & $8.87$ & $1.00$ & $1.00$ & $1.00$ \\
-    pessimistic & $\Delta d_{\rm com} = 62$~Mpc & $12.2$ & $2.23$ & $1.00$ & $1.00$ \\
-    & $\Delta z = 0.02$ & $8.77$ & $1.54$ & $1.00$ & $1.00$ \\
-    & $\Delta z = 0.05$ & $16.8$ & $1.93$ & $1.01$ & $1.00$ \\
-    & $\Delta z = 0.2$ & $9.91$ & $1.00$ & $1.00$ & $1.00$ \\
+    & & \multicolumn{4}{c}{linear-bias prior} \\
+    Truth scatter & Layout & growth-tied & baseline & pessimistic & free \\
     \hline
     \multicolumn{6}{l}{\emph{model A baseline}} \\
     baseline & $\Delta d_{\rm com} = 62$~Mpc & $6.90$ & $1.00$ & $0.970$ & $1.00$ \\
@@ -781,12 +786,13 @@ truth exactly and is omitted from Table~\ref{tab:inflomas}.
     & $\Delta z = 0.2$ & $2.76$ & $1.00$ & $1.00$ & $1.00$ \\
     \hline
   \end{tabular}
-  \caption{The $(w_0, w_a)$ error inflation
-    $\sqrt{\mathrm{E}[\chi^2_w]/2}$: the factor by which each fit's
+  \caption{The $(w_0, w_a)$ goodness of fit
+    $\sqrt{\langle\chi^2_w\rangle/2}$ of Eq.~\eqref{eq:gof}: above
+    $1$, the factor by which each fit's
     ellipse axes are too small when the truth carries the known drifts
-    plus a residual drawn from the named prior.  The rung whose prior
-    equals the truth's scatter (baseline rung for baseline scatter,
-    pessimistic rung for pessimistic scatter) sits at $1$ by the
+    plus a residual drawn from the named prior.  The fit whose prior
+    equals the truth's scatter (baseline prior for baseline scatter,
+    pessimistic prior for pessimistic scatter) sits at $1$ by the
     identity of Appendix~\ref{app:checks}.  $\kmax = 0.075\hMpc$
     quoted at $z = 0$; each bin is cut by the UV-fraction criterion at
     $\kmax/D(\bar{z}_i)$ ($\alpha = 0.05$) within the shipped mask.}
@@ -798,34 +804,26 @@ truth exactly and is omitted from Table~\ref{tab:inflomas}.
   \small
   \begin{tabular}{llcc}
     \hline
-    Truth scatter & Fit linear rung & $\Omega_m$ & $A_s$ \\
-    \hline
-    \multicolumn{4}{l}{\emph{model A calibrated}} \\
-    baseline & tied & $6.06$ / $3.90$ / $11.8$ / $8.73$ & $1.19$ / $9.17$ / $1.23$ / $1.28$ \\
-    & baseline & $1$ / $1$ / $1.01$ / $1$ & $1$ / $1$ / $1$ / $1$ \\
-    & pessimistic & $0.971$ / $0.855$ / $0.993$ / $1$ & $0.987$ / $0.940$ / $0.997$ / $1$ \\
-    pessimistic & tied & $7.57$ / $4.76$ / $12.3$ / $9.59$ & $2.45$ / $9.43$ / $1.91$ / $1.92$ \\
-    & baseline & $1.98$ / $1.33$ / $2.40$ / $1$ & $1.44$ / $1.15$ / $1.29$ / $1$ \\
-    & pessimistic & $1$ / $1$ / $1.02$ / $1$ & $1$ / $1$ / $1$ / $1$ \\
+    Truth scatter & Fit prior & $\Omega_m$ & $A_s$ \\
     \hline
     \multicolumn{4}{l}{\emph{model A baseline}} \\
-    baseline & tied & $9.08$ / $3.88$ / $5.61$ / $5.64$ & $1.13$ / $1.84$ / $2.47$ / $1.61$ \\
+    baseline & growth-tied & $9.08$ / $3.88$ / $5.61$ / $5.64$ & $1.13$ / $1.84$ / $2.47$ / $1.61$ \\
     & baseline & $1$ / $1$ / $1.02$ / $1$ & $1$ / $1$ / $1$ / $1$ \\
     & pessimistic & $0.975$ / $0.874$ / $0.990$ / $1$ & $0.980$ / $0.941$ / $0.989$ / $1$ \\
-    pessimistic & tied & $10.2$ / $4.63$ / $6.36$ / $6.02$ & $2.33$ / $2.04$ / $3.20$ / $1.97$ \\
+    pessimistic & growth-tied & $10.2$ / $4.63$ / $6.36$ / $6.02$ & $2.33$ / $2.04$ / $3.20$ / $1.97$ \\
     & baseline & $1.74$ / $1.29$ / $2.66$ / $1$ & $1.58$ / $1.15$ / $1.81$ / $1$ \\
     & pessimistic & $1$ / $1$ / $1.04$ / $1$ & $1$ / $1$ / $1.01$ / $1$ \\
     \hline
     \multicolumn{4}{l}{\emph{model A pessimistic}} \\
-    baseline & tied & $2.72$ / $1.38$ / $1.29$ / $2.67$ & $1.10$ / $1.62$ / $1.87$ / $1.39$ \\
+    baseline & growth-tied & $2.72$ / $1.38$ / $1.29$ / $2.67$ & $1.10$ / $1.62$ / $1.87$ / $1.39$ \\
     & baseline & $1$ / $1$ / $1$ / $1$ & $1$ / $1$ / $1$ / $1$ \\
     & pessimistic & $0.976$ / $0.876$ / $0.938$ / $1$ & $0.977$ / $0.933$ / $0.964$ / $1$ \\
-    pessimistic & tied & $3.85$ / $2.02$ / $3.62$ / $2.93$ & $2.30$ / $1.82$ / $2.45$ / $1.48$ \\
+    pessimistic & growth-tied & $3.85$ / $2.02$ / $3.62$ / $2.93$ & $2.30$ / $1.82$ / $2.45$ / $1.48$ \\
     & baseline & $1.65$ / $1.27$ / $2.68$ / $1$ & $1.61$ / $1.26$ / $1.87$ / $1$ \\
     & pessimistic & $1$ / $1$ / $1$ / $1$ & $1$ / $1$ / $1$ / $1$ \\
     \hline
   \end{tabular}
-  \caption{The error inflation $\sqrt{\mathrm{E}[\chi^2_p]}$ of
+  \caption{The goodness of fit $\sqrt{\langle\chi^2_p\rangle}$ of
     $\Omega_m$ and $A_s$, each in units of its own marginalized error,
     for the truths of Table~\ref{tab:inflw}.  Each cell lists the
     layouts $\Delta d_{\rm com} = 62$~Mpc / $\Delta z = 0.02$ /
@@ -835,49 +833,56 @@ truth exactly and is omitted from Table~\ref{tab:inflomas}.
   \label{tab:inflomas}
 \end{table}
 
-Two readings beyond the Summary.  The tied rung's $A_s$ error is the
-least damaged of its scores (an inflation of $1.1$ on
+Two readings beyond the Summary.  The growth-tied fit's $A_s$ error is the
+least damaged of its scores (a goodness of fit of $1.1$ on
 $\Delta d_{\rm com} = 62$~Mpc under baseline scatter), but its
 $(w_0, w_a)$ error, at least $2.0$ times too small, excludes it on
-every layout.  And under model A pessimistic the tied rung's
-$(w_0, w_a)$ inflations shrink to $2.0$--$4.4$, against
-$5.6$--$10.3$ under model A baseline.  A likely reason: the free
-tilts of the higher-order offsets can follow part of a linear-bias
-drift.  That narrows the gap without making the tied fit honest.
+every layout.  And under model A pessimistic the growth-tied fit's
+$(w_0, w_a)$ goodness of fit falls to $2.0$--$4.4$, against
+$5.6$--$10.3$ under model A baseline.  A likely reason: the
+flat-prior tilts of the higher-order offsets can follow part of a
+linear-bias drift.  That narrows the gap without making the
+growth-tied fit honest.
 
 \subsection{The calibration drift}
 \label{sec:tabcal}
 
 Table~\ref{tab:caldrift} gives the shifts of the calibration-drift
-truth.  Model A pessimistic absorbs the drift on every rung and
-layout (all its shifts are below $2\times10^{-12}$) and is omitted.
-Under model A baseline the per-bin rungs exceed $\sigma/3$ in
+truth.  Model A pessimistic absorbs the drift under every prior and
+on every layout (every shift at most $1.6\times10^{-12}$) and is
+omitted.  Under model A baseline the baseline, pessimistic and free
+priors exceed $\sigma/3$ in
 $(w_0, w_a)$ on three layouts, and in $A_s$ on $\Delta z = 0.05$
-($0.37$--$0.41\sigma$).  Model A calibrated, which has no offsets at
-all, is moved further: $1.4$--$3.5\sigma$ in $(w_0, w_a)$ on the tied
-rung and up to $1.0\sigma$ on the per-bin rungs.
+($0.37$--$0.41\sigma$).  Figure~\ref{fig:caldrift} draws the model A
+baseline rows.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.62\linewidth]{plots/calibration_drift/calibration_drift.pdf}
+  \caption{The shift of a model A baseline fit under the calibration
+    drift ($\Delta_2$ from about $-0.5$ to $+0.5$ and $\Delta_s$ from
+    about $-0.25$ to $+0.25$, linear in redshift across each group,
+    $b_1$ at its fiducial): $(w_0, w_a)$ in units of the fit's
+    ellipse, $\Omega_m$ and $A_s$ in their own marginalized $\sigma$,
+    one panel each on one shared vertical range; horizontal axis: the
+    four layouts.  Markers: the four linear-bias priors (square
+    growth-tied, circle baseline, diamond pessimistic, triangle
+    free).  Dashed red
+    line: $\sigma/3$.  Model A pessimistic absorbs this drift exactly
+    (every shift at most $1.6\times10^{-12}$) and is not drawn.
+    $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin is cut by the
+    UV-fraction criterion at $\kmax/D(\bar{z}_i)$ ($\alpha = 0.05$)
+    within the shipped mask.}
+  \label{fig:caldrift}
+\end{figure}
 
 \begin{table}[ht]
   \centering
   \small
   \begin{tabular}{llcccc}
     \hline
-    & & \multicolumn{4}{c}{linear rung} \\
-    Layout & Score & tied & baseline & pessimistic & independent \\
-    \hline
-    \multicolumn{6}{l}{\emph{model A calibrated}} \\
-    $\Delta d_{\rm com} = 62$~Mpc & $(w_0, w_a)$ & $2.04$ & $0.777$ & $0.973$ & $1.01$ \\
-    & $\Omega_m$ & $0.58$ & $0.0908$ & $0.253$ & $0.313$ \\
-    & $A_s$ & $0.186$ & $0.482$ & $0.67$ & $0.708$ \\
-    $\Delta z = 0.02$ & $(w_0, w_a)$ & $1.44$ & $0.192$ & $0.188$ & $0.191$ \\
-    & $\Omega_m$ & $0.166$ & $0.178$ & $0.133$ & $0.0562$ \\
-    & $A_s$ & $1.28$ & $0.28$ & $0.245$ & $0.17$ \\
-    $\Delta z = 0.05$ & $(w_0, w_a)$ & $2.87$ & $0.572$ & $0.577$ & $0.575$ \\
-    & $\Omega_m$ & $1.17$ & $0.103$ & $0.124$ & $0.114$ \\
-    & $A_s$ & $0.253$ & $0.47$ & $0.473$ & $0.469$ \\
-    $\Delta z = 0.2$ & $(w_0, w_a)$ & $3.46$ & $0.753$ & $0.753$ & $0.753$ \\
-    & $\Omega_m$ & $2.39$ & $0.522$ & $0.522$ & $0.522$ \\
-    & $A_s$ & $0.000945$ & $0.299$ & $0.299$ & $0.299$ \\
+    & & \multicolumn{4}{c}{linear-bias prior} \\
+    Layout & Score & growth-tied & baseline & pessimistic & free \\
     \hline
     \multicolumn{6}{l}{\emph{model A baseline}} \\
     $\Delta d_{\rm com} = 62$~Mpc & $(w_0, w_a)$ & $1.15$ & $0.345$ & $0.53$ & $0.57$ \\
@@ -918,27 +923,30 @@ rung and up to $1.0\sigma$ on the per-bin rungs.
     $1.3\times10^{-8}$ of the stencil column's largest entry (layout
     order).  The two independent routes, operator columns through the
     bias setter and the full likelihood through the stencil, agree.
-  \item \textbf{The matched-prior identity.}  When a rung's prior
+  \item \textbf{The matched-prior identity.}  When a fit's prior
     equals the truth's scatter, the projection identity
     $\mathsf{P}\Sigma\mathsf{P} = \mathsf{P}$ of v1's appendix ``The
-    error inflation'' makes the scatter and noise terms of
-    $\mathrm{E}[\chi^2_w]$ sum to exactly $2$.  Over every layout and
-    variant, $\max|\mathrm{E}[\chi^2_w] - \Delta_{\rm drift}^2 - 2|
+    goodness of fit'' makes the scatter and noise terms of
+    $\langle\chi^2_w\rangle$ sum to exactly $2$.  Over every layout and
+    variant, $\max|\langle\chi^2_w\rangle - \Delta_{\rm drift}^2 - 2|
     = 4.0\times10^{-10}$.
-  \item \textbf{Exact recovery.}  The independent rung must absorb any
+  \item \textbf{Exact recovery.}  The free prior must absorb any
     truth of the linear bias.  Its largest mean $(w_0, w_a)$ shift
     over the random truths is $2.6\times10^{-11}$.
   \item \textbf{One direction without information.}  On
     $\Delta d_{\rm com} = 62$~Mpc at this cut only $7$ of the $18$ BGS
-    bins keep any band.  Under model A pessimistic on the independent
-    rung, the flat-prior BGS tilts of $\Delta_2$, $\Delta_s$ and
+    bins keep any band.  Under model A pessimistic on the free
+    prior, the flat-prior BGS tilts of $\Delta_2$, $\Delta_s$ and
     $\alpha_0$ then leave one combination of parameters with no
     information.  A plain matrix inverse amplified round-off along it
     into a spurious $2\sigma$ shift.  The notebook therefore inverts
     every Fisher matrix through a pseudo-inverse: it scales the matrix
     to unit diagonal, diagonalizes it, and drops the directions whose
     eigenvalue is below $10^{-12}$ of the largest.  Exactly one of the
-    $48$ systems (four layouts, three variants, four rungs) drops one
+    $48$ systems (four layouts, four linear-bias priors, and three
+    higher-order
+    configurations: model A baseline, model A pessimistic and the exact
+    calibrations of Appendix~\ref{app:comparison}) drops one
     direction, and that direction's largest component on
     $(w_0, w_a)$, $\Omega_m$ and $A_s$ is $5\times10^{-12}$: a pure
     nuisance combination.  The FoMs are unchanged.
@@ -961,7 +969,7 @@ rung and up to $1.0\sigma$ on the per-bin rungs.
     ``Gaps against model A'' of \texttt{notes/higher\_order\_bias}).
   \item \textbf{The same data as v1.}  The kept band powers are read
     from v1's cut cache at $\kmax = 0.075\hMpc$, and the v1 rows of
-    Table~\ref{tab:fom} from v1's figure data.
+    Table~\ref{tab:compare} from v1's figure data.
 \end{itemize}
 
 \section{The counterterm: engines, scale cut and sign}
@@ -1043,6 +1051,84 @@ returns $P_{gg}$ to $b_1^2 P_{\rm mm}$ above the scale where one-loop
 perturbation theory is trusted, or a positivity prior that rejects
 points with $P_{gg} < 0$ below a chosen $k$.
 
+\section{Comparison with linear bias and with exact calibrations}
+\label{app:comparison}
+
+Neither comparison in this appendix is a result of this note.  The
+linear-bias FoMs of v1 come from a model that
+\texttt{notes/linear\_bias\_kmax} shows is already biased at this
+cut, and the exact-calibration FoMs assume that $b_2$ and $\bstwo$
+are known exactly, which no forecast can assume.  They appear here
+only to locate model A's FoMs.  Table~\ref{tab:compare} lists both,
+under the priors and on the layouts of Table~\ref{tab:fom}.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{llcccc}
+    \hline
+    & & \multicolumn{4}{c}{linear-bias prior} \\
+    Layout & Model & growth-tied & baseline & pessimistic & free \\
+    \hline
+    $\Delta d_{\rm com} = 62$~Mpc & v1, linear bias & $32.94$ & $18.19$ & $11.45$ & $10.69$ \\
+    & exact calibrations & $39.42$ & $23.17$ & $15.14$ & $14.28$ \\
+    \hline
+    $\Delta z = 0.02$ & v1, linear bias & $19.93$ & $12.47$ & $7.413$ & $4.016$ \\
+    & exact calibrations & $20.72$ & $13.22$ & $7.759$ & $4.151$ \\
+    \hline
+    $\Delta z = 0.05$ & v1, linear bias & $8.288$ & $1.958$ & $1.329$ & $1.225$ \\
+    & exact calibrations & $11.93$ & $3.740$ & $2.895$ & $2.774$ \\
+    \hline
+    $\Delta z = 0.2$ & v1, linear bias & $1.908$ & $0.5154$ & $0.5154$ & $0.5154$ \\
+    & exact calibrations & $2.542$ & $0.8170$ & $0.8170$ & $0.8170$ \\
+    \hline
+  \end{tabular}
+  \caption{Not results of this note: ${\rm FoM}(w_0, w_a)$ of DESI
+    $C_\ell^{gg}$ alone with v1's linear bias, and with model A's
+    one-loop terms at exact calibrations ($b_2$ and $\bstwo$ on their
+    calibrations of $b_1$, no offsets, $\alpha_0 = {\rm SN}_0 = 0$
+    fixed).  $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin is cut
+    by the UV-fraction criterion at $\kmax/D(\bar{z}_i)$
+    ($\alpha = 0.05$) within the shipped mask.}
+  \label{tab:compare}
+\end{table}
+
+\paragraph{Linear bias.}
+Model A baseline on the baseline prior keeps $84\%$, $86\%$, $71\%$ and
+$44\%$ of v1's baseline-prior FoM (layouts in the order
+$\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$, $0.2$);
+model A pessimistic on the pessimistic prior keeps $75\%$, $73\%$,
+$53\%$ and $30\%$ of v1's pessimistic-prior FoM.  The loss grows as the
+bins widen.  A likely reason: on the wide layouts a group holds few
+bins, so one offset per group is close to one offset per bin, and the
+new parameters compete with each bin's linear bias for the same band
+powers.  v1's FoMs remain the linear-bias reference.
+
+\paragraph{Exact calibrations.}
+With the calibrations taken as exact, the FoM exceeds v1's under every
+prior and on every layout ($23.2$ against $18.2$ on the baseline prior of
+$\Delta d_{\rm com} = 62$~Mpc, $3.74$ against $1.96$ on
+$\Delta z = 0.05$).  The loop terms are then not free: with
+$b_{2,i}$ and $b_{s^2,i}$ fixed by the calibrations at $b_{1,i}$, and
+$\alpha_0 = {\rm SN}_0 = 0$, the one-loop correction is a known
+function of $b_{1,i}$ and of the matter power spectrum.  The loop
+terms grow as the fourth power of the growth factor and the linear
+term as $b_1^2$ times its square, so the size of the correction
+relative to the linear term carries information on the amplitude of
+the matter fluctuations that a linear-bias model does not have.
+
+That information is only as good as the calibrations, and it is why
+this configuration is not a forecast.  The offsets of model A
+baseline, with widths set by the known scatter of the calibrations,
+and its $\alpha_0$ and ${\rm SN}_0$ remove it, and model A baseline
+sits below v1 under every prior and on every layout.  The calibration
+drift of the Summary shows what trusting the calibrations costs: with
+exact calibrations it shifts $(w_0, w_a)$ by $2.04$, $1.44$, $2.87$
+and $3.46\sigma$ on the growth-tied prior (layout order) and by
+$0.19$--$1.01\sigma$ under the baseline, pessimistic and free priors.  The notebook also prints
+this configuration's known-drift shifts and goodness of fit; they
+are not repeated here.
+
 \section{Limitations}
 \label{app:limits}
 
@@ -1052,9 +1138,9 @@ points with $P_{gg} < 0$ below a chosen $k$.
     (\texttt{\_lens\_bias}) uses each group's raw bias while the data
     vector uses $B_g/D(\bar{z}_i)$, which understates the
     high-redshift variances and inflates every absolute FoM by about
-    $2.4$--$3.2$.  The comparisons between rungs, variants and v1 hold
-    the covariance fixed.
-  \item \textbf{Linear response.}  The shifts and inflations are
+    $2.4$--$3.2$.  The comparisons between priors and variants hold the
+    covariance fixed.
+  \item \textbf{Linear response.}  The shifts and the goodness of fit are
     first order in the truth's departure from the fiducial, as in v1.
     v1 estimates the dropped second-order term at a few percent of the
     shift for $1$--$3\%$ residuals and perhaps $10$--$20\%$ for the

@@ -56,7 +56,7 @@ for layout in data['layouts']:
 ax.set_xlim(-0.3, 10.5)
 ax.set_ylim(0.0, 1.05)
 ax.set_xlabel(r'residual scatter $\sigma_b$ [%]')
-ax.set_ylabel(r'FoM / FoM$_\mathrm{tied}$')
+ax.set_ylabel('FoM / FoM(growth-tied)')
 ax.set_title(rf'Exponential kernel against the memory model ($L = {L_ref:g}$, '
              rf'$k_\mathrm{{max}} = {data["kmax_h_per_Mpc"]:g}\,h$ Mpc$^{{-1}}$)')
 ax.text(0.5, 0.97, 'PRELIMINARY: LINEAR BIAS ONLY', transform=ax.transAxes, ha='center',
@@ -67,7 +67,7 @@ styles = [
     Line2D([], [], color='0.3', marker='o', ms=5, lw=1.8, label='exponential kernel'),
     Line2D([], [], color='0.3', marker='^', ms=6, lw=1.8, ls='--',
            label='memory: free tilt + kernel'),
-    Line2D([], [], color='0.3', ls=':', lw=1.2, label='independent biases'),
+    Line2D([], [], color='0.3', ls=':', lw=1.2, label='free biases'),
 ]
 styles += [Line2D([], [], color='none', label=' ')]*(len(lines) - len(styles))
 ax.legend(handles=lines + styles, fontsize=8.5, ncol=2, loc='upper right',

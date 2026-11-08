@@ -47,6 +47,10 @@ with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
 rungs = [r['key'] for r in data['rungs']]
 x = np.arange(len(rungs))
+# the names the figures print for the linear-bias priors (the data keys
+# keep the notebook's names)
+DISPLAY = {'tied': 'growth-tied', 'baseline': 'baseline',
+           'pessimistic': 'pessimistic', 'independent': 'free'}
 
 fig, ax = plt.subplots(figsize=(7.6, 5.0))
 # the two stated assumptions of the note
@@ -69,7 +73,7 @@ ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=4, frameon=False, 
 fig.suptitle(rf'Linear bias assumptions from rigid to free ($k_\mathrm{{max}} = '
              rf'{data["kmax_h_per_Mpc"]:g}\,h\,\mathrm{{Mpc}}^{{-1}}$)', fontsize=12, y=1.02)
 ax.set_xticks(x)
-ax.set_xticklabels([r['label'] for r in data['rungs']])
+ax.set_xticklabels([DISPLAY[r['key']] for r in data['rungs']])
 ax.set_xlim(-0.4, x[-1] + 0.75)
 fig.savefig(os.path.join(HERE, 'baseline_ladder.pdf'))
 fig.savefig(os.path.join(HERE, 'baseline_ladder.png'), dpi=300)

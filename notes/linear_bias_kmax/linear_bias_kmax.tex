@@ -43,8 +43,8 @@ v1 note'' below).
   \item Up to which $\kmax$ does a linear-bias fit to a one-loop truth
     stay unbiased, on all four bin layouts, for the dark-energy pair
     $(w_0, w_a)$, for $\Omega_m$ and for $A_s$?
-  \item Does the v1 accuracy test of the bias priors, tied versus
-    correlated, give the same verdict for $\Omega_m$ and $A_s$ as for
+  \item Does the v1 accuracy test of the bias priors, growth-tied
+    versus correlated, give the same verdict for $\Omega_m$ and $A_s$ as for
     $(w_0, w_a)$?
 \end{enumerate}
 Here $w(a) = w_0 + w_a(1 - a)$ is the dark-energy equation of state,
@@ -54,14 +54,14 @@ primordial curvature power spectrum, sampled as $10^9 A_s$.
 
 \paragraph{The short answer.}
 No scanned cut is safe on all four layouts.  Only the layout of equal
-comoving bin width passes, at $\kmax = 0.05\hMpc$, on every rung of
-the bias ladder and for every truth tried.  At $\kmax = 0.075\hMpc$,
+comoving bin width passes, at $\kmax = 0.05\hMpc$, under every prior
+of the bias ladder and for every truth tried.  At $\kmax = 0.075\hMpc$,
 the cut of the v1 note, a linear fit is biased on every layout and
-every rung, and freeing the linear bias bin by bin does not cure it.
+under every prior, and freeing the linear bias bin by bin does not cure it.
 The safe cut is also expensive: it keeps less than a tenth of the
 dark-energy figure of merit, the inverse area of the $(w_0, w_a)$
 error ellipse.  For the second question the answer is yes: scored for
-$\Omega_m$ and $A_s$, the v1 test excludes the tied model and accepts
+$\Omega_m$ and $A_s$, the v1 test excludes the growth-tied prior and accepts
 the correlated priors, as it does for $(w_0, w_a)$.
 
 \paragraph{The setup.}
@@ -72,17 +72,19 @@ $\Delta d_{\rm com} = 62$~Mpc, and bins of fixed redshift width
 $\Delta z = 0.02$, $0.05$ and $0.2$.  The Gaussian covariance is
 computed for $14{,}000$ square degrees and rescaled to the survey's
 $12{,}300$.  Each one-loop truth, described below, is fitted with
-linear bias on the four rungs of the v1 ladder.  With $D(z)$ the linear growth factor normalized to
-$D(0) = 1$ and $z_i$ the redshift of bin $i$, they are:
-\textbf{tied}, one free amplitude $B_g$ per group $g$ and
-$b_i = B_g/D(z_i)$; \textbf{baseline}, a free amplitude and tilt per
-group plus a correlated residual prior of width $\sigma_g = 3\%$ for
-BGS and $1\%$ for the other groups, with correlation length $L = 0.2$
-in redshift; \textbf{pessimistic}, the same with $\sigma_g = 3\%$
-everywhere and $L = 0.05$; \textbf{independent}, one free bias per
-bin.  The error of each fit is its Fisher linear response
-(Appendix~\ref{app:method}).  The $(w_0, w_a)$ shift is scored in
-units of the rung's own marginalized error ellipse, and $\Omega_m$
+linear bias under the four linear-bias priors of the v1 ladder.  With
+$D(z)$ the linear growth factor normalized to $D(0) = 1$ and $z_i$ the
+redshift of bin $i$, they are: \textbf{growth-tied}, one amplitude
+$B_g$ per group $g$, with the bias following $1/D(z)$,
+$b_i = B_g/D(z_i)$; the \textbf{baseline prior}, a free amplitude and
+tilt per group plus a correlated residual prior of width
+$\sigma_g = 3\%$ for BGS and $1\%$ for the other groups, with
+correlation length $L = 0.2$ in redshift; the \textbf{pessimistic
+prior}, the same with $\sigma_g = 3\%$ everywhere and $L = 0.05$;
+\textbf{free}, one bias per bin, each with a flat prior.  The error of
+each fit is its Fisher linear response (Appendix~\ref{app:method}).
+The $(w_0, w_a)$ shift is scored in units of the fit's own
+marginalized error ellipse, and $\Omega_m$
 and $A_s$ each in units of its own marginalized error $\sigma$.  A
 fit is unbiased when every shift is below $\sigma/3$, the v1 note's
 threshold.
@@ -147,28 +149,28 @@ at which every shift stays below $\sigma/3$, at that cut and at every
 smaller cut that has a fit.  Figure~\ref{fig:fobkmax} draws the
 shifts against $\kmax$.
 \begin{itemize}
-  \item $\Delta d_{\rm com} = 62$~Mpc: safe at $0.05$ on every rung,
+  \item $\Delta d_{\rm com} = 62$~Mpc: safe at $0.05$ under every prior,
     for the calibrated truth and for every truth.  The largest shift
-    at that cut is $0.171\sigma$ ($A_s$, tied rung, $b_2 - 1$).
+    at that cut is $0.171\sigma$ ($A_s$, growth-tied prior, $b_2 - 1$).
   \item $\Delta z = 0.02$: fails.  At $0.05$ the ultraviolet-fraction
     criterion keeps no band of any spectrum, so there is no fit; at
-    $0.075$ every rung already fails.
-  \item $\Delta z = 0.05$: safe at $0.05$ for the tied and baseline
-    rungs under the calibrated truth only.  The pessimistic and
-    independent rungs fail there, with $(w_0, w_a)$ shifts of $0.474$
-    and $0.559$, and every rung fails for some bracket.
+    $0.075$ every prior already fails.
+  \item $\Delta z = 0.05$: safe at $0.05$ for the growth-tied and
+    baseline priors under the calibrated truth only.  The pessimistic and
+    free priors fail there, with $(w_0, w_a)$ shifts of $0.474$
+    and $0.559$, and every prior fails for some bracket.
   \item $\Delta z = 0.2$: fails everywhere, already at $0.05$, with
-    $(w_0, w_a)$ shifts of $0.413$ (tied) and $0.541$ (the other
-    rungs).  Its groups hold one or two bins each, so the free
+    $(w_0, w_a)$ shifts of $0.413$ (growth-tied) and $0.541$ (the
+    other priors).  Its groups hold one or two bins each, so the free
     amplitude and tilt already free every bin, and the baseline,
-    pessimistic and independent rungs coincide.
+    pessimistic and free priors coincide.
 \end{itemize}
 
 \begin{table}[ht]
   \centering
   \begin{tabular}{lcccc}
     \hline
-    Layout & tied & baseline & pessimistic & independent \\
+    Layout & growth-tied & baseline & pessimistic & free \\
     \hline
     $\Delta d_{\rm com} = 62$~Mpc & $0.05$ / $0.05$ & $0.05$ / $0.05$
       & $0.05$ / $0.05$ & $0.05$ / $0.05$ \\
@@ -198,29 +200,30 @@ shifts against $\kmax$.
   \includegraphics[width=\linewidth]{plots/fob_kmax/fob_kmax.pdf}
   \caption{The shift of a linear-bias fit to the one-loop truth
     against the scale cut.  Columns: the four bin layouts.  Rows: the
-    $(w_0, w_a)$ shift in units of the rung's marginalized ellipse,
+    $(w_0, w_a)$ shift in units of the fit's marginalized ellipse,
     and the $\Omega_m$ and $A_s$ shifts in units of their own
     marginalized $\sigma$.  Lines: the calibrated truth ($b_2$ on its
     Lazeyras calibration, $b_{s^2}$ on co-evolution, no counterterm),
-    one color per rung of the linear-bias ladder.  Bands: the range
+    one color per linear-bias prior of the ladder (growth-tied,
+    baseline prior, pessimistic prior, free).  Bands: the range
     spanned by the four brackets, every chunk's $b_2$ offset at
     $\pm 1$ and $\alpha_0 = \pm 12.5\,h^{-2}\,{\rm Mpc}^2$.  Dashed
     line: the $\sigma/3$ threshold.  On $\Delta z = 0.02$ the cut at
     $0.05$ keeps no band, so it has no point.  On $\Delta z = 0.2$ the
-    baseline, pessimistic and independent rungs coincide, and the
-    independent line covers the other two.  $\kmax$ quoted at $z = 0$;
+    baseline, pessimistic and free priors coincide, and the free line
+    covers the other two.  $\kmax$ quoted at $z = 0$;
     each bin is cut by the UV-fraction criterion at
     $\kmax/D(\bar{z}_i)$ ($\alpha = 0.05$) within the shipped mask.}
   \label{fig:fobkmax}
 \end{figure}
 
-\paragraph{At the v1 cut, every rung is biased.}
-At $\kmax = 0.075\hMpc$, under the calibrated truth, every rung on
+\paragraph{At the v1 cut, every prior is biased.}
+At $\kmax = 0.075\hMpc$, under the calibrated truth, every prior on
 every layout shifts some parameter by about $1\sigma$ or more, and no
-bracket brings any rung on any layout under the threshold.  On
+bracket brings any prior on any layout under the threshold.  On
 $\Delta d_{\rm com} = 62$~Mpc the fit moves $\Omega_m$ by
 $1.98$--$2.42\sigma$, $(w_0, w_a)$ by $0.681$--$1.13$ and $A_s$ by
-$0.868$--$1.18$ across the four rungs (Appendix~\ref{app:tables}).
+$0.868$--$1.18$ across the four priors (Appendix~\ref{app:tables}).
 
 \paragraph{Why more bias freedom does not help.}
 A linear bias multiplies a bin's power spectrum by the constant
@@ -231,18 +234,18 @@ model by a scale dependence that no choice of $b_i$ removes.  The fit
 pushes that residual into the cosmological parameters, which do
 change the shape of the band powers.  Freeing the biases changes
 which parameter takes the residual, not whether one does.  On
-$\Delta d_{\rm com} = 62$~Mpc, going from the tied to the independent
-rung lowers the $\Omega_m$ shift from $2.42$ to $1.98$ and raises the
+$\Delta d_{\rm com} = 62$~Mpc, going from the growth-tied to the free
+prior lowers the $\Omega_m$ shift from $2.42$ to $1.98$ and raises the
 $(w_0, w_a)$ shift from $0.681$ to $1.13$.  On $\Delta z = 0.05$ the
-baseline rung moves the error from $\Omega_m$ ($0.162$, against
-$2.32$ for tied) to $(w_0, w_a)$ ($1.80$, against $0.865$).
+baseline prior moves the error from $\Omega_m$ ($0.162$, against
+$2.32$ for growth-tied) to $(w_0, w_a)$ ($1.80$, against $0.865$).
 
 \paragraph{The price of the safe cut.}
 On $\Delta d_{\rm com} = 62$~Mpc the figure of merit
 ${\rm FoM}(w_0, w_a) = [\det \mathrm{Cov}(w_0, w_a)]^{-1/2}$ falls
 from $32.9$, $18.2$, $11.4$ and $10.7$ at $0.075$ to $2.19$, $1.54$,
-$0.855$ and $0.145$ at $0.05$ (tied, baseline, pessimistic,
-independent): $1$--$8\%$ of its value, far below the LSST Y1 3x2pt
+$0.855$ and $0.145$ at $0.05$ (growth-tied, baseline, pessimistic,
+free): $1$--$8\%$ of its value, far below the LSST Y1 3x2pt
 reference of $17.26$.  The loss is part of why the cut at $0.05$
 passes: it keeps fewer bands, on larger scales, where the one-loop
 terms are smaller and the data less precise.  The absolute FoMs carry
@@ -253,19 +256,27 @@ Figure~\ref{fig:ladderbiasparams} repeats the v1 test, with linear
 truths at $\kmax = 0.075\hMpc$: a known bias drift (the $r < 19.5$
 flux limit in BGS, a conserved galaxy population in the other groups)
 plus a residual drawn from the baseline or the pessimistic prior,
-$2000$ draws with the v1 random seed, each fitted with every rung.
+$2000$ draws with the v1 random seed, each fitted under every prior.
 The verdict for $\Omega_m$ and $A_s$ is the verdict for $(w_0, w_a)$;
 the numbers are in the v1 note's appendix ``The same test for
-$\Omega_m$ and $A_s$''.  The tied rung is excluded: the
+$\Omega_m$ and $A_s$''.  The growth-tied prior is excluded: the
 conserved-population drift alone moves $\Omega_m$ by $3.99$, $5.21$,
 $11.7$ and $6.42\sigma$, and $A_s$ by $3.79$, $9.90$, $5.82$ and
 $0.58\sigma$, on $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$,
-$0.05$ and $0.2$.  The error inflation is the factor by which a rung's
-quoted error would have to grow to cover the truth as often as it
-claims.  It is $1$ for the baseline rung under its own scatter, but
-under pessimistic scatter its $\Omega_m$ error bar is up to $2.75$
-times too small.  The pessimistic rung is honest or conservative
-under both truths, with inflations of at most $1.04$.
+$0.05$ and $0.2$.  The verdict is the goodness of fit of the
+parameter recovery, $\sqrt{\langle\chi^2\rangle/n_{\rm dof}}$.  Here
+$\chi^2$ is the distance of the recovered parameters from the truth
+in units of the fit's own covariance, with $n_{\rm dof} = 2$ for
+$(w_0, w_a)$ and $1$ for $\Omega_m$ or $A_s$, and the average runs
+over the random truths and the data noise.  It is $1$ when the error
+bars cover the truth as often as they claim; above $1$ it is the
+factor by which they are too small.  It scores the recovery of the
+parameters, not the $\chi^2$ of the data: a biased fit can match the
+band powers well while its cosmology is wrong.  The goodness of fit
+is $1$ for the baseline prior under its own scatter, but under
+pessimistic scatter its $\Omega_m$ error bar is up to $2.75$ times
+too small.  The pessimistic prior is honest or conservative under both
+truths, with a goodness of fit of at most $1.04$.
 
 \begin{figure}[!t]
   \centering
@@ -273,25 +284,25 @@ under both truths, with inflations of at most $1.04$.
   \small
   \caption{The v1 accuracy test scored for $(w_0, w_a)$, $\Omega_m$
     and $A_s$.  The truths are linear: the true bias of bin $i$ is the
-    tied value times $1 + \delta_i^{\rm drift} + \varepsilon_i$, with
+    growth-tied value times $1 + \delta_i^{\rm drift} + \varepsilon_i$, with
     the drift the $r < 19.5$ flux-limit deviation in BGS and the
     conserved-population deviation in the other groups, and the
     residual $\varepsilon_i$ drawn from the baseline prior (left
     column) or the pessimistic prior (right column); $2000$ truths per
-    column.  Each truth is fitted with every rung (horizontal axis),
-    every rung's bias prior centered on the tied shape.  Rows: the
-    $(w_0, w_a)$ shift in units of the rung's ellipse, and the
+    column.  Each truth is fitted under every linear-bias prior
+    (horizontal axis), each centered on the growth-tied shape.  Rows:
+    the $(w_0, w_a)$ shift in units of the fit's ellipse, and the
     $\Omega_m$ and $A_s$ shifts in units of their own marginalized
     $\sigma$.  Points: the mean shift over the truths; bars: the
     16th--84th percentiles; colors: the four bin layouts; dashed line:
     the $\sigma/3$ threshold.  Gray columns mark the baseline and
-    pessimistic rungs.  In the left column the baseline rung, and in
-    the right column the pessimistic rung, has a prior equal to the
-    truth's scatter: there the mean shift is not a bias, because the
-    rung's error already covers that scatter, and its error inflation
+    pessimistic priors.  In the left column the baseline prior, and in
+    the right column the pessimistic prior, equals the truth's
+    scatter: there the mean shift is not a bias, because the fit's
+    error already covers that scatter, and its goodness of fit
     is $1$.  Open markers on the floor at $10^{-3}$: exact recovery,
-    zero shift; the independent rung absorbs any such truth, and on
-    $\Delta z = 0.2$ so do the baseline and pessimistic rungs.
+    zero shift; the free prior absorbs any such truth, and on
+    $\Delta z = 0.2$ so do the baseline and pessimistic priors.
     $\kmax = 0.075\hMpc$ quoted at $z = 0$; each bin is cut by the
     UV-fraction criterion at $\kmax/D(\bar{z}_i)$ ($\alpha = 0.05$)
     within the shipped mask.}
@@ -301,17 +312,17 @@ under both truths, with inflations of at most $1.04$.
 \paragraph{Recommendation.}
 \begin{itemize}
   \item Linear bias is acceptable only at $\kmax \le 0.05\hMpc$, and
-    of the four layouts robustly, on every rung and for every truth,
+    of the four layouts robustly, under every prior and for every truth,
     only on $\Delta d_{\rm com} = 62$~Mpc.  On $\Delta z = 0.05$ it
-    passes only for the tied and baseline rungs and only on the
+    passes only for the growth-tied and baseline priors and only on the
     calibrations; on $\Delta z = 0.02$ and $0.2$ no scanned cut is
     safe.
   \item That cut keeps less than a tenth of the FoM, so it is not a
     useful operating point.
   \item At $\kmax = 0.075\hMpc$ the forecast should use the one-loop
     model A.  The companion note
-    \texttt{notes/correlated\_bias\_prior\_v2}, being written, redoes
-    the v1 ladder and accuracy test under model A.
+    \texttt{notes/correlated\_bias\_prior\_v2} redoes the v1 ladder
+    and accuracy test under model A.
   \item The v1 note's FoMs at $0.075\hMpc$ remain the linear-bias
     reference, not a final forecast.
 \end{itemize}
@@ -360,7 +371,7 @@ for a constant.  The subsection ``The white-noise limit of the renormalized loop
 \texttt{notes/higher\_order\_bias} derives the constant and the
 treatment.
 
-\subsection{The fit: linear response of each rung}
+\subsection{The fit: linear response under each prior}
 \label{sec:response}
 
 Let $m$ be the expected data vector, $\Cov$ its covariance on the
@@ -369,11 +380,12 @@ square degrees), and $\mathsf{D} = \partial m/\partial p$ the matrix
 of derivatives of the linear-bias model with respect to the fitted
 parameters $p$.  These are the seven cosmological parameters
 ($10^9 A_s$, $n_s$, $H_0$, $\Omega_b$, $\Omega_m$, $w_0$, $w_a$,
-flat priors), the rung's bias parameters, and the per-group velocity
-dispersions with their Gaussian priors.  The rung's Fisher matrix is
+flat priors), the bias parameters of the linear-bias prior, and the
+per-group velocity dispersions with their Gaussian priors.  The fit's
+Fisher matrix is
 $F = \mathsf{D}\T \Cov^{-1} \mathsf{D} + F_{\rm priors}$, where
-$F_{\rm priors}$ holds the velocity-dispersion priors and, on the
-baseline and pessimistic rungs, the projected precision of the bias
+$F_{\rm priors}$ holds the velocity-dispersion priors and, under the
+baseline and pessimistic priors, the projected precision of the bias
 prior derived in the v1 note.
 
 If the data are the truth $m_{\rm truth}$ while the model at the
@@ -387,16 +399,16 @@ difference the best fit moves by
 The derivation is one line: at the old best fit the gradient of the
 log posterior becomes $\mathsf{D}\T \Cov^{-1}(m_{\rm truth} - m_{\rm
 lin})$ instead of zero, and $F$ is the curvature that converts that
-gradient into a parameter displacement.  The tied rung uses the
-cached tied derivatives, one bias column per group.  The other rungs
-use the per-bin derivatives, one bias column per bin.  Both sets come
+gradient into a parameter displacement.  The growth-tied prior uses
+the cached growth-tied derivatives, one bias column per group.  The
+other priors use the per-bin derivatives, one bias column per bin.  Both sets come
 from the linear notebook (\texttt{EXAMPLE\_EVALUATE\_FISHER.ipynb}).
 
 \subsection{The scores and the threshold}
 \label{sec:scores}
 
 With $\delta w$ the $(w_0, w_a)$ entries of $\delta p$ and $\Cov_w$
-the $(w_0, w_a)$ block of $F^{-1}$, the rung's marginalized
+the $(w_0, w_a)$ block of $F^{-1}$, the fit's marginalized
 $2 \times 2$ covariance, the $(w_0, w_a)$ shift is
 \begin{equation}
   \Delta_w \;=\; \sqrt{\delta w\T\, \Cov_w^{-1}\, \delta w} ,
@@ -409,7 +421,7 @@ $\sigma_p = \sqrt{(F^{-1})_{pp}}$ its marginalized error.  The
 threshold is $1/3$, as in the v1 note.  A shift of $\sigma/3$ added
 in quadrature to a $1\sigma$ error gives $\sqrt{1 + 1/9} = 1.05$, so
 below the threshold the total error grows by at most about $5\%$.
-Both the response and the error use the same rung's $F$.
+Both the response and the error use the same fit's $F$.
 
 \subsection{The cut, cuts without data, and the safe $\kmax$}
 \label{sec:cut}
@@ -441,7 +453,7 @@ without a fit neither passes nor fails, so the scan skips it.
 \label{app:tables}
 
 Table~\ref{tab:shifts} lists the shifts of a linear fit to the
-calibrated truth at the two smallest cuts, with each rung's FoM.
+calibrated truth at the two smallest cuts, with each fit's FoM.
 Table~\ref{tab:worst} lists, at $\kmax = 0.05\hMpc$, the largest shift
 over all five truths and the three scores, which decides the ``every
 truth'' column of Table~\ref{tab:safe}.
@@ -454,37 +466,38 @@ truth'' column of Table~\ref{tab:safe}.
     \hline
     & & \multicolumn{4}{c}{$\kmax = 0.05\hMpc$}
       & \multicolumn{4}{c}{$\kmax = 0.075\hMpc$} \\
-    Layout & Rung & $\Delta_w$ & $\Omega_m$ & $A_s$ & FoM
+    Layout & Prior & $\Delta_w$ & $\Omega_m$ & $A_s$ & FoM
       & $\Delta_w$ & $\Omega_m$ & $A_s$ & FoM \\
     \hline
-$\Delta d_{\rm com} = 62$~Mpc & tied & $0.0289$ & $0.0821$ & $0.0285$ & $2.19$ & $0.681$ & $2.42$ & $1.18$ & $32.9$ \\
+$\Delta d_{\rm com} = 62$~Mpc & growth-tied & $0.0289$ & $0.0821$ & $0.0285$ & $2.19$ & $0.681$ & $2.42$ & $1.18$ & $32.9$ \\
  & baseline & $0.0161$ & $0.0137$ & $0.0237$ & $1.54$ & $1.08$ & $2.35$ & $0.868$ & $18.2$ \\
  & pessimistic & $0.0154$ & $0.0108$ & $0.0253$ & $0.855$ & $1.12$ & $2.03$ & $0.884$ & $11.4$ \\
- & independent & $0.0573$ & $0.0488$ & $0.0604$ & $0.145$ & $1.13$ & $1.98$ & $0.887$ & $10.7$ \\
+ & free & $0.0573$ & $0.0488$ & $0.0604$ & $0.145$ & $1.13$ & $1.98$ & $0.887$ & $10.7$ \\
 \hline
-$\Delta z = 0.02$ & tied & \multicolumn{4}{c}{no band kept} & $0.474$ & $1.12$ & $0.806$ & $19.9$ \\
+$\Delta z = 0.02$ & growth-tied & \multicolumn{4}{c}{no band kept} & $0.474$ & $1.12$ & $0.806$ & $19.9$ \\
  & baseline & \multicolumn{4}{c}{no band kept} & $0.477$ & $1.05$ & $0.659$ & $12.5$ \\
  & pessimistic & \multicolumn{4}{c}{no band kept} & $0.636$ & $1.12$ & $0.762$ & $7.41$ \\
- & independent & \multicolumn{4}{c}{no band kept} & $1.06$ & $1.38$ & $1.11$ & $4.02$ \\
+ & free & \multicolumn{4}{c}{no band kept} & $1.06$ & $1.38$ & $1.11$ & $4.02$ \\
 \hline
-$\Delta z = 0.05$ & tied & $0.0971$ & $0.0756$ & $0.0898$ & $1.90$ & $0.865$ & $2.32$ & $0.579$ & $8.29$ \\
+$\Delta z = 0.05$ & growth-tied & $0.0971$ & $0.0756$ & $0.0898$ & $1.90$ & $0.865$ & $2.32$ & $0.579$ & $8.29$ \\
  & baseline & $0.268$ & $0.0225$ & $0.106$ & $0.655$ & $1.80$ & $0.162$ & $0.920$ & $1.96$ \\
  & pessimistic & $0.474$ & $0.267$ & $0.261$ & $0.374$ & $2.02$ & $0.542$ & $1.28$ & $1.33$ \\
- & independent & $0.559$ & $0.369$ & $0.340$ & $0.317$ & $2.09$ & $0.710$ & $1.38$ & $1.23$ \\
+ & free & $0.559$ & $0.369$ & $0.340$ & $0.317$ & $2.09$ & $0.710$ & $1.38$ & $1.23$ \\
 \hline
-$\Delta z = 0.2$ & tied & $0.413$ & $0.198$ & $0.156$ & $0.733$ & $1.00$ & $0.941$ & $0.125$ & $1.91$ \\
+$\Delta z = 0.2$ & growth-tied & $0.413$ & $0.198$ & $0.156$ & $0.733$ & $1.00$ & $0.941$ & $0.125$ & $1.91$ \\
  & baseline & $0.541$ & $0.190$ & $0.228$ & $0.205$ & $1.35$ & $0.310$ & $0.435$ & $0.515$ \\
  & pessimistic & $0.541$ & $0.190$ & $0.228$ & $0.205$ & $1.35$ & $0.310$ & $0.435$ & $0.515$ \\
- & independent & $0.541$ & $0.190$ & $0.228$ & $0.205$ & $1.35$ & $0.310$ & $0.435$ & $0.515$ \\
+ & free & $0.541$ & $0.190$ & $0.228$ & $0.205$ & $1.35$ & $0.310$ & $0.435$ & $0.515$ \\
     \hline
   \end{tabular}
   \caption{The shifts of a linear-bias fit to the calibrated one-loop
-    truth: $\Delta_w$ of Eq.~\eqref{eq:shiftw} in units of the rung's
+    truth: $\Delta_w$ of Eq.~\eqref{eq:shiftw} in units of the fit's
     $(w_0, w_a)$ ellipse, and the $\Omega_m$ and $A_s$ shifts in
     units of their own marginalized $\sigma$; the threshold is $1/3$.
-    FoM: ${\rm FoM}(w_0, w_a)$ of the rung at that cut.  ``no band
+    FoM: ${\rm FoM}(w_0, w_a)$ of the fit at that cut.  ``no band
     kept'': the cut leaves no data, so there is no fit.  On
-    $\Delta z = 0.2$ the three lower rungs coincide.  $\kmax$ quoted
+    $\Delta z = 0.2$ the baseline, pessimistic and free priors
+    coincide.  $\kmax$ quoted
     at $z = 0$; each bin is cut by the UV-fraction criterion at
     $\kmax/D(\bar{z}_i)$ ($\alpha = 0.05$) within the shipped mask.}
   \label{tab:shifts}
@@ -494,22 +507,22 @@ $\Delta z = 0.2$ & tied & $0.413$ & $0.198$ & $0.156$ & $0.733$ & $1.00$ & $0.94
   \centering
   \begin{tabular}{llccc}
     \hline
-    Layout & Rung & largest shift & score & truth \\
+    Layout & Prior & largest shift & score & truth \\
     \hline
-$\Delta d_{\rm com} = 62$~Mpc & tied & $0.171$ & $A_s$ & $b_2 - 1$ \\
+$\Delta d_{\rm com} = 62$~Mpc & growth-tied & $0.171$ & $A_s$ & $b_2 - 1$ \\
  & baseline & $0.147$ & $A_s$ & $b_2 - 1$ \\
  & pessimistic & $0.142$ & $A_s$ & $b_2 - 1$ \\
- & independent & $0.144$ & $A_s$ & $\alpha_0 = -12.5$ \\
+ & free & $0.144$ & $A_s$ & $\alpha_0 = -12.5$ \\
 \hline
-$\Delta z = 0.05$ & tied & $0.345$ & $A_s$ & $\alpha_0 = -12.5$ \\
+$\Delta z = 0.05$ & growth-tied & $0.345$ & $A_s$ & $\alpha_0 = -12.5$ \\
  & baseline & $0.492$ & $(w_0, w_a)$ & $b_2 - 1$ \\
  & pessimistic & $0.838$ & $(w_0, w_a)$ & $b_2 - 1$ \\
- & independent & $0.982$ & $(w_0, w_a)$ & $b_2 - 1$ \\
+ & free & $0.982$ & $(w_0, w_a)$ & $b_2 - 1$ \\
 \hline
-$\Delta z = 0.2$ & tied & $1.06$ & $(w_0, w_a)$ & $b_2 - 1$ \\
+$\Delta z = 0.2$ & growth-tied & $1.06$ & $(w_0, w_a)$ & $b_2 - 1$ \\
  & baseline & $1.19$ & $(w_0, w_a)$ & $\alpha_0 = -12.5$ \\
  & pessimistic & $1.19$ & $(w_0, w_a)$ & $\alpha_0 = -12.5$ \\
- & independent & $1.19$ & $(w_0, w_a)$ & $\alpha_0 = -12.5$ \\
+ & free & $1.19$ & $(w_0, w_a)$ & $\alpha_0 = -12.5$ \\
     \hline
   \end{tabular}
   \caption{The largest shift at $\kmax = 0.05\hMpc$ over the five
@@ -524,30 +537,32 @@ $\Delta z = 0.2$ & tied & $1.06$ & $(w_0, w_a)$ & $b_2 - 1$ \\
 Four readings of the tables.
 
 \emph{The $62$~Mpc pass is comfortable.}  At $\kmax = 0.05\hMpc$ no
-truth brings any rung above $0.171$, half the threshold.  The step to
+truth brings any prior above $0.171$, half the threshold.  The step to
 $0.075$ multiplies the shifts of the calibrated truth by factors of
 $15$ to $190$.
 
-\emph{The $\Delta z = 0.05$ pass is fragile.}  The tied and baseline
-rungs pass on the calibrations, the baseline with a $(w_0, w_a)$
-shift of $0.268$, and both fail for one bracket: the tied rung on
-$A_s$ at $\alpha_0 = -12.5$, the baseline on $(w_0, w_a)$ at
-$b_2 - 1$.  The pessimistic and independent rungs fail on the
+\emph{The $\Delta z = 0.05$ pass is fragile.}  The growth-tied and
+baseline priors pass on the calibrations, the baseline prior with a
+$(w_0, w_a)$ shift of $0.268$, and both fail for one bracket: the
+growth-tied prior on $A_s$ at $\alpha_0 = -12.5$, the baseline prior
+on $(w_0, w_a)$ at
+$b_2 - 1$.  The pessimistic and free priors fail on the
 calibrations already.
 
 \emph{More bias freedom moves the error.}  At $0.075$ on
-$\Delta z = 0.05$ the tied rung puts most of the residual into
-$\Omega_m$ ($2.32$) and the per-bin rungs into $(w_0, w_a)$
+$\Delta z = 0.05$ the growth-tied prior puts most of the residual into
+$\Omega_m$ ($2.32$) and the baseline, pessimistic and free priors
+into $(w_0, w_a)$
 ($1.80$--$2.09$), while their $\Omega_m$ shift drops to
-$0.162$--$0.710$.  On $\Delta z = 0.2$ the tied rung has the smaller
-$A_s$ shift ($0.125$ against $0.435$) but no rung passes.
+$0.162$--$0.710$.  On $\Delta z = 0.2$ the growth-tied prior has the smaller
+$A_s$ shift ($0.125$ against $0.435$) but no prior passes.
 
 \emph{At the safe cut, the brackets below the calibration decide.}
 The negative brackets, $b_2 - 1$ and $\alpha_0 = -12.5$, give the
 largest shift in every fitted case of Table~\ref{tab:worst}.  At
-$0.075$ every truth fails on every rung and layout; there the
-brackets reach $3.63\sigma$ in $\Omega_m$ (tied rung, $b_2 + 1$,
-$\Delta z = 0.05$) and $4.55$ in $(w_0, w_a)$ (independent rung,
+$0.075$ every truth fails under every prior and on every layout; there the
+brackets reach $3.63\sigma$ in $\Omega_m$ (growth-tied prior, $b_2 + 1$,
+$\Delta z = 0.05$) and $4.55$ in $(w_0, w_a)$ (free prior,
 $b_2 - 1$, $\Delta z = 0.05$).
 
 \section{Numerical checks}
@@ -568,16 +583,16 @@ $b_2 - 1$, $\Delta z = 0.05$).
     $1.6\%$, $2.3\%$ and $1.9\%$ of the linear band powers on
     $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$ and
     $0.2$.
-  \item \textbf{The rungs are the v1 rungs.}  The FoMs at
+  \item \textbf{The priors are the v1 priors.}  The FoMs at
     $\kmax = 0.075\hMpc$ in Table~\ref{tab:shifts} equal the v1
     ladder, from $32.9$, $18.2$, $11.4$ and $10.7$ on
     $\Delta d_{\rm com} = 62$~Mpc to $1.91$ and $0.515$ on
     $\Delta z = 0.2$.
   \item \textbf{The truths are the v1 truths.}  The drifts and the
     $2000$ random truths are drawn with the v1 seed and order.  The
-    matched cases reproduce the v1 $(w_0, w_a)$ error inflation within
+    matched cases reproduce the v1 $(w_0, w_a)$ goodness of fit within
     $0.019$ of $1$, and the drift-only $(w_0, w_a)$ shifts of the
-    tied rung, $17.4$, $12.4$, $21.5$ and $10.9$ for the
+    growth-tied prior, $17.4$, $12.4$, $21.5$ and $10.9$ for the
     conserved-population drift, equal the v1 table.
   \item \textbf{The white-noise constant.}  The truths use the exact
     projection of the one-loop white-noise constant

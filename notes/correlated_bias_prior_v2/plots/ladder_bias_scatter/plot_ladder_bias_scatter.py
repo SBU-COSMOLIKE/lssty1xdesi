@@ -51,6 +51,10 @@ with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
 rungs = [r['key'] for r in data['rungs']]
 x = np.arange(len(rungs))
+# the names the figures print for the linear-bias priors (the data keys
+# keep the notebook's names)
+DISPLAY = {'tied': 'growth-tied', 'baseline': 'baseline',
+           'pessimistic': 'pessimistic', 'independent': 'free'}
 panels = [(t, f'truth: known drifts + {t} scatter') for t in data['truths']]
 panels.append(('calibration_drift',
                rf'truth: $b_2$ and $b_{{s^2}}$ offsets drifting by '
@@ -85,7 +89,7 @@ for ax, (truth, title) in zip(axes, panels):
     ax.set_ylabel(r'$(w_0, w_a)$ shift [$\sigma$]')
     ax.set_title(title, fontsize=10.5)
 axes[-1].set_xticks(x)
-axes[-1].set_xticklabels([f'fit:\n{r["label"]}' for r in data['rungs']])
+axes[-1].set_xticklabels([f'fit:\n{DISPLAY[r["key"]]}' for r in data['rungs']])
 axes[-1].set_xlim(-0.45, x[-1] + 0.8)
 handles = [Line2D([], [], ls='none', marker='o', ms=5.0, mfc=lay['color'], mec=lay['color'],
                   label=lay['label']) for lay in data['layouts']]
