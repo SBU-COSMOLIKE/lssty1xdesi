@@ -8,11 +8,12 @@ notes/correlated_bias_prior_v2/plots/fom_kmax_models/plot_fom_kmax_models.py
 (its column (c)).
 
 One column of a two-column paper, three stacked panels on one shared
-logarithmic y axis: the (w0, wa) shift in units of the fit's ellipse, and
-the Omega_m and A_s shifts in their own marginalized sigma, each the largest
-over the truths. Each bin layout has a color, a line width and a marker at
-every cut. The dotted line is sigma/3; it has no legend entry (the caption
-names it). A shift below SHIFT_FLOOR is drawn on the floor. k_max is the
+linear y axis, from 0 to the round value just above the largest shift: the
+(w0, wa) shift in units of the fit's ellipse, and the Omega_m and A_s shifts
+in their own marginalized sigma, each the largest over the truths. Each bin
+layout has a color, a line width and a marker at every cut. The dotted line
+is sigma/3; it has no legend entry but a small "sigma/3" text near its right
+end, in the first panel where the text clears every line. k_max is the
 z = 0 value of a per-bin cut at k_max/D(zbar_i); cuts up to KMAX_MAX are
 drawn.
 
@@ -28,7 +29,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
-from matplotlib.ticker import FuncFormatter, LogLocator, NullFormatter
+from matplotlib.ticker import FuncFormatter, MultipleLocator
 
 # Figure style of the whole notebook: the shared plotting functions never change
 # rcParams, so these lines set every font, tick and grid default.
@@ -73,18 +74,22 @@ REFERENCE_SPAN = 1.5
 KMAX_MAX = 0.2
 # the k_max labels compare floats from data.json
 KMAX_TOLERANCE = 1.0e-9
-# a shift that is exactly zero is drawn on this floor of the log axis
-SHIFT_FLOOR = 1.0e-3
-# The anchors a text may take inside a panel, in axes units (x, y,
-# horizontal and vertical alignment), and the headroom factors of a log
-# axis tried in turn until every text finds a corner free of lines.
-CORNERS = {
-    'upper left': (0.04, 0.93, 'left', 'top'),
-    'upper right': (0.96, 0.93, 'right', 'top'),
-    'lower right': (0.96, 0.07, 'right', 'bottom'),
-    'lower left': (0.04, 0.07, 'left', 'bottom'),
-}
-HEADROOM = [1.6, 2.2, 3.0, 4.5, 7.0, 10.0]
+# the round values the top of the shared y axis can take [sigma]: the
+# smallest one at or above Y_MARGIN times the largest shift is used, so the
+# highest marker stays inside the panel
+ROUND_TOPS = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.5, 2.0, 3.0, 5.0]
+Y_MARGIN = 1.1
+# the spacing of the labeled and of the unlabeled y ticks [sigma]
+Y_MAJOR = 0.2
+Y_MINOR = 0.1
+# The "sigma/3" text of the threshold line: its font size [pt], its
+# horizontal anchor (axes units, right-aligned near the line's right end)
+# and its vertical gap from the line [pt]. It sits just above the line,
+# else just below, in the first panel (top to bottom) where it clears every
+# line, a marker radius included.
+THRESHOLD_TEXT_SIZE = 7.5
+THRESHOLD_TEXT_X = 0.985
+THRESHOLD_TEXT_GAP = 1.5
 # the height of one panel [in]
 PANEL_HEIGHT = 1.15
 # the panels, top to bottom: data.json score and its name, on the right side
@@ -113,20 +118,23 @@ def as_array(values, floor=None):
 
 
 def plain_number(value, position):
-    '''A tick label as a plain number: 0.01, 0.1, 1, 10 (position is unused).'''
+    '''A tick label as a plain number: 0, 0.2, 0.4 (position is unused).'''
     return f'{value:g}'
 
 
-def line_points(ax):
+def line_points(ax, skip=()):
     '''Display coordinates of points densely sampled along every drawn line of
-    ax (the reference lines included), inside the axes only.
+    ax (the reference lines included), inside the axes only; the lines in
+    skip are left out.
 
     Each line's own transform maps its data to the display (an axhline keeps
-    x in axes units), and the segments are sampled in display space, which is
-    where a straight segment of a log axis is straight.'''
+    x in axes units), and the segments are sampled in display space, where a
+    segment is straight on any axis scale.'''
     box = ax.get_window_extent()
     pts = [np.zeros((0, 2))]
     for line in ax.get_lines():
+        if line in skip:
+            continue
         xy = np.column_stack([np.asarray(v, dtype=float) for v in line.get_data()])
         display_xy = line.get_transform().transform(xy)
         finite = np.all(np.isfinite(display_xy), axis=1)
@@ -141,11 +149,12 @@ def line_points(ax):
     return pts[inside]
 
 
-def touches_lines(box, axes):
-    '''True when a display box, with a 3% / 8% margin, holds a point of a line.'''
+def touches_lines(box, axes, skip=()):
+    '''True when a display box, with a 3% / 8% margin, holds a point of a line
+    (the lines in skip left out).'''
     padded = box.expanded(1.03, 1.08)
     for ax in axes:
-        pts = line_points(ax)
+        pts = line_points(ax, skip)
         hit = ((pts[:, 0] > padded.x0) & (pts[:, 0] < padded.x1)
                & (pts[:, 1] > padded.y0) & (pts[:, 1] < padded.y1))
         if np.any(hit):
@@ -153,22 +162,33 @@ def touches_lines(box, axes):
     return False
 
 
-def place_text(fig, axes, ax, text, corner, keep_clear):
-    '''Put a text in one corner of a panel; None (text removed) when it
-    touches a line or overlaps one of the artists keep_clear.'''
+def place_threshold_text(fig, axes, threshold_lines):
+    '''Write "sigma/3" next to the threshold line near its right end: just
+    above the line, else just below, in the first panel (top to bottom)
+    where the text stays inside the panel and clears every line, the
+    threshold lines included; against the data lines its box is also grown
+    by a marker radius. Raise when no panel has room.'''
     renderer = fig.canvas.get_renderer()
-    x, y, ha, va = CORNERS[corner]
-    candidate = ax.text(x, y, text, transform=ax.transAxes, ha=ha, va=va, fontsize=8)
-    fig.canvas.draw()
-    box = candidate.get_window_extent(renderer)
-    clear = not touches_lines(box, axes)
-    for other in keep_clear:
-        if box.overlaps(other.get_window_extent(renderer)):
-            clear = False
-    if not clear:
-        candidate.remove()
-        return None
-    return candidate
+    # a marker radius in display units: line_points samples the line centers
+    radius = 0.5*MARKER_SIZE*fig.dpi/72.0
+    for ax in axes:
+        for sign, va in ((1.0, 'bottom'), (-1.0, 'top')):
+            candidate = ax.annotate(
+                r'$\sigma/3$', xy=(THRESHOLD_TEXT_X, threshold),
+                xycoords=('axes fraction', 'data'),
+                xytext=(0.0, sign*THRESHOLD_TEXT_GAP), textcoords='offset points',
+                ha='right', va=va, fontsize=THRESHOLD_TEXT_SIZE)
+            fig.canvas.draw()
+            box = candidate.get_window_extent(renderer)
+            span = ax.get_window_extent(renderer)
+            inside = (box.x0 >= span.x0 and box.x1 <= span.x1
+                      and box.y0 >= span.y0 and box.y1 <= span.y1)
+            clear = (not touches_lines(box, axes)
+                     and not touches_lines(box.padded(radius), axes, skip=threshold_lines))
+            if inside and clear:
+                return candidate
+            candidate.remove()
+    raise RuntimeError('summary_shifts_kmax: the sigma/3 text touches a line in every panel')
 
 
 def check_labels_off_ticks(fig, axes, labels, name):
@@ -220,25 +240,28 @@ fig, axes = plt.subplots(len(PANELS), 1, figsize=(3.5, PANEL_HEIGHT*len(PANELS))
                          sharex=True, sharey=True, gridspec_kw={'hspace': 0.06})
 flat = list(axes)
 values = [threshold]
+threshold_lines = []
 for ax, (score, name) in zip(axes, PANELS):
     for lay in layouts:
         st = LAYOUT_STYLE[lay['name']]
-        y = as_array(lay['largest'][score], floor=SHIFT_FLOOR)
+        y = as_array(lay['largest'][score])
+        # unclipped, so a marker near a shift of 0 shows whole on the axis
         ax.plot(kmax, y, color=lay['color'], lw=st['lw'], marker=st['marker'],
-                ms=MARKER_SIZE)
+                ms=MARKER_SIZE, clip_on=False)
         values += [float(v) for v in y[np.isfinite(y)]]
-    ax.axhline(threshold, **THRESHOLD_STYLE)
+    threshold_lines.append(ax.axhline(threshold, **THRESHOLD_STYLE))
     ax.grid(False, axis='x')
     # the score's name on the right side, rotated like a y label, so it can
     # never sit on the data
     ax.yaxis.set_label_position('right')
     ax.set_ylabel(name, rotation=90, fontsize=10, labelpad=5)
-axes[0].set_yscale('log')
-# a label on every decade, as plain numbers, no minor labels
-axes[0].yaxis.set_major_locator(LogLocator(base=10.0, numticks=15))
+# a linear axis from 0, so the shifts and the threshold read directly; the
+# tick labels as plain numbers (0, 0.2, 0.4, ...)
+y_top = next(top for top in ROUND_TOPS if top >= Y_MARGIN*max(values))
+axes[0].set_ylim(0.0, y_top)
+axes[0].yaxis.set_major_locator(MultipleLocator(Y_MAJOR))
+axes[0].yaxis.set_minor_locator(MultipleLocator(Y_MINOR))
 axes[0].yaxis.set_major_formatter(FuncFormatter(plain_number))
-axes[0].yaxis.set_minor_formatter(NullFormatter())
-axes[0].set_ylim(min(values)/1.5, max(values)*1.5)
 axes[-1].set_xlim(kmax[0] - 0.01, kmax[-1] + 0.01)
 axes[-1].set_xticks([0.05, 0.1, 0.15, 0.2])
 axes[-1].set_xticklabels(['0.05', '0.1', '0.15', '0.2'])
@@ -260,10 +283,12 @@ layout_legend = axes[0].legend(
     loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=2, frameon=False, fontsize=8,
     handlelength=2.2, columnspacing=1.2, handletextpad=0.5, labelspacing=0.25,
     borderaxespad=0.2, borderpad=0.1)
+threshold_text = place_threshold_text(fig, flat, threshold_lines)
 check_clear(fig, flat, [layout_legend, supylabel, axes[-1].xaxis.label,
-                        *[ax.yaxis.label for ax in axes]])
+                        *[ax.yaxis.label for ax in axes], threshold_text])
 check_labels_off_ticks(fig, flat, [supylabel, axes[-1].xaxis.label,
-                                   *[ax.yaxis.label for ax in axes]], 'summary_shifts_kmax')
+                                   *[ax.yaxis.label for ax in axes], threshold_text],
+                       'summary_shifts_kmax')
 fig.savefig(os.path.join(HERE, 'summary_shifts_kmax.pdf'))
 fig.savefig(os.path.join(HERE, 'summary_shifts_kmax.png'), dpi=300)
 plt.close(fig)

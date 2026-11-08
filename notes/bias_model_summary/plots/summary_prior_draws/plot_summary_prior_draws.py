@@ -5,12 +5,14 @@ history sharing the drift's straight line. The figure names no prior: the
 paper has one, and the caption gives its L.
 
 One column of a two-column paper: one panel per group, two rows of three.
-Each panel is divided by one constant delta_g, a round number just above
-the group's largest |delta| (written in the panel), so every panel shares
-the same y axis. Thick black lines: the known drifts (dashed, a conserved
-population; dash-dot, the BGS flux limit). Thin lines: four draws, each
-with its own color and marker, so a draw can be followed in black and
-white. data.json is the pessimistic row of
+Each panel is divided by one scale, a round percentage just above the
+group's largest |delta| (written in the panel as "scale 20%"), so every
+panel shares the same y axis. Thick black lines: the known drifts (dashed,
+a conserved population; dash-dot, the BGS flux limit). Thin lines: four
+draws in neutral grays, each with its own shade, line width and marker, so
+a draw can be followed in black and white and never reads as a bin layout
+(the layouts own the Okabe-Ito colors and the markers o, s, D, ^ in the
+other figures of the note). data.json is the pessimistic row of
 notes/correlated_bias_prior_v2/plots/prior_draws/data.json, copied by
 EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb.
 Run from any folder: python plot_summary_prior_draws.py
@@ -22,6 +24,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.legend_handler import HandlerTuple
 from matplotlib.lines import Line2D
 from matplotlib.ticker import MaxNLocator
 
@@ -47,18 +50,24 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.format'] = 'pdf'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# colorblind-safe colors (Okabe-Ito, without its green; no red or green),
-# all distinct from the black drift lines
-DRAW_COLORS = ['#0072B2', '#E69F00', '#56B4E9', '#CC79A7']
-# each draw also has its own marker, so a draw can be followed through the
-# crossings in black and white
-DRAW_MARKERS = ['o', 's', '^', 'D']
-# the marker size of the draws [pt]
-DRAW_MARKER_SIZE = 2.3
+# The four draws: a gray shade, a line width [pt] and a marker each, darkest
+# and widest first, so a draw can be followed through the crossings in
+# black and white. The grays keep the draws apart from the bin layouts,
+# which own the Okabe-Ito colors in the other figures, and the markers are
+# none of the layout markers (o, s, D, ^) or the markers of the untied
+# versions (<, >, p, h, x) of this note. A star looks smaller than the other
+# markers at the same size, so it gets a larger one [pt]. Every draw is thin
+# and solid; the drifts are thick, black and dashed.
+DRAW_STYLES = [
+    {'color': '0.10', 'lw': 1.05, 'marker': 'v', 'ms': 2.8},
+    {'color': '0.36', 'lw': 0.85, 'marker': 'X', 'ms': 2.8},
+    {'color': '0.55', 'lw': 0.65, 'marker': 'P', 'ms': 2.8},
+    {'color': '0.70', 'lw': 0.50, 'marker': '*', 'ms': 3.6},
+]
 LAW_STYLE = {'conserved': {'ls': '--', 'label': 'conserved population'},
              'flux_limit': {'ls': '-.', 'label': r'BGS flux limit $r < 19.5$'}}
-# the round values a panel's scale delta_g can take [%]: the smallest one at
-# or above the group's largest |delta| is used
+# the round values a panel's scale can take [%]: the smallest one at or
+# above the group's largest |delta| is used
 ROUND_SCALES = [2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20, 25, 30, 40, 50]
 # the grid of panels: rows and columns
 GRID = (2, 3)
@@ -69,8 +78,8 @@ groups = data['groups']
 
 
 def panel_scale(group):
-    '''delta_g [%] of one group: the smallest ROUND_SCALES value at or above
-    the largest |delta| of its drifts and draws.'''
+    '''The scale [%] of one group: the smallest ROUND_SCALES value at or
+    above the largest |delta| of its drifts and draws.'''
     values = [np.abs(np.array(v)).max() for v in group['laws'].values()]
     values += [np.abs(np.array(draw)).max() for draw in group['draws']]
     largest = 100.0*max(values)
@@ -138,9 +147,11 @@ flat = list(axes.ravel())
 scales = [panel_scale(group) for group in groups]
 for ax, group, scale in zip(flat, groups, scales):
     z = np.array(group['z'])
-    for draw, color, marker in zip(group['draws'], DRAW_COLORS, DRAW_MARKERS):
-        ax.plot(z, 100.0*np.array(draw)/scale, color=color, lw=0.7, marker=marker,
-                ms=DRAW_MARKER_SIZE, alpha=0.85)
+    if len(group['draws']) > len(DRAW_STYLES):
+        raise RuntimeError(f'summary_prior_draws: {group["name"]} has '
+                           f'{len(group["draws"])} draws, DRAW_STYLES only {len(DRAW_STYLES)}')
+    for draw, style in zip(group['draws'], DRAW_STYLES):
+        ax.plot(z, 100.0*np.array(draw)/scale, mew=0.0, **style)
     for law, values in group['laws'].items():
         ax.plot(z, 100.0*np.array(values)/scale, color='black', lw=1.5,
                 ls=LAW_STYLE[law]['ls'])
@@ -153,7 +164,7 @@ for ax, group, scale in zip(flat, groups, scales):
     ticks = ticks[(ticks >= z[0]) & (ticks <= z[-1])]
     ax.set_xticks(ticks[[0, -1]] if len(ticks) > 2 else ticks)
 flat[0].set_yticks([-1, 0, 1])
-supylabel = fig.supylabel(r'$\delta(z)/\delta_g$', fontsize=9, x=0.02)
+supylabel = fig.supylabel(r'$\delta(z)$ / scale', fontsize=9, x=0.02)
 # the shared x label just under the lowest tick label, so they never touch
 fig.canvas.draw()
 tick_bottom = min(label.get_window_extent(fig.canvas.get_renderer()).y0
@@ -165,9 +176,8 @@ supxlabel = fig.supxlabel(r'redshift $z$', fontsize=9, y=tick_bottom - 0.01, va=
 # gets the least headroom at which every label clears the data.
 fig.canvas.draw()
 renderer = fig.canvas.get_renderer()
-labels = [ax.text(0.05, 0.95, f'{group["name"]}\n' + rf'$\delta_g = {scale}$%',
-                  transform=ax.transAxes, ha='left', va='top', fontsize=6.5,
-                  linespacing=1.1)
+labels = [ax.text(0.05, 0.95, f'{group["name"]}, scale {scale}%',
+                  transform=ax.transAxes, ha='left', va='top', fontsize=6.5)
           for ax, group, scale in zip(flat, groups, scales)]
 for headroom in np.arange(1.05, 2.51, 0.05):
     flat[0].set_ylim(-1.05, headroom)
@@ -176,15 +186,25 @@ for headroom in np.arange(1.05, 2.51, 0.05):
         break
 else:
     raise RuntimeError('a panel label touches the data at every headroom')
+# the one-line label must also fit inside its narrow panel
+for ax, label in zip(flat, labels):
+    box = label.get_window_extent(renderer)
+    span = ax.get_window_extent(renderer)
+    if box.x0 < span.x0 or box.x1 > span.x1 or box.y0 < span.y0 or box.y1 > span.y1:
+        raise RuntimeError(f'summary_prior_draws: the label "{label.get_text()}" '
+                           f'leaves its panel')
 
 handles = [Line2D([], [], color='black', lw=1.5, ls=LAW_STYLE[k]['ls'],
                   label=LAW_STYLE[k]['label'])
            for k in ('conserved', 'flux_limit')]
-handles.append(Line2D([], [], color='0.45', lw=0.7, marker='o', ms=DRAW_MARKER_SIZE,
-                      label='prior draws'))
-fig.legend(handles=handles, loc='lower center', ncol=2, frameon=False, fontsize=7.5,
-           bbox_to_anchor=(0.5, 0.9), handlelength=2.4, columnspacing=1.0,
-           labelspacing=0.3)
+# the draws' entry shows the four drawn styles side by side (one marker each)
+handles.append(tuple(Line2D([], [], mew=0.0, **style)
+                     for style in DRAW_STYLES))
+legend_labels = [h.get_label() for h in handles[:-1]] + ['prior draws']
+fig.legend(handles=handles, labels=legend_labels, loc='lower center', ncol=2,
+           frameon=False, fontsize=7.5, bbox_to_anchor=(0.5, 0.9), handlelength=3.6,
+           columnspacing=1.0, labelspacing=0.3,
+           handler_map={tuple: HandlerTuple(ndivide=None, pad=0.3)})
 # the legend sits above the panels: it must not overlap any of them
 fig.canvas.draw()
 legend_box = fig.legends[0].get_window_extent(fig.canvas.get_renderer())

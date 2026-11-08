@@ -493,11 +493,11 @@ drift and add local features of a few percent.
   \begin{minipage}[c]{\dimexpr\linewidth-3.3in-\sidegap\relax}
   \captionsetup{justification=raggedright,singlelinecheck=false}
   \caption{Four draws of the prior on the $\Delta z = 0.02$ bins, one
-    panel per group, each panel divided by the round constant
-    $\delta_g$ written in it.  Thick black dashed: the
-    conserved-population drift; thick black dash-dot (BGS only): the
-    $r < 19.5$ flux-limit drift.  Thin lines: the draws of $\delta(z)$,
-    each with its own color and marker (draws, not layouts).  Every
+    panel per group, each panel divided by the round scale written in
+    it.  Thick black dashed: the conserved-population drift; thick
+    black dash-dot (BGS only): the $r < 19.5$ flux-limit drift.  Thin
+    gray lines: the draws of $\delta(z)$, each with its own shade, line
+    width and marker.  Every
     draw keeps the best straight line through its group's reference
     drift, the flux limit in BGS and the conserved population
     elsewhere, and differs from it by a residual drawn with
@@ -581,9 +581,10 @@ cut.
     \CalDriftTwo{} and \CalDriftS{} across each group), which the tilts
     absorb exactly.  Top: $(w_0, w_a)$, in units of the fit's
     marginalized ellipse; middle and bottom: $\Omega_m$ and $A_s$, in
-    units of their marginalized $\sigma$.  Color, line width and
-    marker: the layouts; dotted: $\sigma/3$.  On $\Delta z = 0.02$ the
-    cut at $0.05$ keeps no band.  \kmaxclause}
+    units of their marginalized $\sigma$; the three panels share one
+    linear axis from $0$.  Color, line width and marker: the layouts;
+    dotted line, labeled in place: $\sigma/3$.  On $\Delta z = 0.02$
+    the cut at $0.05$ keeps no band.  \kmaxclause}
   \label{fig:shifts}
   \end{minipage}
 \end{figure}
@@ -643,14 +644,16 @@ ${\rm FoM}(w_0, w_a)$ is below \FoMwSmallCut{}, it costs more.
     ${\rm FoM}(\Omega_m, 10^9 A_s)$ (bottom row), one column per
     layout.  Every version frees $b_{1,i}$ in each bin and gives
     $\Delta_2$, $\Delta_s$, $\alpha_0$, $\alpha_2$, $\SNz$ and $\SNt$
-    one value per bin; $w$ is the width the model gives the group
-    parameter and $N$ the number of bins of the group.  Dotted, open
-    left triangles: width $w$; dash-dot, filled right triangles: width
-    $w\sqrt{N}$; dashed, filled pentagons: width $w\sqrt{N}$ plus a
-    free tilt per group; solid, open hexagons: width $w$ on top of the
-    model's offsets and tilts.  The line width grows in that order.
-    Thin gray line: a ratio of $1$.  On $\Delta z = 0.02$ the cut at
-    $0.05$ keeps no band.  \kmaxclause}
+    one value per bin; the group width is the width the model gives
+    the group parameter, and $N$ the number of bins of the group.
+    Dotted, open left triangles: the group width; dash-dot, filled
+    right triangles: the group width times $\sqrt{N}$; dashed, filled
+    pentagons: the same plus a free tilt per group; solid, open
+    hexagons: the group width on top of the model's offsets and tilts.
+    The line width grows in that order.  Thin gray line: a ratio of
+    $1$.  The cuts start at $\kmax = 0.075\hMpc$: at $0.05\hMpc$ the
+    model's own ${\rm FoM}(w_0, w_a)$ is below \FoMwSmallCut{}.
+    \kmaxclause}
   \label{fig:untied}
 \end{figure}
 

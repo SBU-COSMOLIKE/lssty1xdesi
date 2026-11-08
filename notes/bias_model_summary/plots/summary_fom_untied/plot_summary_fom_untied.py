@@ -5,22 +5,30 @@ against the scale cut k_max. Built from a copy of
 ../summary_fom_free_bins/plot_summary_fom_free_bins.py.
 
 Every version frees b1 per bin (flat prior) and gives Delta_2, Delta_s,
-alpha_0, alpha_2, SN0 and SN2 one value per bin. With w the width the model
-gives a group parameter and N the number of bins of the group:
-  per bin, width w           - no group offsets, no tilts;
-  per bin, width w sqrt(N)   - the group's mean keeps the width w;
-  per bin, width w sqrt(N)
+alpha_0, alpha_2, SN0 and SN2 one value per bin. The group width is the
+width the model gives a group parameter, and N is the number of bins of the
+group (the figure writes no symbol for the width: "w" would read as the
+dark-energy w0, wa):
+  per bin, group width       - no group offsets, no tilts;
+  per bin, group width
+    x sqrt(N)                - the group's mean keeps the group width;
+  per bin, x sqrt(N)
     + group tilt             - plus a flat tilt in redshift per group, as the
                                model has (SN0 and SN2 never tilt);
-  per bin on top of the model - per-bin values of width w added to the
-                               model's group offsets and tilts;
+  per bin, on top of the
+    model                    - per-bin values of the group width added to
+                               the model's group offsets and tilts;
   correlated residuals on top
     of the model             - the model plus a per-bin residual of Delta_2,
                                Delta_s, alpha_0 and alpha_2 (not SN0, SN2),
                                Gaussian and correlated in redshift over
-                               L = 0.05 with width w, charging only the
-                               deviation from the group's line (the nested
-                               version is this with L -> 0, no projection).
+                               L = 0.05 with the group width, charging only
+                               the deviation from the group's line (the
+                               nested version is this with L -> 0, no
+                               projection).
+A version is drawn when data.json holds it, so a version added by a later
+notebook run needs only its entry in VERSIONS; a version of data.json that
+VERSIONS lacks raises an error, since its label and style cannot be guessed.
 
 One full-width figure: two rows, FoM(w0, wa) and FoM(Omega_m, 10^9 A_s),
 each with one shared y axis, by four columns, the bin layouts, each in its
@@ -28,8 +36,10 @@ layout's color. The versions differ by line style, line width and marker
 (never by color alone; the markers differ from the layout markers of the
 other figures). The thin gray line marks a ratio of 1; it has no legend
 entry (the caption names it). k_max is the z = 0 value of a per-bin cut at
-k_max/D(zbar_i); cuts up to KMAX_MAX are drawn. A cut that leaves no data
-(Delta z = 0.02 at 0.05) has no point.
+k_max/D(zbar_i); cuts from KMAX_MIN to KMAX_MAX are drawn. data.json also
+holds k_max = 0.05, where the model's own FoM(w0, wa) is below 0.1 and the
+ratios would dominate the eye; it is not drawn. A cut that leaves no data
+has no point.
 
 data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, also holds the
 FoMs of the model and of every version.
@@ -77,14 +87,17 @@ ROW_HEIGHT = 1.45
 # are none of the layout markers (o, s, D, ^) or prior markers (*, v, X, P)
 # of the other figures. The dash and gap lengths are in points: matplotlib
 # scales a dash pattern by the line width, so dividing by it keeps them fixed.
+# The labels write no symbol for the group width ("w" would read as the
+# dark-energy w0, wa). Adding a version is one entry here; it is drawn once
+# data.json holds its key.
 VERSIONS = [
-    ('gauss', r'per bin, width $w$',
+    ('gauss', 'per bin, group width',
      {'lw': 1.0, 'dash': (1.2, 1.6), 'marker': '<', 'open': True}),
-    ('sqrtn', r'per bin, width $w\sqrt{N}$',
+    ('sqrtn', r'per bin, group width $\times\sqrt{N}$',
      {'lw': 1.4, 'dash': (5.0, 1.8, 1.2, 1.8), 'marker': '>', 'open': False}),
-    ('sqrtn_tilt', r'per bin, width $w\sqrt{N}$ + group tilt',
+    ('sqrtn_tilt', r'per bin, $\times\sqrt{N}$ + group tilt',
      {'lw': 1.8, 'dash': (4.5, 2.2), 'marker': 'p', 'open': False}),
-    ('nested', 'per bin on top of the model',
+    ('nested', 'per bin, on top of the model',
      {'lw': 2.2, 'dash': None, 'marker': 'h', 'open': True}),
     ('correlated_residuals', 'correlated residuals on top of the model',
      {'lw': 1.2, 'dash': (7.0, 1.6, 1.2, 1.6, 1.2, 1.6), 'marker': 'x', 'open': False}),
@@ -97,7 +110,10 @@ ROWS = [('ratio_fom', r'FoM$(w_0, w_a)$'),
         ('ratio_fom_om_as', r'FoM$(\Omega_\mathrm{m}, 10^9 A_\mathrm{s})$')]
 # the shared y label
 YLABEL = 'FoM ratio: per bin / model'
-# the largest cut drawn [h/Mpc at z = 0]; data.json may hold larger ones
+# the smallest and largest cuts drawn [h/Mpc at z = 0]; data.json also holds
+# 0.05 (the model's own FoM(w0, wa) is below 0.1 there) and may hold larger
+# cuts
+KMAX_MIN = 0.075
 KMAX_MAX = 0.2
 # the k_max labels compare floats from data.json
 KMAX_TOLERANCE = 1.0e-9
@@ -107,10 +123,33 @@ Y_MARGIN = 0.1
 with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
 kmax_all = np.array(data['kmax_h_per_Mpc'], dtype=float)
-# the cuts drawn: KMAX_MAX and below
-DRAWN_CUTS = kmax_all <= KMAX_MAX + KMAX_TOLERANCE
+# the cuts drawn: KMAX_MIN to KMAX_MAX
+DRAWN_CUTS = ((kmax_all >= KMAX_MIN - KMAX_TOLERANCE)
+              & (kmax_all <= KMAX_MAX + KMAX_TOLERANCE))
 kmax = kmax_all[DRAWN_CUTS]
 layouts = data['layouts']
+
+
+def present_versions():
+    '''The VERSIONS entries that data.json holds, in VERSIONS order.
+
+    A version counts as present when every layout holds it in every row; one
+    that only some layouts or rows hold is an incomplete export and raises.
+    A version of data.json that VERSIONS lacks also raises.'''
+    known = [key for key, label, style in VERSIONS]
+    held = [set(lay[field]) for lay in layouts for field, name in ROWS]
+    unknown = sorted(set().union(*held) - set(known))
+    if unknown:
+        raise RuntimeError(f'summary_fom_untied: data.json holds the versions {unknown}, '
+                           f'which VERSIONS lacks: add their label and style')
+    partial = sorted(set().union(*held) - set.intersection(*held))
+    if partial:
+        raise RuntimeError(f'summary_fom_untied: the versions {partial} are missing '
+                           f'from some layouts or rows of data.json')
+    return [entry for entry in VERSIONS if entry[0] in held[0]]
+
+
+drawn_versions = present_versions()
 
 
 def version_style(style, color):
@@ -223,7 +262,7 @@ for r, (field, name) in enumerate(ROWS):
     for c, lay in enumerate(layouts):
         ax = axes[r, c]
         ax.axhline(1.0, **UNITY_STYLE)
-        for key, label, style in VERSIONS:
+        for key, label, style in drawn_versions:
             y = as_array(lay[field][key])
             ax.plot(kmax, y, **version_style(style, lay['color']))
             values += [float(v) for v in y[np.isfinite(y)]]
@@ -236,13 +275,13 @@ for r, (field, name) in enumerate(ROWS):
     # the figure of merit's name on the right of the last column
     axes[r, -1].yaxis.set_label_position('right')
     axes[r, -1].set_ylabel(name, rotation=90, fontsize=9, labelpad=5)
-# labels at 0.1 and 0.2, unlabeled ticks at 0.05 and 0.15, so the labels of
-# neighboring columns never meet
+# labels at 0.1 and 0.2 only, so the labels of neighboring columns never
+# meet, and an unlabeled tick at every other cut drawn
 for ax in axes[-1]:
     ax.set_xlim(kmax[0] - 0.01, kmax[-1] + 0.01)
     ax.set_xticks([0.1, 0.2])
     ax.set_xticklabels(['0.1', '0.2'])
-    ax.set_xticks([0.05, 0.15], minor=True)
+    ax.set_xticks([0.075, 0.125, 0.15, 0.175], minor=True)
 # the shared x label just under the lowest tick label
 fig.canvas.draw()
 renderer = fig.canvas.get_renderer()
@@ -264,7 +303,7 @@ title_top = max(ax.title.get_window_extent(renderer).y1 for ax in axes[0])
 title_top = fig.transFigure.inverted().transform((0.0, title_top))[1]
 legend = fig.legend(
     handles=[Line2D([], [], label=label, **version_style(style, '0.25'))
-             for key, label, style in VERSIONS],
+             for key, label, style in drawn_versions],
     loc='lower center', bbox_to_anchor=(0.5, title_top + 0.005), ncol=2, frameon=False,
     fontsize=8.5, handlelength=3.4, columnspacing=1.8, handletextpad=0.5,
     labelspacing=0.3, borderaxespad=0.0, borderpad=0.1)
