@@ -3,10 +3,12 @@
 Conclusions of an adversarial physics and code review (2026-11-06) of
 the DESI C_ell^gg Fisher forecast - the EXAMPLE_EVALUATE1-4 layouts at
 h = 0.02, AccuracyBoost 1 - and of the draft paper's higher-order bias
-model. The Fisher numbers below were reproduced from the cached
-derivative matrices (the rebuilt F matches the pickles to better than
-7e-16) and from counterfactual covariances built on the fiducial data
-vector.
+model, with the later finding that SN_2 breaks model A (Sec. 6). The
+review's Fisher numbers were reproduced from the cached derivative
+matrices with the covariance of the time (the rebuilt F matched the
+pickles to better than 7e-16) and from counterfactual covariances
+built on the fiducial data vector. Its covariance finding is fixed
+(Sec. 3); numbers marked "pre-fix" are relative statements.
 
 ## 1. The model, and what it leaves out
 
@@ -34,7 +36,9 @@ An EFT-grade scale cut is the k_max at which the model in use is
 accurate to better than the survey's statistical error; going further
 requires freeing the nonlinear nuisances. The two honest choices:
 
-- (a) linear bias with k_max ~ 0.08-0.12 h/Mpc (~0.055-0.08 /Mpc);
+- (a) linear bias with k_max ~ 0.08-0.12 h/Mpc (~0.055-0.08 /Mpc),
+  the literature estimate; on this vector a linear-bias fit is
+  unbiased only at 0.05 h/Mpc (notes/linear_bias_kmax);
 - (b) k_max ~ 0.2 h/Mpc (the DESI DR1 full-shape choice,
   ~0.135 /Mpc) with the one-loop EFT model, marginalizing about 7-12
   nuisances per tracer/redshift chunk: b2, b_G2, counterterms c0, c2,
@@ -57,23 +61,27 @@ scale-leakage criterion with threshold alpha = 0.3 (its equation for
 ell_max^ii), and finds that the Limber relation ell_max = k_max chi is
 optimistic at low redshift (BGS).
 
-## 3. The thin-bin FoM: physical ratio, inflated normalization
+## 3. The thin-bin FoM: physical ratio, covariance-set normalization
 
-Measured FoM(w0, wa), DESI C_gg alone, h = 0.02 (2026-11-06);
+FoM(w0, wa), DESI C_gg alone, h = 0.02, shipped mask;
 Delta d_com = 62 Mpc names the 76-bin layout of equal
-comoving width, d_com the comoving distance:
+comoving width, d_com the comoving distance. "Pre-fix" is the
+covariance the review measured (raw chunk bias, item 1 below);
+"corrected" is the shipped one (EXAMPLE_EVALUATE_FISHER.ipynb):
 
-| layout | FoM |
-|---|---:|
-| Delta z 0.2 (10 bins) | 5.67 |
-| Delta z 0.05 (36 bins) | 32.0 |
-| Delta z 0.02 (90 bins) | 125.6 |
-| Delta d_com = 62 Mpc (76 bins) | 135.2 |
+| layout | pre-fix | corrected |
+|---|---:|---:|
+| Delta z 0.2 (10 bins) | 5.67 | 2.22 |
+| Delta z 0.05 (36 bins) | 32.0 | 12.6 |
+| Delta z 0.02 (90 bins) | 125.6 | 50.2 |
+| Delta d_com = 62 Mpc (76 bins) | 135.2 | 41.2 |
 
-Decomposition from the cached derivatives (same layout order):
+Decomposition from the cached derivatives (pre-fix covariance, same
+layout order):
 
 - **free bias per bin**: 1.94 / 11.2 / 56.4 / 66.8 - the thin/wide
-  ratio survives;
+  ratio survives (corrected covariance, k_max = 0.25: 0.70 / 4.26 /
+  23.2 / 21.0);
 - **autos only**: 5.0 / 24.1 / 58.5 / 72.6;
 - **everything but w0, wa fixed**: 991 / 3402 / 7265 / 9105, a 7.3x
   thin/wide ratio, close to radial mode counting;
@@ -84,11 +92,13 @@ Decomposition from the cached derivatives (same layout order):
   Superseded by the non-Limber UV-fraction scale cuts (Sec. 2),
   which count the thin bins' radial modes: at the matching
   k_max = 0.075 h/Mpc (~0.05 /Mpc) they give 1.91 / 8.29 / 19.9 /
-  32.9, and at k_max = 0.05 h/Mpc the Delta z = 0.02 layout keeps
+  32.9 pre-fix (0.646 / 2.77 / 7.26 / 7.61 corrected), and at
+  k_max = 0.05 h/Mpc the Delta z = 0.02 layout keeps
   no band at all. The full tables are in the skill's scale-cut
   section.
 
-Interpretation: about 7x from radial modes (k_parallel resolved to
+Interpretation (thin/wide ratio 24x pre-fix, 19-23x corrected):
+about 7x from radial modes (k_parallel resolved to
 ~0.006 /Mpc at Delta z = 0.2 against ~0.06 /Mpc at Delta z = 0.02),
 and about 3x from degeneracy breaking by Kaiser RSD and radial BAO,
 which wide bins wash out.
@@ -99,21 +109,20 @@ arXiv:1803.10773): many thin bins recover the 3D P(k, mu) information
 and saturate when Delta chi ~ 0.6-0.8 lambda_min. The information is
 bounded by the 3D Fisher of the same survey at the same cuts, so it
 does not grow without limit as Delta z -> 0. Delta d_com = 62 Mpc
-(76 bins, FoM 135)
-against Delta z 0.02 (90 bins, FoM 126) shows the plateau.
+(76 bins) against Delta z 0.02 (90 bins) shows the plateau: 135
+against 126 pre-fix, 41 against 50 corrected.
 
-### Why the absolute FoM is inflated
+### What sets the absolute FoM
 
-1. **The covariance bias bug** (confirmed in the code, not yet
-   fixed). The likelihood uses b_i = DESI_B1 / D(zbar_i)
-   (likelihood/desi_cl.py, around lines 166-180), while
-   covariance/lssty1xdesi_covariance.py passes the raw CHUNK_BIAS
-   (1.34 / 1.70 / 0.84) through `_lens_bias` (around lines 104-111
-   and 274-291). The covariance signal is therefore low by D(z)^2 at
-   high z, and the FoM is inflated by 2.4-3.2x in every layout. A
-   self-consistent covariance gives FoM 2.3 / 13.1 / 51.7 / 42.2.
-   The fix: divide by D(zbar_i) in `_lens_bias` and regenerate the
-   DESI covariances.
+1. **The covariance bias** (fixed). The likelihood uses
+   b_i = DESI_B1 / D(zbar_i), and the review found
+   `covariance/lssty1xdesi_covariance.py` passing the raw CHUNK_BIAS
+   (1.34 / 1.70 / 0.84) through `_lens_bias`, which left the
+   covariance signal low by D(z)^2 at high z. Its counterfactual, a
+   self-consistent covariance, predicted FoM 2.3 / 13.1 / 51.7 / 42.2.
+   `_lens_bias` now divides by D(zbar_i), computed as the likelihood
+   does, and the regenerated covariances give 2.22 / 12.6 / 50.2 /
+   41.2 (the skill's section "The covariance").
 2. **Weak covariance cross spectra at high ell**: the covariance's
    non-Limber correction is FKEM-linear at the covariance's own
    boost, against the low-rank engine in the data vector; worth
@@ -127,15 +136,15 @@ against Delta z 0.02 (90 bins, FoM 126) shows the plateau.
    arXiv:2404.03002). The "DR1" label is wrong.
 6. **The model rigidity of Secs. 1-2**: linear bias + halofit to the
    shipped cut, with six constant amplitudes and seven sigma_v groups
-   as the entire ignorance budget.
-
-The honest range for DESI C_gg alone is FoM ~ 10-40.
+   as the entire ignorance budget. Measured since: a linear-bias fit
+   is unbiased only at k_max = 0.05 h/Mpc (notes/linear_bias_kmax),
+   and the forecast is one-loop (models A and B, Sec. 5).
 
 ### The LSST comparison
 
 LSST Y1 3x2pt alone has FoM 17.4, consistent with the DESC SRD
 (arXiv:1809.01669: Y1 WL+LSS at 22 without priors). The forecast's
-"LSST barely helps" conclusion is an artifact of the inflated DESI
+"LSST barely helps" conclusion was an artifact of the inflated DESI
 side, and does not survive the corrections above.
 
 ### Benchmarks
@@ -193,7 +202,81 @@ term by term against CCL's EulerianPTCalculator source
 ## 5. Higher-order bias
 
 The requirements of this review became models A and B of
-notes/higher_order_bias/higher_order_bias.tex (sections
-"Recommendation" and "Implementation in CoCoA"), summarized in the
+notes/higher_order_bias/higher_order_bias.tex, summarized in the
 skill's section "Higher-order bias: models A and B" with its
-parameter budget and order of work.
+parameter budget. The note's pre-implementation Recommendation and
+order of work are kept in `higher_order_bias_recommendation.md`.
+
+## 6. SN_2 breaks model A on the thin layouts
+
+**Result.** A stochastic term SN_2 k^2 mu^2 in the truth, which model
+A lacks, biases model A at its own cut. With SN_2 = +-5 units
+(model B's prior width; unit f_sat sigma_sat^2/nbar, the skill's
+model B section) in every bin, k_max = 0.075 h/Mpc, a model A fit
+moves Omega_m by 1.25-1.50 sigma on Delta d_com = 62 Mpc (both
+variants; baseline, pessimistic and free priors) and by
+1.43-1.68 sigma on Delta z = 0.02 (baseline and pessimistic priors;
+on the free prior (w0, wa) moves by 1.16-1.41). Model A's break
+point is therefore 0.05 on Delta d_com = 62 Mpc and no fitted cut on
+Delta z = 0.02 (EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, section 7).
+
+**Mechanism: the adjacent-bin cross spectra.** Neighbouring thin
+bins share an edge, where the radial derivatives of their kernels
+have opposite sign (the falling edge of one bin, the rising edge of
+the next). The projected SN_2 template is the integral of
+W_i' W_j'/chi^2, so it is anticorrelated between neighbours: on
+Delta d_com = 62 Mpc the normalized adjacent term
+K2_ij/sqrt(K2_ii K2_jj) has median -0.50 in every sample (range
+-0.54 to -0.46), against +0.05 to +0.06 for SN_0. No positive white
+noise reproduces that pattern:
+
+- the data-space split of the SN_2 = +5 response puts it in the
+  crosses: model A pessimistic on the pessimistic prior, Omega_m
+  -1.37 sigma in total, -0.13 from the autos and -1.24 from the
+  crosses (62 Mpc); -1.58, -0.22 and -1.36 on Delta z = 0.02;
+- one free SN_0 per bin (Gaussian width 100) instead of per group
+  does not repair it: on 62 Mpc the shift grows (Omega_m -1.37 ->
+  -1.45 sigma, (w0, wa) 1.00 -> 1.15); on Delta z = 0.02 Omega_m
+  drops to -0.75 sigma but (w0, wa) is still 1.12.
+
+**Where the signal sits.** About half of each bin's SN_2 auto kernel
+comes from k_par above the bin's own cut k_max/D(zbar_i) at 0.075:
+0.58 (BGS bin 10), 0.46 (LRG bin 34), 0.51 (ELG bin 63) on
+Delta d_com = 62 Mpc; at k_max = 0.2 the fractions are 0.18 / 0.09 /
+0.12. The UV-fraction cut is evaluated on the linear-bias spectra,
+so it does not see this k_par^2-weighted content.
+
+**By sample.** The LRG term carries the break (alone: Omega_m -1.24
+to -1.38 sigma, matched configurations). ELG alone moves Omega_m by
+at most 0.23 sigma (A_s by up to 0.31); its unit, 0.84 (Mpc/h)^2, is
+a seventh of LRG's 6.08. BGS contributes nothing at this cut (0.00),
+with the borrowed LRG unit or with f_sat sigma_chi^2, sigma_chi the
+BGS bins' own FoG dispersion in Mpc/h (1.5-1.7 (Mpc/h)^2), so the BGS
+unit choice does not matter here.
+
+**The alternatives** (largest score over the fixed truths, sigma/3
+threshold):
+
+- without SN_2 in the truth (alpha_2 = +-12.5 and the offsets only):
+  model A holds to 0.075 on both thin layouts (Delta z = 0.02 model A
+  baseline on the baseline prior excepted: alpha_2 moves A_s by
+  0.34 sigma at 0.075), and breaks at 0.1 (62 Mpc: alpha_2 moves A_s
+  by 0.37-0.42 sigma, or the offsets Omega_m by 0.37; Delta z = 0.02:
+  alpha_2 moves (w0, wa) by 1.48-1.59);
+- autos only (all three truths): model A holds to 0.075-0.1, but
+  dropping the cross pairs keeps only 18-46% of the FoM(w0, wa) on
+  the thin layouts (pessimistic prior: model A 0.18-0.19 at 0.075 and
+  0.29-0.36 at 0.15; model B 0.35-0.38 and 0.38-0.46), against
+  62-88% on the wide ones;
+- model B, which fits SN_2, absorbs it: shifts at most 0.22 sigma for
+  SN_2 = +5 (62 Mpc and Delta z = 0.02, at 0.075 and 0.15, both
+  variants on their matched priors).
+
+**Open.** How the break is quoted in the notes and the paper (with
+SN_2 in the truth, without it, or on autos only) is undecided.
+
+**Provenance.** Measured 2026-11-08 on the caches of the executed
+model B notebook (break tables, section 7) and with scratch
+diagnostics on the same namespace (the sample split, the BGS unit,
+the adjacent cross terms, the per-bin SN_0 control, the auto/cross
+split, the k_par content and the variants; not in the repository).

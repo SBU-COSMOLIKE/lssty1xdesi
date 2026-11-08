@@ -1,6 +1,6 @@
 ---
 name: lssty1xdesi-dev
-description: Development on the lssty1xdesi project - DESI thin-bin spectroscopic angular clustering - the Delta d_com = 62 Mpc layout, 76 bins of equal comoving width, from a DESI DR3-like source forecast - cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebooks (EXAMPLE_EVALUATE_FISHER.ipynb, EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb), and the galaxy-bias notes under notes/ (correlated_bias_prior_v2, linear_bias_kmax, higher_order_bias, bias_model_summary) with their plots/ folders. Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, the dndz FoG convolution, the correlated bias prior, the bias ladder (growth-tied, baseline, pessimistic, free), the memory model, the figure of bias, the statistic sqrt(<chi^2>/n_dof) of the accuracy test, or higher-order bias models A and B. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
+description: Development on the lssty1xdesi project - DESI thin-bin spectroscopic angular clustering - the Delta d_com = 62 Mpc layout, 76 bins of equal comoving width, from a DESI DR3-like source forecast - cross LSST-Y1 shear in Fourier band powers. Use this skill for ANY work in projects/lssty1xdesi - the likelihood (desi_cl), the Fingers-of-God model and sigma_v parameters, the n(z) files and their sampling, the low-rank non-Limber engine settings, the gg-cross block, the covariance adapter, the test suite, the data-generation scripts, the DESI DR1 fixed-width Delta z cases (EXAMPLE_EVALUATE2-4), the LSST Y1 3x2pt case (EXAMPLE_EVALUATE5), or the Fisher module and notebooks (EXAMPLE_EVALUATE_FISHER.ipynb, EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb), and the galaxy-bias notes under notes/ (correlated_bias_prior_v2, linear_bias_kmax, higher_order_bias, bias_model_summary) with their plots/ folders. Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, gg cross pairs, the dndz FoG convolution, the correlated bias prior, the bias ladder (growth-tied, baseline, pessimistic, free), the memory model, the figure of bias, the statistic sqrt(<chi^2>/n_dof) of the accuracy test, higher-order bias models A and B, the counterterm alpha_2, the SN_2 stochastic term, or where model A breaks. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
 ---
 
 # lssty1xdesi: the thin-bin extreme
@@ -200,33 +200,57 @@ smearing is this project's systematic, so it lives in the adapter and
 the shared covariance code never models FoG. The derived file is
 regenerated on every configuration() call and gitignored.
 
-Validation against the supplied forecast covariance: the Knox formula
+The covariance signal must carry the data vector's bias. `_lens_bias`
+gives each bin the likelihood's fiducial b_i = B_g/D(zbar_i), with B_g
+the chunk amplitude (CHUNK_BIAS, the bias at z = 0) and D the linear
+growth read off the linear P(k) ratio at k = 5e-3/Mpc exactly as
+`likelihood/desi_cl.py` does (`_lens_growth`; GROWTH_KREF must equal
+the likelihood's KREF). Passing the raw CHUNK_BIAS instead left the
+signal low by D(zbar_i)^2 at high redshift and inflated every DESI FoM
+by a factor 2.5-3.3 at the shipped mask (2.7-4.3 for linear bias at
+k_max = 0.075 h/Mpc). With the per-bin bias the ratio of the
+covariance's mean signal to each fiducial data vector is 1.03 on the
+kept autos at every redshift (the remaining 3% is the covariance's
+massless neutrinos; the raw bias let it fall to ~0.25), and
+`_lens_growth` agrees with an independent LCDM growth integral to 2e-4
+(measured at the fix, commit e663480). The one-loop terms of model A,
+about 2% of the kept spectra at k_max = 0.075 h/Mpc, stay out of the
+covariance.
+
+All four DESI cases score the project's own Gaussian covariance:
+`scripts/make_desi_covariance.py --case <case>` writes
+`data/<stem>_cov` from the Gaussian term of the case's archive
+(`covariance/production_covariance[_<case>].npz`). The source
+forecast's sacc covariance is kept as
+`data/lssty1xdesi_desi_dr3_sacc_cov`, for comparison only.
+
+Validation against that supplied covariance: the Knox formula
 with the project's own band values closes the bookkeeping exactly
 (first clustering rows 1.007/1.018), and the pre-FoG-kernel
 comparison measured sigma ratios with medians 1.218/1.228 (both
-totals positive definite); re-measure after any kernel or fiducial
-change. One qualitative difference is physical, not a bug: the
-source forecast's adjacent-bin cross bandpowers turn NEGATIVE at
-high multipole (FoG smearing anticorrelates neighboring thin bins),
+totals positive definite); both predate the per-bin bias, and the
+comparison is re-measured after any kernel or fiducial change. One
+qualitative difference is physical, not a bug: the source forecast's
+adjacent-bin cross bandpowers turn NEGATIVE at high multipole (FoG
+smearing anticorrelates neighboring thin bins),
 while the project's geometric-mean cross spectra are nonnegative by
 construction. `covariance/default.yaml` still runs its own
 nonlimber_accuracyboost at 1 and has not been retuned to the adopted
 data-vector state.
 
-## Covariance of the fixed-width Delta z cases
+## Covariance files: Gaussian only, and the G + SSC plan
 
 The DESI DR1 fixed-width Delta z layouts (cases dr1_dz0p20,
 dr1_dz0p05, dr1_dz0p02: 10, 36 and 90 lens bins, built by
-scripts/make_desi_dz_case.py) have no supplied covariance. Their
-likelihood covariance files hold the **Gaussian term only** of the
-project's own forecast (compute_covariance.py with `case:` in the
-covariance yaml), the convention of the comoving
-Delta d_com = 62 Mpc sacc. The CLI
+scripts/make_desi_dz_case.py) and the Delta d_com = 62 Mpc case
+(dr3) all ship the **Gaussian term only** of the project's own
+forecast (compute_covariance.py with `case:` in the covariance yaml,
+then scripts/make_desi_covariance.py). The CLI
 also computes SSC and cNG and keeps them in the archive
 (covariance/production_covariance_<case>.npz).
 
-Measured 2026-11-04 on the unmasked entries (error-bar inflation on
-the diagonal):
+Measured 2026-11-04, before the per-bin bias fix, on the unmasked
+entries (error-bar inflation on the diagonal):
 
 | case | SSC over G: median / max | cNG over G+SSC: max |
 |---|---|---|
@@ -315,6 +339,17 @@ each from a failure it prevents:
 - **Area.** DESI case covariances are built at 14,000 deg^2; the
   common-area forecast multiplies their inverse by 12,300/14,000 (exact
   for a Gaussian covariance).
+- **Cache derivatives, never Fisher matrices.** A covariance change
+  must not need new derivatives. EXAMPLE_EVALUATE_FISHER.ipynb keeps
+  only the derivatives of its caches (`chains/EXAMPLE_EVALUATE<n>_FISHER_AB<b>.pkl`)
+  and rebuilds F, the bias numerators and the Delta chi2 from the
+  covariance file at every run (`refresh_fisher`), with the Gaussian
+  priors read from the example yaml (cobaya `update_info`); the F
+  stored in those caches predates the covariance fix and is unused
+  (the printed check reads 0.76 for DESI, 1.8e-14 for LSST). The
+  scale-cut FoM cache stores each layout's covariance sha256 and
+  recomputes on a change. EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb
+  reads its priors from the yamls the same way.
 - **LSST Y1 3x2pt + DESI C_gg = block-diagonal sum.** `combine` adds Fisher matrices by
   parameter name; no prior is shared between the probes, so none is
   double-counted. The joint likelihood for chains still needs the
@@ -323,7 +358,8 @@ each from a failure it prevents:
   smoothness of the vector in the parameters. Diagnostic: scan one
   parameter on 17 fine points, whiten by the Cholesky factor of C^-1,
   fit a quartic, read the residual per point in sqrt(chi2) units
-  (measured 2026-11-04, Delta z = 0.2 DESI and the LSST case):
+  (measured 2026-11-04 with the pre-fix DESI covariance, Delta z = 0.2
+  DESI and the LSST case):
 
   | setting | DESI omegam / w0 / wa | LSST omegam / w0 / wa |
   |---|---|---|
@@ -339,18 +375,20 @@ each from a failure it prevents:
   values at AB 1 and 3) and, for the thin DESI bins, the chi grid at
   the likelihood's boost (8 converges one chi2; derivatives need 64).
   With stock halofit at h = 0.01-0.05 the FoM(w0, wa) moved 22.7 /
-  7.3 / 5.8 / 5.1 (DESI) and 52 / 14 / 24 / 19 (LSST). CAMB is now
+  7.3 / 5.8 / 5.1 (DESI, pre-fix covariance) and 52 / 14 / 24 / 19
+  (LSST). CAMB is now
   installed with `PATCH_CAMB_HALOFIT_TOLERANCE` (1e-7), and the
   notebook sets `nonlimber_accuracyboost: 64` for every DESI Fisher
   evaluation.
-- **Step and accuracy stability with both fixes** (measured
-  2026-11-05, FoM(w0, wa) at h = 0.01 / 0.02 / 0.03 / 0.05):
+- **Step and accuracy stability with both fixes** (derivatives
+  measured 2026-11-05, Fisher matrices rebuilt with the corrected
+  covariance; FoM(w0, wa) at h = 0.01 / 0.02 / 0.03 / 0.05, Delta z = 0.2):
 
   | probe | AB 1 | AB 3 |
   |---|---|---|
-  | DESI C_gg | 6.62 / 5.61 / 5.59 / 5.71 | 5.70 / 5.67 / 5.66 / 5.66 |
+  | DESI C_gg | 2.53 / 2.20 / 2.18 / 2.24 | 2.23 / 2.22 / 2.22 / 2.22 |
   | LSST 3x2pt | 17.68 / 17.67 / 17.65 / 17.68 | 17.36 at every step |
-  | LSST Y1 3x2pt + DESI C_gg | 34.4 / 32.0 / 32.0 / 32.3 | 32.24 / 32.20 / 32.20 / 32.19 |
+  | LSST Y1 3x2pt + DESI C_gg | 24.9 / 24.2 / 24.2 / 24.3 | 24.09 / 24.08 / 24.08 / 24.08 |
 
   Cost (M2 Pro, AC, 8 threads, quiet, 2026-11-05): one evaluation is
   3.8 s / 14.3 s (DESI at NL 64, AB 1 / 3) and 0.8 s / 2.4 s (LSST);
@@ -370,18 +408,19 @@ each from a failure it prevents:
 
   | alternative | probe | max abs(delta p/sigma) | Delta chi2 |
   |---|---|---:|---:|
-  | FKEM, cap 550 | DESI C_gg | 0.006 | 0.115 |
-  | Limber | DESI C_gg | 5.6 (n_s) | 332 |
+  | FKEM, cap 550 | DESI C_gg | 0.009 (Omega_m) | 0.039 |
+  | Limber | DESI C_gg | 3.1 (n_s) | 85.0 |
   | SVD engine | LSST 3x2pt | 0.0024 | 1.4e-4 |
   | Limber | LSST 3x2pt | 0.40 (A_s) | 11.2 |
-  | DESI FKEM, cap 550 | LSST Y1 3x2pt + DESI C_gg | 0.013 | 0.115 |
-  | DESI Limber | LSST Y1 3x2pt + DESI C_gg | 2.1 (w_a) | 332 |
-  | Limber in both | LSST Y1 3x2pt + DESI C_gg | 2.1 (w_a) | 343 |
+  | DESI FKEM, cap 550 | LSST Y1 3x2pt + DESI C_gg | 0.008 | 0.039 |
+  | DESI Limber | LSST Y1 3x2pt + DESI C_gg | 0.98 (w_a) | 85.0 |
+  | Limber in both | LSST Y1 3x2pt + DESI C_gg | 1.01 (w_a) | 96.2 |
 
-  The fair FKEM Delta chi2 is 0.115 here against the test pin 0.147:
-  the notebook rescales the DESI inverse covariance to 12,300 deg^2
-  (x 0.879, giving 0.129 at the likelihood's chi grid) and runs at
-  `nonlimber_accuracyboost: 64` and AB 3.
+  These Delta chi2 use the corrected covariance rescaled to
+  12,300 deg^2 (x 0.879), at `nonlimber_accuracyboost: 64` and AB 3.
+  The test pins (`DCHI2_MEASURED_CASES`, 0.132 for Delta z = 0.2)
+  score the frozen pre-fix covariance at the likelihood's chi grid, so
+  the two are not comparable.
 - **Per-layout Fisher biases.** The notebook repeats the two DESI
   alternatives on every layout: each alternative vector is evaluated
   at the layout's own overrides and AB 1 and cached in
@@ -393,10 +432,10 @@ each from a failure it prevents:
 
   | layout | FKEM, cap 550 | Limber | Delta chi2 |
   |---|---|---|---|
-  | Delta d_com = 62 Mpc | 0.32 (w_a) / 0.64 (Omega_b) | tens of sigma | 64.2 / 1.86e4 |
-  | Delta z = 0.02 | 0.47 (w_a) / 0.85 (Omega_b) | 43 (Omega_m) alone | 80.7 / 3.67e4 |
-  | Delta z = 0.05 | 0.06 / 0.18 | tens of sigma | 4.47 / 3483 |
-  | Delta z = 0.2 | 0.006 / 0.013 | 5.6 (n_s) / 2.1 (w_a) | 0.115 / 332 |
+  | Delta d_com = 62 Mpc | 0.16 (w_a) / 0.49 (H_0) | 11 (Omega_b) / 12 (Omega_b) | 19.3 / 6548 |
+  | Delta z = 0.02 | 0.30 (Omega_b) / 0.63 (H_0) | 27 (Omega_b) / 17 (Omega_b) | 31.7 / 1.49e4 |
+  | Delta z = 0.05 | 0.08 / 0.14 | 7.2 (Omega_b) / 3.0 (A_s) | 1.51 / 1305 |
+  | Delta z = 0.2 | 0.009 / 0.008 | 3.1 (n_s) / 0.98 (w_a) | 0.039 / 85.0 |
 
   FKEM's Limber treatment of the nonlinear correction is harmless on
   the wide bins but biases the thin layouts by a sizable fraction of
@@ -410,7 +449,9 @@ the higher-order bias work. Full detail - measurement tables, the
 CCL term-by-term check and the arXiv citations - lives in
 `references/fom_and_bias_review.md`. The load-bearing conclusions:
 
-- **The thin/wide FoM ratio (~24x) is physical.** About 7x is radial
+- **The thin/wide FoM ratio is physical** (19-23x at the shipped
+  mask with the corrected covariance). In the review's decomposition
+  (pre-fix covariance, ratio 24x) about 7x is radial
   mode counting (k_parallel resolved to ~0.006 /Mpc at Delta z = 0.2
   against ~0.06 /Mpc at 0.02) and about 3x is degeneracy breaking by
   Kaiser RSD and radial BAO, which wide bins wash out. The ratio
@@ -418,25 +459,24 @@ CCL term-by-term check and the arXiv citations - lives in
   self-consistent covariance and an ell <= 100 cut, and it saturates
   near Delta chi ~ 0.6-0.8 lambda_min (Asorey et al. 1207.6487),
   where the Delta d_com = 62 Mpc layout already sits.
-- **The absolute FoM (126-135, DESI C_gg alone) is inflated; the
-  honest range is ~10-40.** The largest single factor, 2.4-3.2x in
-  every layout, is a confirmed and still unfixed covariance bug: the
-  likelihood evaluates b_i = DESI_B1 / D(zbar_i) while
-  `covariance/lssty1xdesi_covariance.py::_lens_bias` passes the raw
-  CHUNK_BIAS, so the covariance signal is low by D(z)^2 at high z.
-  The fix is to divide by D(zbar_i) in `_lens_bias` and regenerate
-  the DESI covariances. The rest is model rigidity: linear bias +
-  halofit to the shipped k = 0.1185 /Mpc (~0.18 h/Mpc) cut with six
-  constant amplitudes and seven sigma_v groups as the entire
-  ignorance budget - an EFT-grade cut gives linear bias only
-  k_max ~ 0.08-0.12 h/Mpc, and reaching ~0.2 h/Mpc requires the
-  one-loop model with 7-12 marginalized nuisances per chunk; the
-  UV-fraction scale cuts (next section) measure the FoM inside
-  that reach. The
+- **The absolute FoM is set by the covariance and the bias model.**
+  The covariance now carries the likelihood's per-bin bias (section
+  "The covariance"): FoM(w0, wa) of DESI C_gg alone at the shipped
+  mask is 41.2 / 50.2 / 12.6 / 2.22 (Delta d_com = 62 Mpc, Delta z =
+  0.02, 0.05, 0.2), as the review's self-consistent counterfactual
+  predicted (42.2 / 51.7 / 13.1 / 2.3). The rest is model rigidity:
+  linear bias + halofit to the shipped k = 0.1185 /Mpc (~0.18 h/Mpc)
+  cut with six constant amplitudes and seven sigma_v groups as the
+  entire ignorance budget. Measured on this vector, linear bias holds
+  only to k_max = 0.05 h/Mpc (`notes/linear_bias_kmax`), so the
+  forecast is one-loop: model A at 0.075 and model B against k_max
+  (sections below). The
   "DR1" label is also wrong: the density is the completed survey
   (~28M tracers), not DR1 (~6M).
-- **"LSST barely helps" is an artifact** of the inflated DESI side:
-  LSST Y1 3x2pt alone (FoM 17.4) matches the DESC SRD (1809.01669).
+- **"LSST barely helps" was an artifact** of the inflated DESI side:
+  LSST Y1 3x2pt alone (FoM 17.4) matches the DESC SRD (1809.01669),
+  and DESI C_gg alone lies below it under model A at 0.075 and under
+  model B pessimistic on the pessimistic prior up to k_max = 0.25.
 
 The bias model that answers this review - a per-bin linear bias
 reported as a ladder of stated priors, and the one-loop models A and
@@ -511,23 +551,26 @@ each cell autos / cross pairs; k_max in h/Mpc at z = 0):
 | 0.25 | 2276 / 3025 | 3016 / 4605 | 1205 / 1560 | 327 / 415 |
 | shipped | 2276 / 3033 | 3016 / 4605 | 1205 / 1777 | 329 / 415 |
 
-FoM(w0, wa) of DESI C_ell^gg alone, the Fisher matrix rebuilt from
-the cached derivatives on the kept covariance block. A galaxy-bias
-parameter whose bins lost every band has a flat prior and no data,
-so it is dropped without touching the cosmology; with no band
+FoM(w0, wa) of DESI C_ell^gg alone (growth-tied linear bias), the
+Fisher matrix rebuilt from the cached derivatives on the kept block of
+the corrected covariance. A galaxy-bias parameter whose bins lost
+every band has a flat prior and no data, so it is dropped without
+touching the cosmology; the test is a relative tolerance, because
+derivative round-off on such a parameter once made the
+Delta d_com = 62 Mpc FoM at 0.05 infinite. With no band
 power left at all there is no w0-wa constraint, and the FoM is
 reported as 0:
 
 | k_max | Delta d_com = 62 Mpc | Delta z = 0.02 | Delta z = 0.05 | Delta z = 0.2 |
 |---|---:|---:|---:|---:|
-| 0.05 | 2.17 | 0 (no band left) | 1.90 | 0.73 |
-| 0.075 | 32.9 | 19.9 | 8.29 | 1.91 |
-| 0.1 | 54.9 | 57.0 | 14.2 | 3.06 |
-| 0.125 | 84.7 | 89.0 | 23.3 | 3.94 |
-| 0.15 | 114 | 111 | 27.8 | 4.73 |
-| 0.2 | 132 | 125 | 30.9 | 5.19 |
-| 0.25 | 135 | 126 | 31.6 | 5.51 |
-| shipped mask | 135.2 | 125.6 | 32.0 | 5.67 |
+| 0.05 | 0.358 | 0 (no band left) | 0.592 | 0.205 |
+| 0.075 | 7.61 | 7.26 | 2.77 | 0.646 |
+| 0.1 | 15.0 | 23.1 | 5.25 | 1.15 |
+| 0.125 | 24.3 | 35.4 | 8.64 | 1.50 |
+| 0.15 | 33.4 | 44.0 | 10.8 | 1.82 |
+| 0.2 | 39.5 | 49.6 | 12.1 | 2.02 |
+| 0.25 | 41.1 | 50.2 | 12.4 | 2.17 |
+| shipped mask | 41.2 | 50.2 | 12.6 | 2.22 |
 
 Conclusions:
 
@@ -542,20 +585,30 @@ Conclusions:
 - At k_max = 0.05 h/Mpc, Delta z = 0.02 keeps nothing, and the
   Delta d_com = 62 Mpc layout keeps only the bins above z ~ 0.9, where 1/D(z) raises the cut
   the most.
-- The absolute FoM values remain inflated by the covariance bias
-  mismatch (2.4-3.2x, the section above); the linear-bias validity,
-  about 0.08-0.12 h/Mpc, is unchanged.
+- These are linear-bias FoMs. A linear-bias fit is unbiased only at
+  k_max = 0.05 (`notes/linear_bias_kmax`), so the forecast numbers
+  are those of models A and B below.
 
 ## The bias notes are the physics reference
 
 The physics of the galaxy-bias model lives in four LaTeX notes under
-`notes/`. `correlated_bias_prior_v2` is the correlated-prior note: the
-per-bin linear-bias priors, their derivations, and the prior ladder
-and accuracy test under the one-loop model A (its results are figures,
-no tables). `linear_bias_kmax` measures up to which k_max a
-linear-bias fit holds and runs the accuracy test of the linear-bias
-priors; `higher_order_bias` builds models A and B; `bias_model_summary`
-is the 2-page summary of A and B. For any physics question - a
+`notes/`:
+
+- `correlated_bias_prior_v2`, the forecast note: the per-bin
+  linear-bias priors and their derivations, the prior ladder and
+  accuracy test under model A, and models A and B against k_max (its
+  results are figures, no tables). There is no v3: model B results go
+  into this note.
+- `linear_bias_kmax`: up to which k_max a linear-bias fit holds, and
+  the accuracy test of the linear-bias priors for Omega_m and A_s.
+- `higher_order_bias`: builds models A and B. Its Recommendation
+  section predates the implementation; that text is kept in
+  `references/higher_order_bias_recommendation.md`.
+- `bias_model_summary`: written last, from the other three, as a
+  presentable summary carrying their key figures (not a compact
+  digest).
+
+For any physics question - a
 derivation, an equation, an assumption, a citation, a literature
 value - read the `.tex` source, not the PDF and not this skill; find
 the part with `grep -n '\\section\|\\subsection' <note>.tex` (line
@@ -566,19 +619,19 @@ is right and the skill is corrected.
 
 | question | note: section |
 |---|---|
-| the model A forecast in 2-3 pages, for collaborators | correlated_bias_prior_v2: Summary |
-| models A and B, priors, budget in 2 pages | bias_model_summary |
-| the models; physical L and sigma_b (continuity, selection, measurements) | correlated_bias_prior_v2: The models; Which L and sigma_b are physical |
-| memory model, figure of bias, random truths, sqrt(<chi^2>/n_dof) | correlated_bias_prior_v2: The memory model; The accuracy test: the figure of bias |
-| projection algebra | correlated_bias_prior_v2: The projected precision for two bins; The tridiagonal inverse from the chain of links |
+| the model A forecast on one page | correlated_bias_prior_v2: Summary |
+| the forecast setup; the prior; model A; the accuracy test; the FoM | correlated_bias_prior_v2: The forecast; The linear-bias prior; Model A; The accuracy test; The figure of merit |
+| the models; physical L and sigma_g (continuity, selection, measurements) | correlated_bias_prior_v2: The models; Which L and sigma_g are physical (subsection What the measurements say) |
+| memory model; shift formula, random truths, sqrt(<chi^2>/n_dof) | correlated_bias_prior_v2: The memory model; appendix The accuracy test |
+| projection algebra | correlated_bias_prior_v2: The projected precision for two bins; Many bins: the tridiagonal inverse; The memory projection, step by step |
 | b - 1 proportional to 1/D, BGS flux limit and its omissions | correlated_bias_prior_v2: The bias continuity equation, step by step; The BGS flux-limit bias model, step by step |
-| bias measurements in the literature | correlated_bias_prior_v2: What the literature says, paper by paper |
+| model A's derivatives, checks, counterterm, open issues | correlated_bias_prior_v2: Implementation and the Fisher construction; Numerical checks; The counterterm requires the low-rank engine; Open issues |
 | the identities checked numerically | correlated_bias_prior_v2: Numerical verification |
-| linear bias against k_max; the linear-bias ladder at k_max = 0.075 h/Mpc | linear_bias_kmax: Summary; The shift tables |
-| one-loop P_gg, bases and conversions, DESI DR1 full-shape priors | higher_order_bias: The one-loop galaxy power spectrum; The DESI DR1 full-shape model and priors; appendix Bases and conversions |
+| linear bias against k_max; the linear-bias ladder for Omega_m and A_s | linear_bias_kmax: Summary; Method |
+| one-loop P_gg, bases and conversions, DESI DR1 full-shape priors | higher_order_bias: The one-loop galaxy power spectrum; The DESI DR1 full-shape model and priors; appendix Bases and conversions, with every factor |
 | the draft paper's bias table | higher_order_bias: The draft paper's bias table: the tidal-bias verdict |
-| projection to thin bins, term sizes, the higher-order ladder | higher_order_bias: Projection to thin-bin angular spectra; The size of every term; Bias evolution within a group |
-| models A and B, code gaps, order of work | higher_order_bias: Recommendation; Implementation in CoCoA |
+| projection to thin bins (stochastic terms included), term sizes, the higher-order ladder | higher_order_bias: Projection to thin-bin angular spectra; The size of every term; Bias evolution within a group |
+| code inventory against model A | higher_order_bias: Implementation in CoCoA |
 
 `notes/correlated_bias_prior_v2/verify_prior.py` checks the
 identities of the correlated-prior note (23 PASS lines). Recipes and
@@ -632,8 +685,10 @@ down, and nothing is retracted.
 
 The numbers of this section are linear bias, the reference that
 built the mechanics; `notes/linear_bias_kmax` shows that a linear fit
-is already biased at this cut (Omega_m moves by 2.0-2.4 sigma on
-Delta d_com = 62 Mpc under every prior), so the forecast is the
+is already biased at this cut (Omega_m moves by 1.5-1.8 sigma on
+Delta d_com = 62 Mpc under every prior; the fit is safe only at
+k_max = 0.05, and for every prior and truth only on that layout,
+keeping 1-6% of the FoM), so the forecast is the
 ladder under model A (next section). FoM(w0, wa) with linear bias,
 DESI C_gg alone, k_max = 0.075 h/Mpc (UV-fraction cut; LSST Y1 3x2pt
 alone: 17.26; on Delta z = 0.2 every group has one or two bins, so
@@ -641,10 +696,10 @@ the lower three priors coincide):
 
 | layout | growth-tied | baseline | pessimistic | free |
 |---|---:|---:|---:|---:|
-| Delta d_com = 62 Mpc | 32.94 | 18.19 | 11.45 | 10.69 |
-| Delta z = 0.02 | 19.93 | 12.47 | 7.41 | 4.02 |
-| Delta z = 0.05 | 8.29 | 1.96 | 1.33 | 1.23 |
-| Delta z = 0.2 | 1.91 | 0.515 | 0.515 | 0.515 |
+| Delta d_com = 62 Mpc | 7.61 | 5.10 | 3.37 | 2.78 |
+| Delta z = 0.02 | 7.26 | 4.66 | 3.57 | 1.65 |
+| Delta z = 0.05 | 2.77 | 0.712 | 0.492 | 0.411 |
+| Delta z = 0.2 | 0.646 | 0.176 | 0.176 | 0.176 |
 
 - **Roughness.** Smooth deviations constrain only sigma_g/sqrt(L),
   so scans use x = sigma_g sqrt(0.1/L), the rms change of delta
@@ -654,9 +709,10 @@ the lower three priors coincide):
 - **Figure of bias** Delta_w = sqrt(dw^T C_w^-1 dw): the linear-response
   (w0, wa) shift dw of a fit to biased data, in units of the fit's
   own marginalized ellipse C_w; threshold 1/3. A conserved-population
-  drift moves the growth-tied fit by 17.4 / 12.4 / 21.5 / 10.9 sigma
-  (table order); baseline and pessimistic stay below 0.3 for both
-  known drifts.
+  drift moves the growth-tied fit by 8.0 / 7.2 / 11.6 / 5.0 sigma
+  (table order); baseline and pessimistic stay at or below 0.11 for
+  both known drifts, except the BGS flux limit on Delta z = 0.05
+  (0.31 baseline, 0.35 pessimistic).
 - **Random truths and sqrt(<chi^2>/n_dof).** 2000 truths per case,
   each the known drift (BGS flux limit in BGS, conserved population
   elsewhere) plus a residual drawn from the baseline or the
@@ -669,23 +725,21 @@ the lower three priors coincide):
 
 | truth scatter | growth-tied | baseline | pessimistic | free |
 |---|---|---|---|---|
-| baseline | 8.54-16.9 | 1.00-1.01 | 0.971 / 0.866 / 0.994 / 1.00 | 1.00 |
-| pessimistic | 8.89-17.6 | 2.28 / 1.53 / 2.14 / 1.00 | 1.00-1.02 | 1.00 |
+| baseline | 4.75-9.86 | 1.00-1.01 | 0.936 / 0.910 / 0.980 / 1.00 | 1.00 |
+| pessimistic | 5.18-10.2 | 1.62 / 1.24 / 1.65 / 1.00 | 1.00-1.03 | 1.00 |
 
-  The growth-tied prior is excluded on accuracy (8.5-18x too
+  The growth-tied prior is excluded on accuracy (4.7-10x too
   optimistic). The baseline is honest under its own scatter but
-  1.5-2.3x too small if local features reach the pessimistic size, so
+  1.2-1.7x too small if local features reach the pessimistic size, so
   the baseline FoM rests on that assumption and the pessimistic FoM is
-  the safe statement; the pessimistic prior is honest or at most 15%
+  the safe statement; the pessimistic prior is honest or at most 10%
   conservative. Matched cases give scatter + noise = 2 exactly
   (P Sigma P = P); the drift term leaves
-  sqrt(1 + Delta_drift^2/2) <= 1.02. Scored for Omega_m and A_s (one
+  sqrt(1 + Delta_drift^2/2) <= 1.03. Scored for Omega_m and A_s (one
   parameter, n_dof = 1) the verdict is the same
   (`notes/linear_bias_kmax`, figure ladder_bias_params).
 - **Limits.** First order in delta (a few percent of the shift for
-  1-3% residuals, perhaps 10-20% for the 22% BGS drift). Absolute FoMs
-  carry the covariance bias mismatch (2.4-3.2x); ratios between priors
-  do not.
+  1-3% residuals, perhaps 10-20% for the 22% BGS drift).
 
 ## Higher-order bias: models A and B
 
@@ -705,11 +759,13 @@ Delta_{2,g} and Delta_{s,g} per group, and b_3nl fixed.
   alpha_0 and one SN_0 per group. Gaussian priors at zero: 1.0 on
   Delta_2, 0.5 on Delta_s, 0.5/k_max^2 ~ 89 h^-2 Mpc^2 on alpha_0,
   twice the Poisson power on SN_0.
-- **Model B, k_max ~ 0.18 h/Mpc** (the shipped mask): adds the radial
-  counterterm alpha_2 mu^2 k^2 P_lin (mu the cosine to the line of
-  sight, P_lin the linear matter power), SN_2 k^2 mu^2 and the
-  one-loop redshift-space terms, with DESI DR1 prior widths (values
-  in bias_model_summary). A research task, not an extension of A.
+- **Model B, scanned over k_max = 0.05-0.25 h/Mpc**: model A's
+  linear sector with the offset priors widened to 2.0 (Delta_2) and
+  1.0 (Delta_s), plus per group the redshift-space counterterm
+  alpha_2 and the stochastic term SN_2 k^2 mu^2 (mu the cosine to the
+  line of sight). Gaussian priors at zero: 0.5/k_max^2 on alpha_0 and
+  alpha_2 (DESI's 12.5 h^-2 Mpc^2 at 0.2), 5 units on SN_2, 2 on SN_0.
+  No redshift-space one-loop terms: CosmoLike has none.
 - **Ladder.** Baseline: one offset per group. Pessimistic: offset plus
   tilt, Delta_g -> Delta_g + t_g (z_i - zbar_g). Only b_2, b_{s^2},
   alpha_0 and alpha_2 tilt (they follow the host-halo population);
@@ -739,35 +795,94 @@ EXAMPLE_EVALUATE_MODEL_A1-A4.yaml, and
 EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb, which builds the Fisher
 matrices of the correlated-prior note on the band powers that
 EXAMPLE_EVALUATE_FISHER.ipynb keeps at k_max = 0.075 h/Mpc. The note quotes two
-configurations (FoM(w0, wa), DESI C_gg alone, layout order
-Delta d_com = 62 Mpc, Delta z = 0.02, 0.05, 0.2):
+configurations (DESI C_gg alone, layout order
+Delta d_com = 62 Mpc, Delta z = 0.02, 0.05, 0.2; LSST Y1 3x2pt alone:
+17.26 and 214.9):
 
-| configuration | FoM(w0, wa) | stated assumption |
-|---|---|---|
-| model A baseline on the baseline prior | 15.3 / 10.8 / 1.39 / 0.228 | residuals no larger or rougher than the baseline prior; calibrations exact up to one offset per group |
-| model A pessimistic on the pessimistic prior | 8.59 / 5.40 / 0.705 / 0.154 | honest under both truth families; absorbs a linear calibration drift exactly |
+| configuration | FoM(w0, wa) | FoM(Omega_m, 10^9 A_s) | stated assumption |
+|---|---|---|---|
+| model A baseline on the baseline prior | 4.50 / 4.32 / 0.523 / 0.0881 | 11.1 / 9.26 / 3.12 / 0.713 | residuals no larger or rougher than the baseline prior; calibrations exact up to one offset per group |
+| model A pessimistic on the pessimistic prior | 2.75 / 2.88 / 0.270 / 0.0535 | 9.07 / 7.02 / 1.78 / 0.456 | honest under both truth families; absorbs a linear calibration drift exactly |
 
-The growth-tied prior is excluded under both variants (its ellipse
-is 5.6-10.3x too small under model A baseline). The baseline prior
-has sqrt(<chi^2>/n_dof) = 1.00-1.01 under its own scatter and
-1.55-2.3 under pessimistic scatter. A linear drift of the calibration
-offsets shifts (w0, wa) by 0.35-0.57 sigma under model A baseline
-(baseline, pessimistic and free priors; Delta d_com = 62 Mpc,
-Delta z = 0.05 and 0.2); model A pessimistic absorbs it exactly. Open in the code: the covariance still carries linear
-bias, and model B.
+The growth-tied prior is excluded under both variants:
+sqrt(<chi^2>/n_dof) of (w0, wa) is 3.3-6.5 under model A baseline and
+1.4-2.3 under model A pessimistic. The baseline prior gives 1.00-1.01
+under its own scatter and 1.24-1.70 under pessimistic scatter, where
+its Omega_m error bar covers the truth in 40-63% of universes instead
+of 68% (Delta z = 0.2 excepted, where the priors coincide). A linear
+drift of the calibration offsets shifts (w0, wa) under model A
+baseline by 0.13-0.27 sigma on Delta d_com = 62 Mpc, at most 0.08 on
+Delta z = 0.02 and 0.37-0.40 on Delta z = 0.05 and 0.2 (baseline,
+pessimistic and free priors); model A pessimistic absorbs it exactly.
+On the pessimistic prior the BGS flux-limit drift moves model A
+baseline on Delta z = 0.05 by 0.37 sigma, just above the threshold.
+
+### Model B and where model A breaks
+
+The model B pieces are in the code:
+
+- **alpha_2** (cosmolike_core, `galpha2` in bias.c): the DESI DR1
+  convention (Maus et al., arXiv:2404.07312), adding
+  P_CT = (b_1 + f mu^2) f alpha_2 mu^2 k^2 P_lin, with f the linear
+  growth rate and P_lin the linear matter power. One value per lens
+  bin, set with `ci.set_nuisance_bias_alpha2(A2=...)` (a numpy array,
+  in h^-2 Mpc^2). It is projected through the Kaiser transfers in
+  every gg engine (FFTLog, low-rank, FKEM pairs, Limber); alpha_2 = 0
+  is bitwise the previous build, and a brute-force j_l / j_l''
+  integral agrees to 6e-4 on a thin auto and an adjacent pair.
+- **SN_2** (`desi_cl.stochastic_templates(order=2)`): a k_par^2 white
+  noise is the radial derivative of white noise, so it projects
+  exactly as integral dchi W_i' W_j' / chi^2 (W_i the FoG-convolved
+  kernel of bin i, ' = d/dchi) times the unit U_i = f_sat sigma_sat^2
+  P_Pois,i: f_sat the satellite fraction and sigma_sat the satellites'
+  dispersion in Mpc/h (DESI DR1 values, Maus et al.; `SN2_UNIT`: LRG
+  0.1 x 7.8^2, ELG 0.1 x 2.9^2, and BGS takes the LRG value), not the
+  FoG sigma_v. `order=0` reproduces the SN_0 templates bitwise.
+
+EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb (executed, not yet committed)
+reads the model A derivative caches and the linear notebook's scale
+cuts, adds the alpha_2 columns and SN_2 templates (cached in
+`chains/EXAMPLE_EVALUATE_FISHER_MODEL_B_TEMPLATES_<n>.pkl`), and
+scans k_max for models A and B; its export writes `fom_kmax_models`
+and `model_a_break` (also pending commit). The model B likelihood
+option (`higher_order_bias: 2`) is in progress.
+
+Results (pessimistic variant on the pessimistic prior unless stated):
+
+- **Model B FoM(w0, wa)**: 1.29 / 1.34 / 0.228 / 0.0494 at 0.075 and
+  11.6 / 14.3 / 2.70 / 0.299 at 0.25 (layout order above).
+- **Model A breaks on the thin layouts at its own cut.** The largest
+  shift of a model A fit to fixed truths carrying model B freedom
+  (alpha_2 = +-12.5 h^-2 Mpc^2, SN_2 = +-5 units, or the offsets at
+  model A's 1 sigma) stays below sigma/3 up to 0.05 on
+  Delta d_com = 62 Mpc and at no fitted cut on Delta z = 0.02 (both
+  variants, every prior); 0.1-0.125 on Delta z = 0.05; every cut on
+  Delta z = 0.2. SN_2 sets the break: at 0.075 it moves Omega_m by
+  1.25-1.68 sigma on the two thin layouts ((w0, wa) by 1.16-1.41 on
+  the free prior of Delta z = 0.02). With alpha_2 and SN_2 drawn from
+  model B's prior, model A's error bars there are too small by
+  2.4-3.5 (62 Mpc) and 2.5-4.0 (Delta z = 0.02) at 0.075, covering
+  the truth in 21-28% and 14-31% of universes. The mechanism and the
+  alternatives are in `references/fom_and_bias_review.md`, section 6.
 
 ## Open work
 
-- **The covariance bias fix.** `_lens_bias` must divide CHUNK_BIAS by
-  D(zbar_i) and the DESI covariances must be regenerated; the
-  UV-fraction scale cuts it waited for are implemented. Until then
-  every absolute FoM carries the 2.4-3.2x inflation.
-- **The linear notebook's export.** EXAMPLE_EVALUATE_FISHER.ipynb
-  still writes its ladder figures into the deleted folder
-  `notes/correlated_bias_prior/plots/`; its retargeting is scheduled
-  with the covariance fix.
-- **Model B**, after model A; the G + SSC final covariance and the
-  joint lens sample as in the sections above.
+- **Model B in the likelihood.** The option `higher_order_bias: 2`
+  and its yamls are in progress; the model B notebook and the
+  `fom_kmax_models` and `model_a_break` folders await commit; the
+  model B results then enter `correlated_bias_prior_v2`, and
+  `bias_model_summary` is rewritten last.
+- **Open decision: how the model A break is quoted** - with SN_2 in
+  the truth, without it, or on autos only
+  (`references/fom_and_bias_review.md`, section 6).
+- **The notes' open issues** (correlated_bias_prior_v2, Open issues):
+  the one-loop terms are outside the covariance; the UV-fraction cut
+  is built on the linear model (the alpha_0 template's UV fraction is
+  a median 0.076 on the kept bands, above alpha); negative alpha_0 in
+  chains makes the low-rank engine floor P_gg; CosmoLike's b_3
+  template is broken (b_3 = 0).
+- **The G + SSC final covariance and the joint lens sample**, as in
+  the sections above.
 - **Optional:** a nonlinear spot-check of the linear-response figure
   of bias (a few data-vector evaluations at drawn truths).
 
@@ -789,8 +904,9 @@ for the ELG groups (fiducial bias 0.84). A fixed relative numerical
 error of the data vector costs delta chi2 proportional to the ratio
 squared against the fiducial covariance: many units of chi2 at ratio
 50. The cut is safe for inference because the DESI Fisher 2 sigma
-contours reach a ratio of only about 2.1 on the Delta z = 0.2 binning
-(EXAMPLE_EVALUATE_FISHER.ipynb, section 8): it removes only prior volume
+contours reach a ratio of only about 3.2 on the Delta z = 0.2 binning
+and 1.5-1.9 on the others (EXAMPLE_EVALUATE_FISHER.ipynb, section 8,
+corrected covariance): it removes only prior volume
 the data already exclude.
 
 What the cut costs: at the extreme corners a cut of 8 still admits,
@@ -867,6 +983,9 @@ non-Limber drift values - `DCHI2_MEASURED` of example1 and the
 test files (the README's refreeze step) - and re-run
 the accuracy scan - its project-specific knobs are the chi-grid
 boost (with a 64 -> 128 convergence row), the SVD rank and the
-engine cap. Published README numbers that predate a model change are
+engine cap. The frozen covariances under `tests/frozen/data/`
+predate the per-bin covariance bias (the dr3 copy is the sacc
+covariance), so every pinned Delta chi2 scores that state, not the
+shipped `data/*_cov`. Published README numbers that predate a model change are
 superseded the moment the frozen state moves: replace them, never
 append.
