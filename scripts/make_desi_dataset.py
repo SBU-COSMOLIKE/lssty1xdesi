@@ -55,7 +55,14 @@ Outputs (into the project's data/ folder):
                                       and weights, kept for the
                                       exact-bandpower follow-up
   lssty1xdesi_desi_dr3.dataset      = the descriptor naming all of the
-                                      above plus the n(z) files
+                                      above plus the n(z) files. It
+                                      names the sacc data vector; the
+                                      shipped descriptor names instead
+                                      the model vector that
+                                      make_desi_fiducial.py writes (the
+                                      paper's model at its fiducial),
+                                      and lssty1xdesi_desi_dr3_linear.dataset
+                                      the growth-tied linear one
 
 Usage (from the Cocoa/ folder, cocoapy311 active, start_cocoa.sh
 sourced, the project compiled):

@@ -13,7 +13,7 @@ stop_at_error: True
 likelihood:
   lssty1xdesi.exploration.desi_cl_dr1_dz0p20_model_b_growth_tied:
     path: ./external_modules/data/lssty1xdesi
-    data_file: lssty1xdesi_desi_dr1_dz0p20.dataset
+    data_file: lssty1xdesi_desi_dr1_dz0p20_linear.dataset
     # band powers at the dataset's explicit centers (Delta ell = 10)
     binning_space: fourier
     # the FoG convolution rebuilds the n(z) at every point

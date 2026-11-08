@@ -30,17 +30,22 @@ Three stages, run in order (the project README's section on the
 Delta z cases lists the full command sequence):
 
   files      - the n(z) (refined five-fold, make_desi_nz.py's rule),
-               bin table, densities, pairs, mask, the dataset with
-               placeholder data vector and covariance, the parameter
-               fragment, the likelihood class and yaml, and the EXAMPLE
-               yamls (the linear example
+               bin table, densities, pairs, mask, the two datasets
+               (<stem>.dataset and <stem>_linear.dataset, which differ
+               only in their data vector) with placeholder data vectors
+               and covariance, the parameter fragment, the likelihood
+               class and yaml, and the EXAMPLE yamls (the linear example
                exploration/EXAMPLE_EVALUATE_LINEAR<N>.yaml and
                EXAMPLE_EVALUATE_COVARIANCE<N>.yaml);
   covariance - writes the cosmolike covariance file from the Gaussian
                term of the case's archive (compute_covariance.py on
                EXAMPLE_EVALUATE_COVARIANCE<N>.yaml);
-  fiducial   - evaluates the case's linear example at its fiducial point
-               and writes the model vector as the case's data vector.
+  fiducial   - writes the case's two data vectors with
+               make_desi_fiducial.py: the linear example's model at its
+               fiducial point as <stem>_linear_fid.datavector, and, when
+               the paper's example EXAMPLE_EVALUATE<N>.yaml exists (it is
+               written by hand), the paper's model at its fiducial point
+               as <stem>_fid.datavector.
 
 Usage (from the Cocoa/ folder, cocoapy311 active, start_cocoa.sh
 sourced, the project compiled with its covariance interface):
@@ -243,8 +248,8 @@ def write_examples(width, case, stem, cls, nbin):
     text = open(template).read()
     for old, new in (
             ("  lssty1xdesi.desi_cl:\n", f"  lssty1xdesi.{cls}:\n"),
-            ("data_file: lssty1xdesi_desi_dr3.dataset",
-             f"data_file: {stem}.dataset"),
+            ("data_file: lssty1xdesi_desi_dr3_linear.dataset",
+             f"data_file: {stem}_linear.dataset"),
             ("chains/desi_theory.modelvector",
              f"chains/desi_{case}_theory.modelvector"),
             ("output: ./projects/lssty1xdesi/chains/EXAMPLE_EVALUATE_LINEAR1",
@@ -366,25 +371,31 @@ def stage_files(input_dir, width):
     np.savetxt(os.path.join(DATA, f"{stem}.mask"),
                np.column_stack([np.arange(ndata), mask]), fmt="%d")
 
-    # placeholders until the covariance and fiducial stages
-    np.savetxt(os.path.join(DATA, f"{stem}_fid.datavector"),
-               np.column_stack([np.arange(ndata), np.zeros(ndata)]),
-               fmt=["%d", "%.8e"])
+    # placeholders until the covariance and fiducial stages: the data
+    # vector of the paper's model (<stem>_fid) and of the growth-tied
+    # linear bias (<stem>_linear_fid)
+    for suffix in ("", "_linear"):
+        np.savetxt(os.path.join(DATA, f"{stem}{suffix}_fid.datavector"),
+                   np.column_stack([np.arange(ndata), np.zeros(ndata)]),
+                   fmt=["%d", "%.8e"])
     with open(os.path.join(DATA, f"{stem}_cov"), "w") as out:
         for i in range(ndata):
             out.write(f"{i} {i} 1.0\n")
 
-    with open(os.path.join(DATA, f"{stem}.dataset"), "w") as out:
-        out.write(f"data_file = {stem}_fid.datavector\n")
-        out.write(f"cov_file = {stem}_cov\n")
-        out.write(f"mask_file = {stem}.mask\n")
-        out.write(f"nz_lens_file = {stem}.nz\n")
-        out.write("nz_source_file = lssty1xdesi_source.nz\n")
-        out.write(f"lens_ntomo = {nbin}\n")
-        out.write(f"source_ntomo = {N_SOURCE}\n")
-        out.write("ell_file = lssty1xdesi_desi_dr3_ells.txt\n")
-        out.write(f"lens_bin_table = {stem}_bins.txt\n")
-        out.write(f"gg_cross_pairs_file = {stem}_pairs.txt\n")
+    # two datasets that differ only in data_file: <stem>.dataset for the
+    # paper's example, <stem>_linear.dataset for the exploration examples
+    for suffix in ("", "_linear"):
+        with open(os.path.join(DATA, f"{stem}{suffix}.dataset"), "w") as out:
+            out.write(f"data_file = {stem}{suffix}_fid.datavector\n")
+            out.write(f"cov_file = {stem}_cov\n")
+            out.write(f"mask_file = {stem}.mask\n")
+            out.write(f"nz_lens_file = {stem}.nz\n")
+            out.write("nz_source_file = lssty1xdesi_source.nz\n")
+            out.write(f"lens_ntomo = {nbin}\n")
+            out.write(f"source_ntomo = {N_SOURCE}\n")
+            out.write("ell_file = lssty1xdesi_desi_dr3_ells.txt\n")
+            out.write(f"lens_bin_table = {stem}_bins.txt\n")
+            out.write(f"gg_cross_pairs_file = {stem}_pairs.txt\n")
 
     subprocess.run([sys.executable, os.path.join(SCRIPTS, "make_desi_params.py"),
                     "--case", case], check=True)
@@ -439,26 +450,37 @@ def stage_covariance(width):
 
 
 def stage_fiducial(width):
-    case, stem, cls = case_names(width)
-    from cobaya.model import get_model
-    from cobaya.yaml import yaml_load_file
-    # the linear example: its fiducial vector is the case's data vector
-    info = yaml_load_file(os.path.join(
-        PROJECT, "exploration", f"EXAMPLE_EVALUATE_LINEAR{WIDTHS[width][2]}.yaml"))
-    point = dict(info["sampler"]["evaluate"]["override"])
-    for key in ("sampler", "output", "force", "resume", "debug"):
-        info.pop(key, None)
-    target = os.path.join(DATA, f"{stem}_fid.datavector")
-    like = info["likelihood"][f"lssty1xdesi.{cls}"]
-    like["print_datavector"] = True
-    like["print_datavector_file"] = target
-    model = get_model(info)
-    point = {k: v for k, v in point.items()
-             if k in model.parameterization.sampled_params()}
-    model.logposterior(point, cached=False)
-    v = np.loadtxt(target)
-    print(f"{case}: fiducial data vector written ({v.shape[0]} rows, "
-          f"{int(np.sum(v[:, 1] != 0))} nonzero)")
+    """Write the case's two fiducial data vectors (make_desi_fiducial.py).
+
+    The linear example exploration/EXAMPLE_EVALUATE_LINEAR<N>.yaml
+    (growth-tied linear bias) writes <stem>_linear_fid.datavector, the
+    vector of <stem>_linear.dataset; the paper's example
+    EXAMPLE_EVALUATE<N>.yaml (model B + tilts on the pessimistic
+    linear-bias prior) writes <stem>_fid.datavector, the vector of
+    <stem>.dataset. Each example then evaluates to chi2 ~ 0 on its own
+    dataset. The paper's example is written by hand for a new case; until
+    it exists only the linear vector is written.
+
+    Arguments:
+      width = the case's Delta z, as spelled in WIDTHS.
+
+    Side effects: overwrites the data vectors named above.
+    """
+    import make_desi_fiducial as fiducial
+    number = WIDTHS[width][2]
+    case = case_names(width)[0]
+    examples = [
+        os.path.join(PROJECT, "exploration", f"EXAMPLE_EVALUATE_LINEAR{number}.yaml"),
+        os.path.join(PROJECT, f"EXAMPLE_EVALUATE{number}.yaml"),
+    ]
+    for example in examples:
+        if not os.path.exists(example):
+            print(f"{case}: {example} does not exist; its data vector is "
+                  "not written")
+            continue
+        target, rows, live, chi2_old = fiducial.write_fiducial(example)
+        print(f"{case}: wrote {target} from {os.path.basename(example)} "
+              f"({rows} rows, {live} nonzero)")
 
 
 def main():

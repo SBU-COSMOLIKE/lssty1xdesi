@@ -9,7 +9,9 @@ likelihood:
     # data vector itself is computed exactly, as in the CAMB example
     use_emulator: 2
     path: ./external_modules/data/lssty1xdesi
-    data_file: lssty1xdesi_desi_dr3.dataset
+    # linear bias: the linear-fiducial dataset (the main dataset holds the
+    # paper model's vector; see exploration/README.md)
+    data_file: lssty1xdesi_desi_dr3_linear.dataset
     binning_space: fourier
     external_nz_modeling: 1
     print_datavector: False

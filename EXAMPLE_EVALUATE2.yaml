@@ -7,8 +7,11 @@
 # every bin takes its group amplitude, b_{1,n} = B_g/D(zbar_n) with B_g =
 # DESI_B1_<g>. Model B is built for the shipped mask (k_max = 0.1185/Mpc at
 # every redshift, about 0.176 h/Mpc), the mask this example evaluates.
+# The data vector is this model at this point (scripts/make_desi_fiducial.py),
+# so the example evaluates to chi2 ~ 0.
 # exploration/EXAMPLE_EVALUATE_LINEAR2.yaml evaluates the same layout with
-# the growth-tied linear bias, the model of the shipped data vector.
+# the growth-tied linear bias, on its own data vector
+# (lssty1xdesi_desi_dr1_dz0p02_linear.dataset).
 # The DESI DR1 fixed-width Delta z = 0.02 case (90 lens bins):
 # scripts/make_desi_dz_case.py builds its files.
 timing: True

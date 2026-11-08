@@ -32,6 +32,19 @@ covering $`15 \le \ell \le 544`$: 9,964 entries, 5,309 of them
 unmasked. No galaxy-galaxy lensing rows are measured
 (`ggl_exclude: all`).
 
+Each DESI layout's data vector is a model at the fiducial point, not a
+measurement. `data/lssty1xdesi_desi_<case>.dataset`, which
+`EXAMPLE_EVALUATE1.yaml` to `EXAMPLE_EVALUATE4.yaml` read, holds the
+paper's bias model (model B + tilts on the pessimistic linear-bias
+prior, [one-loop bias](#higher_order_bias)) at its fiducial, so those
+examples evaluate to $`\chi^2 \approx 0`$.
+`data/lssty1xdesi_desi_<case>_linear.dataset` differs only in its data
+vector, the growth-tied linear bias at the same point, and every
+example in [exploration/](exploration/README.md) reads it.
+`scripts/make_desi_fiducial.py` writes either vector from its example
+(`<case>` = `dr3` for $`\Delta d_\mathrm{com} = 62`$ Mpc, `dr1_dz0p02`,
+`dr1_dz0p05`, `dr1_dz0p20`).
+
 The thin bins are the project's defining numerical challenge. Their
 radial kernels keep real non-Limber power far past the multipole where
 photometric surveys hand off to Limber, and the Fingers-of-God
@@ -84,10 +97,9 @@ flowchart TB
   `EXAMPLE_EVALUATE5.yaml` the LSST Y1 3×2pt case
   ([Δz cases](#dz_cases), [LSST case](#lsst_case)).
 - [exploration/](exploration/README.md) holds the examples of the other
-  bias models: the growth-tied linear bias that generated the data
-  vectors (`EXAMPLE_EVALUATE_LINEAR1.yaml` to
-  `EXAMPLE_EVALUATE_LINEAR4.yaml`), model A, and model B on the
-  growth-tied linear bias.
+  bias models, on the linear data vectors: the growth-tied linear bias
+  (`EXAMPLE_EVALUATE_LINEAR1.yaml` to `EXAMPLE_EVALUATE_LINEAR4.yaml`),
+  model A, and model B on the growth-tied linear bias.
 - `EXAMPLE_EMUL2_EVALUATE1.yaml` is the hybrid-emulator variant of the
   linear example `exploration/EXAMPLE_EVALUATE_LINEAR1.yaml`, with MCMC
   and Nautilus examples alongside
@@ -298,15 +310,18 @@ python ./projects/lssty1xdesi/covariance/compute_covariance.py ./projects/lssty1
 python ./projects/lssty1xdesi/scripts/make_desi_dz_case.py --width 0.02 --stage covariance
 ```
 
-**Step :four:**: write the fiducial data vector.
+**Step :four:**: write the fiducial data vectors.
 
 ```bash
 python ./projects/lssty1xdesi/scripts/make_desi_dz_case.py --width 0.02 --stage fiducial
 ```
 
-The last step writes the model vector of the linear example
-(`exploration/EXAMPLE_EVALUATE_LINEAR<N>.yaml`) at its fiducial point
-as the case's data vector, so that example evaluates to
+The last step writes, with `scripts/make_desi_fiducial.py`, the model
+vector of the linear example (`exploration/EXAMPLE_EVALUATE_LINEAR<N>.yaml`)
+at its fiducial point as the data vector of the case's linear dataset,
+and, when the paper's example `EXAMPLE_EVALUATE<N>.yaml` exists (it is
+written by hand for a new case), that example's vector as the data
+vector of the case's main dataset. Each example then evaluates to
 $`\chi^2 \approx 0`$.
 
 # The LSST Y1 3×2pt case <a name="lsst_case"></a>
@@ -442,9 +457,9 @@ Each class sets `higher_order_bias: 1` and reads two parameter files
 The examples run as in the
 [basic instructions](#running_cosmolike_projects), with every offset,
 tilt and residual at zero, where every bin's bias is its chunk's
-$`B_g/D(\bar z_n)`$. The data vectors are the linear-bias fiducials, so
-these examples do not evaluate to $`\chi^2 \approx 0`$: the one-loop
-terms change the vector even at zero offsets.
+$`B_g/D(\bar z_n)`$. The data vectors are this model at this point, so
+the examples evaluate to $`\chi^2 \approx 0`$ (1.0e-11, 1.1e-11, 4.1e-12
+and 7.0e-13 in layout order).
 
 The linear examples (growth-tied linear bias) and model A, model A +
 tilts and model B without tilts, with their classes and examples, are
