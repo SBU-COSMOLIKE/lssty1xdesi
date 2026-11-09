@@ -462,9 +462,92 @@ $D(0) = 1$.
 The Limber approximation evaluates the power spectrum only at the
 transverse wavenumber $(\ell + 1/2)/\chi$, with $\chi$ the comoving
 distance, and misses the line-of-sight modes that a thin bin with sharp
-edges passes.  Every term of the model is therefore projected without
-it, the real-space power through a low-rank factorization of each
-bin's power spectrum and the stochastic terms as exact templates.
+edges passes.  The exact projection keeps them: between bins $i$ and
+$j$, with $W_i(\chi) = n_i(z)\,dz/d\chi$ the radial kernel of bin $i$,
+$n_i$ its normalized redshift distribution, $j_\ell$ the spherical
+Bessel function and $P(k;\, z_1, z_2)$ the unequal-time power spectrum
+of the projected field at $z_1 = z(\chi_1)$ and $z_2 = z(\chi_2)$,
+\begin{equation}
+  C_\ell^{ij} \;=\; \frac{2}{\pi} \int d\chi_1\, W_i(\chi_1)
+  \int d\chi_2\, W_j(\chi_2)
+  \int_0^\infty dk\, k^2\, P(k;\, z_1, z_2)\,
+  j_\ell(k\chi_1)\, j_\ell(k\chi_2) .
+  \label{eq:exactcl}
+\end{equation}
+The double Bessel integral is the cost: $j_\ell(k\chi_1)\,
+j_\ell(k\chi_2)$ oscillates and beats, and quadrature over it is slow
+and unstable.
+
+Fang et al.~\cite{FangKEM2020} (FKEM) remove that cost by splitting
+the spectrum into its linear part and a nonlinear remainder.  The
+linear part is separable, $P_{\rm lin}(k;\, z_1, z_2) =
+D(z_1)\,D(z_2)\,P_{\rm lin}(k)$, with $P_{\rm lin}(k)$ the linear
+matter power spectrum today, so in Eq.~\eqref{eq:exactcl} each
+$\chi$ integral closes around its own Bessel function and becomes a
+one-dimensional transform that the FFTLog algorithm computes quickly.
+The remainder $P_{\rm mm} - P_{\rm lin}$, with $P_{\rm mm}$ the
+nonlinear matter power spectrum, matters only at high $k$, which
+projects to multipoles where the Limber approximation is accurate, so
+it is added in Limber:
+\begin{equation}
+  C_\ell \;=\; C_\ell^{\rm exact}[P_{\rm lin}]
+  \;+\; C_\ell^{\rm Limber}[P_{\rm mm}]
+  \;-\; C_\ell^{\rm Limber}[P_{\rm lin}] .
+  \label{eq:fkem}
+\end{equation}
+
+FKEM projects three transfer kernels per galaxy bin: density,
+redshift space and magnification.  The density and redshift-space
+(Kaiser) parts together give, with $b_{1,i}$ the bin's linear galaxy
+bias and $f = d\ln D/d\ln a$ the linear growth rate ($a$ the scale
+factor),
+\begin{equation}
+  \Delta_\ell^i(k) \;=\; \int d\chi\, W_i(\chi)\, D(z)
+  \left[\, b_{1,i}\, j_\ell(k\chi) \;-\; f(z)\, j_\ell''(k\chi)
+  \,\right] :
+  \label{eq:kaiserkernel}
+\end{equation}
+each factor $f\mu^2$ of the flat-sky Kaiser power, with $\mu$ the
+cosine of the angle to the line of sight, becomes a $-j_\ell''$ in the
+exact projection.  In the Limber terms of Eq.~\eqref{eq:fkem} the
+identity $j_\ell''(x) = [\ell(\ell-1)/x^2 - 1]\,j_\ell(x)
++ (2/x)\,j_{\ell+1}(x)$ writes the second derivative with the orders
+$\ell$ and $\ell+1$, and Limber evaluates each order at its own
+distance, $\chi_\ell = (\ell + 1/2)/k$ and
+$\chi_{\ell+1} = (\ell + 3/2)/k$, so the Limber redshift-space kernel
+combines the bin's radial kernel at two neighbouring distances:
+redshift-space distortions move galaxies between neighbouring shells.
+The third kernel, lensing magnification, is proportional to
+the magnification bias $b_{\rm mag}$, the response of the observed
+number density to the lensing convergence; this forecast sets
+$b_{\rm mag} = 0$ in every DESI bin and every LSST Y1 lens bin, so
+magnification is neglected.
+
+For thin bins the split of Eq.~\eqref{eq:fkem} is not enough.
+Limber's error shrinks with the width of the radial kernel, so for a
+thin bin the Limber remainder stays wrong far past the switch
+multipole: the hand-off fails exactly where accuracy was the goal.
+The density--density part of every DESI spectrum -- the linear-bias
+term, the one-loop terms and the $\alpha_0$ counterterm of
+Eq.~\eqref{eq:pgg} -- is therefore projected by a low-rank
+factorization instead.  Per bin, a singular value decomposition writes
+the square root of the real-space galaxy power spectrum $P_g(k, z)$ as
+a sum of five products of a function of $k$ and a function of $z$,
+each projected with its own FFTLog transform; the unequal-time
+spectrum is the geometric mean
+$\sqrt{P_g(k, z_1)}\,\sqrt{P_g(k, z_2)}$, exact at equal times and
+treating the two fields as fully correlated otherwise.  This carries
+the full one-loop power with no Limber hand-off up to a multipole cap
+at $\ell = 1000$, below which every kept band lies.
+
+The hybrid in one sentence: the density--density part runs through the
+low-rank factorization; the Kaiser terms and the $\alpha_2$
+counterterm keep the FKEM split, projected exactly with
+$P_{\rm lin}$ and corrected in Limber by Eq.~\eqref{eq:fkem}; the
+stochastic terms are projected as exact templates; and magnification
+is neglected.  The one-loop power is not pushed through the velocity
+terms because velocities do not grow like the density field once
+nonlinear.
 
 \paragraph{Parameters and figures of merit.}
 Seven cosmological parameters vary with flat priors: $10^9 A_s$, with
@@ -537,8 +620,11 @@ each bin's Fingers-of-God-convolved redshift distribution, with no
 redshift-space one-loop terms, and $\alpha_2$ is the line-of-sight
 counterterm in the convention of the DESI 2024 full-shape
 analysis~\cite{Maus2024}, in which $\alpha_2 k^2$ is a fractional
-correction to the velocity part of the Kaiser power.  Both
-counterterms are in $h^{-2}\,{\rm Mpc}^2$.  $\SNz$ is the white noise
+correction to the velocity part of the Kaiser power.  Equation~\eqref{eq:pgg}
+writes these terms with $P_{\rm lin}$; their projection adds the Limber
+difference between $P_{\rm mm}$ and $P_{\rm lin}$ (Section~\ref{sec:data}),
+so where the Limber approximation holds they carry the nonlinear power.
+Both counterterms are in $h^{-2}\,{\rm Mpc}^2$.  $\SNz$ is the white noise
 beyond Poisson, in units of the Poisson power $1/\bar{n}_i$ that the
 covariance carries, and $\SNt\,k^2\mu^2$ the stochastic term of the
 satellites' velocities, in units of $f_{\rm sat}\sigma_{\rm
@@ -1239,6 +1325,12 @@ gives the details.
 J.~Asorey, M.~Crocce, E.~Gazta\~naga and A.~Lewis,
 ``Recovering 3D clustering information with angular correlations'',
 2012, arXiv:1207.6487.
+
+\bibitem{FangKEM2020}
+X.~Fang, E.~Krause, T.~Eifler and N.~MacCrann,
+``Beyond Limber: efficient computation of angular power spectra for
+galaxy clustering and weak lensing'',
+2020, arXiv:1911.11947.
 
 \bibitem{DESCSRD2018}
 The LSST Dark Energy Science Collaboration,
