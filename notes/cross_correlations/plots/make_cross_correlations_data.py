@@ -1,4 +1,4 @@
-"""Write the data.json files of the two figures of notes/cross_correlations.
+"""Write the data.json files of the figures of notes/cross_correlations.
 
 What the note shows. The lssty1xdesi forecast cuts the DESI galaxies into
 thin redshift bins and measures, besides the angular power spectrum C_ii
@@ -8,9 +8,10 @@ distributions n_i(z): the histogram of the measured redshifts of the
 galaxies of bin i. Two bins are paired when their n(z) overlap or touch.
 The model never uses these histograms directly: it first blurs each one
 with the Fingers-of-God (FoG) smearing, a Gaussian in redshift that
-stands for the random velocities of galaxies inside their halos. The two
-figures draw the pairs (nz_overlap_layouts) and the blur
-(fog_smearing).
+stands for the random velocities of galaxies inside their halos; pairs
+whose blurred n(z) overlap are measured too (scripts/make_desi_pairs.py).
+The figures draw the pairs (nz_overlap_layouts, nz_overlap_zoom) and the
+blur (fog_smearing).
 
 Inputs, read from the project's data/ and likelihood/ folders for each of
 the four bin layouts (Delta d_com = 62 Mpc, the comoving layout whose
@@ -24,7 +25,16 @@ files are named dr3, and Delta z = 0.02, 0.05 and 0.2):
                           the DESI grid refined five-fold by linear
                           interpolation (scripts/make_desi_nz.py), so
                           every fifth row is an original DESI node;
-  data/<stem>_pairs.txt = the measured pairs (i, j), i < j, 0-based;
+  data/<stem>_pairs.txt = the measured pairs (i, j), i < j, 0-based: the
+                          base list (the DESI forecast's on 62 Mpc, the
+                          raw-range rule of scripts/make_desi_dz_case.py on
+                          the Delta z layouts) plus the pairs that
+                          scripts/make_desi_pairs.py adds because their
+                          FoG-blurred n(z) overlap;
+  data/lssty1xdesi_desi_dr3_linear_pairs.txt = the base list of
+                          62 Mpc alone (the 97 DESI pairs, kept for the
+                          exploration examples), which tells the added
+                          pairs apart; the Delta z layouts add none;
   likelihood/params_desi[_<case>].yaml = the velocity dispersions sigma_v
                           of the seven FoG groups: the prior centre of
                           each group leader, the value every evaluation
@@ -34,16 +44,18 @@ Outputs, next to this script:
 
   nz_overlap_layouts/data.json = per layout, every bin's raw n(z) on the
       DESI nodes (scaled to unit peak), the pairs, whether each pair's
-      raw ranges overlap or touch, the redshift range shared by LRG3 and
-      ELG1, and the counts the note quotes;
+      raw ranges overlap or touch and whether the overlap rule added it,
+      the redshift range shared by LRG3 and ELG1, and the counts the note
+      quotes;
   nz_overlap_zoom/data.json = the same for the corner where LRG2 ends
       and LRG3 and ELG1 begin, on the two thin layouts, with the bins
       numbered from 1 in data-vector order;
   fog_smearing/data.json = the raw and FoG-convolved n(z) of the bins in
       one narrow redshift window, sigma_z and the width of every bin,
       the overlap integral of every pair of neighbouring bins with and
-      without FoG, and of every pair outside the data vector that the
-      blur makes overlap.
+      without FoG, of the pairs added because the blur makes them
+      overlap, and of any pair outside the data vector that still
+      overlaps after the blur (none).
 
 The FoG convolution is the one of likelihood/desi_cl.py
 (set_lens_related): scipy's gaussian_filter1d on the refined grid, with
@@ -97,7 +109,9 @@ LAYOUTS = [
      "params": "params_desi.yaml",
      "label": "Delta d_com = 62 Mpc",
      "color": "#0072B2",
-     "marker": "o"},
+     "marker": "o",
+     # the DESI pairs before the overlap rule of scripts/make_desi_pairs.py
+     "base_pairs": "lssty1xdesi_desi_dr3_linear_pairs.txt"},
 ]
 
 # The n(z) table refines the DESI grid five-fold (REFINE of
@@ -316,6 +330,21 @@ def build_layout(project, layout):
     pair_set = set()
     for row in pairs:
         pair_set.add((int(row[0]), int(row[1])))
+    # the base list: the pair file itself unless the layout names an
+    # earlier one; a pair outside it was added by the overlap rule
+    base_set = set(pair_set)
+    if layout.get("base_pairs"):
+        base_rows = np.loadtxt(os.path.join(project, "data", layout["base_pairs"]),
+                               dtype=int, ndmin=2)
+        base_set = set()
+        for row in base_rows:
+            base_set.add((int(row[0]), int(row[1])))
+        if not base_set <= pair_set:
+            raise ValueError(f"{layout['base_pairs']} lists pairs missing from "
+                             f"{stem}_pairs.txt")
+    added = []
+    for row in pairs:
+        added.append((int(row[0]), int(row[1])) not in base_set)
     touching = []
     for i, j in pairs:
         lo_i = z_raw[ranges[i, 0]]
@@ -381,6 +410,9 @@ def build_layout(project, layout):
                 value = overlap(n_fog[:, i], n_fog[:, j], z)
             if (i, j) in pair_set:
                 measured_fog[(i, j)] = value
+                if (i, j) not in base_set and value < NEAR_THRESHOLD:
+                    raise ValueError(f"added pair ({i}, {j}) overlaps by only "
+                                     f"{value:.1e} after the blur")
             elif value > NEAR_THRESHOLD:
                 unmeasured_near.append({"i": i,
                                         "j": j,
@@ -394,7 +426,8 @@ def build_layout(project, layout):
             "sigma_v": sigma_v, "sigma_z": sigma_z, "leaders": leaders,
             "widths": widths, "neighbours": neighbours,
             "next_but_one": next_but_one, "measured_fog": measured_fog,
-            "unmeasured_near": unmeasured_near, "fog_check": fog_check}
+            "unmeasured_near": unmeasured_near, "base_set": base_set,
+            "added": added, "fog_check": fog_check}
 
 
 def pair_summary(built):
@@ -417,8 +450,10 @@ def pair_summary(built):
     kinds = {}
     partners = np.zeros(nbin, dtype=int)
     largest = (-1.0, None)
-    for i, j in built["pairs"]:
-        if samples[i] == samples[j] and j == i + 1:
+    for (i, j), is_added in zip(built["pairs"], built["added"]):
+        if is_added:
+            kind = f"added: {groups[i]} x {groups[j]}, blurred kernels overlap"
+        elif samples[i] == samples[j] and j == i + 1:
             kind = "same sample, next bin"
         elif samples[i] == samples[j]:
             kind = f"same sample, {j - i} bins apart"
@@ -451,6 +486,8 @@ def pair_summary(built):
 
     return {"nbins": nbin,
             "npairs": int(len(built["pairs"])),
+            "npairs_base": len(built["base_set"]),
+            "nspectra_gg": nbin + int(len(built["pairs"])),
             "kinds": kinds,
             "partners_min": int(partners.min()),
             "partners_max": int(partners.max()),
@@ -460,6 +497,30 @@ def pair_summary(built):
             "largest_measured": describe(largest),
             "smallest_unmeasured": describe(smallest),
             "smallest_unmeasured_same_sample": describe(smallest_same)}
+
+
+def added_overlaps(built):
+    """Return the pairs added by the overlap rule with their overlaps.
+
+    Arguments:
+      built = the dict of build_layout.
+
+    Returns:
+      a dict of lists: bins (1-based), groups, mean redshift of the pair,
+      raw and convolved overlap integral, one entry per added pair.
+    """
+    z = built["z"]
+    out = {"bins_1based": [], "groups": [], "zmid": [], "raw": [], "fog": []}
+    for (i, j), is_added in zip(built["pairs"], built["added"]):
+        if not is_added:
+            continue
+        out["bins_1based"].append([int(i) + 1, int(j) + 1])
+        out["groups"].append([built["groups"][i], built["groups"][j]])
+        out["zmid"].append(round(0.5*float(built["zbar"][i] + built["zbar"][j]), 5))
+        raw = overlap(built["n_fine"][:, i], built["n_fine"][:, j], z)
+        out["raw"].append(float(f"{raw:.4e}"))
+        out["fog"].append(float(f"{built['measured_fog'][(int(i), int(j))]:.4e}"))
+    return out
 
 
 def measured_minimum(built):
@@ -541,6 +602,7 @@ def main():
             "bins": bins_out,
             "pairs": [[int(i), int(j)] for i, j in b["pairs"]],
             "touching": b["touching"],
+            "added": b["added"],
             "unmeasured_near": [[p["i"], p["j"]] for p in b["unmeasured_near"]],
             "lrg3_elg1_range": shared_range(b, "LRG3", "ELG1"),
             "summary": pair_summary(b)})
@@ -553,7 +615,9 @@ def main():
                   "to unit peak. Pairs and bins are 0-based in data-vector "
                   "order; 'touching' is the pairing rule of "
                   "scripts/make_desi_dz_case.py (raw ranges overlap or come "
-                  "within 1.5 node steps) applied to each listed pair. "
+                  "within 1.5 node steps) applied to each listed pair; "
+                  "'added' marks the pairs scripts/make_desi_pairs.py added "
+                  "to the base list because their FoG-blurred n(z) overlap. "
                   "unmeasured_near: the pairs not in the data vector whose "
                   "FoG-convolved n(z) overlap by more than 1e-6 (see "
                   "fog_smearing/data.json). lrg3_elg1_range is where the raw "
@@ -595,10 +659,12 @@ def main():
             bins_out.append(b)
         pairs_out = []
         touching_out = []
-        for (i, j), t in zip(entry["pairs"], entry["touching"]):
+        added_out = []
+        for (i, j), t, a in zip(entry["pairs"], entry["touching"], entry["added"]):
             if i in keep and j in keep:
                 pairs_out.append([keep.index(i), keep.index(j)])
                 touching_out.append(t)
+                added_out.append(a)
         near_out = []
         for i, j in entry["unmeasured_near"]:
             if i in keep and j in keep:
@@ -612,6 +678,7 @@ def main():
                              "bins": bins_out,
                              "pairs": pairs_out,
                              "touching": touching_out,
+                             "added": added_out,
                              "unmeasured_near": near_out})
     zoom_order = []
     for key in OVERLAP_ZOOM_LAYOUTS:
@@ -624,9 +691,10 @@ def main():
                   "nz_overlap_layouts/data.json that reach into the window "
                   "on two thin layouts, plus every partner of one of them, "
                   "with their 1-based numbers in data-vector order, the "
-                  "measured pairs among them and the unmeasured pairs whose "
-                  "FoG-convolved n(z) overlap by more than 1e-6 (indices "
-                  "into this file's bin list)."),
+                  "measured pairs among them, with 'added' marking those the "
+                  "overlap rule of scripts/make_desi_pairs.py added, and the "
+                  "unmeasured pairs whose FoG-convolved n(z) overlap by more "
+                  "than 1e-6 (none; indices into this file's bin list)."),
         "window": list(OVERLAP_ZOOM_WINDOW),
         "layouts": zoom_order}
     target = os.path.join(HERE, "nz_overlap_zoom", "data.json")
@@ -703,6 +771,7 @@ def main():
                 "zmid": [round(p["zmid"], 5) for p in b["unmeasured_near"]],
                 "raw": [float(f"{p['raw']:.4e}") for p in b["unmeasured_near"]],
                 "fog": [float(f"{p['fog']:.4e}") for p in b["unmeasured_near"]]},
+            "added": added_overlaps(b),
             "measured_fog_min": measured_minimum(b),
             "fog_check_against_covariance_adapter": b["fog_check"]})
         print(f"{layout['key']}: sigma_z/width {ratio.min():.3f}-{ratio.max():.3f}; "
@@ -710,6 +779,7 @@ def main():
               f"{max(p['raw'] for p in nb):.2e}, FoG {min(p['fog'] for p in nb):.3f}-"
               f"{max(p['fog'] for p in nb):.3f}; next-but-one largest raw "
               f"{max(p['raw'] for p in nnb):.1e}, FoG {max(p['fog'] for p in nnb):.1e}; "
+              f"{sum(b['added'])} added pairs; "
               f"{len(b['unmeasured_near'])} unmeasured pairs overlap after the blur")
     leaders = built["dr3"]["leaders"]
     fog_data = {
@@ -726,6 +796,9 @@ def main():
                   "(i, i + 1), int n_i n_j dz / sqrt(int n_i^2 int n_j^2), "
                   "on the refined grid, raw and convolved; next_but_one_max: "
                   "the largest such overlap of the pairs (i, i + 2); "
+                  "added: the pairs the overlap rule of "
+                  "scripts/make_desi_pairs.py added, with their raw and "
+                  "convolved overlaps; "
                   "unmeasured_near: every pair outside the data vector whose "
                   "convolved overlap exceeds 1e-6; measured_fog_min: the "
                   "measured pair with the smallest convolved overlap."),

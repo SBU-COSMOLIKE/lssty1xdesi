@@ -21,14 +21,14 @@ term (cNG). The shared kernels live in
 `lssty1xdesi_covariance.py` states this survey and forwards the
 calculation.
 
-The measured layout has 9964 Fourier entries, 53 bandpowers per
+The measured layout has 10494 Fourier entries, 53 bandpowers per
 spectrum:
 
 | block | spectra | entries |
 |---|---|---|
 | EE | 15 LSST Y1 source pairs | 0 - 794 |
 | gg | 76 DESI thin-bin autos | 795 - 4822 |
-| gg cross | 97 DESI measured bin pairs | 4823 - 9963 |
+| gg cross | 107 DESI bin pairs (the forecast's 97 and 10 FoG-overlap pairs) | 4823 - 10493 |
 
 No galaxy-galaxy lensing rows are measured. The cross pairs follow
 `data/lssty1xdesi_desi_dr3_pairs.txt`, the order of the data vector,

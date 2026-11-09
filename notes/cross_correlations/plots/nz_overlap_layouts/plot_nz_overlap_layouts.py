@@ -17,10 +17,13 @@ What is drawn. One block per layout, top to bottom Delta z = 0.2, 0.05,
     LRG bin to an ELG bin at about the same redshift.
 
 A gray band marks the redshifts where LRG3 and ELG1, two different
-galaxy samples, observe the same volume. A dashed segment is a pair
-whose raw ranges neither overlap nor touch (only the BGS-LRG1 boundary
-pair of Delta d_com = 62 Mpc, which the DESI forecast's pair list
-includes).
+galaxy samples, observe the same volume. The pair segments come in
+three styles, named by a legend under the figure: solid, a pair whose
+raw ranges overlap or touch; dashed black, the BGS-LRG1 boundary pair of
+Delta d_com = 62 Mpc, whose raw ranges do not touch but which the DESI
+forecast's pair list includes; dash-dotted vermillion, the ten LRG3-ELG1
+pairs of Delta d_com = 62 Mpc that scripts/make_desi_pairs.py added
+because their Fingers-of-God-blurred n(z) overlap.
 
 A header above the blocks names the groups with a swatch of their fill
 and outline. The texts inside the panels are checked in code against
@@ -38,6 +41,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.gridspec import GridSpec
+from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 
 # Figure style of the whole notebook: the shared plotting functions never change
@@ -83,8 +87,21 @@ GRAPH_ROW = {1: 1.0, 0: 0.0}
 # the outline of every bin: thin and dark, so the shared edge of two
 # touching bins shows as one line
 OUTLINE = {'color': '0.15', 'lw': 0.55}
-# the pair segments and the bin dots of the pair graph
-EDGE = {'color': '0.1', 'lw': 0.6}
+# the bin dots of the pair graph
+# The three kinds of pair segment: a pair whose raw ranges overlap or
+# touch; a listed pair whose raw ranges do not touch (dashed); a pair
+# added because the blurred n(z) overlap (vermillion and dash-dotted,
+# so it reads apart from the others in black and white too)
+PAIR_STYLE = {
+    'touching': {'color': '0.1', 'lw': 0.6, 'ls': '-'},
+    'apart': {'color': '0.1', 'lw': 0.6, 'ls': (0, (2.0, 1.5))},
+    'added': {'color': '#D55E00', 'lw': 0.9, 'ls': (0, (3.0, 1.0, 1.0, 1.0))},
+}
+PAIR_LABEL = {
+    'touching': 'raw ranges overlap or touch',
+    'apart': 'DESI pair, raw ranges apart',
+    'added': 'added: blurred kernels overlap',
+}
 NODE_SIZE = 2.6
 # the gray band where LRG3 and ELG1 share a volume
 BAND_COLOR = '0.86'
@@ -229,9 +246,15 @@ for k, lay in enumerate(layouts):
     zbar = np.array([b['zbar'] for b in lay['bins']])
     lane = np.array([GROUPS[b['group']]['lane'] for b in lay['bins']])
     yrow = np.array([GRAPH_ROW[v] for v in lane])
-    for (i, j), touching in zip(lay['pairs'], lay['touching']):
-        graph.plot([zbar[i], zbar[j]], [yrow[i], yrow[j]],
-                   ls='-' if touching else (0, (2.0, 1.5)), zorder=2, **EDGE)
+    for (i, j), touching, added in zip(lay['pairs'], lay['touching'], lay['added']):
+        if added:
+            kind = 'added'
+        elif touching:
+            kind = 'touching'
+        else:
+            kind = 'apart'
+        graph.plot([zbar[i], zbar[j]], [yrow[i], yrow[j]], zorder=2,
+                   **PAIR_STYLE[kind])
     graph.plot(zbar, yrow, ls='none', marker=lay['marker'], ms=NODE_SIZE,
                mfc=lay['color'], mec='0.1', mew=0.35, zorder=3)
     graph.set_ylim(-0.5, 1.5)
@@ -247,6 +270,12 @@ for k, lay in enumerate(layouts):
 
 fig.text(0.0, 0.5, r'raw $n(z)$ at unit peak; pairs', rotation=90,
          ha='left', va='center', fontsize=9)
+# the three kinds of pair segment, in one row under the x label
+fig.legend(handles=[Line2D([], [], **PAIR_STYLE[kind]) for kind in PAIR_STYLE],
+           labels=[PAIR_LABEL[kind] for kind in PAIR_STYLE],
+           loc='upper center', bbox_to_anchor=(0.54, 0.0), ncol=3,
+           frameon=False, fontsize=8, handlelength=3.2, columnspacing=2.0,
+           handletextpad=0.5)
 fig.savefig(os.path.join(HERE, 'nz_overlap_layouts.pdf'))
 fig.savefig(os.path.join(HERE, 'nz_overlap_layouts.png'), dpi=300)
 plt.close(fig)

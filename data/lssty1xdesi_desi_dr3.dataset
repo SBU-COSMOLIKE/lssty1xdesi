@@ -1,5 +1,4 @@
 data_file = lssty1xdesi_desi_dr3_fid.datavector
-#data_file = lssty1xdesi_desi_dr3_sacc.datavector
 cov_file = lssty1xdesi_desi_dr3_cov
 mask_file = lssty1xdesi_desi_dr3.mask
 nz_lens_file = lssty1xdesi_desi_dr3.nz

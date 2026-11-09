@@ -1,7 +1,7 @@
 """Compute and save the lssty1xdesi covariance through the production interface.
 
-The covariance matrix of the data vector (9964 Fourier entries: 15 EE
-spectra, 76 clustering autos and 97 clustering cross pairs, 53
+The covariance matrix of the data vector (10494 Fourier entries: 15 EE
+spectra, 76 clustering autos and 107 clustering cross pairs, 53
 bandpowers each) is the sum of three terms: Gaussian (G), super-sample
 covariance (SSC) and connected non-Gaussian (cNG). This script evaluates
 them at the one cosmology written in a Cobaya-style yaml file and saves G,

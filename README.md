@@ -26,11 +26,15 @@ $`d_\mathrm{com}`$ the comoving distance (BGS, LRG1-3,
 ELG1-2; mean redshifts 0.11 to 1.55;
 `data/lssty1xdesi_desi_dr3_bins.txt` names each bin's sample chunk and
 `data/lssty1xdesi_desi_dr3_ngal.txt` its density). The data vector
-holds 15 shear pairs, 76 clustering autos and 97 measured cross-bin
+holds 15 shear pairs, 76 clustering autos and 107 cross-bin
 clustering pairs, each in 53 bands of width $`\Delta\ell = 10`$
-covering $`15 \le \ell \le 544`$: 9,964 entries, 5,309 of them
-unmasked. No galaxy-galaxy lensing rows are measured
-(`ggl_exclude: all`).
+covering $`15 \le \ell \le 544`$: 10,494 entries, 5,674 of them
+unmasked. The cross pairs are the 97 that the DESI forecast measures and
+10 LRG3 x ELG1 pairs whose Fingers-of-God-blurred kernels overlap
+although their bin edges miss by 0.001-0.002 in redshift
+(`scripts/make_desi_pairs.py` states the rule;
+[the cross-correlation note](notes/cross_correlations/cross_correlations.pdf)).
+No galaxy-galaxy lensing rows are measured (`ggl_exclude: all`).
 
 Each DESI layout's data vector is a model at the fiducial point, not a
 measurement. `data/lssty1xdesi_desi_<case>.dataset`, which
@@ -40,7 +44,12 @@ prior, [one-loop bias](#higher_order_bias)) at its fiducial, so those
 examples evaluate to $`\chi^2 \approx 0`$.
 `data/lssty1xdesi_desi_<case>_linear.dataset` differs only in its data
 vector, the growth-tied linear bias at the same point, and every
-example in [exploration/](exploration/README.md) reads it.
+example in [exploration/](exploration/README.md) reads it. On the
+$`\Delta d_\mathrm{com} = 62`$ Mpc layout the linear dataset also keeps
+the 97-pair list of the DESI forecast, with its mask and covariance
+(`lssty1xdesi_desi_dr3_linear_pairs.txt`, `_linear.mask`,
+`_linear_cov`), so the exploration examples evaluate the layout they
+were built on.
 `scripts/make_desi_fiducial.py` writes either vector from its example
 (`<case>` = `dr3` for $`\Delta d_\mathrm{com} = 62`$ Mpc, `dr1_dz0p02`,
 `dr1_dz0p05`, `dr1_dz0p20`).

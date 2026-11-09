@@ -26,7 +26,11 @@ was: about 0 for the linear examples, and 4817.064, 5408.959, 2166.0383
 and 704.4138 (in layout order) for model A and model B on the
 growth-tied linear bias at their fiducial points.
 `scripts/make_desi_fiducial.py` rewrites a linear vector from its linear
-example.
+example. On the $`\Delta d_\mathrm{com} = 62`$ Mpc layout the linear
+dataset keeps the 97 cross pairs of the DESI forecast, with their mask and
+covariance (`data/lssty1xdesi_desi_dr3_linear_pairs.txt`, `_linear.mask`,
+`_linear_cov`); the main dataset adds 10 LRG3 x ELG1 pairs
+(`scripts/make_desi_pairs.py`).
 
 | File | Model | Served |
 |---|---|---|

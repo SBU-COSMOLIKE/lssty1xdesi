@@ -11,11 +11,14 @@ functions): it states the survey and forwards the calculation.
 compute_covariance.py and the notebook EXAMPLE_EVALUATE_COVARIANCE.ipynb
 use it.
 
-The measured layout has 9964 Fourier entries over 53 bandpowers each:
+The measured layout has 10494 Fourier entries over 53 bandpowers each:
 
-  EE        15 LSST Y1 source-pair spectra      entries     0 -  794
-  gg        76 DESI thin-bin auto spectra       entries   795 - 4822
-  gg cross  97 DESI measured bin pairs          entries  4823 - 9963
+  EE        15 LSST Y1 source-pair spectra      entries     0 -   794
+  gg        76 DESI thin-bin auto spectra       entries   795 -  4822
+  gg cross  107 DESI bin pairs                  entries  4823 - 10493
+
+The 107 pairs are the 97 the source forecast measures and 10 LRG3 x ELG1
+pairs whose blurred kernels overlap (scripts/make_desi_pairs.py).
 
 No galaxy-galaxy lensing rows are measured. The cross pairs are the rows
 of data/lssty1xdesi_desi_dr3_pairs.txt, in file order - the same order as
@@ -190,7 +193,7 @@ def observable_rows(case="dr3"):
     measured in a DESI case. Clustering carries one auto row per lens
     bin first, then the measured cross pairs with A < B - exactly the
     data-vector block order, so row r of the covariance is entry 53*r of
-    the vector. The default case has 76 lens bins and 97 pairs: 188
+    the vector. The default case has 76 lens bins and 107 pairs: 198
     rows. The LSST case inserts galaxy-galaxy lensing (probe 2, rows
     (lens, source)) for every pair, lens bin outer, between EE and the
     clustering autos, and has no cross pairs.
@@ -590,7 +593,7 @@ def compute(interface, settings, space="fourier", rows=None, progress=None,
         space = "fourier" (the measured E-mode and clustering
             bandpowers); the project measures no real-space vector.
         rows = optional subset of measured rows, an int32 [n_rows, 3]
-            table of (type, A, B); None selects the full 188-row layout
+            table of (type, A, B); None selects the full 198-row layout
             of observable_rows() for settings["case"], the
             data-vector order.
         progress = optional function called as progress(stage,
@@ -601,7 +604,7 @@ def compute(interface, settings, space="fourier", rows=None, progress=None,
         the shared forecast dict (compute_forecast): the G, SSC, cNG and
         total matrices, mean signals, the coordinate of each row (band
         centers in multipole) and the resolved settings. The full layout
-        has 9964 entries in the default case.
+        has 10494 entries in the default case.
     """
     if rows is None:
         rows = observable_rows(settings.get("case", "dr3"))

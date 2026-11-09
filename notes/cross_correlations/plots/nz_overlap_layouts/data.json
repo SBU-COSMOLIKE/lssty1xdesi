@@ -1,5 +1,5 @@
 {
- "about": "Written by notes/cross_correlations/plots/make_cross_correlations_data.py from the project's data/lssty1xdesi_desi_<layout>.nz, _bins.txt and _pairs.txt. Each bin's raw n(z) is given on the DESI redshift nodes (spacing dz_node) from z_first on, scaled to unit peak. Pairs and bins are 0-based in data-vector order; 'touching' is the pairing rule of scripts/make_desi_dz_case.py (raw ranges overlap or come within 1.5 node steps) applied to each listed pair. unmeasured_near: the pairs not in the data vector whose FoG-convolved n(z) overlap by more than 1e-6 (see fog_smearing/data.json). lrg3_elg1_range is where the raw LRG3 and ELG1 ranges intersect.",
+ "about": "Written by notes/cross_correlations/plots/make_cross_correlations_data.py from the project's data/lssty1xdesi_desi_<layout>.nz, _bins.txt and _pairs.txt. Each bin's raw n(z) is given on the DESI redshift nodes (spacing dz_node) from z_first on, scaled to unit peak. Pairs and bins are 0-based in data-vector order; 'touching' is the pairing rule of scripts/make_desi_dz_case.py (raw ranges overlap or come within 1.5 node steps) applied to each listed pair; 'added' marks the pairs scripts/make_desi_pairs.py added to the base list because their FoG-blurred n(z) overlap. unmeasured_near: the pairs not in the data vector whose FoG-convolved n(z) overlap by more than 1e-6 (see fog_smearing/data.json). lrg3_elg1_range is where the raw LRG3 and ELG1 ranges intersect.",
  "layouts": [
   {
    "key": "dr1_dz0p20",
@@ -5327,6 +5327,21 @@
     true,
     true
    ],
+   "added": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
    "unmeasured_near": [],
    "lrg3_elg1_range": [
     0.8003,
@@ -5335,6 +5350,8 @@
    "summary": {
     "nbins": 10,
     "npairs": 13,
+    "npairs_base": 13,
+    "nspectra_gg": 23,
     "kinds": {
      "same sample, next bin": 7,
      "BGS x LRG1": 1,
@@ -11190,6 +11207,60 @@
     true,
     true
    ],
+   "added": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
    "unmeasured_near": [],
    "lrg3_elg1_range": [
     0.8003,
@@ -11198,6 +11269,8 @@
    "summary": {
     "nbins": 36,
     "npairs": 52,
+    "npairs_base": 52,
+    "nspectra_gg": 88,
     "kinds": {
      "same sample, next bin": 33,
      "BGS x LRG1": 1,
@@ -18024,6 +18097,141 @@
     true,
     true
    ],
+   "added": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
    "unmeasured_near": [],
    "lrg3_elg1_range": [
     0.8003,
@@ -18032,6 +18240,8 @@
    "summary": {
     "nbins": 90,
     "npairs": 133,
+    "npairs_base": 133,
+    "nspectra_gg": 223,
     "kinds": {
      "same sample, next bin": 87,
      "BGS x LRG1": 1,
@@ -24014,6 +24224,10 @@
     ],
     [
      39,
+     49
+    ],
+    [
+     39,
      50
     ],
     [
@@ -24023,6 +24237,10 @@
     [
      40,
      41
+    ],
+    [
+     40,
+     50
     ],
     [
      40,
@@ -24038,6 +24256,10 @@
     ],
     [
      41,
+     51
+    ],
+    [
+     41,
      52
     ],
     [
@@ -24047,6 +24269,10 @@
     [
      42,
      43
+    ],
+    [
+     42,
+     52
     ],
     [
      42,
@@ -24062,6 +24288,10 @@
     ],
     [
      43,
+     53
+    ],
+    [
+     43,
      54
     ],
     [
@@ -24071,6 +24301,10 @@
     [
      44,
      45
+    ],
+    [
+     44,
+     54
     ],
     [
      44,
@@ -24086,6 +24320,10 @@
     ],
     [
      45,
+     55
+    ],
+    [
+     45,
      56
     ],
     [
@@ -24095,6 +24333,10 @@
     [
      46,
      47
+    ],
+    [
+     46,
+     56
     ],
     [
      46,
@@ -24110,11 +24352,19 @@
     ],
     [
      47,
+     57
+    ],
+    [
+     47,
      58
     ],
     [
      47,
      59
+    ],
+    [
+     48,
+     58
     ],
     [
      48,
@@ -24273,32 +24523,42 @@
     true,
     true,
     true,
+    false,
     true,
     true,
     true,
+    false,
     true,
     true,
     true,
+    false,
     true,
     true,
     true,
+    false,
     true,
     true,
     true,
+    false,
     true,
     true,
     true,
+    false,
     true,
     true,
     true,
+    false,
     true,
     true,
     true,
+    false,
     true,
     true,
     true,
+    false,
     true,
     true,
+    false,
     true,
     true,
     true,
@@ -24328,67 +24588,178 @@
     true,
     true
    ],
-   "unmeasured_near": [
-    [
-     39,
-     49
-    ],
-    [
-     40,
-     50
-    ],
-    [
-     41,
-     51
-    ],
-    [
-     42,
-     52
-    ],
-    [
-     43,
-     53
-    ],
-    [
-     44,
-     54
-    ],
-    [
-     45,
-     55
-    ],
-    [
-     46,
-     56
-    ],
-    [
-     47,
-     57
-    ],
-    [
-     48,
-     58
-    ]
+   "added": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
    ],
+   "unmeasured_near": [],
    "lrg3_elg1_range": [
     0.8017,
     1.074
    ],
    "summary": {
     "nbins": 76,
-    "npairs": 97,
+    "npairs": 107,
+    "npairs_base": 97,
+    "nspectra_gg": 183,
     "kinds": {
      "same sample, next bin": 73,
      "BGS x LRG1": 1,
      "LRG2 x ELG1": 1,
-     "LRG3 x ELG1": 22
+     "LRG3 x ELG1": 22,
+     "added: LRG3 x ELG1, blurred kernels overlap": 10
     },
     "partners_min": 1,
-    "partners_max": 4,
+    "partners_max": 5,
     "pairs_not_touching_1based": [
      [
       18,
       19
+     ],
+     [
+      40,
+      50
+     ],
+     [
+      41,
+      51
+     ],
+     [
+      42,
+      52
+     ],
+     [
+      43,
+      53
+     ],
+     [
+      44,
+      54
+     ],
+     [
+      45,
+      55
+     ],
+     [
+      46,
+      56
+     ],
+     [
+      47,
+      57
+     ],
+     [
+      48,
+      58
+     ],
+     [
+      49,
+      59
      ]
     ],
     "largest_measured": {
@@ -24407,18 +24778,18 @@
      ]
     },
     "smallest_unmeasured": {
-     "separation": 0.0243,
+     "separation": 0.0301,
      "bins_1based": [
-      40,
-      50
+      1,
+      3
      ],
      "groups": [
-      "LRG3",
-      "ELG1"
+      "BGS",
+      "BGS"
      ],
      "zbar": [
-      0.8361,
-      0.8118
+      0.1076,
+      0.1377
      ]
     },
     "smallest_unmeasured_same_sample": {

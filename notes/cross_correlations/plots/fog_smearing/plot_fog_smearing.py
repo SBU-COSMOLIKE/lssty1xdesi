@@ -21,9 +21,10 @@ What is drawn.
              O_ij = int n_i n_j dz / sqrt(int n_i^2 dz int n_j^2 dz),
              for the raw (dashed, open markers) and the convolved
              (solid, filled markers) n(z), on a logarithmic axis; black
-             crosses mark the unmeasured LRG3 x ELG1 pairs of
-             Delta d_com = 62 Mpc whose raw ranges miss by 3 to 5 DESI grid steps and
-             whose convolved n(z) overlap (their raw overlap is zero).
+             crosses mark the ten LRG3 x ELG1 pairs of
+             Delta d_com = 62 Mpc that scripts/make_desi_pairs.py added
+             because their convolved n(z) overlap (their raw ranges miss
+             by 3 to 5 DESI grid steps, so their raw overlap is zero).
 
 Each layout has its house color, line width and marker
 (.claude/skills/paper-figures/SKILL.md); raw against convolved is dashed
@@ -227,11 +228,11 @@ for lay in data['layouts']:
         pick = nb_samples == sample
         ax_overlap.plot(zmid[pick], fog[pick], mfc=color, **style)
         ax_overlap.plot(zmid[pick], raw[pick], mfc='white', ls=dashed(lw), **style)
-    # unmeasured pairs that overlap only after the blur (their raw overlap
-    # is zero, which a log axis cannot show): black crosses
-    near = lay['unmeasured_near']
-    if near['zmid']:
-        ax_overlap.plot(near['zmid'], near['fog'], ls='none', marker='x', ms=4.0,
+    # pairs added because they overlap only after the blur (their raw
+    # overlap is zero, which a log axis cannot show): black crosses
+    added = lay['added']
+    if added['zmid']:
+        ax_overlap.plot(added['zmid'], added['fog'], ls='none', marker='x', ms=4.0,
                         mew=1.0, color='black', zorder=5)
 ax_ratio.set_ylim(0.0, 0.142)
 ax_ratio.set_yticks([0.0, 0.04, 0.08, 0.12])
@@ -250,7 +251,7 @@ for ax in (ax_ratio, ax_overlap):
 # against every line and marker
 cross_legend = ax_overlap.legend(
     handles=[Line2D([], [], ls='none', marker='x', ms=4.0, mew=1.0, color='black')],
-    labels=[r'unmeasured LRG3$\times$ELG1 pairs, $\Delta d_\mathrm{com} = 62$ Mpc'],
+    labels=[r'added LRG3$\times$ELG1 pairs, $\Delta d_\mathrm{com} = 62$ Mpc'],
     loc='upper left', frameon=False, fontsize=FONT - 0.5, handletextpad=0.3,
     borderaxespad=0.2, borderpad=0.1)
 fig.canvas.draw()

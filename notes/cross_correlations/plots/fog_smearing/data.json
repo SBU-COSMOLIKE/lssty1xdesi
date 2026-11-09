@@ -1,5 +1,5 @@
 {
- "about": "Written by notes/cross_correlations/plots/make_cross_correlations_data.py. The FoG convolution is that of likelihood/desi_cl.py (scipy gaussian_filter1d on the refined n(z) grid, sigma_z = (1 + zbar) sigma_v / c in grid steps, mode constant) at the default sigma_v of likelihood/params_desi[_<case>].yaml. zoom: raw n(z) on the DESI nodes and convolved n(z) on every second refined row, both divided by the raw peak of the bin. width: the bin's raw redshift range plus one node. neighbours: the normalized overlap integral of each same-sample pair (i, i + 1), int n_i n_j dz / sqrt(int n_i^2 int n_j^2), on the refined grid, raw and convolved; next_but_one_max: the largest such overlap of the pairs (i, i + 2); unmeasured_near: every pair outside the data vector whose convolved overlap exceeds 1e-6; measured_fog_min: the measured pair with the smallest convolved overlap.",
+ "about": "Written by notes/cross_correlations/plots/make_cross_correlations_data.py. The FoG convolution is that of likelihood/desi_cl.py (scipy gaussian_filter1d on the refined n(z) grid, sigma_z = (1 + zbar) sigma_v / c in grid steps, mode constant) at the default sigma_v of likelihood/params_desi[_<case>].yaml. zoom: raw n(z) on the DESI nodes and convolved n(z) on every second refined row, both divided by the raw peak of the bin. width: the bin's raw redshift range plus one node. neighbours: the normalized overlap integral of each same-sample pair (i, i + 1), int n_i n_j dz / sqrt(int n_i^2 int n_j^2), on the refined grid, raw and convolved; next_but_one_max: the largest such overlap of the pairs (i, i + 2); added: the pairs the overlap rule of scripts/make_desi_pairs.py added, with their raw and convolved overlaps; unmeasured_near: every pair outside the data vector whose convolved overlap exceeds 1e-6; measured_fog_min: the measured pair with the smallest convolved overlap.",
  "c_kms": 299792.458,
  "sigma_v_groups": {
   "BGS0": 371.0,
@@ -20354,6 +20354,13 @@
     "raw": [],
     "fog": []
    },
+   "added": {
+    "bins_1based": [],
+    "groups": [],
+    "zmid": [],
+    "raw": [],
+    "fog": []
+   },
    "measured_fog_min": {
     "bins_1based": [
      2,
@@ -20709,6 +20716,13 @@
     "fog": 0.0
    },
    "unmeasured_near": {
+    "bins_1based": [],
+    "groups": [],
+    "zmid": [],
+    "raw": [],
+    "fog": []
+   },
+   "added": {
     "bins_1based": [],
     "groups": [],
     "zmid": [],
@@ -21562,6 +21576,13 @@
     "raw": [],
     "fog": []
    },
+   "added": {
+    "bins_1based": [],
+    "groups": [],
+    "zmid": [],
+    "raw": [],
+    "fog": []
+   },
    "measured_fog_min": {
     "bins_1based": [
      1,
@@ -22277,6 +22298,13 @@
     "fog": 0.0
    },
    "unmeasured_near": {
+    "bins_1based": [],
+    "groups": [],
+    "zmid": [],
+    "raw": [],
+    "fog": []
+   },
+   "added": {
     "bins_1based": [
      [
       40,

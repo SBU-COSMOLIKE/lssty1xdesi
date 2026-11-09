@@ -10,11 +10,13 @@ Delta z = 0.02 (top block) and Delta d_com = 62 Mpc (bottom block),
     group fills and outline styles of nz_overlap_layouts;
   - the lower panel is the pair graph: a dot per bin at its mean redshift
     zbar, labelled with the bin's number in the data vector (counted from
-    1, group by group), a solid segment per measured cross spectrum, and a
-    dotted gray segment per unmeasured pair whose raw ranges miss each
-    other but whose Fingers-of-God-blurred n(z) overlap (on
-    Delta d_com = 62 Mpc only: the LRG edges sit 0.001-0.002 above the ELG
-    edges, so an LRG3 bin starts just above the end of an ELG1 bin).
+    1, group by group), and a segment per measured cross spectrum: solid
+    when the two raw ranges overlap or touch, dash-dotted vermillion for
+    the pairs that scripts/make_desi_pairs.py added because their
+    Fingers-of-God-blurred n(z) overlap (on Delta d_com = 62 Mpc only:
+    the LRG edges sit 0.001-0.002 above the ELG edges, so an LRG3 bin
+    starts just above the end of an ELG1 bin). A legend under the figure
+    names the two styles.
 
 The numbers show why the LRG-ELG pairs look far apart in the bin
 numbering and are not: the numbering runs through all LRG bins before the
@@ -33,6 +35,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.gridspec import GridSpec
+from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 
 # Figure style of the whole notebook: the shared plotting functions never change
@@ -69,7 +72,17 @@ GROUPS = {
 LANE_BASE = {1: 1.2, 0: 0.0}
 GRAPH_ROW = {1: 1.0, 0: 0.0}
 OUTLINE = {'color': '0.15', 'lw': 0.6}
-EDGE = {'color': '0.1', 'lw': 0.7}
+# The pair segments: raw ranges that overlap or touch (solid), and pairs
+# added because the blurred n(z) overlap (vermillion and dash-dotted, so
+# they read apart in black and white too), as in nz_overlap_layouts
+PAIR_STYLE = {
+    'touching': {'color': '0.1', 'lw': 0.7, 'ls': '-'},
+    'added': {'color': '#D55E00', 'lw': 1.0, 'ls': (0, (3.0, 1.0, 1.0, 1.0))},
+}
+PAIR_LABEL = {
+    'touching': 'raw ranges overlap or touch',
+    'added': 'added: blurred kernels overlap',
+}
 NODE_SIZE = 3.4
 BAND_COLOR = '0.86'
 LABEL = {
@@ -195,14 +208,13 @@ for k, lay in enumerate(layouts):
     zbar = np.array([b['zbar'] for b in lay['bins']])
     lane = np.array([GROUPS[b['group']]['lane'] for b in lay['bins']])
     yrow = np.array([GRAPH_ROW[v] for v in lane])
-    for (i, j), touching in zip(lay['pairs'], lay['touching']):
-        graph.plot([zbar[i], zbar[j]], [yrow[i], yrow[j]],
-                   ls='-' if touching else (0, (2.0, 1.5)), zorder=2, **EDGE)
-    # unmeasured pairs that overlap only after the blur: dotted and gray,
-    # so they read apart from the measured pairs in black and white
-    for i, j in lay['unmeasured_near']:
-        graph.plot([zbar[i], zbar[j]], [yrow[i], yrow[j]], color='0.45', lw=0.9,
-                   ls=(0, (0.8, 1.2)), zorder=1)
+    for (i, j), touching, added in zip(lay['pairs'], lay['touching'], lay['added']):
+        if not touching and not added:
+            raise ValueError(f'pair {i}, {j}: raw ranges apart and not added; '
+                             'this figure has no style for it')
+        kind = 'added' if added else 'touching'
+        graph.plot([zbar[i], zbar[j]], [yrow[i], yrow[j]], zorder=2,
+                   **PAIR_STYLE[kind])
     graph.plot(zbar, yrow, ls='none', marker=lay['marker'], ms=NODE_SIZE,
                mfc=lay['color'], mec='0.1', mew=0.4, zorder=3)
     # bin numbers: above the LRG row, below the ELG row
@@ -225,6 +237,12 @@ for k, lay in enumerate(layouts):
         graph.set_xlabel('redshift $z$', fontsize=9)
         graph.tick_params(axis='x', labelsize=8)
 
+# the two kinds of pair segment, under the x label
+fig.legend(handles=[Line2D([], [], **PAIR_STYLE[kind]) for kind in PAIR_STYLE],
+           labels=[PAIR_LABEL[kind] for kind in PAIR_STYLE],
+           loc='upper center', bbox_to_anchor=(0.56, 0.0), ncol=1,
+           frameon=False, fontsize=7.5, handlelength=3.2, handletextpad=0.5,
+           labelspacing=0.3)
 fig.savefig(os.path.join(HERE, 'nz_overlap_zoom.pdf'))
 fig.savefig(os.path.join(HERE, 'nz_overlap_zoom.png'), dpi=300)
 plt.close(fig)
