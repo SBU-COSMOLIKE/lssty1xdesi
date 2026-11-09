@@ -9,6 +9,10 @@ follows.
 - <a name="optional_studies"></a>[Optional studies](studies/README.md#optional_studies)
   compare n(z) reconstructions and numerical accuracy, with plots and
   $\Delta\chi^2$ results. Run them separately from the routine tests.
+- <a name="fisher_derivative_study"></a>[The Fisher-derivative convergence study](studies/README.md#fisher_derivatives)
+  finds the accuracy settings at which the Fisher derivatives stop
+  changing the errors, figures of merit and break-test shifts, with a
+  figure and saved JSON results. Run it separately from the routine tests.
 
 Covariance generation is production tooling, not a test sector: its
 machinery, notebook and guide live in [covariance/](../covariance/README.md)

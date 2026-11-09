@@ -1,0 +1,49 @@
+{
+ "layout": "Delta z = 0.05",
+ "production_cache": "EXAMPLE_EVALUATE_FISHER_MODEL_A_DERIVATIVES_3.pkl",
+ "production_settings": {
+  "yaml": "projects/lssty1xdesi/exploration/EXAMPLE_EVALUATE_MODEL_A3.yaml",
+  "dataset": "lssty1xdesi_desi_dr1_dz0p05",
+  "bias_params": "projects/lssty1xdesi/likelihood/params_desi_dr1_dz0p05.yaml",
+  "overrides": {
+   "accuracyboost": 3.0,
+   "nonlimber_accuracyboost": 64.0,
+   "integration_accuracy": 1,
+   "kmax_boltzmann": 20.0,
+   "data_file": "lssty1xdesi_desi_dr1_dz0p05.dataset"
+  },
+  "camb": {
+   "AccuracyBoost": 2.0,
+   "k_per_logint": 30
+  },
+  "accuracy_boost": 1.0,
+  "tier": "final",
+  "stencil": "five-point",
+  "steps": {
+   "b1": 0.01,
+   "b2": 0.02,
+   "bs2": 0.02,
+   "a0": 5.0
+  },
+  "h": 0.02
+ },
+ "study_settings": {
+  "accuracyboost": 3.0,
+  "integration_accuracy": 1,
+  "chi_grid": 256.0,
+  "rank": 5,
+  "lowrank_lmax": 1000,
+  "camb_kmax": 60.0,
+  "camb_accuracy": 2.0,
+  "k_per_logint": 30,
+  "offsets": "five",
+  "blocks": "all"
+ },
+ "max_relative_difference": {
+  "DESI_B1 (chain rule)": 5.1988213424790276e-11,
+  "DESI_DB2": 0.0,
+  "DESI_DBS": 0.0,
+  "DESI_A0": 0.0,
+  "stencil (COSMO, sigma_v)": 4.634672804816832e-14
+ }
+}
