@@ -65,7 +65,16 @@
 %     stays at or below 1 (largest ratio 0.98); the costs fall from
 %     k_max = 0.075 to 0.2; correlated residuals cost more than
 %     independent per-bin terms on the three thinner layouts and nothing
-%     on Delta z = 0.2 (Section 6).
+%     on Delta z = 0.2 (Section 6);
+%   - "one constant value per wide sample" claims the largest FoM
+%     ratios of the untied figure on every layout from k_max = 0.075
+%     on; its sqrt(<chi^2>/n_dof) of (w0, wa) is larger at 0.2 than at
+%     0.075 on every layout, and its smallest coverage sits on
+%     Delta d_com = 62 Mpc (Section 6);
+%   - in the bottom row of the untied figure the four versions that
+%     free b1 per bin sit exactly at 1, correlated residuals stay
+%     within EtaCorrMin-EtaCorrMax, and the model within EtaW
+%     (Section 6).
 % ---------------------------------------------------------------------
 % The refresh switch: \numbersfinalfalse prints every \refresh value in
 % red and the note under the title; \numbersfinaltrue prints them plain.
@@ -148,6 +157,46 @@
 \newcommand{\CostWideMax}{\refresh{1.1}}
 \newcommand{\UntieGainMax}{\refresh{2.2}}
 \newcommand{\FoMwSmallCut}{\refresh{0.04}}
+% The version constant_per_sample ("one constant value per wide
+% sample") of summary_fom_untied/data.json, from k_max = 0.075 on.
+% ConstGainLow*: its ratio_fom over the layouts at 0.075 (smallest on
+% Delta d_com = 62 Mpc, largest on Delta z = 0.05); ConstGainHigh*: the
+% same at 0.2 (smallest on Delta d_com = 62 Mpc, largest on
+% Delta z = 0.2); ConstGainTwenty*: its ratio_fom on Delta z = 0.2 over
+% the cuts; ConstGainOm*: its ratio_fom_om_as over layouts and cuts.
+% ConstEta*: its eta of (w0, wa) over the layouts at 0.075 and at 0.2,
+% and its eta of Omega_m and of A_s at 0.2 (over all cuts the Omega_m
+% value peaks at 4.3, on Delta z = 0.02 at 0.1; the text quotes 0.2).
+% ConstCover*: the smallest coverage per layout over (w0, wa), Omega_m
+% and A_s: its range over the layouts, and the smallest anywhere,
+% Omega_m on Delta d_com = 62 Mpc at 0.1.  ConstEvo*: the shift of
+% (w0, wa) under the bias's own evolution inside each sample alone,
+% over the layouts at 0.075 and at 0.2 (evolution_shift) [sigma].
+% EtaCorr*: the range of the version correlated_residuals in eta of
+% (w0, wa) over layouts and cuts.
+\newcommand{\ConstGainLowMin}{\refresh{3.3}}
+\newcommand{\ConstGainLowMax}{\refresh{8.6}}
+\newcommand{\ConstGainHighMin}{\refresh{1.9}}
+\newcommand{\ConstGainHighMax}{\refresh{3.6}}
+\newcommand{\ConstGainTwentyMin}{\refresh{3.6}}
+\newcommand{\ConstGainTwentyMax}{\refresh{7.1}}
+\newcommand{\ConstGainOmMin}{\refresh{1.4}}
+\newcommand{\ConstGainOmMax}{\refresh{5.2}}
+\newcommand{\ConstEtaLowMin}{\refresh{2.2}}
+\newcommand{\ConstEtaLowMax}{\refresh{3.8}}
+\newcommand{\ConstEtaHighMin}{\refresh{3.2}}
+\newcommand{\ConstEtaHighMax}{\refresh{6.2}}
+\newcommand{\ConstEtaOm}{\refresh{3.4}}
+\newcommand{\ConstEtaAs}{\refresh{3.9}}
+\newcommand{\ConstCoverMin}{\refresh{4\%}}
+\newcommand{\ConstCoverMax}{\refresh{8\%}}
+\newcommand{\ConstCoverCom}{\refresh{3.8\%}}
+\newcommand{\ConstEvoLowMin}{\refresh{3.8}}
+\newcommand{\ConstEvoLowMax}{\refresh{6.3}}
+\newcommand{\ConstEvoHighMin}{\refresh{4.7}}
+\newcommand{\ConstEvoHighMax}{\refresh{16}}
+\newcommand{\EtaCorrMin}{\refresh{0.98}}
+\newcommand{\EtaCorrMax}{\refresh{1.00}}
 % ---------------------------------------------------------------------
 % Part 2: inputs and template properties (not moved by the recompute).
 %
@@ -380,7 +429,10 @@ ${\rm FoM}(w_0, w_a)$.  Untied bins that keep the freedom of the wide
 samples cost a factor of \CostNestedLowMin{} to \CostNestedLowMax{} in
 ${\rm FoM}(w_0, w_a)$ on the thin layouts at $\kmax = 0.075\hMpc$ with
 independent per-bin terms, and up to \CostCorrLowTwo{} with residuals
-correlated in redshift (Section~\ref{sec:grouping}).
+correlated in redshift (Section~\ref{sec:grouping}).  One constant
+value of every bias quantity per wide sample claims up to
+\ConstGainLowMax{} times the model's ${\rm FoM}(w_0, w_a)$, with error
+bars up to \ConstEtaHighMax{} times too small.
 
 \section{Data and scale cut}
 \label{sec:data}
@@ -790,14 +842,18 @@ $A_s$), and the $1\sigma$ region covers the truth in at least
 
 The principle of Section~\ref{sec:prior} says that a thin-bin prior
 must keep the freedom of the wide original samples, and add nothing to
-it.  Figure~\ref{fig:untied} puts the principle to a test: it divides
-the FoM of five versions that untie the bias bin by bin by the FoM of
-the model.  The group width of a parameter is the width the model gives
+it.  Figure~\ref{fig:untied} puts the principle to a test on six
+versions of the priors: five untie the bias bin by bin, and one ties it
+harder, to a constant across each sample.  The top two rows divide each
+version's FoM by the model's; the bottom row asks whether its error
+bars are honest, with the statistic $\eta$ of
+Section~\ref{sec:forecast} for $(w_0, w_a)$ over the same random bias
+histories.  The group width of a parameter is the width the model gives
 it (Table~\ref{tab:params}), and $N$ is the number of bins of its
 group.  The first four versions free $b_{1,i}$ in every bin and give
 $\Delta_2$, $\Delta_s$, $\alpha_0$, $\alpha_2$, $\SNz$ and $\SNt$ one
 value per bin; the fifth keeps the model whole, its $b_1$ prior
-included.
+included; the sixth ties every bin of a sample to one value.
 
 \paragraph{Why a naive per-bin prior gains.}
 Give each of $N$ bins its own offset, independent of the others, each
@@ -810,7 +866,7 @@ $N = \ToyN$, the prior pins the group's average offset to $\ToyAvg$,
 \ToyFactor{} times tighter than the wide sample knows it.  Slice the same sample into more bins and the
 pin tightens further, with no new knowledge of the bias.
 
-\paragraph{The five versions,} in the words of the figure's legend:
+\paragraph{The six versions,} in the words of the figure's legend:
 \begin{itemize}
   \item \textbf{per bin, group width}: looks looser than the model, but
     pins each group's average to the group width over $\sqrt{N}$.  It
@@ -838,6 +894,13 @@ pin tightens further, with no new knowledge of the bias.
     residual column of Table~\ref{tab:params} for these four terms.  In
     a group of one or two bins the offset and the tilt already fix
     every bin, so on $\Delta z = 0.2$ this version is the model.
+  \item \textbf{one constant value per wide sample}: every thin bin of
+    a group shares one value of every bias quantity, constant in
+    redshift.  The linear bias is a plain constant, $b_{1,i} = B_g$
+    instead of $B_g/D(\bar{z}_i)$, and $\Delta_2$, $\Delta_s$,
+    $\alpha_0$, $\alpha_2$, $\SNz$ and $\SNt$ take one value per group,
+    under the model's priors on the group values, with no tilts and no
+    residuals.  It is the simplest way to slice a wide sample.
 \end{itemize}
 
 \paragraph{What untying the bins costs.}
@@ -857,28 +920,72 @@ cosmology across neighboring bins, while independent per-bin terms
 average down over the bins of a group.  On $\Delta z = 0.2$ neither
 version costs more than a factor of \CostWideMax{} at any cut.
 
+\paragraph{What a constant per sample claims.}
+The sixth version claims the largest gains of the figure:
+\ConstGainLowMin{} to \ConstGainLowMax{} times the model's
+${\rm FoM}(w_0, w_a)$ over the layouts at $\kmax = 0.075\hMpc$,
+\ConstGainHighMin{} to \ConstGainHighMax{} at $0.2\hMpc$, and
+\ConstGainOmMin{} to \ConstGainOmMax{} times
+${\rm FoM}(\Omega_m, 10^9 A_s)$.  The bottom row prices the claim.  For
+this version the truth also holds the evolution of the bias inside each
+sample, which a constant cannot follow: the fiducial bias itself
+evolves, the linear bias as $B_g/D(\bar{z}_i)$, and $b_2$ and $\bstwo$
+with it through the calibrations.  That evolution alone shifts
+$(w_0, w_a)$ by \ConstEvoLowMin{} to \ConstEvoLowMax{}$\sigma$ at
+$0.075\hMpc$ and \ConstEvoHighMin{} to \ConstEvoHighMax{}$\sigma$ at
+$0.2\hMpc$; the known drifts partly cancel it, which is why $\eta$
+comes out smaller than those shifts.  The error bars are still
+\ConstEtaLowMin{} to \ConstEtaLowMax{} times too small at $0.075\hMpc$
+and \ConstEtaHighMin{} to \ConstEtaHighMax{} at $0.2\hMpc$, where they
+reach \ConstEtaOm{} for $\Omega_m$ and \ConstEtaAs{} for $A_s$, and the
+$68.3\%$ region covers the truth in \ConstCoverMin{} to \ConstCoverMax{}
+of universes (\ConstCoverCom{} on $\Delta d_{\rm com} = 62$~Mpc).  The
+gain is the information the evolution of the bias would have to supply,
+asserted instead by the prior: where the model keeps the freedom the
+bias has on the wide original samples, a constant removes even the
+freedom the wide sample's own evolution needs.  Even $\Delta z = 0.2$,
+one or two bins per sample, gains a factor of \ConstGainTwentyMin{} to
+\ConstGainTwentyMax{} and fails the test: giving up the tilts and the
+residuals there gives up real freedom.
+
+\paragraph{What the bottom row tests.}
+The random truths change only the linear bias, so the bottom row tests
+the linear bias, not the higher-order terms.  The four versions that
+free $b_{1,i}$ per bin sit exactly at $1$ by construction: a free
+per-bin linear bias absorbs any change of the linear bias, so their
+honesty there says nothing about their higher-order freedom.  The
+version with correlated residuals, whose $b_1$ keeps the model's prior,
+stays between \EtaCorrMin{} and \EtaCorrMax{}, and the model itself at
+most \EtaW{} (Section~\ref{sec:forecast}).
+
 \begin{figure}[tbp]
   \centering
   \includegraphics{plots/summary_fom_untied/summary_fom_untied.pdf}
-  \caption{The FoM of five versions with the bias untied bin by bin,
-    divided by that of the model: ${\rm FoM}(w_0, w_a)$ (top row) and
-    ${\rm FoM}(\Omega_m, 10^9 A_s)$ (bottom row), one column per
-    layout.  The group width is the width the model gives a group
-    parameter, and $N$ the number of bins of the group.  The first four
-    versions free $b_{1,i}$ in each bin and give $\Delta_2$, $\Delta_s$,
-    $\alpha_0$, $\alpha_2$, $\SNz$ and $\SNt$ one value per bin.
-    Dotted, open left triangles: the group width; dash-dot, filled
-    right triangles: the group width times $\sqrt{N}$; dashed, filled
-    pentagons: the same plus a free tilt per group; solid, open
-    hexagons: the group width on top of the model's offsets and tilts.
-    The line width grows in that order.  The fifth keeps the model, its
-    $b_1$ prior included, and adds correlated per-bin residuals to
-    $\Delta_2$, $\Delta_s$, $\alpha_0$ and $\alpha_2$: thin
-    dash-dot-dot line, crosses; on $\Delta d_{\rm com} = 62$~Mpc it has
-    no well-defined fit at $\kmax = 0.075\hMpc$, hence the gap.  Thin
-    gray line: a ratio of $1$.  The cuts start at $\kmax = 0.075\hMpc$:
-    at $0.05\hMpc$ the model's own ${\rm FoM}(w_0, w_a)$ is below
-    \FoMwSmallCut{}.  \kmaxclause}
+  \caption{Six versions of the bias priors against the model, one
+    column per layout.  Top and middle rows: ${\rm FoM}(w_0, w_a)$ and
+    ${\rm FoM}(\Omega_m, 10^9 A_s)$, each divided by the model's.
+    Bottom row: $\eta = \chidof$ of $(w_0, w_a)$ over the random bias
+    histories of Section~\ref{sec:forecast}; for the constant version
+    the truth also holds the bias's own evolution inside each sample.
+    The group width is the width the model gives a group parameter, and
+    $N$ the number of bins of the group.  The first four versions free
+    $b_{1,i}$ in each bin and give $\Delta_2$, $\Delta_s$, $\alpha_0$,
+    $\alpha_2$, $\SNz$ and $\SNt$ one value per bin.  Dotted, open left
+    triangles: the group width; dash-dot, filled right triangles: the
+    group width times $\sqrt{N}$; dashed, filled pentagons: the same
+    plus a free tilt per group; solid, open hexagons: the group width
+    on top of the model's offsets and tilts.  The line width grows in
+    that order.  Thin dash-dot-dot line, crosses: the model, its $b_1$
+    prior included, plus correlated per-bin residuals on $\Delta_2$,
+    $\Delta_s$, $\alpha_0$ and $\alpha_2$; on
+    $\Delta d_{\rm com} = 62$~Mpc it has no well-defined fit at
+    $\kmax = 0.075\hMpc$, hence the gap.  Thick long-dashed line, plus
+    signs: one constant value of every bias quantity per wide sample.
+    Thin gray line: a ratio of $1$, and honest error bars in the bottom
+    row.  There the other five versions coincide at $1$; the solid
+    line, drawn on top, hides all but the crosses.  The cuts start at
+    $\kmax = 0.075\hMpc$: at $0.05\hMpc$ the model's own
+    ${\rm FoM}(w_0, w_a)$ is below \FoMwSmallCut{}.  \kmaxclause}
   \label{fig:untied}
 \end{figure}
 

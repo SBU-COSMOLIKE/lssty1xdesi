@@ -4,8 +4,8 @@ to the summary model (model B + tilts on the pessimistic linear-bias prior),
 against the scale cut k_max. Built from a copy of
 ../summary_fom_free_bins/plot_summary_fom_free_bins.py.
 
-Every version frees b1 per bin (flat prior) and gives Delta_2, Delta_s,
-alpha_0, alpha_2, SN0 and SN2 one value per bin. The group width is the
+The first four versions free b1 per bin (flat prior) and give Delta_2,
+Delta_s, alpha_0, alpha_2, SN0 and SN2 one value per bin. The group width is the
 width the model gives a group parameter, and N is the number of bins of the
 group (the figure writes no symbol for the width: "w" would read as the
 dark-energy w0, wa):
@@ -25,24 +25,38 @@ dark-energy w0, wa):
                                L = 0.05 with the group width, charging only
                                the deviation from the group's line (the
                                nested version is this with L -> 0, no
-                               projection).
+                               projection); b1 keeps the model's prior;
+  one constant value per wide
+    sample                   - one value per group of every bias parameter,
+                               b1 constant in redshift (not B_g/D(z)), with
+                               the model's priors on the group values, no
+                               tilts and no residuals.
 A version is drawn when data.json holds it, so a version added by a later
 notebook run needs only its entry in VERSIONS; a version of data.json that
 VERSIONS lacks raises an error, since its label and style cannot be guessed.
 
-One full-width figure: two rows, FoM(w0, wa) and FoM(Omega_m, 10^9 A_s),
-each with one shared y axis, by four columns, the bin layouts, each in its
-layout's color. The versions differ by line style, line width and marker
-(never by color alone; the markers differ from the layout markers of the
-other figures). The thin gray line marks a ratio of 1; it has no legend
-entry (the caption names it). k_max is the z = 0 value of a per-bin cut at
+One full-width figure of three rows by four columns, the bin layouts, each
+in its layout's color. The first two rows are the FoM ratios, FoM(w0, wa)
+and FoM(Omega_m, 10^9 A_s), each with one shared logarithmic y axis and one
+y label centered on the two rows. The third row is sqrt(<chi^2>/n_dof) of
+(w0, wa) for every version, under the known drifts plus the pessimistic
+scatter (for the constant version also the fiducial's own evolution within
+each sample, which a constant cannot follow), on a linear axis from 0 with
+its own y label: 1 means honest error bars, and a version with b1 free per
+bin sits at 1 by construction, so those lines lie on top of each other there.
+The versions differ by line style, line width and marker (never by color
+alone; the markers differ from the layout markers of the other figures). The
+thin gray line marks a ratio of 1 and an honest 1 in the third row; it has
+no legend entry (the caption names it). k_max is the z = 0 value of a per-bin cut at
 k_max/D(zbar_i); cuts from KMAX_MIN to KMAX_MAX are drawn. data.json also
 holds k_max = 0.05, where the model's own FoM(w0, wa) is below 0.1 and the
 ratios would dominate the eye; it is not drawn. A cut that leaves no data
 has no point.
 
 data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, also holds the
-FoMs of the model and of every version.
+FoMs of the model and of every version, and per version (the model as
+'model') the statistic of every score, the coverage of the 68.3% region and
+the largest shift over the fixed truths.
 Run from any folder: python plot_summary_fom_untied.py
 """
 import json
@@ -53,7 +67,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
-from matplotlib.ticker import FuncFormatter, LogLocator, MultipleLocator, NullFormatter
+from matplotlib.ticker import FixedLocator, FuncFormatter, NullLocator
 
 # Figure style of the whole notebook: the shared plotting functions never change
 # rcParams, so these lines set every font, tick and grid default.
@@ -101,6 +115,8 @@ VERSIONS = [
      {'lw': 2.2, 'dash': None, 'marker': 'h', 'open': True}),
     ('correlated_residuals', 'correlated residuals on top of the model',
      {'lw': 1.2, 'dash': (7.0, 1.6, 1.2, 1.6, 1.2, 1.6), 'marker': 'x', 'open': False}),
+    ('constant_per_sample', 'one constant value per wide sample',
+     {'lw': 2.6, 'dash': (8.0, 2.6), 'marker': '+', 'open': False}),
 ]
 MARKER_SIZE = 4.0
 # the line at a ratio of 1 (no change): thin and gray
@@ -117,8 +133,13 @@ KMAX_MIN = 0.075
 KMAX_MAX = 0.2
 # the k_max labels compare floats from data.json
 KMAX_TOLERANCE = 1.0e-9
-# the margin of each row's y range, in units of its span
-Y_MARGIN = 0.1
+# The y axis is logarithmic: the constant-per-sample version reaches ratios
+# near 10 while the others stay between 0.3 and 2.3, and on a log axis a ratio
+# and its inverse sit at the same distance from 1. The margin of each row's
+# range is a fraction of its span in decades; the labeled ticks are those of
+# Y_TICKS inside it.
+Y_MARGIN = 0.06
+Y_TICKS = [0.2, 0.3, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0, 20.0]
 
 with open(os.path.join(HERE, 'data.json')) as f:
     data = json.load(f)
@@ -254,7 +275,19 @@ def check_clear(fig, axes, artists):
                                    f'overlaps {type(artists[j]).__name__} {j}')
 
 
-fig, axes = plt.subplots(len(ROWS), len(layouts), figsize=(FIG_WIDTH, ROW_HEIGHT*len(ROWS)),
+# The third row: sqrt(<chi^2>/n_dof) of (w0, wa) for every version, under the
+# known drifts plus the pessimistic scatter (data.json's eta, keyed by
+# version); the gray line at 1 marks honest error bars. A linear axis from 0:
+# its top lies ETA_HEADROOM above the largest value, and its labeled ticks are
+# those of ETA_TICKS below the top (1 always among them).
+ETA_FIELD = 'eta'
+ETA_SCORE = 'w0wa'
+ETA_TICKS = [1, 2, 4, 6, 8, 10, 15, 20]
+ETA_HEADROOM = 0.12
+ETA_NAME = r'$(w_0, w_a)$'
+ETA_YLABEL = r'$\sqrt{\langle\chi^2\rangle/n_\mathrm{dof}}$'
+n_rows = len(ROWS) + 1
+fig, axes = plt.subplots(n_rows, len(layouts), figsize=(FIG_WIDTH, ROW_HEIGHT*n_rows),
                          sharex=True, sharey='row', gridspec_kw={'hspace': 0.08, 'wspace': 0.08})
 flat = list(axes.ravel())
 for r, (field, name) in enumerate(ROWS):
@@ -269,12 +302,34 @@ for r, (field, name) in enumerate(ROWS):
         ax.grid(False, axis='x')
         if r == 0:
             ax.set_title(lay['label'], fontsize=9.5, color='black')
-    span = max(values) - min(values)
-    axes[r, 0].set_ylim(max(0.0, min(values) - Y_MARGIN*span), max(values) + Y_MARGIN*span)
-    axes[r, 0].yaxis.set_major_locator(MultipleLocator(0.5))
+    decades = np.log10(max(values)/min(values))
+    low = min(values)/10.0**(Y_MARGIN*decades)
+    high = max(values)*10.0**(Y_MARGIN*decades)
+    axes[r, 0].set_yscale('log')
+    axes[r, 0].set_ylim(low, high)
+    axes[r, 0].yaxis.set_major_locator(FixedLocator([t for t in Y_TICKS if low < t < high]))
+    axes[r, 0].yaxis.set_major_formatter(FuncFormatter(plain_number))
+    axes[r, 0].yaxis.set_minor_locator(NullLocator())
     # the figure of merit's name on the right of the last column
     axes[r, -1].yaxis.set_label_position('right')
     axes[r, -1].set_ylabel(name, rotation=90, fontsize=9, labelpad=5)
+r3 = len(ROWS)
+eta_values = [1.0]
+for c, lay in enumerate(layouts):
+    ax = axes[r3, c]
+    ax.axhline(1.0, **UNITY_STYLE)
+    for key, label, style in drawn_versions:
+        y = as_array(lay[ETA_FIELD][key][ETA_SCORE])
+        ax.plot(kmax, y, **version_style(style, lay['color']))
+        eta_values += [float(v) for v in y[np.isfinite(y)]]
+    ax.grid(False, axis='x')
+eta_top = max(eta_values)*(1.0 + ETA_HEADROOM)
+axes[r3, 0].set_ylim(0.0, eta_top)
+axes[r3, 0].yaxis.set_major_locator(FixedLocator([t for t in ETA_TICKS if t < eta_top]))
+axes[r3, 0].yaxis.set_major_formatter(FuncFormatter(plain_number))
+axes[r3, 0].yaxis.set_minor_locator(NullLocator())
+axes[r3, -1].yaxis.set_label_position('right')
+axes[r3, -1].set_ylabel(ETA_NAME, rotation=90, fontsize=9, labelpad=5)
 # labels at 0.1 and 0.2 only, so the labels of neighboring columns never
 # meet, and an unlabeled tick at every other cut drawn
 for ax in axes[-1]:
@@ -294,7 +349,16 @@ supxlabel = fig.supxlabel(r'$k_\mathrm{max}$ [$h$ Mpc$^{-1}$] at $z = 0$', fonts
 tick_left = min(label.get_window_extent(renderer).x0
                 for ax in axes[:, 0] for label in ax.get_yticklabels() if label.get_text())
 tick_left = fig.transFigure.inverted().transform((tick_left, 0.0))[0]
-supylabel = fig.supylabel(YLABEL, x=tick_left - 0.01, ha='right', fontsize=10)
+to_fig = fig.transFigure.inverted()
+def row_center(rows):
+    '''The vertical center, in figure units, of the rows given.'''
+    top = axes[rows[0], 0].get_window_extent(renderer).y1
+    bottom = axes[rows[-1], 0].get_window_extent(renderer).y0
+    return to_fig.transform((0.0, 0.5*(top + bottom)))[1]
+supylabel = fig.text(tick_left - 0.01, row_center([0, len(ROWS) - 1]), YLABEL,
+                     rotation=90, ha='right', va='center', fontsize=10)
+etalabel = fig.text(tick_left - 0.01, row_center([r3]), ETA_YLABEL,
+                    rotation=90, ha='right', va='center', fontsize=10)
 
 # the versions above the titles, in dark gray (the color is the column's
 # layout), with the line style, width and marker drawn
@@ -307,8 +371,8 @@ legend = fig.legend(
     loc='lower center', bbox_to_anchor=(0.5, title_top + 0.005), ncol=2, frameon=False,
     fontsize=8.5, handlelength=3.4, columnspacing=1.8, handletextpad=0.5,
     labelspacing=0.3, borderaxespad=0.0, borderpad=0.1)
-labels = [supxlabel, supylabel, *[ax.title for ax in axes[0]],
-          *[axes[r, -1].yaxis.label for r in range(len(ROWS))]]
+labels = [supxlabel, supylabel, etalabel, *[ax.title for ax in axes[0]],
+          *[axes[r, -1].yaxis.label for r in range(n_rows)]]
 check_clear(fig, flat, [legend, *labels])
 check_labels_off_ticks(fig, flat, labels, 'summary_fom_untied')
 # the tick labels of neighboring columns must not meet either
