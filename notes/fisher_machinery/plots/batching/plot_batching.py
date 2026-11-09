@@ -556,14 +556,26 @@ def inches_to_rect(fig, left, bottom, width, height):
 # (a). Panel (c)'s axes span the whole strip without a frame, so its notes
 # share its data coordinates: one unit is one cell, CELL_W wide and CELL_H
 # tall.
-H_BLOCK = 3.10
+CELL_W = 0.22
+CELL_H = 0.118
+# panel (c) holds one row per auto and per cross spectrum of the stretch,
+# a gap of GAP_ROWS rows between them, HEADER_ROWS rows of column header
+# above and FOOTER_ROWS of margin below; its strip is at least H_BLOCK_MIN
+# tall, the room panel (d) and the notes of (c) need
+GAP_ROWS = 0.6
+HEADER_ROWS = 4.9
+FOOTER_ROWS = 0.7
+H_BLOCK_MIN = 3.10
+inside_stretch = set(stretch)
+n_cross_rows = sum(1 for p in pairs
+                   if p[0] in inside_stretch and p[1] in inside_stretch)
+H_BLOCK = max(H_BLOCK_MIN, CELL_H*(HEADER_ROWS + len(stretch) + GAP_ROWS
+                                   + n_cross_rows + FOOTER_ROWS))
 H_ZOOM = 1.25
 H_OVER = 1.15
 GAP_LOW = 0.40
 GAP_HIGH = 0.36
 FIG_HEIGHT = H_BLOCK + GAP_LOW + H_ZOOM + GAP_HIGH + H_OVER + 0.05
-CELL_W = 0.22
-CELL_H = 0.118
 # panel (d): its box inside the bottom strip [in]
 SAVE_LEFT = 3.50
 SAVE_BOTTOM = 0.33
@@ -695,8 +707,7 @@ crosses = []
 for p in pairs:
     if p[0] in inside and p[1] in inside:
         crosses.append(p)
-# row positions: the autos first, then a small gap, then the crosses
-GAP_ROWS = 0.6
+# row positions: the autos first, then a gap of GAP_ROWS, then the crosses
 spectra = []
 for k, s in enumerate(autos):
     spectra.append((s, float(k)))
@@ -708,7 +719,7 @@ n_cols = len(columns)
 # above the first row (room for the column header)
 x_left = -4.15
 x_right = x_left + FIG_WIDTH/CELL_W
-y_top = -4.9
+y_top = -HEADER_ROWS
 y_bottom = y_top + H_BLOCK/CELL_H
 ax.set_xlim(x_left, x_right)
 ax.set_ylim(y_bottom, y_top)
