@@ -1022,16 +1022,17 @@ sampling of the full likelihood.
     configuration & grid factor $g$ & seconds per evaluation \\
     \hline
     MCMC settings                 & $32$  & $3.9$ \\
-    reference, grid lowered       & $64$  & $11.4$ \\
-    reference                     & $128$ & $17.0$ \\
-    reference, grid raised        & $256$ & $28.0$ \\
-    reference, grid raised        & $512$ & $48.4$ \\
-    final settings                & $256$ & $19.5$ \\
+    starting configuration, grid lowered & $64$  & $11.4$ \\
+    starting configuration               & $128$ & $17.0$ \\
+    starting configuration, grid raised  & $256$ (final) & $28.0$ \\
+    starting configuration, grid raised  & $512$ & $48.4$ \\
+    final settings                       & $256$ (final) & $19.5$ \\
     \hline
   \end{tabular}
   \caption{The cost of one data-vector evaluation on $\Delta z = 0.05$,
     measured by the convergence study on AC power with no other heavy job
-    running, except the $g = 256$ reference run, which started while one
+    running, except the $g = 256$ run of the starting configuration,
+    which started while one
     other job was running.  The final settings ran $130$ evaluations in
     $42$ minutes.  Section~\ref{sec:accuracy} describes the
     configurations.}
@@ -1072,7 +1073,8 @@ noise looks like information, and the FoM comes out too high.
 
 \paragraph{How much the old caches were off.}
 The caches the notebooks used before the study show the size of the
-effect.  On $\Delta d_{\rm com} = 62$~Mpc, with converged derivatives,
+effect.  On $\Delta d_{\rm com} = 62$~Mpc, with the final-tier
+derivatives ($g = 256$),
 the paper model's ${\rm FoM}(w_0, w_a)$ (model B + tilts on the
 pessimistic prior) falls from $1.29$ to $0.39$ at $\kmax = 0.075\hMpc$
 and from $10.9$ to $7.44$ at $0.2\hMpc$.  Model A on the baseline prior
@@ -1084,7 +1086,8 @@ stencil columns back into the new Fisher matrix, and the old FoMs come
 back exactly, $1.288$ and $10.9$: the inflation was the noise in those
 two columns.
 
-\paragraph{The study: a reference, and one control at a time.}
+\paragraph{The study: a starting configuration, and one control at a
+time.}
 The convergence study, \texttt{tests/studies/run\us fisher\us
 derivatives.py}, measures the effect on $\Delta z = 0.05$ for the paper
 model.  It scores the marginalized errors of $w_0$, $w_a$, $\Omega_m$
@@ -1093,18 +1096,21 @@ that carry a term the fit lacks or holds with a prior; the
 correlated-prior note, ``Model B and the reach of model A''), at
 $\kmax = 0.075$ and $0.2\hMpc$.
 
-The reference configuration sets every accuracy control high:
-CosmoLike's \texttt{accuracyboost} $4$ and \texttt{integration\us
-accuracy} $2$, the low-rank engine's rank $8$ (the number of terms kept
-in its sum) and multipole cap $2000$, a grid factor $g = 128$, and
-CAMB's \texttt{AccuracyBoost} $2.0$, \texttt{k\us per\us logint} $30$
-and maximum wavenumber $80\,{\rm Mpc}^{-1}$.  Here $g$ is the product
+The scan starts from one configuration, the starting configuration: a
+grid factor $g = 128$ with every other control raised, CosmoLike's
+\texttt{accuracyboost} $4$ and \texttt{integration\us accuracy} $2$, the
+low-rank engine's rank $8$ (the number of terms kept in its sum) and
+multipole cap $2000$, and CAMB's \texttt{AccuracyBoost} $2.0$,
+\texttt{k\us per\us logint} $30$ and maximum wavenumber
+$80\,{\rm Mpc}^{-1}$.  The scan then varied one control at a time away
+from it.  Here $g$ is the product
 $\texttt{accuracyboost} \times \texttt{nonlimber\us accuracyboost}$, and
 the non-Limber projection integrates over about $511\,g$ comoving
-distances; the MCMC value on $\Delta z = 0.05$ is $g = 32$.  Each other
-configuration lowers one control.  The grid is also raised to $256$ and
-$512$, and the five-point stencil at step $h$ on $g = 512$ is the
-converged value every result is compared with.
+distances; the MCMC value on $\Delta z = 0.05$ is $g = 32$.  Besides
+the lowered controls, the grid was also raised to $256$ and $512$.  The
+five-point stencil at step $h$ on $g = 512$ is the converged value
+($g = 512$) every result is compared with.  The final tier, chosen at
+the end of the section, uses $g = 256$.
 
 \paragraph{The noise of one evaluation.}
 Through five equally spaced stencil points, the combination
@@ -1120,7 +1126,8 @@ $\sqrt{\chi^2}$ units (Table~\ref{tab:noise}).
 At the MCMC settings the $\Omega_m$, $w_0$ and $w_a$ columns are seven
 to twelve times noisier than the $H_0$ column, which does not change
 with the grid.  The finer grid quiets $w_0$ and $w_a$ most: the $w_a$
-noise falls fortyfold from the MCMC settings to $g = 256$.
+noise falls fortyfold from the MCMC settings to $g = 256$, the final
+grid.
 
 \begin{table}[tbp]
   \centering
@@ -1130,22 +1137,24 @@ noise falls fortyfold from the MCMC settings to $g = 256$.
     \hline
     MCMC settings          & $2.1\times10^{-3}$ & $1.7\times10^{-2}$ & $2.5\times10^{-2}$ & $1.4\times10^{-2}$ \\
     $g = 64$               & $2.2\times10^{-3}$ & $8.1\times10^{-3}$ & $1.1\times10^{-2}$ & $4.8\times10^{-3}$ \\
-    $g = 128$ (reference)  & $2.2\times10^{-3}$ & $6.5\times10^{-3}$ & $4.3\times10^{-3}$ & $1.8\times10^{-3}$ \\
-    $g = 256$              & $2.2\times10^{-3}$ & $6.1\times10^{-3}$ & $2.2\times10^{-3}$ & $3.5\times10^{-4}$ \\
+    $g = 128$ (starting)   & $2.2\times10^{-3}$ & $6.5\times10^{-3}$ & $4.3\times10^{-3}$ & $1.8\times10^{-3}$ \\
+    $g = 256$ (final)      & $2.2\times10^{-3}$ & $6.1\times10^{-3}$ & $2.2\times10^{-3}$ & $3.5\times10^{-4}$ \\
     \hline
   \end{tabular}
   \caption{The noise of one evaluation along each stencil parameter,
     in $\sqrt{\chi^2}$ units, on $\Delta z = 0.05$.  The rows with a
-    grid factor $g$ keep every other control at the reference.}
+    grid factor $g$ keep every other control at the starting
+    configuration's value ($g = 128$ is the starting configuration
+    itself).}
   \label{tab:noise}
 \end{table}
 
 \paragraph{The distance grid dominates.}
 Table~\ref{tab:grid} and Figure~\ref{fig:convergence} give the offset of
-the FoMs from the converged value, every control but the grid at the
-reference.  The MCMC settings as a whole raise ${\rm FoM}(w_0, w_a)$ by
+the FoMs from the converged value ($g = 512$), every control but the
+grid at the starting configuration's value.  The MCMC settings as a whole raise ${\rm FoM}(w_0, w_a)$ by
 $58\%$ at $0.075\hMpc$ and by $11\%$ at $0.2\hMpc$, although their
-fiducial vector differs from the reference by only
+fiducial vector differs from the starting configuration's by only
 $\Delta\chi^2 = 0.015$.  The grid alone accounts for most of it.
 
 Which columns carry the offset?  Swapping single columns between
@@ -1161,12 +1170,12 @@ The per-bin and $\sigma_v$ columns move the FoM by less than $0.1\%$.
     $32$ (MCMC)       & $+38\%$  & $+6.7\%$ \\
     $64$ (old caches) & $+31\%$  & $+5.1\%$ \\
     $128$             & $+0.9\%$ & $+0.3\%$ \\
-    $256$             & $0.0\%$  & $0.0\%$ \\
+    $256$ (final)     & $0.0\%$  & $0.0\%$ \\
     \hline
   \end{tabular}
   \caption{The offset of ${\rm FoM}(w_0, w_a)$ of the paper model from
     the converged value ($g = 512$), on $\Delta z = 0.05$, every other
-    control at the reference.  $\kmax$ quoted at $z = 0$; each bin is
+    control at the starting configuration's value.  $\kmax$ quoted at $z = 0$; each bin is
     cut at $\kmax/D(\bar{z}_i)$.}
   \label{tab:grid}
 \end{table}
@@ -1180,7 +1189,8 @@ The per-bin and $\sigma_v$ columns move the FoM by less than $0.1\%$.
     $\kmax = 0.075$ and $0.2\hMpc$, then ${\rm FoM}(\Omega_m, 10^9 A_s)$
     at the same cuts.
     Follow the diamonds from left to right first.  This grid scan, at
-    step $h$, holds the reference's other settings: CosmoLike's
+    step $h$, holds the other controls at the starting configuration's
+    values: CosmoLike's
     \texttt{accuracyboost} 4 and \texttt{integration\us accuracy} 2,
     low-rank rank 8 and multipole cap 2000, CAMB's
     \texttt{AccuracyBoost} 2, \texttt{k\us per\us logint} 30 and maximum
@@ -1249,7 +1259,8 @@ layout:
   \item five-point stencils for every stencil and per-bin column.
 \end{enumerate}
 
-Against the converged value on $\Delta z = 0.05$, these settings give
+Against the converged value ($g = 512$) on $\Delta z = 0.05$, these
+settings give
 ${\rm FoM}(w_0, w_a)$ $+1.8\%$ at $0.075\hMpc$ and $-0.5\%$ at
 $0.2\hMpc$, and ${\rm FoM}(\Omega_m, 10^9 A_s)$ $+1.6\%$ and $-0.5\%$.
 The errors $\sigma$ move by at most $1.6\%$, and the largest shift by at
@@ -1275,7 +1286,7 @@ $\{b_{2,i}\}$ families, batch by batch.
     remove the error of a coarse grid.
   \item At the final settings it agrees with the five-point stencil
     within $2.1\%$ ($\sigma$ within $2.2\%$, shifts within $0.006\sigma$)
-    and sits $0.3$ to $0.9\%$ from the converged value.
+    and sits $0.3$ to $0.9\%$ from the converged value ($g = 512$).
   \item It costs $11$ evaluations per column against $4$, about $210$~s
     against $78$~s per column.
 \end{itemize}
@@ -1581,7 +1592,7 @@ $\mG_m$ symmetric with no negative information, by construction.
 
 Each layout gets eight such matrices: the seven cuts
 $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$, and the shipped mask alone,
-the reference of the information test below.  The model A notebook,
+the comparison point of the information test below.  The model A notebook,
 which works at one cut, forms $\mD = \mB\mM$ explicitly and multiplies
 it by the inverse of the kept covariance block; the two routes agree
 (Section~\ref{sec:limits}).
