@@ -1,0 +1,696 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+% The reference layout, as the reader-facing text names it.
+\newcommand{\dcom}{$\Delta d_{\rm com} = 62$~Mpc}
+% The velocity dispersion of the Fingers-of-God blur.
+\newcommand{\sv}{\sigma_v}
+% An underscore after which a long code name may break.
+\newcommand{\us}{\_\allowbreak}
+
+\title{Cross spectra between thin redshift bins}
+\date{November 2026}
+\author{}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE Cross spectra between thin redshift bins\par}
+  \vspace{0.6em}
+  {\large Which pairs the data vector measures, and how the\\
+    Fingers-of-God blur changes their overlap\par}
+  \vspace{1em}
+  {\large November 2026\par}
+\end{center}
+\vspace{1em}
+
+\section{Summary}
+\label{sec:summary}
+
+\paragraph{The questions.}
+The forecast cuts the DESI galaxies into thin redshift bins and
+measures the angular power spectrum of every bin.  For some pairs of
+bins it also measures their cross spectrum, the correlation between the
+two bins' maps.  Four bin layouts slice the galaxies: \dcom{}, $76$ bins
+of equal comoving depth, and three of fixed redshift width,
+$\Delta z = 0.02$, $0.05$ and $0.2$, with $90$, $36$ and $10$ bins.  The
+first two are the thin layouts.  This note answers three questions:
+\begin{enumerate}
+  \item Which pairs of bins have their cross spectrum in the data
+    vector, and why those?
+  \item What does that rule mean in redshift, on each of the four bin
+    layouts?
+  \item How does the Fingers-of-God (FoG) blur, at its default
+    strength, change how much neighbouring bins overlap?
+\end{enumerate}
+
+\paragraph{The answers.}
+\begin{enumerate}
+  \item A pair is measured when the two bins' redshift distributions
+    $n(z)$ overlap or touch.  That gives the neighbours along each
+    galaxy sample's chain of bins, plus the pairs of an LRG bin and an
+    ELG bin at the same redshift: at $0.8 < z < 1.1$ the LRG3 and ELG1
+    groups are two galaxy samples observing one volume
+    (Figures~\ref{fig:layouts} and~\ref{fig:zoom}).  The four layouts
+    measure $97$, $133$, $52$ and $13$ cross spectra.
+  \item On the layouts of fixed redshift width only adjacent bins pair.
+    On \dcom{} the rule is adjacency in comoving distance, which no
+    single cut in redshift can express: a bin of fixed comoving depth
+    is $0.015$ wide in redshift at $z = 0.1$ and $0.035$ at $z = 1.5$.
+  \item The blur has a width of $5$--$6$~Mpc along the line of sight,
+    about a tenth of a thin bin.  It raises the overlap of two
+    neighbouring thin bins from about $0.003$, the one grid step where
+    their tabulated edges meet, to about $0.06$.  Bins one apart stay
+    disjoint.  On \dcom{}, ten LRG3--ELG1 pairs that the data vector
+    does not measure overlap by $0.03$ once blurred, half of what a
+    measured neighbour pair does (Figure~\ref{fig:fog}).
+\end{enumerate}
+
+\section{Why cross spectra between thin bins matter}
+\label{sec:why}
+
+\paragraph{The angular power spectrum.}
+Take the galaxies of bin $i$ and draw a map of their number on the
+sky: $\delta_i(\hat{n})$ is the fractional excess of galaxies in the
+direction $\hat{n}$ over the mean.  Expand the map in spherical
+harmonics, $\delta_i(\hat{n}) = \sum_{\ell m} a^i_{\ell m}
+Y_{\ell m}(\hat{n})$.  The multipole $\ell$ labels an angular scale of
+about $180^\circ/\ell$: $\ell = 20$ is about $9^\circ$, $\ell = 500$
+about $0.4^\circ$.
+
+The auto spectrum of bin $i$ is the variance of its coefficients,
+$C^{ii}_\ell = \langle |a^i_{\ell m}|^2 \rangle$; the cross spectrum of
+bins $i$ and $j$ is their covariance, $C^{ij}_\ell = \langle a^i_{\ell
+m} a^{j*}_{\ell m} \rangle$.  Two unrelated maps have a cross spectrum
+that averages to zero; two maps of the same structures have a positive
+one.  The data vector holds these spectra in $53$ bands of width
+$\Delta\ell = 10$ over $15 \le \ell \le 544$.
+
+\paragraph{Why neighbouring thin bins correlate.}
+A thin bin is a shell of the universe a few tens of Mpc deep: $62$~Mpc
+on \dcom{}, and between $37$ and $85$~Mpc for $\Delta z = 0.02$.  The
+matter distribution has structures of every size.  One that is
+$200$~Mpc across spans three or four such shells, and each of them sees
+it in the same direction on the sky.  Their maps share it, so the cross
+spectrum of two neighbouring shells is large at the angular scale of
+that structure.  A structure a few Mpc across sits in one shell only,
+unless it sits where two shells meet.
+
+\paragraph{Limber and non-Limber.}
+These two cases are the two regimes of a cross spectrum.  At high
+$\ell$ the Limber approximation~\cite{Limber1953} holds: only Fourier
+modes perpendicular to the line of sight contribute, and
+\begin{equation}
+  C^{ij}_\ell \;\simeq\; \int d\chi\, \frac{W_i(\chi)\,W_j(\chi)}{\chi^2}\,
+  P\!\left(k = \frac{\ell + 1/2}{\chi}\right) ,
+  \label{eq:limber}
+\end{equation}
+with $\chi$ the comoving distance, $W_i(\chi)$ the redshift
+distribution of bin $i$ written per unit comoving distance, and $P(k)$
+the power spectrum of the galaxy density at wavenumber $k$.  Two shells
+whose $W$ do not overlap then have no cross spectrum.  At low $\ell$
+the approximation fails for thin shells: modes with a component along
+the line of sight longer than the shell depth connect shells that do
+not touch.  The forecast computes every spectrum without the Limber
+approximation, so it keeps that low-$\ell$ correlation.
+
+\paragraph{Where the radial information sits.}
+Slicing a sample into thin shells keeps information along the line of
+sight: a shell of depth $\Delta\chi$ resolves line-of-sight wavenumbers
+up to about $\pi/\Delta\chi$, $0.05\,{\rm Mpc}^{-1}$ for $62$~Mpc.  The
+auto spectra say how clustered each shell is; the cross spectra say how
+the clustering of one shell continues into the next.
+
+How much the cross spectra are worth depends on the bin layout:
+the thinner the shells, the more of the line-of-sight information
+sits in the cross spectra between neighbours rather than in the
+auto spectra.
+
+\section{The six groups and the LRG--ELG overlap}
+\label{sec:groups}
+
+\paragraph{Three galaxy samples.}
+DESI selects three kinds of galaxies, each by its own colours and
+brightness, and each fills the redshifts where it is bright and
+numerous enough to observe:
+\begin{itemize}
+  \item \textbf{BGS}, the Bright Galaxy Survey: the brightest galaxies
+    at low redshift, here $0.1 < z < 0.4$;
+  \item \textbf{LRG}, luminous red galaxies: massive galaxies that
+    stopped forming stars, $0.4 < z < 1.1$;
+  \item \textbf{ELG}, emission-line galaxies: star-forming galaxies,
+    found by the bright emission lines of their gas, $0.8 < z < 1.6$.
+\end{itemize}
+Nothing forces these ranges to tile the redshift axis.  LRG and ELG
+both cover $0.8 < z < 1.1$.
+
+\paragraph{Six groups.}
+The forecast splits the samples into six groups by the bins' mean
+redshift $\bar{z}_i$, and gives each group its own bias parameters
+(Table~\ref{tab:groups}): BGS whole; LRG1 ($\bar{z}_i < 0.6$), LRG2
+($0.6 \le \bar{z}_i < 0.8$) and LRG3 ($\bar{z}_i \ge 0.8$); ELG1
+($\bar{z}_i < 1.1$) and ELG2 ($\bar{z}_i \ge 1.1$).  LRG3 and ELG1 are
+therefore two different galaxy populations in the same volume, at
+$z \approx 0.8$--$1.1$.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{llcc}
+    \hline
+    group & sample & bins & $\bar{z}_i$ \\
+    \hline
+    BGS & bright galaxies & $1$--$18$ & $0.11$--$0.38$ \\
+    LRG1 & luminous red galaxies & $19$--$29$ & $0.41$--$0.60$ \\
+    LRG2 & luminous red galaxies & $30$--$38$ & $0.62$--$0.79$ \\
+    LRG3 & luminous red galaxies & $39$--$49$ & $0.81$--$1.06$ \\
+    ELG1 & emission-line galaxies & $50$--$61$ & $0.81$--$1.09$ \\
+    ELG2 & emission-line galaxies & $62$--$76$ & $1.11$--$1.55$ \\
+    \hline
+  \end{tabular}
+  \caption{The six groups of \dcom{}, with bins numbered from $1$ in
+    data-vector order.  LRG3 and ELG1 cover the same redshifts.}
+  \label{tab:groups}
+\end{table}
+
+\paragraph{The numbering runs group by group.}
+Bins are numbered in the order of the data vector: all BGS bins by
+increasing redshift, then all LRG bins, then all ELG bins.  The
+numbering therefore jumps back in redshift between bins $49$ and $50$:
+bin $49$ (LRG3) has $\bar{z} = 1.060$, bin $50$ (ELG1) has
+$\bar{z} = 0.812$.  Two bins far apart in number can sit at the same
+redshift: LRG3 bin $44$ has $\bar{z} = 0.932$ and ELG1 bin $55$ has
+$\bar{z} = 0.931$.
+
+\paragraph{What the LRG--ELG cross spectrum measures.}
+An LRG bin and an ELG bin at the same redshift sample the same matter
+with different galaxies.  On large scales a galaxy map is the matter map
+times a number, the linear bias $b_i$ of the bin, so their cross
+spectrum is about $b_i b_j$ times the matter spectrum, while the two
+autos are about $b_i^2$ and $b_j^2$ times it.  The three spectra
+together tie the two biases to each other.  Two tracers of the same
+structures also share the random fluctuations of those structures, so
+comparing them measures their bias ratio with less of that randomness
+than either map alone (the multi-tracer idea~\cite{Seljak2009}).
+
+\paragraph{Shot noise and the stochastic terms.}
+A galaxy map is made of discrete objects, so even a random scatter of
+galaxies has a nonzero auto spectrum: the shot noise, $1/\bar{n}_i$
+for a bin of $\bar{n}_i$ galaxies per steradian.  A cross spectrum
+has no shot noise, because no galaxy is in two bins: within one
+sample each galaxy has one measured redshift, and two samples are
+different galaxies.
+
+The one-loop model adds stochastic terms beyond this Poisson noise,
+${\rm SN}_0$ and ${\rm SN}_2$.  They are properties of the
+three-dimensional galaxy field, so they reach the cross spectrum of two
+bins of one sample through the overlap of their kernels, $\int d\chi\,
+W_i W_j/\chi^2$ for ${\rm SN}_0$ and the same integral of the kernels'
+radial derivatives for ${\rm SN}_2$ (\texttt{stochastic\us templates} in
+\texttt{likelihood/desi\us cl.py}).  An LRG--ELG pair gets none: two
+different populations do not share a stochastic term, and the model has
+no separate cross-stochasticity parameter.
+
+\section{Which pairs are measured}
+\label{sec:rule}
+
+\paragraph{The rule.}
+Each bin's raw $n(z)$ is the histogram of the measured redshifts of its
+galaxies, tabulated on the DESI redshift grid of step
+$h = 3.5 \times 10^{-4}$.  Let $z_i^{\rm lo}$ and $z_i^{\rm hi}$ be the
+first and last grid redshifts where $n_i(z)$ is nonzero.  Bins $i$ and
+$j$ pair when their ranges overlap or touch:
+\begin{equation}
+  z_j^{\rm lo} \le z_i^{\rm hi} + 1.5\,h
+  \quad\text{and}\quad
+  z_i^{\rm lo} \le z_j^{\rm hi} + 1.5\,h .
+  \label{eq:rule}
+\end{equation}
+The slack of $1.5$ grid steps is there because two neighbouring bins of
+one sample either share their edge node or sit one node apart; $1.5$
+steps catches both and nothing farther.
+
+For example, on $\Delta z = 0.02$ bin $1$ ends at $z = 0.1198$ and bin
+$2$ starts one grid step later, at $0.1202$: they pair.  Bin $3$ starts
+at $0.1401$, $0.020$ after the end of bin $1$: bins $1$ and $3$ do not
+pair.
+
+\paragraph{Where the pair lists come from.}
+For the three fixed-$\Delta z$ layouts the rule writes the pair list
+(\texttt{cross\us pairs} in \texttt{scripts/make\us desi\us dz\us
+case.py}).  On \dcom{} the list comes from the DESI forecast's data
+file (a \texttt{sacc} file), which pairs bins by redshift proximity;
+\texttt{scripts/make\us desi\us dataset.py} imports it.  The rule
+reproduces $96$ of its $97$ pairs.  The exception is the boundary pair
+of BGS bin $18$ and LRG1 bin $19$: BGS ends at $z = 0.390$ and LRG
+starts at $z = 0.400$, so their ranges are $0.010$ apart, and the
+forecast includes them anyway.
+
+\paragraph{The counts.}
+Table~\ref{tab:counts} sorts every layout's pairs by kind.  Most join a
+bin to the next one of its sample.  The rest join an LRG and an ELG bin:
+the LRG3--ELG1 pairs of the shared volume, one LRG2--ELG1 pair at
+$z = 0.8$ where LRG2 ends and ELG1 begins, and, on $\Delta z = 0.02$
+and $0.05$, one LRG3--ELG2 pair at $z = 1.1$.  Each bin has $1$ to $4$
+cross partners on \dcom{} and $\Delta z = 0.2$, and $1$ to $5$ on
+$\Delta z = 0.02$ and $0.05$; the first and last bins have one.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{lcccccc}
+    \hline
+    layout & bins & next bin & BGS--LRG1 & LRG3--ELG1 & LRG--ELG, other & total \\
+    \hline
+    \dcom{} & $76$ & $73$ & $1$ & $22$ & $1$ & $97$ \\
+    $\Delta z = 0.02$ & $90$ & $87$ & $1$ & $43$ & $2$ & $133$ \\
+    $\Delta z = 0.05$ & $36$ & $33$ & $1$ & $16$ & $2$ & $52$ \\
+    $\Delta z = 0.2$ & $10$ & $7$ & $1$ & $4$ & $1$ & $13$ \\
+    \hline
+  \end{tabular}
+  \caption{The measured cross spectra of each layout, by kind.
+    ``Next bin'': two consecutive bins of one sample; BGS--LRG1: the
+    pair across the BGS--LRG boundary at $z = 0.4$; ``LRG--ELG,
+    other'': the LRG2--ELG1 pair at $z = 0.8$ and the LRG3--ELG2 pair at
+    $z = 1.1$.}
+  \label{tab:counts}
+\end{table}
+
+\paragraph{How to read Figure~\ref{fig:layouts}.}
+Each block is one layout.  Its upper panel draws every bin's raw
+$n(z)$ at unit peak, BGS and LRG in the upper lane, ELG in the lower
+one; two bins that touch share an edge.  Its lower panel is the pair
+graph: a dot per bin at $\bar{z}_i$ and a segment per measured pair.
+The segments inside a row are the chain of neighbours; the segments
+between the rows are the LRG--ELG pairs, all inside the gray band
+where LRG3 and ELG1 share a volume, or at its edges.  On
+$\Delta z = 0.02$ the LRG and ELG bins have the same edges, so each
+LRG3 bin touches three ELG1 bins: the one at its redshift and the two
+beside it.  Figure~\ref{fig:zoom} magnifies the corner where LRG2 ends
+and LRG3 and ELG1 begin.
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=\linewidth]{plots/nz_overlap_layouts/nz_overlap_layouts.pdf}
+  \caption{Every thin bin of the four layouts and the cross spectra the
+    data vector measures.  Upper panel of each block: each bin's raw
+    $n(z)$ at unit peak, BGS and LRG in the upper lane, ELG in the
+    lower; fill shade and outline style mark the six groups (header).
+    Lower panel: a dot per bin at its mean redshift and a segment per
+    measured pair; dashed: the BGS--LRG1 pair of \dcom{}, whose ranges
+    do not touch.  Gray band: the redshifts where LRG3 and ELG1 both
+    have bins.}
+  \label{fig:layouts}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=3.5in]{plots/nz_overlap_zoom/nz_overlap_zoom.pdf}
+  \caption{The corner of Figure~\ref{fig:layouts} where LRG2 ends and
+    LRG3 and ELG1 begin, on the two thin layouts, with every bin
+    numbered in data-vector order.  Solid segments: measured pairs.
+    Dotted gray: unmeasured LRG3--ELG1 pairs of \dcom{} whose raw ranges
+    miss by $3$ to $5$ grid steps and whose blurred $n(z)$ overlap
+    (Section~\ref{sec:fog}).  A segment leaving the panel joins a bin
+    outside it.}
+  \label{fig:zoom}
+\end{figure}
+
+\section{What the rule means in redshift}
+\label{sec:redshift}
+
+\paragraph{Centre separations.}
+A rule in terms of ranges can be compared with a rule in terms of
+centres: is there a separation $|\bar{z}_i - \bar{z}_j|$ below which
+every pair is measured and above which none is?
+Table~\ref{tab:separations} gives, per layout, the largest separation
+of a measured pair and the smallest of an unmeasured one.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{lccc}
+    \hline
+    layout & bin width in $z$ & largest measured & smallest unmeasured \\
+    \hline
+    $\Delta z = 0.2$ & $0.1$--$0.2$ & $0.211$ (LRG3 $5$, ELG1 $8$)
+      & $0.257$ (LRG3 $6$, ELG2 $9$) \\
+    $\Delta z = 0.05$ & $0.05$ & $0.053$ (BGS $6$, LRG1 $7$)
+      & $0.097$ (LRG3 $18$, ELG1 $22$) \\
+    $\Delta z = 0.02$ & $0.02$ & $0.020$ (LRG3 $48$, ELG1 $64$)
+      & $0.040$ (LRG3 $45$, ELG1 $58$) \\
+    \dcom{} & $0.015$--$0.035$ & $0.035$ (ELG2 $75$, $76$)
+      & $0.024$ (LRG3 $40$, ELG1 $50$) \\
+    \hline
+  \end{tabular}
+  \caption{The separation $|\bar{z}_i - \bar{z}_j|$ of the mean
+    redshifts of the farthest measured pair and of the closest
+    unmeasured pair, with their groups and bin numbers.  On
+    $\Delta z = 0.2$ the bins at the ends of some samples are $0.1$
+    wide.}
+  \label{tab:separations}
+\end{table}
+
+\paragraph{Fixed redshift width: only adjacent bins.}
+On the three fixed-$\Delta z$ layouts the two columns are separated by
+about a factor of two: neighbours are one width apart, the next bin
+over is two widths apart.  Any cut between the two columns, for
+example at $0.03$ on $\Delta z = 0.02$, reproduces the rule.  So on
+these layouts the rule means: only adjacent bins pair,
+where an LRG bin and an ELG bin with the same range count as adjacent
+(separation near zero).  The edge bins of $\Delta z = 0.2$, $0.1$
+wide, shift the numbers but not the conclusion.
+
+\paragraph{Fixed comoving width: no redshift cut works.}
+On \dcom{} the columns cross: a measured pair is $0.035$ apart and an
+unmeasured one $0.024$.  The reason is how a shell of fixed depth
+looks in redshift.  The comoving distance is $\chi(z) = \int_0^z c\,
+dz'/H(z')$, with $H(z)$ the expansion rate, so a shell of depth
+$\Delta d_{\rm com}$ spans $\Delta z \approx \Delta d_{\rm com}\,
+H(z)/c$ in redshift.  $H$ grows with $z$, so the same $62$~Mpc covers
+$0.015$ in redshift at $\bar{z} = 0.11$ and $0.035$ at
+$\bar{z} = 1.55$.
+
+Two examples make this concrete.  BGS bins $1$ and $3$, one bin apart
+at $z \approx 0.12$, are only $0.030$ apart in mean redshift and not
+paired; ELG2 bins $75$ and $76$, neighbours at $z \approx 1.53$, are
+$0.035$ apart and paired.  The rule is adjacency in comoving distance,
+and in redshift that adjacency stretches with $z$.
+
+\paragraph{Misaligned LRG and ELG edges.}
+The closest unmeasured pair of \dcom{}, LRG3 bin $40$ and ELG1 bin
+$50$, has a second cause.  Each sample has its own bin edges: the LRG
+bins begin at $z = 0.400$ and the ELG bins at $z = 0.800$.  In the
+shared volume the LRG edges sit $0.001$--$0.002$ above the ELG edges
+(Figure~\ref{fig:zoom}, bottom).  An LRG3 bin therefore
+overlaps the ELG1 bin at its redshift and the one above it, and starts
+just above the end of the one below it.  Bin $40$ begins $0.0014$ above
+the end of bin $50$: $4$ grid steps, more than the rule's $1.5$, so the
+pair is not measured, although their centres are only one bin width
+apart.  This is why each LRG3 bin has two ELG1 partners on \dcom{},
+$22$ pairs in all, against three on $\Delta z = 0.02$.
+
+\section{The Fingers-of-God blur}
+\label{sec:fog}
+
+\subsection{What it is}
+
+\paragraph{Redshift is not distance.}
+The forecast places each galaxy by its measured redshift.  That
+redshift has two parts: the cosmological redshift, set by the
+galaxy's distance, and a Doppler shift from the galaxy's own velocity
+$v$ along the line of sight, its peculiar velocity.  The two multiply,
+$1 + z_{\rm obs} = (1 + z)(1 + v/c)$, so for $v \ll c$
+\begin{equation}
+  z_{\rm obs} - z \;\simeq\; (1 + z)\,\frac{v}{c} .
+  \label{eq:doppler}
+\end{equation}
+For example, $v = 350$~km/s at $z = 0.5$ shifts the redshift by
+$1.75 \times 10^{-3}$.  In distance this is $\delta\chi = c\,\delta
+z/H(z) = (1 + z)\,v/H(z) \approx 6$~Mpc, with $H(0.5) = 88$~km/s/Mpc
+in the examples' cosmology ($H_0 = 67.32$~km/s/Mpc, $\Omega_m = 0.3$).
+
+\paragraph{Fingers of God.}
+Inside groups and clusters, galaxies orbit their common halo with
+random speeds of several hundred km/s.  In a map that places every
+galaxy at its redshift distance, a cluster is stretched along the line
+of sight into a long finger pointing at the observer: the Fingers of
+God~\cite{Jackson1972}.  The orderly infall of galaxies onto large
+structures is a different effect, the Kaiser
+distortion~\cite{Kaiser1987}, which the model computes separately.
+
+\paragraph{What it does to a thin bin.}
+A bin collects the galaxies whose measured redshift falls inside its
+range: a sharp cut in $z_{\rm obs}$.  The matter that the galaxies
+trace sits at their true distances.  A galaxy just outside the range,
+moving towards it, is measured inside; one just inside, moving away, is
+measured outside.  So the galaxies of the bin trace the matter over a
+slightly wider, softer-edged range than the histogram of their measured
+redshifts.  The same convolution describes a sharp shell in true
+redshift observed blurred along the line of sight; for a symmetric
+velocity distribution the two descriptions agree.
+
+\subsection{The model in the likelihood}
+
+The likelihood replaces each bin's raw $n_i(z)$ by its convolution with
+a Gaussian in redshift~\cite{GrasshornGebhardt2020},
+\begin{equation}
+  n_i^{\rm FoG}(z) = \int dz'\, n_i(z')\,
+  \frac{1}{\sqrt{2\pi}\,\sigma_{z,i}}\,
+  \exp\!\left[-\frac{(z - z')^2}{2\sigma_{z,i}^2}\right] ,
+  \qquad
+  \sigma_{z,i} = (1 + \bar{z}_i)\,\frac{\sv}{c} ,
+  \label{eq:fog}
+\end{equation}
+with $\sv$ the velocity dispersion of the bin's group, the standard
+deviation of the line-of-sight velocities, and $c = 299792.458$~km/s.
+The width follows from Eq.~\eqref{eq:doppler}.
+
+The code is \texttt{set\us lens\us related} in
+\texttt{likelihood/desi\us cl.py}.  It convolves a copy of each raw
+histogram with \texttt{scipy.ndimage.gaussian\us filter1d} on the
+$n(z)$ table's grid, the DESI grid refined five-fold (step
+$7.0 \times 10^{-5}$, so $\sigma_{z,i}$ spans $20$ to $36$ steps), with
+the width in grid steps and zero beyond the grid ends.  The Gaussian is
+truncated at $4\sigma_{z,i}$, scipy's default.  The $\sv$ are sampled
+parameters, so the convolution runs again at every sampled point.  The
+figures of this note repeat that call; at the default $\sv$ the result
+equals, bit for bit, the convolved tables that the covariance adapter
+writes with the same call (\texttt{covariance/<layout>\us fog.nz}).
+
+\subsection{Where the velocity dispersions come from}
+
+The source forecast measured the line-of-sight velocity dispersion of
+its simulated galaxies as a function of redshift, with an error bar per
+bin.  The project reads one value per group off that measurement
+(Table~\ref{tab:sigv}).  The measured curve steps inside BGS, between
+the bins at $\bar{z} = 0.247$ and $0.263$, so BGS takes two values,
+split at $z = 0.255$: seven dispersion groups for six bias groups.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lcccc}
+    \hline
+    group & $\sv$ [km/s] & prior width [km/s] & $\sigma_{z,i}$ [$10^{-3}$]
+      & $\delta\chi$ [Mpc] \\
+    \hline
+    BGS, $\bar{z}_i < 0.255$ & $371$ & $145$ & $1.37$--$1.54$ & $5.8$--$6.1$ \\
+    BGS, $\bar{z}_i \ge 0.255$ & $358$ & $105$ & $1.51$--$1.65$ & $5.9$--$6.0$ \\
+    LRG1 & $357$ & $70$ & $1.68$--$1.90$ & $6.0$--$6.1$ \\
+    LRG2 & $348$ & $50$ & $1.88$--$2.08$ & $6.0$ \\
+    LRG3 & $343$ & $50$ & $2.07$--$2.36$ & $5.8$--$5.9$ \\
+    ELG1 & $304$ & $40$ & $1.84$--$2.12$ & $5.1$--$5.2$ \\
+    ELG2 & $289$ & $30$ & $2.04$--$2.46$ & $4.6$--$4.8$ \\
+    \hline
+  \end{tabular}
+  \caption{The default velocity dispersion of each group, the width of
+    its Gaussian prior, and the resulting redshift width
+    $\sigma_{z,i}$ and comoving width $\delta\chi = (1 + \bar{z}_i)\,
+    \sv/H(\bar{z}_i)$ over the bins of \dcom{}.}
+  \label{tab:sigv}
+\end{table}
+
+Each prior is a Gaussian centred on the default, five times as wide as
+the per-bin error bar of the measurement, and truncated at zero.  The
+defaults live in \texttt{likelihood/params\us desi*.yaml} (the
+\texttt{DESI\us SIGV} parameters; the first bin of each group carries
+the prior and the others are tied to it), and the same seven values in
+\texttt{CHUNK\us SIGMA\us V} of
+\texttt{covariance/lssty1xdesi\us covariance.py}, which convolves the
+covariance's kernels at fixed $\sv$.  The ELG dispersions are the
+lowest, as expected for star-forming galaxies, which tend to live in
+lighter halos with slower orbits.
+
+\subsection{How large the blur is}
+
+\paragraph{A nearly constant width in distance.}
+In comoving distance the blur is $\delta\chi = (1 + z)\,\sv/H(z)$
+(last column of Table~\ref{tab:sigv}): $5.8$--$6.1$~Mpc for BGS and
+LRG and $4.6$--$5.2$~Mpc for ELG, at every redshift.  It barely changes
+with $z$ because $(1 + z)/H(z)$ changes by at most $10\%$ over
+$0.1 < z < 1.6$.
+
+\paragraph{Against the bin width.}
+What matters for overlap is $\sigma_{z,i}$ divided by the bin's width
+$w_i$, the redshift range its galaxies were selected in.  On \dcom{} it
+is the same ratio in distance, $\delta\chi/62$~Mpc: $0.069$--$0.096$,
+about a tenth of the bin at every redshift.  On $\Delta z = 0.02$ it
+grows with redshift, from $0.069$ to $0.125$, because a fixed
+$\Delta z$ is a thinner shell at high $z$.  On $\Delta z = 0.05$ it is
+$0.028$--$0.050$, and on $\Delta z = 0.2$ $0.007$--$0.023$
+(Figure~\ref{fig:fog}, top right).
+
+A Gaussian blur of a sharp edge moves a fraction of about
+$\sigma_z/(\sqrt{2\pi}\,w)$ of a bin's galaxies across each edge.  The
+blurred $n(z)$ of a thin bin has $5$--$8\%$ of its weight outside its
+raw range on \dcom{} and $5$--$10\%$ on $\Delta z = 0.02$, against
+$2$--$4\%$ on $\Delta z = 0.05$ and $0.5$--$2\%$ on $\Delta z = 0.2$.
+That weight lies inside the neighbouring bins.
+
+\subsection{What it does to the overlap}
+
+\paragraph{A measure of overlap.}
+For two bins define the normalized overlap integral
+\begin{equation}
+  O_{ij} \;=\; \frac{\int dz\, n_i(z)\, n_j(z)}
+  {\sqrt{\int dz\, n_i^2(z)\, \int dz\, n_j^2(z)}} ,
+  \label{eq:overlap}
+\end{equation}
+$1$ for two identical distributions and $0$ for disjoint ones,
+whatever their normalization.  It has a direct meaning.  In the Limber
+regime, Eq.~\eqref{eq:limber}, the power spectrum and $\chi$ barely
+change across two thin bins, so $O_{ij}$ is close to the correlation
+coefficient $C^{ij}_\ell/\sqrt{C^{ii}_\ell C^{jj}_\ell}$ of the two
+bins at high $\ell$.  The ${\rm SN}_0$ cross term of
+Section~\ref{sec:groups} is nearly the same integral.
+
+\paragraph{Neighbours.}
+Without the blur, two neighbouring bins touch only over the one grid
+step where their tabulated edges meet, and their overlap is about
+$h/(6\,w)$: $0.0015$--$0.0039$ on \dcom{}, $0.0027$--$0.0029$ on
+$\Delta z = 0.02$, $0.0011$--$0.0012$ on $\Delta z = 0.05$ and
+$0.0003$--$0.0004$ on $\Delta z = 0.2$.  This number measures the grid,
+not the galaxies.  With the blur at the default $\sv$ the edges become
+ramps about $4\sigma_z$ wide, and the overlap becomes about
+$0.6\,\sigma_z/w$: $0.039$--$0.061$ on \dcom{} (median $0.057$),
+$0.043$--$0.083$ on $\Delta z = 0.02$ ($0.066$), $0.018$--$0.032$ on
+$\Delta z = 0.05$ ($0.024$) and $0.006$--$0.009$ on $\Delta z = 0.2$
+($0.007$).  On the thin layouts this is a $6\%$ correlation at high
+$\ell$ that the raw $n(z)$ would put at $0.3\%$.
+
+\paragraph{Bins one apart stay disjoint.}
+The bin between them is at least $8\sigma_z$ wide, and the Gaussian is
+truncated at $4\sigma_z$, so the blurred $n(z)$ of two bins one apart
+do not meet.  The only exception is the last ELG2 bins of
+$\Delta z = 0.02$, where $\sigma_z/w = 0.125$ and the truncated tails
+touch, with an overlap below $2 \times 10^{-14}$.  Even an untruncated
+Gaussian gives two blurred top hats one bin apart a percent-level
+overlap only at $\sigma_z \approx 0.4\,w$, four times the default on the
+thin layouts.  Within two prior widths of every default $\sigma_z/w$
+stays below $0.2$, where that overlap is below $2 \times 10^{-5}$.
+
+\paragraph{The misaligned LRG3--ELG1 pairs.}
+The blur does change one set of pairs.  On \dcom{} the ten unmeasured
+pairs of an LRG3 bin and the ELG1 bin ending just below it (bins $40$
+to $49$ with $50$ to $59$; Section~\ref{sec:redshift}) have raw ranges
+$3$ to $5$ grid steps apart, less than $\sigma_z$, and zero raw
+overlap.  Blurred, they overlap by $0.028$--$0.035$, half of a measured
+neighbour pair (crosses in Figure~\ref{fig:fog}; dotted segments in
+Figure~\ref{fig:zoom}).  No unmeasured pair of the fixed-$\Delta z$
+layouts overlaps by more than $10^{-6}$ after the blur.  The measured
+BGS--LRG1 boundary pair of \dcom{} overlaps by $3 \times 10^{-7}$: its
+ranges are $0.010$ apart, six times $\sigma_z$.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{plots/fog_smearing/fog_smearing.pdf}
+  \caption{The Fingers-of-God blur at the default $\sv$.  Left: raw
+    (dashed) and blurred (solid) $n(z)$ of the LRG1 bins in
+    $0.435 < z < 0.535$ on three layouts, each divided by its raw
+    peak; shaded: the overlap $\min(n_i, n_j)$ of neighbouring blurred
+    bins; bar: $\pm\sigma_z$.  Right: $\sigma_z$ over the bin width,
+    and the overlap $O_{ij}$ of Eq.~\eqref{eq:overlap} for
+    consecutive bins of one sample, raw (dashed, open markers) and
+    blurred (solid, filled), against the mean redshift.  Crosses: the
+    ten unmeasured LRG3--ELG1 pairs of \dcom{}, whose raw overlap is
+    zero.  Bins one apart overlap by at most $2 \times 10^{-14}$, raw
+    or blurred.}
+  \label{fig:fog}
+\end{figure}
+
+\subsection{Raw $n(z)$ for the rule, blurred $n(z)$ for the model}
+
+The pairing rule, Eq.~\eqref{eq:rule}, reads the raw $n(z)$: the pair
+list is fixed with the data and does not move when $\sv$ is sampled.
+The model reads the blurred $n(z)$ in every spectrum it computes: the
+autos, the measured cross spectra and the stochastic templates.  The
+covariance uses the blurred $n(z)$ at the default $\sv$.
+
+For the three fixed-$\Delta z$ layouts the two choices give the same
+list: no unmeasured pair overlaps after the blur, and every measured
+pair overlaps by at least $0.003$.  On \dcom{} a rule applied to the
+blurred $n(z)$ would add the ten LRG3--ELG1 pairs above and drop the
+BGS--LRG1 boundary pair.
+
+\section{What is not measured, and why that is a choice}
+\label{sec:notmeasured}
+
+\paragraph{Unmeasured spectra are not zero.}
+Two thin bins one apart share no galaxies and, even blurred, no
+redshift range, so their cross spectrum vanishes in the Limber regime.
+At low $\ell$ it does not vanish: modes longer than a bin along the
+line of sight connect the two shells (Section~\ref{sec:why}), so their
+non-Limber cross spectrum is small but nonzero.  The same holds for any
+pair beyond.  On \dcom{} the ten misaligned LRG3--ELG1 pairs are larger
+still: their blurred kernels overlap like those of neighbours.
+
+\paragraph{Leaving a spectrum out is a choice of data, not an error.}
+The likelihood compares each spectrum in the data vector with the
+model's prediction for that same spectrum, weighted by the covariance
+of the measured spectra.  Leaving a pair out removes its rows from the
+data, the model and the covariance together.  The remaining comparison
+is still a correct one; it uses less information.  So the choice can
+cost precision, by the information the unmeasured spectra carry, but it
+cannot bias a fit: a bias would need a wrong prediction for a spectrum
+that is kept, and leaving another spectrum out changes no prediction.
+
+\section{Open issues}
+\label{sec:open}
+
+\begin{itemize}
+  \item \textbf{The ten misaligned LRG3--ELG1 pairs of \dcom{}.}  The
+    pair list, from the DESI forecast and reproduced by the rule on the
+    raw $n(z)$, leaves them out, although their blurred kernels overlap
+    by $0.028$--$0.035$.  Their information is not in the forecast.
+  \item \textbf{The BGS--LRG1 boundary pair of \dcom{}.}  It is
+    measured although its ranges are $0.010$ apart and its blurred
+    kernels do not overlap ($3 \times 10^{-7}$); its signal is the
+    low-$\ell$ non-Limber correlation alone.
+  \item \textbf{The list does not follow $\sv$.}  A sampled $\sv$
+    changes every kernel overlap but not which pairs are measured.
+    Within two prior widths of the defaults no unmeasured pair of the
+    fixed-$\Delta z$ layouts reaches an overlap of $10^{-4}$.
+\end{itemize}
+
+\paragraph{Reproducing the figures.}
+\texttt{plots/make\us cross\us correlations\us data.py} reads the
+project's \texttt{data/} and \texttt{likelihood/} files and writes the
+\texttt{data.json} of the three figure folders, with every number
+quoted here.  Each folder's \texttt{plot\us <name>.py} redraws its
+figure from that file alone.
+
+\begin{thebibliography}{99}
+
+\bibitem{Limber1953}
+D.~N. Limber,
+``The Analysis of Counts of the Extragalactic Nebulae in Terms of a
+Fluctuating Density Field'',
+ApJ 117, 134 (1953).
+
+\bibitem{Seljak2009}
+U. Seljak,
+``Extracting primordial non-Gaussianity without cosmic variance'',
+Phys. Rev. Lett. 102, 021302 (2009), arXiv:0807.1770.
+
+\bibitem{Jackson1972}
+J.~C. Jackson,
+``A critique of Rees's theory of primordial gravitational radiation'',
+MNRAS 156, 1P (1972).
+
+\bibitem{Kaiser1987}
+N. Kaiser,
+``Clustering in real space and in redshift space'',
+MNRAS 227, 1 (1987).
+
+\bibitem{GrasshornGebhardt2020}
+H.~S. Grasshorn Gebhardt and D. Jeong,
+``Nonlinear redshift-space distortions in the harmonic-space galaxy
+power spectrum'',
+Phys. Rev. D 102, 083521 (2020).
+
+\end{thebibliography}
+
+\end{document}
