@@ -86,7 +86,7 @@ At $\kmax = 0.075\hMpc$ every prior fits $2000$ random bias histories
 under model A (Section~\ref{sec:accuracy}).  The growth-tied prior
 fails.  The baseline prior is honest only when the truth is as smooth
 as it assumes: under the pessimistic residuals its $\Omega_m$ error bar
-covers the truth in $40$--$63\%$ of universes instead of $68\%$.  The
+covers the truth in $60$--$67\%$ of universes instead of $68\%$.  The
 pessimistic and free priors are honest under both, and model A + tilts
 absorbs a linear drift of the calibrations that moves model A by more
 than $\sigma/3$ on the wide layouts.
@@ -97,19 +97,21 @@ pessimistic prior with models A and B + tilts, fitted against $\kmax$
 to truths that carry $\alpha_2$, $\SNt$, the offsets at one prior
 width, or the calibration drift (Figure~\ref{fig:fomkmax}).  The
 baseline scenario fails quickly: from $\kmax = 0.1\hMpc$ on, its
-largest shift is $0.53$--$2.75\sigma$ in both models, mostly from the
+largest shift is $0.53$--$2.8\sigma$ in both models, mostly from the
 calibration drift.  It also buys little: at $0.2$ model B gives
-${\rm FoM}(w_0, w_a) = 17.5$ and $24.6$ on the thin layouts, $1.6$ and
-$1.8$ times the $10.9$ and $13.9$ of model B + tilts.  Model A buys
-little even below $0.1$: with tilts it holds to $0.075$ on the thin
-layouts, where its ${\rm FoM}(w_0, w_a)$, $2.59$ and $2.70$, is small
+${\rm FoM}(w_0, w_a) = 8.47$ and $9.92$ on the thin layouts, $1.12$ and
+$1.18$ times the $7.54$ and $8.43$ of model B + tilts.  Model A buys
+little even below $0.1$: with tilts it holds to $0.075$ on
+$\Delta z = 0.02$ but only to $0.05$ on $\Delta d_{\rm com} = 62$~Mpc,
+and its ${\rm FoM}(w_0, w_a)$ at $0.075$, $1.01$ and $0.675$, is small
 next to those of model B + tilts at $0.2$.  The adopted model is
 therefore model B + tilts on the pessimistic prior, at every cut.
-From $0.1$ on, truths at one prior width move it by $0.37$--$0.59\sigma$
-on the three thinner layouts, mostly through $\alpha_2$, and by
-$0.19$--$0.23\sigma$ on $\Delta z = 0.2$; over random bias histories
-its error bars stay honest, $\chidof \le 1.023$.  It stays below
-LSST Y1 3x2pt in both FoMs.
+Truths at one prior width move it by up to $0.99\sigma$ on
+$\Delta d_{\rm com} = 62$~Mpc at $0.075$ and by $0.33$--$1.09\sigma$
+on the three thinner layouts from $0.1$ on, mostly through $\alpha_2$,
+and by at most $0.22\sigma$ on $\Delta z = 0.2$; over random bias
+histories its error bars stay honest, $\chidof \le 1.028$.  It stays
+below LSST Y1 3x2pt in both FoMs.
 Appendices~\ref{app:limits} and \ref{app:open} give the limits and the
 open issues.
 
@@ -272,7 +274,7 @@ features nobody has measured.
 
 Linear bias alone is not enough at $\kmax = 0.075\hMpc$: a
 linear-bias fit to a one-loop truth moves $\Omega_m$ by
-$1.5$--$1.8\sigma$ on $\Delta d_{\rm com} = 62$~Mpc under every
+$1.7$--$1.9\sigma$ on $\Delta d_{\rm com} = 62$~Mpc under every
 linear-bias prior, and is safe only at $\kmax = 0.05\hMpc$
 (\texttt{notes/linear\_bias\_kmax}).  Model A
 (\texttt{notes/higher\_order\_bias}) keeps the per-bin linear bias of
@@ -408,43 +410,57 @@ smaller fitted cut; it breaks at the next cut.
 Figure~\ref{fig:fomkmax}c draws the largest shift in two scenarios:
 the baseline prior with models A and B, and the pessimistic prior with
 models A and B + tilts.  Each variant breaks at the same cut under the
-baseline, pessimistic and free priors.
+baseline, pessimistic and free priors, except model A + tilts on
+$\Delta z = 0.05$, where the free prior holds to $0.15$ and the other
+two to $0.075$.
 \begin{itemize}
-  \item Without tilts model A holds to $0.075\hMpc$ on the thin
-    layouts; model B holds only to $0.05$ on
-    $\Delta d_{\rm com} = 62$~Mpc and fails at the first fitted cut,
-    $0.075$, on $\Delta z = 0.02$, both through $\alpha_2$.  Both
-    models hold only to $0.05$ on $\Delta z = 0.05$ and $0.2$, ended by
-    the calibration drift.  From $0.1$ on the largest shift is
-    $0.53$--$2.75\sigma$, and from $0.125$ on the drift sets it.
-  \item The tilts absorb the calibration drift exactly.  Model A +
-    tilts holds to its own cut, $0.075$, on the thin layouts, to $0.15$
-    on $\Delta z = 0.05$, and at every cut on $\Delta z = 0.2$, whose
-    wide bins barely see $\alpha_2$.  It fails through $\alpha_2$: in
-    $A_s$ on $\Delta d_{\rm com} = 62$~Mpc and $\Delta z = 0.05$, in
-    $(w_0, w_a)$ on $\Delta z = 0.02$.
-  \item Model B + tilts holds at every cut on $\Delta z = 0.2$, to
-    $0.075$ on $\Delta z = 0.02$ and $0.05$, and to $0.05$ on
+  \item Without tilts model A holds to $0.075\hMpc$ on
+    $\Delta z = 0.02$ but only to $0.05$ on
     $\Delta d_{\rm com} = 62$~Mpc, where $\alpha_2$ moves $A_s$ by
-    $0.46\sigma$ at $0.075$.  From $0.1$ on its largest shift on the
-    three thinner layouts is $0.37$--$0.59\sigma$, set mostly by
-    $\alpha_2$; without the $\alpha_2$ truth it would be
-    $0.26$--$0.43\sigma$.
+    $0.334\sigma$ at $0.075$, just above $\sigma/3$; model B holds only
+    to $0.05$ on $\Delta d_{\rm com} = 62$~Mpc and fails at the first
+    fitted cut, $0.075$, on $\Delta z = 0.02$, both through $\alpha_2$.
+    Both models hold only to $0.05$ on $\Delta z = 0.05$ and $0.2$,
+    ended by the calibration drift, except model B on
+    $\Delta z = 0.2$, by its own offsets ($0.35\sigma$).  From $0.1$ on
+    the largest shift is $0.53$--$2.8\sigma$, and from $0.125$ on the
+    drift sets it.
+  \item The tilts absorb the calibration drift exactly.  Model A +
+    tilts holds to $0.075$ on $\Delta z = 0.02$ and, under the baseline
+    and pessimistic priors, on $\Delta z = 0.05$; to $0.05$ on
+    $\Delta d_{\rm com} = 62$~Mpc ($\alpha_2$ moves $A_s$ by
+    $0.34$--$0.35\sigma$ at $0.075$); and at every cut on
+    $\Delta z = 0.2$, whose wide bins barely see $\alpha_2$.  It fails
+    through $\alpha_2$ in $(w_0, w_a)$ on $\Delta z = 0.02$ and
+    through its own offsets in $\Omega_m$ on $\Delta z = 0.05$, where
+    the free prior holds to $0.15$ and then fails through $\alpha_2$
+    in $A_s$.
+  \item Model B + tilts holds at every cut on $\Delta z = 0.2$, to
+    $0.075$ on $\Delta z = 0.05$, and to $0.05$ on
+    $\Delta d_{\rm com} = 62$~Mpc; on $\Delta z = 0.02$ it fails at the
+    first fitted cut.  The truth that ends it is $\alpha_2$ at one of
+    its own prior widths, which moves $(w_0, w_a)$ by $0.99\sigma$ on
+    $\Delta d_{\rm com} = 62$~Mpc and $0.57\sigma$ on
+    $\Delta z = 0.02$ at $0.075$, and its own offsets on
+    $\Delta z = 0.05$ ($\Omega_m$, $0.46\sigma$ at $0.1$).  From $0.1$
+    on its largest shift on the three thinner layouts is
+    $0.33$--$1.09\sigma$, set mostly by $\alpha_2$; without the
+    $\alpha_2$ truth it would be $0.26$--$0.70\sigma$.
 \end{itemize}
 With $\SNt$ in the fit, an $\SNt$ truth at one prior width moves no
-parameter by more than $0.3\sigma$ at any cut and sets no break.
+parameter by more than $0.39\sigma$ at any cut and sets no break.
 
 The offset truth stays inside model A's priors.  If the calibrations
 instead scatter as widely as model B allows, $\pm(2, 1)$, model A's
-tighter offset priors shift its largest score by $0.23$--$0.44\sigma$
-at $0.075$ and by $0.31$--$0.75\sigma$ from $0.1$ up: a diagnostic of
+tighter offset priors shift its largest score by $0.19$--$0.44\sigma$
+at $0.075$ and by $0.45$--$0.98\sigma$ from $0.1$ up: a diagnostic of
 the prior, outside the break point.  Likewise, when $\alpha_2$
 scatters over model B's whole prior, seven times $12.5\aunit$ at
 $0.075$, model A's error bars on the two thin layouts at that cut are
-too small by factors of $2.1$--$3.7$ and cover the truth in
-$15$--$36\%$ of universes instead of $68\%$; they recover as the prior
+too small by factors of $1.5$--$3.3$ and cover the truth in
+$13$--$50\%$ of universes instead of $68\%$; they recover as the prior
 narrows with $\kmax$, and on the wide layouts they are too small by
-at most $12\%$ at every cut.
+at most $11\%$ at every cut.
 
 \begin{figure}[tbp]
   \centering
@@ -466,16 +482,16 @@ at most $12\%$ at every cut.
 Figure~\ref{fig:fomkmax}a and b draw the FoMs of the two scenarios,
 model A up to its break and model B at every cut, with LSST Y1 3x2pt
 ($17.26$ and $214.9$) for reference.  The baseline scenario gives the
-larger FoMs at every cut, ${\rm FoM}(w_0, w_a) = 4.33$ and $4.00$ for
-model A at $0.075$ on the thin layouts and $17.5$ and $24.6$ for model
-B at $0.2\hMpc$, with ${\rm FoM}(\Omega_m, 10^9 A_s)$ at most $116$,
-but fails the break test from $0.1$ on.  On the pessimistic prior,
-model A + tilts gives ${\rm FoM}(w_0, w_a) = 2.59$ and $2.70$ on the
-thin layouts at its break, $0.075$.  Model B + tilts, the adopted
-model, gives ${\rm FoM}(w_0, w_a) = 1.29$, $1.34$, $0.227$ and $0.0495$
-at $0.075$ and $10.9$, $13.9$, $2.64$ and $0.289$ at $0.2$ (layout
-order), and ${\rm FoM}(\Omega_m, 10^9 A_s) = 70.8$, $81.3$, $23.1$ and
-$2.98$ at $0.2$.  The free prior, and the model A FoMs beyond the
+larger FoMs at every cut, ${\rm FoM}(w_0, w_a) = 1.09$ and $0.866$ for
+model A at $0.075$ on the thin layouts and $8.47$ and $9.92$ for model
+B at $0.2\hMpc$, with ${\rm FoM}(\Omega_m, 10^9 A_s)$ at most $67.6$,
+but fails the break test from $0.075$ on.  On the pessimistic prior,
+model A + tilts gives ${\rm FoM}(w_0, w_a) = 1.01$ and $0.675$ on the
+thin layouts at $0.075$.  Model B + tilts, the adopted
+model, gives ${\rm FoM}(w_0, w_a) = 0.411$, $0.244$, $0.160$ and $0.0496$
+at $0.075$ and $7.54$, $8.43$, $2.48$ and $0.288$ at $0.2$ (layout
+order), and ${\rm FoM}(\Omega_m, 10^9 A_s) = 55.9$, $58.2$, $21.8$ and
+$2.97$ at $0.2$.  The free prior, and the model A FoMs beyond the
 break, which extending model A would claim, are in
 \texttt{plots/fom\_kmax\_models/data.json}.
 
@@ -543,7 +559,7 @@ covers the truth (Appendix~\ref{sec:inflation}).
     $\eta = 1$.  A one-parameter $1\sigma$ bar covers the truth in a
     fraction $2\Phi(1/\eta) - 1$ of universes, $\Phi$ the Gaussian
     cumulative distribution.  Omitted: the free prior (exactly $1$) and
-    the pessimistic prior (at most $1.05$).  \kmaxclause}
+    the pessimistic prior (at most $1.08$).  \kmaxclause}
   \label{fig:gof}
 \end{figure}
 
@@ -554,20 +570,20 @@ Figures~\ref{fig:scatter} and \ref{fig:gof} order the priors.
     discarded.}  The conserved-population drift alone moves its
     $(w_0, w_a)$ by several $\sigma$ (Appendix~\ref{sec:tabdrifts}),
     and under the pessimistic scatter its $\Omega_m$ bar covers the
-    truth in only $5$--$40\%$ of universes.  Under model A + tilts,
+    truth in only $0.4$--$12\%$ of universes.  Under model A + tilts,
     whose flat-prior tilts follow part of a drift, $\eta$
-    of $(w_0, w_a)$ is still $1.4$--$2.3$.
+    of $(w_0, w_a)$ is still $1.5$--$2.4$.
   \item \emph{The baseline prior is honest only if the residual is as
     smooth as it assumes.}  Under its own scatter $\eta$ is
-    $1.00$--$1.02$.  Under the pessimistic scatter it fails on every
-    layout but $\Delta z = 0.2$, where the priors coincide: the
-    $\Omega_m$ bar covers the truth in $55$, $63$ and $40\%$ of
-    universes on $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$ and
-    $0.05$, and the $A_s$ bar in $56$, $64$ and $54\%$.  Model A +
-    tilts does not change this.
+    $1.00$--$1.11$.  Under the pessimistic scatter it stays below
+    $1.05$ on every layout but $\Delta z = 0.05$, where $\eta$ reaches
+    $1.19$: the $\Omega_m$ bar covers the truth in $67$, $66$ and
+    $60\%$ of universes on $\Delta d_{\rm com} = 62$~Mpc,
+    $\Delta z = 0.02$ and $0.05$, and the $A_s$ bar in $67$, $66$ and
+    $64\%$.  Model A + tilts does not change this.
   \item \emph{The pessimistic prior is honest under both scatters}:
-    $\eta \le 1.05$ in every score, and $0.89$--$1.00$ in $(w_0, w_a)$
-    under baseline scatter.  The $1.05$ is the BGS flux-limit drift on
+    $\eta \le 1.08$ in every score, and $0.99$--$1.04$ in $(w_0, w_a)$
+    under baseline scatter.  The $1.08$ is the BGS flux-limit drift on
     $\Delta z = 0.05$, which this prior leaves just above $\sigma/3$
     (Appendix~\ref{sec:tabdrifts}).  The free prior gives exactly $1$.
 \end{itemize}
@@ -596,6 +612,36 @@ drift is also one of the break truths of Section~\ref{sec:modelb}.
     linear-bias priors; dashed: $\sigma/3$.  Omitted: model A + tilts,
     which absorbs the drift exactly.  \kmaxclause}
   \label{fig:caldrift}
+\end{figure}
+
+\paragraph{The test at every cut.}
+The test above fixes $\kmax = 0.075\hMpc$ and model A.
+Figure~\ref{fig:gtkmax} repeats it at every cut under model B + tilts,
+the adopted model, for the growth-tied prior against the pessimistic
+prior, with the same truths: the known drifts plus a residual drawn
+from the pessimistic prior.  The pessimistic prior keeps
+$\eta \le 1.03$ at every cut and on every layout.  Under the
+growth-tied prior $\eta$ grows from $1.0$--$1.5$ at the smallest
+fitted cut to a largest score of $3.3$--$4.5$ on the three thinner
+layouts at $0.2\hMpc$, where its $\Omega_m$ bar covers the truth in
+$2$--$9\%$ of universes, and $1.7$ on $\Delta z = 0.2$.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics{plots/growth_tied_kmax/growth_tied_kmax.pdf}
+  \caption{The accuracy test at every cut: $\eta = \chidof$ of
+    $(w_0, w_a)$, $\Omega_m$ and $A_s$ (one panel each, one shared
+    logarithmic scale) for model B + tilts fitted with the growth-tied
+    prior (solid, filled markers) and with the correlated prior, here
+    the pessimistic prior (thin dashed, open markers), to truths that
+    carry the known drifts plus a residual drawn from the pessimistic
+    prior.  Color, line width and marker: the layouts.  Gray dashed:
+    $\eta = 1$, honest error bars.  The pessimistic prior stays at
+    $\eta \le 1.03$ at every cut; the growth-tied prior reaches
+    $3.3$--$4.5$ on the three thinner layouts at $0.2\hMpc$, where its
+    $\Omega_m$ bar covers the truth in $2$--$9\%$ of universes.
+    \kmaxscanclause}
+  \label{fig:gtkmax}
 \end{figure}
 
 \section{The figure of merit at $\kmax = 0.075\hMpc$}
@@ -813,13 +859,14 @@ Figure~\ref{fig:driftshifts} draws the shift of each known drift alone
 under model A.  The free prior absorbs both drifts exactly.
 The growth-tied prior stays excluded: the conserved-population drift
 moves its $(w_0, w_a)$ by several $\sigma$, and still by
-$1.2$--$1.8\sigma$ under model A + tilts.  The baseline and
+$1.5$--$2.6\sigma$ under model A + tilts.  The baseline and
 pessimistic priors absorb both drifts below $\sigma/3$ in every score
-but one: the BGS flux limit on $\Delta z = 0.05$, a layout that
-resolves BGS into only six bins.  There the baseline prior lands just
-below $\sigma/3$ and the pessimistic prior just above it, in
-$(w_0, w_a)$ and in $\Omega_m$; this residual drift lifts the
-pessimistic prior's $\eta$ on that layout to its maximum of $1.05$
+but the BGS flux limit on $\Delta z = 0.05$, a layout that
+resolves BGS into only six bins.  There both priors land above
+$\sigma/3$ in $(w_0, w_a)$ and in $\Omega_m$ ($0.54$ and $0.51$ for
+the baseline prior, $0.44$ and $0.42$ for the pessimistic); this
+residual drift lifts the pessimistic prior's $\eta$ on that layout to
+its maximum of $1.08$
 (Appendix~\ref{sec:inflation}).  Under model A + tilts both priors
 stay below $\sigma/10$.
 
@@ -843,29 +890,29 @@ stay below $\sigma/10$.
   \item \textbf{The chain rule.}  For every group, the per-bin columns
     of Eq.~\eqref{eq:chain}, summed with the weights $1/D(\bar{z}_i)$,
     reproduce the stencil derivative of the group amplitude $B_g$ to
-    $9.8\times10^{-8}$, $1.2\times10^{-7}$, $4.0\times10^{-8}$ and
-    $1.3\times10^{-8}$ of the stencil column's largest entry (layout
+    $1.4\times10^{-9}$, $1.5\times10^{-9}$, $1.2\times10^{-9}$ and
+    $1.3\times10^{-9}$ of the stencil column's largest entry (layout
     order).
   \item \textbf{The stochastic templates.}  The order-$0$ templates of
     the $\SNt$ run equal the cached $\SNz$ templates exactly, and its
     fiducial vector has $\Delta\chi^2 = 0$ against the derivative
     cache.  $\SNt$ is linear to $3\times10^{-14}$.
   \item \textbf{The $\alpha_2$ columns.}  The forward and backward
-    differences agree to $3.1\times10^{-10}$ of each column, and the
+    differences agree to $1.6\times10^{-10}$ of each column, and the
     vector after the steps equals the one before bit for bit.  The
     model A FoMs of the $\kmax$ scan equal those of the model A
-    notebook at $0.075\hMpc$ to $7.9\times10^{-10}$.
+    notebook at $0.075\hMpc$ to $6.5\times10^{-10}$.
   \item \textbf{The matched-prior identity.}  When a fit's prior equals
     the truth's scatter, the identity $\Prec\Sigma\Prec = \Prec$ of
     Appendix~\ref{sec:inflation} makes the scatter and noise terms of
     $\langle\chi^2_w\rangle$ sum to exactly $2$:
     $\max|\langle\chi^2_w\rangle - \Delta_{\rm drift}^2 - 2|
-    = 5.7\times10^{-10}$ over every layout and variant.  The random
+    = 1.7\times10^{-9}$ over every layout and variant.  The random
     $\alpha_2$ truths with $\alpha_2$ removed give $\eta = 1$ to
-    $4.1\times10^{-9}$.
+    $1.4\times10^{-9}$.
   \item \textbf{Exact recovery.}  The free prior must absorb any truth
     of the linear bias; its largest mean $(w_0, w_a)$ shift over the
-    random truths is $8.4\times10^{-12}$.
+    random truths is $1.4\times10^{-11}$.
   \item \textbf{Directions without information.}  On
     $\Delta d_{\rm com} = 62$~Mpc at $\kmax = 0.075\hMpc$ only $7$ of
     the $18$ BGS bins keep any band, and under model A + tilts on
@@ -876,8 +923,8 @@ stay below $\sigma/10$.
     it, and drop the directions below $10^{-12}$ of the largest
     eigenvalue: one of the $48$ systems at this cut and $20$ of the
     $336$ of the scan, with largest components on $(w_0, w_a)$,
-    $\Omega_m$ and $A_s$ of $7.2\times10^{-12}$ and
-    $7.0\times10^{-10}$, pure nuisance combinations.
+    $\Omega_m$ and $A_s$ of $1.3\times10^{-11}$ and
+    $7.2\times10^{-10}$, pure nuisance combinations.
   \item \textbf{The $\alpha_0$ step.}  At $\alpha_0 = -5\aunit$ the
     factor $b_1^2 + \alpha_0 k^2$ turns negative above
     $k \approx 0.6\hMpc$, where the low-rank engine floors the
@@ -926,9 +973,9 @@ $\bstwo$ are known exactly.  Both sets of FoMs are in
 \texttt{plots/baseline\_ladder/data.json}.
 
 \paragraph{Linear bias.}
-Model A keeps about $85$, $86$, $73$ and $50\%$ of the linear-bias
+Model A keeps about $78$, $73$, $72$ and $50\%$ of the linear-bias
 run's ${\rm FoM}(w_0, w_a)$ on the baseline prior, and model A + tilts
-about $77$, $76$, $55$ and $30\%$ on the
+about $72$, $58$, $52$ and $30\%$ on the
 pessimistic prior (layout order).  The loss grows as the bins widen,
 likely because a wide-layout group holds few bins, so one offset per
 group is close to one per bin and competes with each bin's linear
@@ -937,15 +984,15 @@ bias.
 \paragraph{Exact calibrations.}
 With the calibrations exact and $\alpha_0 = \SNz = \SNt = 0$, the FoM
 exceeds that of the linear-bias run under every prior and on every
-layout, on the baseline prior about $1.4$ times on
-$\Delta d_{\rm com} = 62$~Mpc and $2.0$ times on $\Delta z = 0.05$.  The
+layout, on the baseline prior about $1.6$ times on
+$\Delta d_{\rm com} = 62$~Mpc and $2.5$ times on $\Delta z = 0.05$.  The
 one-loop correction is then a known function of $b_{1,i}$ and of the
 matter power spectrum; the loops grow as the fourth power of the
 growth factor and the linear term as $b_1^2$ times its square, so
 their ratio carries information on the amplitude of the matter
 fluctuations.  That information is only as good as the calibrations:
-the calibration drift then shifts $(w_0, w_a)$ by $0.8$--$2.0\sigma$
-under the growth-tied prior and $0.06$--$0.48\sigma$ under the other
+the calibration drift then shifts $(w_0, w_a)$ by $1.0$--$2.0\sigma$
+under the growth-tied prior and $0.07$--$0.46\sigma$ under the other
 three.  The offsets, counterterm and stochastic terms of model A
 remove it, and model A sits below the linear-bias run under every
 prior and on every layout.

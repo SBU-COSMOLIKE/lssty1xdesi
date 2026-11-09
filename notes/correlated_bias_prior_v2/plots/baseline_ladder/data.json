@@ -70,152 +70,152 @@
    "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
    "color": "#0072B2",
    "v1_linear": {
-    "tied": 7.627411203127562,
-    "baseline": 5.104890581088736,
-    "pessimistic": 3.368634918137105,
-    "independent": 2.7759526640597696
+    "tied": 2.976763687927408,
+    "baseline": 1.4083767264982765,
+    "pessimistic": 1.3918882646703545,
+    "independent": 1.385710961294995
    },
    "fom_om_as": {
     "A calibrated": {
-     "tied": 23.932223717666982,
-     "baseline": 19.48034160232521,
-     "pessimistic": 16.349229695910857,
-     "independent": 14.848732541704422
+     "tied": 12.9532923687705,
+     "baseline": 9.698310913848918,
+     "pessimistic": 9.643240454420637,
+     "independent": 9.614877142043344
     },
     "A": {
-     "tied": 15.68226377396724,
-     "baseline": 10.147506182846614,
-     "pessimistic": 8.574218152560414,
-     "independent": 7.669140461540792
+     "tied": 7.326956732586971,
+     "baseline": 5.0177985800383205,
+     "pessimistic": 4.944528062397502,
+     "independent": 4.919598767856927
     },
     "A tilts": {
-     "tied": 10.586950664515102,
-     "baseline": 9.558181975297686,
-     "pessimistic": 8.094867211845589,
-     "independent": 7.185205505793353
+     "tied": 5.224007500297753,
+     "baseline": 4.735938074150296,
+     "pessimistic": 4.670410868980954,
+     "independent": 4.642264528355543
     }
    },
    "fom": {
     "A calibrated": {
-     "tied": 9.457403069095141,
-     "baseline": 6.928143653994931,
-     "pessimistic": 4.755060537287881,
-     "independent": 4.045737418240031
+     "tied": 3.6655338021615322,
+     "baseline": 2.2236690102588033,
+     "pessimistic": 2.209076733568046,
+     "independent": 2.2019324507794527
     },
     "A": {
-     "tied": 6.577978888047531,
-     "baseline": 4.329039055380337,
-     "pessimistic": 2.7759103579388853,
-     "independent": 2.2442526724756005
+     "tied": 1.9540034238493456,
+     "baseline": 1.094825934229304,
+     "pessimistic": 1.0793774001859804,
+     "independent": 1.0736358719743642
     },
     "A tilts": {
-     "tied": 4.947465520074945,
-     "baseline": 4.1321809337947215,
-     "pessimistic": 2.5858289053848917,
-     "independent": 2.043597190342321
+     "tied": 1.2339170027035662,
+     "baseline": 1.0344881560567483,
+     "pessimistic": 1.0058879013650344,
+     "independent": 0.9955882364336928
     }
    },
    "shifts": {
     "A calibrated": {
      "tied": {
-      "conserved": 6.946150905027762,
-      "conserved_omegam": 1.2825430492928598,
-      "conserved_As_1e9": 0.022969202891339868,
-      "flux_limit": 0.16826632845237666,
-      "flux_limit_omegam": 0.12423918087907744,
-      "flux_limit_As_1e9": 0.006901507088485529
+      "conserved": 10.658484571907755,
+      "conserved_omegam": 6.384136670329722,
+      "conserved_As_1e9": 5.411271883994778,
+      "flux_limit": 0.2897859947422564,
+      "flux_limit_omegam": 0.2642976673860096,
+      "flux_limit_As_1e9": 0.14314712119905618
      },
      "baseline": {
-      "conserved": 0.016470234152059015,
-      "conserved_omegam": 0.024682622499363954,
-      "conserved_As_1e9": 0.003897533410613041,
-      "flux_limit": 0.0019931196251611986,
-      "flux_limit_omegam": 0.001428645455196485,
-      "flux_limit_As_1e9": 0.0004276192025990717
+      "conserved": 0.02591711473705088,
+      "conserved_omegam": 0.006170702110324425,
+      "conserved_As_1e9": 0.01616274753284757,
+      "flux_limit": 0.0024046098383533145,
+      "flux_limit_omegam": 0.0018612033774745907,
+      "flux_limit_As_1e9": 0.0006505900041430218
      },
      "pessimistic": {
-      "conserved": 0.0037572021441673806,
-      "conserved_omegam": 0.004885705758147959,
-      "conserved_As_1e9": 0.0018689580683623674,
-      "flux_limit": 0.001940308621514919,
-      "flux_limit_omegam": 0.0014288287579813947,
-      "flux_limit_As_1e9": 0.0001628421787625404
+      "conserved": 0.0035236441006546936,
+      "conserved_omegam": 2.950203906557147e-06,
+      "conserved_As_1e9": 0.0016363582089446841,
+      "flux_limit": 0.002240501365715917,
+      "flux_limit_omegam": 0.0017382867270148619,
+      "flux_limit_As_1e9": 0.0006144847233741249
      },
      "independent": {
-      "conserved": 9.400704474817039e-13,
-      "conserved_omegam": 5.910979993517182e-13,
-      "conserved_As_1e9": 2.5318337319632943e-12,
-      "flux_limit": 1.7008062830165968e-13,
-      "flux_limit_omegam": 3.4769376324841844e-14,
-      "flux_limit_As_1e9": 2.0461085857777163e-13
+      "conserved": 4.486826897757158e-12,
+      "conserved_omegam": 1.5253728025919036e-12,
+      "conserved_As_1e9": 1.87710576939622e-12,
+      "flux_limit": 3.5166589765081076e-13,
+      "flux_limit_omegam": 1.2673691183388296e-13,
+      "flux_limit_As_1e9": 1.2589751588558048e-14
      }
     },
     "A": {
      "tied": {
-      "conserved": 4.677744037691988,
-      "conserved_omegam": 2.734950063841576,
-      "conserved_As_1e9": 0.754780656219344,
-      "flux_limit": 0.1945753952070452,
-      "flux_limit_omegam": 0.13762883814719576,
-      "flux_limit_As_1e9": 0.016383380551972238
+      "conserved": 6.2577523958757055,
+      "conserved_omegam": 2.6449411840078336,
+      "conserved_As_1e9": 3.8378700883111705,
+      "flux_limit": 0.3630780468589804,
+      "flux_limit_omegam": 0.33408103376796283,
+      "flux_limit_As_1e9": 0.219176349210193
      },
      "baseline": {
-      "conserved": 0.019147337472671434,
-      "conserved_omegam": 0.014766201631692883,
-      "conserved_As_1e9": 0.026972569796117094,
-      "flux_limit": 0.0023945465225759708,
-      "flux_limit_omegam": 0.0026829566791811634,
-      "flux_limit_As_1e9": 0.00030553395259346193
+      "conserved": 0.0174867452024197,
+      "conserved_omegam": 0.011916312585049384,
+      "conserved_As_1e9": 0.007302535584836367,
+      "flux_limit": 0.0029288979643891755,
+      "flux_limit_omegam": 0.002841762287124958,
+      "flux_limit_As_1e9": 0.0015718596548946655
      },
      "pessimistic": {
-      "conserved": 0.004427407705219181,
-      "conserved_omegam": 0.0036217467258441,
-      "conserved_As_1e9": 0.005328374599281542,
-      "flux_limit": 0.0023582905005098986,
-      "flux_limit_omegam": 0.002553128840208091,
-      "flux_limit_As_1e9": 0.0005557841376733597
+      "conserved": 0.0023525757682251653,
+      "conserved_omegam": 0.0015402976477554282,
+      "conserved_As_1e9": 0.0009094368275073608,
+      "flux_limit": 0.0027397853101074343,
+      "flux_limit_omegam": 0.002657158568914048,
+      "flux_limit_As_1e9": 0.001466356448067366
      },
      "independent": {
-      "conserved": 5.822262281276721e-13,
-      "conserved_omegam": 1.1855759979287587e-12,
-      "conserved_As_1e9": 1.946674674407976e-12,
-      "flux_limit": 1.2382443306926115e-13,
-      "flux_limit_omegam": 5.769675493383786e-14,
-      "flux_limit_As_1e9": 1.1969642091042866e-13
+      "conserved": 2.194785919834646e-12,
+      "conserved_omegam": 1.128944944821426e-12,
+      "conserved_As_1e9": 9.237167073776747e-13,
+      "flux_limit": 6.610004184367408e-13,
+      "flux_limit_omegam": 4.685363128392226e-13,
+      "flux_limit_As_1e9": 4.737640040731601e-13
      }
     },
     "A tilts": {
      "tied": {
-      "conserved": 1.2160520105281856,
-      "conserved_omegam": 0.6656013167291384,
-      "conserved_As_1e9": 0.2213038449198048,
-      "flux_limit": 0.0003028612525941055,
-      "flux_limit_omegam": 0.0002567015319192757,
-      "flux_limit_As_1e9": 0.00019304397979804532
+      "conserved": 1.9749377702494075,
+      "conserved_omegam": 0.952356003080048,
+      "conserved_As_1e9": 1.3617988237189347,
+      "flux_limit": 0.0002534640484311266,
+      "flux_limit_omegam": 6.995337031742444e-05,
+      "flux_limit_As_1e9": 0.00014815129363445043
      },
      "baseline": {
-      "conserved": 0.03306879705497619,
-      "conserved_omegam": 0.035604024023297653,
-      "conserved_As_1e9": 0.019812130650582363,
-      "flux_limit": 2.9821526174426568e-05,
-      "flux_limit_omegam": 2.4554072518103473e-05,
-      "flux_limit_As_1e9": 9.777697583233067e-07
+      "conserved": 0.036018187851007966,
+      "conserved_omegam": 0.015741040785025428,
+      "conserved_As_1e9": 0.0233019241027521,
+      "flux_limit": 3.138032747697223e-05,
+      "flux_limit_omegam": 2.9737968656930556e-05,
+      "flux_limit_As_1e9": 1.9583408768672176e-05
      },
      "pessimistic": {
-      "conserved": 0.0050898950262904565,
-      "conserved_omegam": 0.009960823353439724,
-      "conserved_As_1e9": 0.006808037168376155,
-      "flux_limit": 3.32243978024127e-05,
-      "flux_limit_omegam": 2.9078552002035378e-05,
-      "flux_limit_As_1e9": 6.0416716238162435e-06
+      "conserved": 0.009415438244243918,
+      "conserved_omegam": 0.003986170047193793,
+      "conserved_As_1e9": 0.0054626137942951625,
+      "flux_limit": 3.16465519060196e-05,
+      "flux_limit_omegam": 3.0399343197386032e-05,
+      "flux_limit_As_1e9": 2.028077772441935e-05
      },
      "independent": {
-      "conserved": 2.4917522697867288e-12,
-      "conserved_omegam": 2.078765190761799e-12,
-      "conserved_As_1e9": 3.0933908315445517e-12,
-      "flux_limit": 1.3634836064173672e-13,
-      "flux_limit_omegam": 3.9231632804005124e-15,
-      "flux_limit_As_1e9": 3.18139250629134e-14
+      "conserved": 5.901177997891759e-12,
+      "conserved_omegam": 2.175076046219324e-12,
+      "conserved_As_1e9": 5.040268856240054e-13,
+      "flux_limit": 8.05773997004012e-13,
+      "flux_limit_omegam": 4.4955977957042025e-13,
+      "flux_limit_As_1e9": 5.795664788009625e-13
      }
     }
    }
@@ -225,152 +225,152 @@
    "label": "$\\Delta z = 0.02$",
    "color": "#E69F00",
    "v1_linear": {
-    "tied": 7.2405144921405045,
-    "baseline": 4.647711525760278,
-    "pessimistic": 3.5565982508304637,
-    "independent": 1.6451904146771588
+    "tied": 2.666689865450558,
+    "baseline": 1.182587061617257,
+    "pessimistic": 1.1651022111086224,
+    "independent": 1.1495567609021338
    },
    "fom_om_as": {
     "A calibrated": {
-     "tied": 16.888523348718852,
-     "baseline": 11.555466336305777,
-     "pessimistic": 9.846598662371992,
-     "independent": 5.2179266634942625
+     "tied": 7.970936215091948,
+     "baseline": 3.841638513025732,
+     "pessimistic": 3.790935977795592,
+     "independent": 3.7400173806293164
     },
     "A": {
-     "tied": 11.940950320554764,
-     "baseline": 8.573174270183362,
-     "pessimistic": 7.52275605702102,
-     "independent": 4.1199918484245375
+     "tied": 5.158868746212034,
+     "baseline": 2.9625607202871223,
+     "pessimistic": 2.9072023555524824,
+     "independent": 2.855663376564826
     },
     "A tilts": {
-     "tied": 8.231526115011103,
-     "baseline": 7.609426037039874,
-     "pessimistic": 6.579192378109319,
-     "independent": 3.389507038771857
+     "tied": 3.0396771305045616,
+     "baseline": 2.4695049869139143,
+     "pessimistic": 2.370389103913173,
+     "independent": 2.2690765759817118
     }
    },
    "fom": {
     "A calibrated": {
-     "tied": 7.602078420022626,
-     "baseline": 5.084673064547357,
-     "pessimistic": 3.863540845544762,
-     "independent": 1.7349392689153567
+     "tied": 2.698027381406152,
+     "baseline": 1.216406374075917,
+     "pessimistic": 1.1980472076117075,
+     "independent": 1.180901774192864
     },
     "A": {
-     "tied": 6.458308737404146,
-     "baseline": 3.998590294695709,
-     "pessimistic": 3.013971864043984,
-     "independent": 1.291450774732596
+     "tied": 1.9089510144444608,
+     "baseline": 0.8656405934480401,
+     "pessimistic": 0.8459945361079052,
+     "independent": 0.8292138394793122
     },
     "A tilts": {
-     "tied": 4.286254681033295,
-     "baseline": 3.6842275770557884,
-     "pessimistic": 2.6990569264871063,
-     "independent": 1.0281534862704578
+     "tied": 0.9459802632396359,
+     "baseline": 0.7110764067042394,
+     "pessimistic": 0.6746407595838321,
+     "independent": 0.6412623917453261
     }
    },
    "shifts": {
     "A calibrated": {
      "tied": {
-      "conserved": 7.0047314575779565,
-      "conserved_omegam": 1.8025545680651192,
-      "conserved_As_1e9": 6.464700103935898,
-      "flux_limit": 1.1107333072779164,
-      "flux_limit_omegam": 0.8537724899229501,
-      "flux_limit_As_1e9": 0.20730044048615648
+      "conserved": 9.346244198160639,
+      "conserved_omegam": 4.544285395144248,
+      "conserved_As_1e9": 8.947477286810118,
+      "flux_limit": 2.0206265882698364,
+      "flux_limit_omegam": 1.889858455496903,
+      "flux_limit_As_1e9": 0.8493846789558742
      },
      "baseline": {
-      "conserved": 0.03829590393457603,
-      "conserved_omegam": 0.007338399095222643,
-      "conserved_As_1e9": 0.023589651482705982,
-      "flux_limit": 0.022664068244433642,
-      "flux_limit_omegam": 0.00924733677115631,
-      "flux_limit_As_1e9": 0.0011720001430876698
+      "conserved": 0.03553769673306921,
+      "conserved_omegam": 0.011503925708414475,
+      "conserved_As_1e9": 0.025961543004269023,
+      "flux_limit": 0.08736217543341163,
+      "flux_limit_omegam": 0.08116408559445419,
+      "flux_limit_As_1e9": 0.0688910214705488
      },
      "pessimistic": {
-      "conserved": 0.006698396381956621,
-      "conserved_omegam": 0.002538601630597076,
-      "conserved_As_1e9": 0.004607969056737327,
-      "flux_limit": 0.021964036655476724,
-      "flux_limit_omegam": 0.01275265574453264,
-      "flux_limit_As_1e9": 0.00357638523659617
+      "conserved": 0.0066404846330891795,
+      "conserved_omegam": 0.001222434754410913,
+      "conserved_As_1e9": 0.004266157906250099,
+      "flux_limit": 0.07045297175210534,
+      "flux_limit_omegam": 0.0658324944268393,
+      "flux_limit_As_1e9": 0.05542081338842421
      },
      "independent": {
-      "conserved": 2.52312065961893e-12,
-      "conserved_omegam": 4.185355835394785e-13,
-      "conserved_As_1e9": 1.3401708670280527e-12,
-      "flux_limit": 3.516836597206833e-13,
-      "flux_limit_omegam": 2.495115978793045e-13,
-      "flux_limit_As_1e9": 5.514244713292509e-13
+      "conserved": 1.030165489751658e-12,
+      "conserved_omegam": 1.3212340397184804e-12,
+      "conserved_As_1e9": 2.170888981302785e-12,
+      "flux_limit": 9.007162249356279e-13,
+      "flux_limit_omegam": 7.962794435803342e-13,
+      "flux_limit_As_1e9": 8.473112605595055e-13
      }
     },
     "A": {
      "tied": {
-      "conserved": 5.189069438151789,
-      "conserved_omegam": 1.6818358131103577,
-      "conserved_As_1e9": 2.570382716335458,
-      "flux_limit": 1.0852187131780393,
-      "flux_limit_omegam": 0.8791164787509885,
-      "flux_limit_As_1e9": 0.09078361369346728
+      "conserved": 6.146021089773747,
+      "conserved_omegam": 2.1981036854958744,
+      "conserved_As_1e9": 4.166410868660259,
+      "flux_limit": 2.0555643494301505,
+      "flux_limit_omegam": 1.9539455521908442,
+      "flux_limit_As_1e9": 1.154695385646793
      },
      "baseline": {
-      "conserved": 0.02110048032504559,
-      "conserved_omegam": 0.0031394501197004802,
-      "conserved_As_1e9": 0.01434759975050146,
-      "flux_limit": 0.02381205275941505,
-      "flux_limit_omegam": 0.009479628921499847,
-      "flux_limit_As_1e9": 0.0018583567625059835
+      "conserved": 0.03181104107555801,
+      "conserved_omegam": 0.023943288686250917,
+      "conserved_As_1e9": 0.03173755626049935,
+      "flux_limit": 0.09653732699700537,
+      "flux_limit_omegam": 0.08893540410920829,
+      "flux_limit_As_1e9": 0.07851225037412218
      },
      "pessimistic": {
-      "conserved": 0.0038904618715312326,
-      "conserved_omegam": 0.0011081487865970008,
-      "conserved_As_1e9": 0.0037812173981638603,
-      "flux_limit": 0.022929174773778326,
-      "flux_limit_omegam": 0.012981613690858328,
-      "flux_limit_As_1e9": 0.004238786640635946
+      "conserved": 0.0075432854841829475,
+      "conserved_omegam": 0.005973547807621043,
+      "conserved_As_1e9": 0.007642423650596666,
+      "flux_limit": 0.07820169816543736,
+      "flux_limit_omegam": 0.07267174855187462,
+      "flux_limit_As_1e9": 0.06367627157658048
      },
      "independent": {
-      "conserved": 2.6112673193746073e-12,
-      "conserved_omegam": 2.1062462799696334e-12,
-      "conserved_As_1e9": 2.4731784424875542e-12,
-      "flux_limit": 1.2047959120756754e-13,
-      "flux_limit_omegam": 3.068922037619782e-14,
-      "flux_limit_As_1e9": 8.523377905280378e-14
+      "conserved": 7.476964234702793e-13,
+      "conserved_omegam": 3.5739560811996654e-13,
+      "conserved_As_1e9": 1.2056818277959394e-13,
+      "flux_limit": 4.557417453200799e-13,
+      "flux_limit_omegam": 2.529481763043984e-13,
+      "flux_limit_As_1e9": 1.7381201925334493e-13
      }
     },
     "A tilts": {
      "tied": {
-      "conserved": 1.3953501731971898,
-      "conserved_omegam": 0.4410055982030442,
-      "conserved_As_1e9": 0.7797362597331953,
-      "flux_limit": 0.02413311755483496,
-      "flux_limit_omegam": 0.03777425295068953,
-      "flux_limit_As_1e9": 0.03964962869312478
+      "conserved": 1.9748331887465806,
+      "conserved_omegam": 1.0875172950556005,
+      "conserved_As_1e9": 1.599166756067148,
+      "flux_limit": 0.08007292078234127,
+      "flux_limit_omegam": 0.05273966953476787,
+      "flux_limit_As_1e9": 0.03645027363774834
      },
      "baseline": {
-      "conserved": 0.010798982082301106,
-      "conserved_omegam": 0.006316188610934609,
-      "conserved_As_1e9": 0.00042876828312587425,
-      "flux_limit": 0.011898238344424087,
-      "flux_limit_omegam": 0.008871344547225832,
-      "flux_limit_As_1e9": 0.004989592533333642
+      "conserved": 0.03106321660422046,
+      "conserved_omegam": 0.024805173728005222,
+      "conserved_As_1e9": 0.02564117430880223,
+      "flux_limit": 0.021173075061950243,
+      "flux_limit_omegam": 0.019621863688835006,
+      "flux_limit_As_1e9": 0.017188736904077982
      },
      "pessimistic": {
-      "conserved": 0.0053775118184529016,
-      "conserved_omegam": 0.0020257360222633064,
-      "conserved_As_1e9": 0.004050269690206698,
-      "flux_limit": 0.0114395539802158,
-      "flux_limit_omegam": 0.00899179059969248,
-      "flux_limit_As_1e9": 0.005903163884343581
+      "conserved": 0.012099487554879449,
+      "conserved_omegam": 0.009697512116347482,
+      "conserved_As_1e9": 0.006819777054752153,
+      "flux_limit": 0.021162461613329693,
+      "flux_limit_omegam": 0.019974625649557577,
+      "flux_limit_As_1e9": 0.017935869720486497
      },
      "independent": {
-      "conserved": 1.6959351075126784e-12,
-      "conserved_omegam": 1.0883896116236503e-13,
-      "conserved_As_1e9": 4.921713575577653e-13,
-      "flux_limit": 4.5157929319652093e-13,
-      "flux_limit_omegam": 3.7413392899562975e-13,
-      "flux_limit_As_1e9": 3.7938208811744407e-13
+      "conserved": 5.160709692565038e-12,
+      "conserved_omegam": 4.497326162605019e-12,
+      "conserved_As_1e9": 6.7240923450540674e-12,
+      "flux_limit": 1.1423806170970379e-12,
+      "flux_limit_omegam": 5.996434883473359e-13,
+      "flux_limit_As_1e9": 1.4841465085930148e-12
      }
     }
    }
@@ -380,152 +380,152 @@
    "label": "$\\Delta z = 0.05$",
    "color": "#CC79A7",
    "v1_linear": {
-    "tied": 2.7716605382831294,
-    "baseline": 0.7118207019932663,
-    "pessimistic": 0.4916844170276314,
-    "independent": 0.40959981746605045
+    "tied": 2.043853303147722,
+    "baseline": 0.40004336759010317,
+    "pessimistic": 0.38141574055627103,
+    "independent": 0.3488269688150831
    },
    "fom_om_as": {
     "A calibrated": {
-     "tied": 17.94824317797858,
-     "baseline": 8.697593437596613,
-     "pessimistic": 6.936180585584415,
-     "independent": 6.3366285928510475
+     "tied": 15.45363032494801,
+     "baseline": 6.278126892604801,
+     "pessimistic": 6.128789205994231,
+     "independent": 5.888833306201568
     },
     "A": {
-     "tied": 7.254369678686334,
-     "baseline": 3.1022649776817577,
-     "pessimistic": 2.2314166169829206,
-     "independent": 1.8465947792665802
+     "tied": 5.971260998870299,
+     "baseline": 1.8673343569992813,
+     "pessimistic": 1.7915011575717419,
+     "independent": 1.636344453966435
     },
     "A tilts": {
-     "tied": 3.1050901179749917,
-     "baseline": 2.569640292891004,
-     "pessimistic": 1.7674912639524363,
-     "independent": 1.4788951361935359
+     "tied": 1.9090502462776697,
+     "baseline": 1.3641012000240658,
+     "pessimistic": 1.3062883421586584,
+     "independent": 1.2750839490606003
     }
    },
    "fom": {
     "A calibrated": {
-     "tied": 4.191771754857032,
-     "baseline": 1.422237983929299,
-     "pessimistic": 1.100048599826205,
-     "independent": 0.9977153305445309
+     "tied": 3.2634551435803556,
+     "baseline": 0.9988861405429549,
+     "pessimistic": 0.9738506860969635,
+     "independent": 0.9342335882313942
     },
     "A": {
-     "tied": 1.9903952419984108,
-     "baseline": 0.5220479562671734,
-     "pessimistic": 0.3458636929729648,
-     "independent": 0.27965967389802665
+     "tied": 1.4302907331100188,
+     "baseline": 0.2884595629078928,
+     "pessimistic": 0.2754713622412868,
+     "independent": 0.2498063875578497
     },
     "A tilts": {
-     "tied": 0.6281913207819498,
-     "baseline": 0.42644124194544714,
-     "pessimistic": 0.2679891439945776,
-     "independent": 0.21929551222071966
+     "tied": 0.34472926009244237,
+     "baseline": 0.2079725985270507,
+     "pessimistic": 0.19721739289613585,
+     "independent": 0.19211091477213935
     }
    },
    "shifts": {
     "A calibrated": {
      "tied": {
-      "conserved": 10.40826704931124,
-      "conserved_omegam": 3.9436609790166637,
-      "conserved_As_1e9": 0.08234232432180603,
-      "flux_limit": 2.571879989433619,
-      "flux_limit_omegam": 2.122640199530588,
-      "flux_limit_As_1e9": 0.17198655622232964
+      "conserved": 10.315116470098003,
+      "conserved_omegam": 4.71939494654447,
+      "conserved_As_1e9": 0.2717830653693105,
+      "flux_limit": 2.9290938445356174,
+      "flux_limit_omegam": 2.5085137262167403,
+      "flux_limit_As_1e9": 0.41481827116053693
      },
      "baseline": {
-      "conserved": 0.08652622037643233,
-      "conserved_omegam": 0.06569174080982776,
-      "conserved_As_1e9": 0.0040489885201451074,
-      "flux_limit": 0.2683296645218262,
-      "flux_limit_omegam": 0.24403153407886208,
-      "flux_limit_As_1e9": 0.04102309354653475
+      "conserved": 0.03657410615844532,
+      "conserved_omegam": 0.024206480076689872,
+      "conserved_As_1e9": 0.002697047041502206,
+      "flux_limit": 0.3753345363270601,
+      "flux_limit_omegam": 0.35474033700902774,
+      "flux_limit_As_1e9": 0.09856341813278768
      },
      "pessimistic": {
-      "conserved": 0.009029918552065344,
-      "conserved_omegam": 0.007017907851193339,
-      "conserved_As_1e9": 0.0013818837632042322,
-      "flux_limit": 0.2710647791320383,
-      "flux_limit_omegam": 0.2554201265846553,
-      "flux_limit_As_1e9": 0.06591656339100077
+      "conserved": 0.00334809134087657,
+      "conserved_omegam": 0.0036867595084346585,
+      "conserved_As_1e9": 0.001989287994863466,
+      "flux_limit": 0.3019909228778685,
+      "flux_limit_omegam": 0.2861244905926294,
+      "flux_limit_As_1e9": 0.07965130406434373
      },
      "independent": {
-      "conserved": 3.1340053445657086e-12,
-      "conserved_omegam": 1.890764261749136e-12,
-      "conserved_As_1e9": 2.4564730891800855e-12,
-      "flux_limit": 1.2479921480979774e-13,
-      "flux_limit_omegam": 4.3107368955809406e-14,
-      "flux_limit_As_1e9": 7.127620742026061e-14
+      "conserved": 2.593693291531224e-12,
+      "conserved_omegam": 7.072426823222563e-13,
+      "conserved_As_1e9": 5.5248342833116747e-14,
+      "flux_limit": 4.2174745291753926e-13,
+      "flux_limit_omegam": 3.9046598430621335e-13,
+      "flux_limit_As_1e9": 3.6548073727109816e-13
      }
     },
     "A": {
      "tied": {
-      "conserved": 6.076520761919701,
-      "conserved_omegam": 1.293780937646948,
-      "conserved_As_1e9": 1.5735902091061493,
-      "flux_limit": 2.8407041117717338,
-      "flux_limit_omegam": 1.9133986576302286,
-      "flux_limit_As_1e9": 0.2201012622809549
+      "conserved": 5.9213144219846106,
+      "conserved_omegam": 1.9787043894035123,
+      "conserved_As_1e9": 2.0941662242144825,
+      "flux_limit": 3.2032152330625414,
+      "flux_limit_omegam": 2.343930648517674,
+      "flux_limit_As_1e9": 0.22873854427513046
      },
      "baseline": {
-      "conserved": 0.07487779872468438,
-      "conserved_omegam": 0.05482841459273718,
-      "conserved_As_1e9": 0.017893123442063605,
-      "flux_limit": 0.32254422307753244,
-      "flux_limit_omegam": 0.281833728303372,
-      "flux_limit_As_1e9": 0.07796524236789236
+      "conserved": 0.03263314472015214,
+      "conserved_omegam": 0.024844294030531386,
+      "conserved_As_1e9": 0.013127456339063424,
+      "flux_limit": 0.5397543586660994,
+      "flux_limit_omegam": 0.5108558248784867,
+      "flux_limit_As_1e9": 0.2972884541779399
      },
      "pessimistic": {
-      "conserved": 0.010512302420368057,
-      "conserved_omegam": 0.008589088753828612,
-      "conserved_As_1e9": 0.005289151686182801,
-      "flux_limit": 0.37489050533329354,
-      "flux_limit_omegam": 0.35067429876465317,
-      "flux_limit_As_1e9": 0.17495906862401522
+      "conserved": 0.004841299512492237,
+      "conserved_omegam": 0.005372674839960443,
+      "conserved_As_1e9": 0.003251948902444242,
+      "flux_limit": 0.4439547855982492,
+      "flux_limit_omegam": 0.42180727467633766,
+      "flux_limit_As_1e9": 0.24675208727245335
      },
      "independent": {
-      "conserved": 3.4827412689317486e-12,
-      "conserved_omegam": 2.1251559964904067e-12,
-      "conserved_As_1e9": 1.8069982494652018e-12,
-      "flux_limit": 5.982655430825511e-13,
-      "flux_limit_omegam": 1.9923337467097564e-13,
-      "flux_limit_As_1e9": 1.1450596546090253e-12
+      "conserved": 4.3424299928916e-12,
+      "conserved_omegam": 5.234287446473391e-12,
+      "conserved_As_1e9": 4.218007830755353e-12,
+      "flux_limit": 4.899793880615395e-13,
+      "flux_limit_omegam": 3.1935384718066817e-13,
+      "flux_limit_As_1e9": 5.960228456502128e-13
      }
     },
     "A tilts": {
      "tied": {
-      "conserved": 1.7936063786607266,
-      "conserved_omegam": 0.4085546084418339,
-      "conserved_As_1e9": 0.9474774039252298,
-      "flux_limit": 0.04231212567555834,
-      "flux_limit_omegam": 0.02442695222828684,
-      "flux_limit_As_1e9": 0.050356251531568454
+      "conserved": 2.5727378137534442,
+      "conserved_omegam": 1.6895976399144772,
+      "conserved_As_1e9": 1.7573295683450765,
+      "flux_limit": 0.06235811616372815,
+      "flux_limit_omegam": 0.049790572080958405,
+      "flux_limit_As_1e9": 0.06741294584377722
      },
      "baseline": {
-      "conserved": 0.07417860926943864,
-      "conserved_omegam": 0.03971161418008067,
-      "conserved_As_1e9": 0.043332433730635486,
-      "flux_limit": 0.02006685392817344,
-      "flux_limit_omegam": 0.016025503065193878,
-      "flux_limit_As_1e9": 0.00717841126454582
+      "conserved": 0.06367189536165817,
+      "conserved_omegam": 0.0415107531543846,
+      "conserved_As_1e9": 0.052484598414367555,
+      "flux_limit": 0.021728861635062508,
+      "flux_limit_omegam": 0.011503053511808114,
+      "flux_limit_As_1e9": 0.004930858586662125
      },
      "pessimistic": {
-      "conserved": 0.027858295739021884,
-      "conserved_omegam": 0.021854824126358745,
-      "conserved_As_1e9": 0.019371418464453918,
-      "flux_limit": 0.016435962268866042,
-      "flux_limit_omegam": 0.01226410986279525,
-      "flux_limit_As_1e9": 0.002853521156057914
+      "conserved": 0.01563601738572251,
+      "conserved_omegam": 0.010495372116737208,
+      "conserved_As_1e9": 0.012813820734703845,
+      "flux_limit": 0.017709736252547504,
+      "flux_limit_omegam": 0.009960062057087608,
+      "flux_limit_As_1e9": 0.003548262883682979
      },
      "independent": {
-      "conserved": 5.177272019276231e-12,
-      "conserved_omegam": 2.5949527342130633e-12,
-      "conserved_As_1e9": 3.0305100456325564e-12,
-      "flux_limit": 4.182816450699067e-13,
-      "flux_limit_omegam": 4.506881881374404e-13,
-      "flux_limit_As_1e9": 6.340084503058119e-13
+      "conserved": 7.870026032398648e-12,
+      "conserved_omegam": 5.812986919261362e-12,
+      "conserved_As_1e9": 8.62059049764092e-12,
+      "flux_limit": 7.440989023857033e-13,
+      "flux_limit_omegam": 1.1171844481210284e-12,
+      "flux_limit_As_1e9": 4.2382383169898403e-13
      }
     }
    }
@@ -535,152 +535,152 @@
    "label": "$\\Delta z = 0.2$",
    "color": "#56B4E9",
    "v1_linear": {
-    "tied": 0.6518125950344678,
-    "baseline": 0.17722771807101156,
-    "pessimistic": 0.17722771807101156,
-    "independent": 0.17722771807101156
+    "tied": 0.6512245014832377,
+    "baseline": 0.17761113916688775,
+    "pessimistic": 0.17761113916688775,
+    "independent": 0.17761113916688775
    },
    "fom_om_as": {
     "A calibrated": {
-     "tied": 6.463056283667245,
-     "baseline": 2.7911352530630062,
-     "pessimistic": 2.7911352530630062,
-     "independent": 2.7911352530630062
+     "tied": 6.47118975481103,
+     "baseline": 2.797423539911523,
+     "pessimistic": 2.797423539911523,
+     "independent": 2.797423539911523
     },
     "A": {
-     "tied": 2.1565777958537726,
-     "baseline": 0.7159759693194556,
-     "pessimistic": 0.7159759693194556,
-     "independent": 0.7159759693194556
+     "tied": 2.154246627187522,
+     "baseline": 0.7169313215030905,
+     "pessimistic": 0.7169313215030905,
+     "independent": 0.7169313215030905
     },
     "A tilts": {
-     "tied": 0.7435493974175633,
-     "baseline": 0.45672625958564517,
-     "pessimistic": 0.45672625958564517,
-     "independent": 0.45672625958564517
+     "tied": 0.7442452353191498,
+     "baseline": 0.45874733135198487,
+     "pessimistic": 0.45874733135198487,
+     "independent": 0.45874733135198487
     }
    },
    "fom": {
     "A calibrated": {
-     "tied": 0.9068833787115719,
-     "baseline": 0.29485402957541507,
-     "pessimistic": 0.29485402957541507,
-     "independent": 0.29485402957541507
+     "tied": 0.9063754254992781,
+     "baseline": 0.2949411446742635,
+     "pessimistic": 0.2949411446742635,
+     "independent": 0.2949411446742635
     },
     "A": {
-     "tied": 0.3898050305016365,
-     "baseline": 0.08842333536999956,
-     "pessimistic": 0.08842333536999956,
-     "independent": 0.08842333536999956
+     "tied": 0.3888856869143828,
+     "baseline": 0.08843593236968235,
+     "pessimistic": 0.08843593236968235,
+     "independent": 0.08843593236968235
     },
     "A tilts": {
-     "tied": 0.10353835948408785,
-     "baseline": 0.05364388016365614,
-     "pessimistic": 0.05364388016365614,
-     "independent": 0.05364388016365614
+     "tied": 0.10355912975793174,
+     "baseline": 0.053816971741475164,
+     "pessimistic": 0.053816971741475164,
+     "independent": 0.053816971741475164
     }
    },
    "shifts": {
     "A calibrated": {
      "tied": {
-      "conserved": 5.147212901962752,
-      "conserved_omegam": 2.7503242713444522,
-      "conserved_As_1e9": 0.16315547562672691,
-      "flux_limit": 1.3209482991804558,
-      "flux_limit_omegam": 1.2457442199274769,
-      "flux_limit_As_1e9": 0.0781964432189743
+      "conserved": 5.145858587758777,
+      "conserved_omegam": 2.7497666709488127,
+      "conserved_As_1e9": 0.16031705702204727,
+      "flux_limit": 1.3203935577666763,
+      "flux_limit_omegam": 1.2447977891056135,
+      "flux_limit_As_1e9": 0.07744996895853673
      },
      "baseline": {
-      "conserved": 9.59716417359796e-13,
-      "conserved_omegam": 5.948891333817335e-13,
-      "conserved_As_1e9": 4.936175988080975e-13,
-      "flux_limit": 2.958885759948038e-13,
-      "flux_limit_omegam": 5.479242017989651e-14,
-      "flux_limit_As_1e9": 8.510648255312025e-15
+      "conserved": 2.0638660354919107e-12,
+      "conserved_omegam": 3.450109674936704e-13,
+      "conserved_As_1e9": 3.2358772368748513e-13,
+      "flux_limit": 7.602396729113694e-13,
+      "flux_limit_omegam": 3.9205791760644365e-14,
+      "flux_limit_As_1e9": 2.554639923848567e-14
      },
      "pessimistic": {
-      "conserved": 9.59716417359796e-13,
-      "conserved_omegam": 5.948891333817335e-13,
-      "conserved_As_1e9": 4.936175988080975e-13,
-      "flux_limit": 2.958885759948038e-13,
-      "flux_limit_omegam": 5.479242017989651e-14,
-      "flux_limit_As_1e9": 8.510648255312025e-15
+      "conserved": 2.0638660354919107e-12,
+      "conserved_omegam": 3.450109674936704e-13,
+      "conserved_As_1e9": 3.2358772368748513e-13,
+      "flux_limit": 7.602396729113694e-13,
+      "flux_limit_omegam": 3.9205791760644365e-14,
+      "flux_limit_As_1e9": 2.554639923848567e-14
      },
      "independent": {
-      "conserved": 9.59716417359796e-13,
-      "conserved_omegam": 5.948891333817335e-13,
-      "conserved_As_1e9": 4.936175988080975e-13,
-      "flux_limit": 2.958885759948038e-13,
-      "flux_limit_omegam": 5.479242017989651e-14,
-      "flux_limit_As_1e9": 8.510648255312025e-15
+      "conserved": 2.0638660354919107e-12,
+      "conserved_omegam": 3.450109674936704e-13,
+      "conserved_As_1e9": 3.2358772368748513e-13,
+      "flux_limit": 7.602396729113694e-13,
+      "flux_limit_omegam": 3.9205791760644365e-14,
+      "flux_limit_As_1e9": 2.554639923848567e-14
      }
     },
     "A": {
      "tied": {
-      "conserved": 3.9780250477076,
-      "conserved_omegam": 1.445725689007386,
-      "conserved_As_1e9": 0.7246373171804066,
-      "flux_limit": 1.5357668383570209,
-      "flux_limit_omegam": 1.2941740148026428,
-      "flux_limit_As_1e9": 0.1399488235537414
+      "conserved": 3.9706752326449597,
+      "conserved_omegam": 1.4397153863963421,
+      "conserved_As_1e9": 0.71697363407717,
+      "flux_limit": 1.5357886570544395,
+      "flux_limit_omegam": 1.2921597253222998,
+      "flux_limit_As_1e9": 0.1422454409467238
      },
      "baseline": {
-      "conserved": 1.4509794477285265e-12,
-      "conserved_omegam": 4.699358404171295e-14,
-      "conserved_As_1e9": 1.4381736235154275e-12,
-      "flux_limit": 1.0314310172214461e-12,
-      "flux_limit_omegam": 2.8451811752004827e-13,
-      "flux_limit_As_1e9": 2.275524819595246e-13
+      "conserved": 2.6649605563448916e-12,
+      "conserved_omegam": 2.0904020775117093e-12,
+      "conserved_As_1e9": 1.991791597127528e-13,
+      "flux_limit": 7.919665069634256e-13,
+      "flux_limit_omegam": 3.505262902244541e-13,
+      "flux_limit_As_1e9": 1.9209764534789558e-13
      },
      "pessimistic": {
-      "conserved": 1.4509794477285265e-12,
-      "conserved_omegam": 4.699358404171295e-14,
-      "conserved_As_1e9": 1.4381736235154275e-12,
-      "flux_limit": 1.0314310172214461e-12,
-      "flux_limit_omegam": 2.8451811752004827e-13,
-      "flux_limit_As_1e9": 2.275524819595246e-13
+      "conserved": 2.6649605563448916e-12,
+      "conserved_omegam": 2.0904020775117093e-12,
+      "conserved_As_1e9": 1.991791597127528e-13,
+      "flux_limit": 7.919665069634256e-13,
+      "flux_limit_omegam": 3.505262902244541e-13,
+      "flux_limit_As_1e9": 1.9209764534789558e-13
      },
      "independent": {
-      "conserved": 1.4509794477285265e-12,
-      "conserved_omegam": 4.699358404171295e-14,
-      "conserved_As_1e9": 1.4381736235154275e-12,
-      "flux_limit": 1.0314310172214461e-12,
-      "flux_limit_omegam": 2.8451811752004827e-13,
-      "flux_limit_As_1e9": 2.275524819595246e-13
+      "conserved": 2.6649605563448916e-12,
+      "conserved_omegam": 2.0904020775117093e-12,
+      "conserved_As_1e9": 1.991791597127528e-13,
+      "flux_limit": 7.919665069634256e-13,
+      "flux_limit_omegam": 3.505262902244541e-13,
+      "flux_limit_As_1e9": 1.9209764534789558e-13
      }
     },
     "A tilts": {
      "tied": {
-      "conserved": 1.4764437907236483,
-      "conserved_omegam": 1.1092581438309495,
-      "conserved_As_1e9": 0.4611471055077818,
-      "flux_limit": 0.09496239775799621,
-      "flux_limit_omegam": 0.08155071299813996,
-      "flux_limit_As_1e9": 0.02048362472411004
+      "conserved": 1.4728880363955723,
+      "conserved_omegam": 1.103213035156184,
+      "conserved_As_1e9": 0.45723014189542427,
+      "flux_limit": 0.09603846573743968,
+      "flux_limit_omegam": 0.08253752400215406,
+      "flux_limit_As_1e9": 0.021052532363832963
      },
      "baseline": {
-      "conserved": 2.7930205781069704e-12,
-      "conserved_omegam": 1.6338492900570321e-12,
-      "conserved_As_1e9": 8.246671608480654e-13,
-      "flux_limit": 1.7541866523049247e-12,
-      "flux_limit_omegam": 8.782387484035454e-13,
-      "flux_limit_As_1e9": 6.391374574202964e-13
+      "conserved": 3.509917096264379e-12,
+      "conserved_omegam": 1.2513962763394108e-12,
+      "conserved_As_1e9": 1.3047738192935504e-12,
+      "flux_limit": 1.8150277373056801e-12,
+      "flux_limit_omegam": 1.8230990851017785e-12,
+      "flux_limit_As_1e9": 8.088074703942378e-13
      },
      "pessimistic": {
-      "conserved": 2.7930205781069704e-12,
-      "conserved_omegam": 1.6338492900570321e-12,
-      "conserved_As_1e9": 8.246671608480654e-13,
-      "flux_limit": 1.7541866523049247e-12,
-      "flux_limit_omegam": 8.782387484035454e-13,
-      "flux_limit_As_1e9": 6.391374574202964e-13
+      "conserved": 3.509917096264379e-12,
+      "conserved_omegam": 1.2513962763394108e-12,
+      "conserved_As_1e9": 1.3047738192935504e-12,
+      "flux_limit": 1.8150277373056801e-12,
+      "flux_limit_omegam": 1.8230990851017785e-12,
+      "flux_limit_As_1e9": 8.088074703942378e-13
      },
      "independent": {
-      "conserved": 2.7930205781069704e-12,
-      "conserved_omegam": 1.6338492900570321e-12,
-      "conserved_As_1e9": 8.246671608480654e-13,
-      "flux_limit": 1.7541866523049247e-12,
-      "flux_limit_omegam": 8.782387484035454e-13,
-      "flux_limit_As_1e9": 6.391374574202964e-13
+      "conserved": 3.509917096264379e-12,
+      "conserved_omegam": 1.2513962763394108e-12,
+      "conserved_As_1e9": 1.3047738192935504e-12,
+      "flux_limit": 1.8150277373056801e-12,
+      "flux_limit_omegam": 1.8230990851017785e-12,
+      "flux_limit_As_1e9": 8.088074703942378e-13
      }
     }
    }
