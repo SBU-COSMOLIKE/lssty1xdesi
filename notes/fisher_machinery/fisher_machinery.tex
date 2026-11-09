@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
 
 % One symbol per object, as in notes/correlated_bias_prior_v2.
 \newcommand{\Cov}{\mathsf{C}}
@@ -13,9 +14,9 @@
 \newcommand{\kmax}{k_{\rm max}}
 \newcommand{\hMpc}{\,h/{\rm Mpc}}
 \newcommand{\aunit}{\,h^{-2}\,{\rm Mpc}^2}
-\newcommand{\bstwo}{b_{s^2}}
-\newcommand{\SNz}{{\rm SN}_0}
-\newcommand{\SNt}{{\rm SN}_2}
+% The per-bin stochastic amplitudes of bin i.
+\newcommand{\SNzi}{{\rm SN}_{0,i}}
+\newcommand{\SNti}{{\rm SN}_{2,i}}
 % The parameter-recovery statistic.  It has no name.
 \newcommand{\chidof}{\sqrt{\langle\chi^2\rangle/n_{\rm dof}}}
 % The matrices of the Fisher assembly, sans-serif as in the
@@ -30,7 +31,8 @@
 % An underscore after which a long code name may break.
 \newcommand{\us}{\_\allowbreak}
 
-% Okabe-Ito colors of the schematic (no red or green).
+% Okabe-Ito colors of the drawings (no red or green); every color is
+% doubled by a number, a label or a pattern.
 \definecolor{okblue}{HTML}{0072B2}
 \definecolor{okorange}{HTML}{E69F00}
 \definecolor{oksky}{HTML}{56B4E9}
@@ -40,7 +42,7 @@
 \author{}
 
 \emergencystretch=3em
-% let the schematic share a page with text
+% let the drawings share a page with text
 \renewcommand{\topfraction}{0.85}
 \renewcommand{\textfraction}{0.1}
 \renewcommand{\floatpagefraction}{0.75}
@@ -62,135 +64,389 @@
 
 \paragraph{The question.}
 The project's Fisher notebooks report figures of merit (FoMs),
-marginalized errors and parameter shifts for four bias variants, up to
-four linear-bias priors, seven scale cuts and four bin layouts, under
-dozens of assumed truths.  One likelihood evaluation runs CAMB and
-CosmoLike's non-Limber projection of every thin bin, and the
-derivatives of one layout took roughly $15$ to $45$ minutes during
-development.  How, then, can a change of model, prior or scale cut cost
-only seconds?
+parameter errors and parameter shifts for four bias models, up to four
+linear-bias priors, seven scale cuts and four bin layouts, under dozens
+of assumed truths.  One evaluation of the data vector runs CAMB, the
+code that computes the matter power spectrum, and CosmoLike, the code
+that projects it onto the sky for every thin bin; it takes seconds to
+tens of seconds.  How,
+then, can a change of model, prior or scale cut cost only seconds?
 
 \paragraph{The answer.}
 \begin{enumerate}
-  \item A Fisher forecast linearizes the data vector around one point,
-    so it needs the derivatives at that point and nothing else
-    (Section~\ref{sec:linear}).
-  \item For each layout the notebooks compute a fixed set of base
-    columns once, the derivatives with respect to the cosmology, to
-    four bias operators in every bin and to the terms linear in their
-    amplitude, and cache them on disk (Section~\ref{sec:base}).
-  \item A derivative needs more accuracy than a $\chi^2$: numerical
-    noise divided by the step looks like information and inflates the
-    FoM.  A convergence study sets the final accuracy tier, the one
-    every published number uses (Section~\ref{sec:accuracy}).
-  \item A bias model is a fixed matrix $\mM$ that combines the base
-    columns, $\mD = \mB\mM$, by the chain rule.  A new model is a new
-    $\mM$ (Section~\ref{sec:models}).
-  \item A scale cut keeps a subset of the rows, and each cut is reduced
-    once to the matrix $\mG = \mB\T \Cov^{-1} \mB$, at most
-    $645 \times 645$ (Section~\ref{sec:cuts}).  Every Fisher matrix is
-    then $\mM\T \mG \mM$ plus priors, and every FoM, shift and
-    $\langle\chi^2\rangle$ is a product of small matrices
-    (Section~\ref{sec:downstream}).
-  \item New likelihood evaluations are needed only for a term outside
-    the base columns, a new fiducial point, or effects beyond first
-    order (Section~\ref{sec:limits}).  Section~\ref{sec:usage} lists
-    the cache files and what invalidates them.
+  \item A Fisher forecast only needs the derivatives of the data vector
+    at one point (Section~\ref{sec:linear}).
+  \item For each layout the notebooks compute the base once: one
+    derivative column for each elementary knob, which is each
+    cosmological parameter, each velocity dispersion, and each bias term
+    in each thin bin.  They store it on disk (Section~\ref{sec:base}).
+  \item A derivative needs more numerical accuracy than a $\chi^2$, and a
+    convergence study fixes the settings every published number uses
+    (Section~\ref{sec:accuracy}).
+  \item A bias model is a recipe that moves several knobs at once.
+    Written as a matrix $\mM$, it turns the base $\mB$ into the model's
+    derivatives, $\mD = \mB\mM$.  A new model is a new $\mM$
+    (Section~\ref{sec:models}).
+  \item A scale cut keeps some rows of the data vector.  Each cut is
+    reduced once to a small matrix $\mG$ (Section~\ref{sec:cuts}), and
+    every Fisher matrix, FoM and shift is then a product of small
+    matrices (Section~\ref{sec:downstream}).
+  \item New evaluations are needed only for a term outside the base, a
+    new fiducial point, or effects beyond first order
+    (Section~\ref{sec:limits}).  Section~\ref{sec:usage} lists the files
+    and what makes them stale.
 \end{enumerate}
 
 \paragraph{The setup.}
-The data are the DESI band powers $C_\ell^{gg}$, the angular power
-spectrum averaged in $53$ multipole bands, computed without the Limber
-approximation for six tracer groups $g$ (BGS, LRG1, LRG2, LRG3, ELG1
-and ELG2) on four layouts: bins of equal comoving width
+The data are the DESI band powers $C_\ell^{gg}$: the angular power
+spectrum of galaxy clustering, averaged in $53$ bands of multipole
+$\ell$.  They are computed without the Limber approximation, which
+ties each multipole to a single wavenumber and fails for thin bins, for
+six tracer groups $g$ (BGS, LRG1, LRG2, LRG3,
+ELG1 and ELG2) on four layouts: bins of equal comoving width
 $\Delta d_{\rm com} = 62$~Mpc, and bins of fixed redshift width
 $\Delta z = 0.02$, $0.05$ and $0.2$.  Bin $i$ has mean redshift
 $\bar{z}_i$, and $D(z)$ is the linear growth factor, $D(0) = 1$.  The
-bias models A and B and the linear-bias priors are those of the
-correlated-prior note, \texttt{notes/correlated\_bias\_prior\_v2}.
+bias models and priors are those of the correlated-prior note,
+\texttt{notes/correlated\_bias\_prior\_v2}.  Models A and B are two
+one-loop bias models; model B adds a radial counterterm and widens two
+priors.  The four linear-bias priors (growth-tied, baseline,
+pessimistic and free) range from one amplitude per group to one free
+bias per bin; the baseline and pessimistic priors allow correlated
+wiggles of the bin biases around a straight line in redshift.
 
 \section{Why derivatives at one point are enough}
 \label{sec:linear}
 
-Let $m(p)$ be the expected data vector at the parameters $p$, $p_0$ the
-fiducial point and $\Cov$ the covariance of the data.  The vector $m$
-has $n$ entries: the band powers of every bin's auto spectrum and of
-every measured cross pair of bins, after $795$ entries that the data
-format reserves for cosmic-shear blocks and that stay zero for DESI
-alone.  Near $p_0$
+Let $m(p)$ be the expected data vector at the parameters $p$, and $p_0$
+the fiducial point, the parameter values around which the forecast is
+made.  The vector $m$ has $n$ entries: the band powers of
+every bin's auto spectrum and of every measured cross spectrum between
+two bins, after $795$ entries that the data format reserves for
+cosmic-shear blocks and that stay zero for DESI alone.  $\Cov$ is the
+covariance of the data: how the measured band powers scatter around
+$m$ and how their errors correlate.
+
+Near $p_0$ the data vector is close to a straight line in the
+parameters,
 \begin{equation}
   m(p) \;\simeq\; m(p_0) + \mD\,(p - p_0),
   \qquad
-  \mD_{aj} = \frac{\partial m_a}{\partial p_j}\bigg|_{p_0} ,
+  \mD_{rj} = \frac{\partial m_r}{\partial p_j}\bigg|_{p_0} ,
   \label{eq:linearize}
 \end{equation}
-so a Gaussian likelihood becomes a Gaussian in $p$.  With Gaussian
-priors of precision $F_{\rm prior}$, the posterior has the inverse
-covariance
+with $r$ one row, that is one band power.  With Gaussian data errors
+and Gaussian priors, the probability of the parameters given the data
+is then a Gaussian in $p$, whose inverse covariance is the Fisher matrix
 \begin{equation}
-  F \;=\; \mD\T \Cov^{-1} \mD \;+\; F_{\rm prior} ,
+  F \;=\; \mD\T \Cov^{-1} \mD \;+\; F_{\rm prior} .
   \label{eq:fisher}
 \end{equation}
-the Fisher matrix.  Its inverse is the forecast:
+$F_{\rm prior}$ is the priors' contribution: a Gaussian prior of width
+$w$ adds $1/w^2$ to its parameter's diagonal entry, and a flat prior
+adds nothing.
+
+The inverse $F^{-1}$ is the forecast covariance of the parameters.
 $\sigma_j = [(F^{-1})_{jj}]^{1/2}$ is the marginalized error of
-parameter $j$, and ${\rm FoM}(w_0, w_a) = [\det \Cov_w]^{-1/2}$, with
-$\Cov_w$ the $(w_0, w_a)$ block of $F^{-1}$ and
-$w(a) = w_0 + w_a(1 - a)$ the dark-energy equation of state ($a$ the
-scale factor).  ${\rm FoM}(\Omega_m, 10^9 A_s)$ is defined the same
-way, with $\Omega_m$ the matter density today in units of the critical
-density and $A_s$ the amplitude of the primordial curvature power
-spectrum.
+parameter $j$, its error when every other parameter is free.
+${\rm FoM}(w_0, w_a) = [\det \Cov_w]^{-1/2}$ is the inverse area of the
+$(w_0, w_a)$ error ellipse, with $\Cov_w$ the $(w_0, w_a)$ block of
+$F^{-1}$ and $w(a) = w_0 + w_a(1 - a)$ the dark-energy equation of state
+($a$ the scale factor).  ${\rm FoM}(\Omega_m, 10^9 A_s)$ is defined the
+same way, with $\Omega_m$ the matter density today in units of the
+critical density and $A_s$ the amplitude of the primordial curvature
+power spectrum.
 
-The likelihood enters $F$ only through $\mD$, at one point.  The
-covariance is Gaussian, computed at the one-loop fiducial for
-$14{,}000$ square degrees, with its inverse rescaled by
-$f_A = 12{,}300/14{,}000$ to the survey area.  It does not depend on
-the model being fitted.
+The model enters $F$ only through $\mD$, at one point.  The covariance
+is Gaussian, computed at the one-loop fiducial (the fiducial point of the
+one-loop bias model, Section~\ref{sec:operators}) for $14{,}000$ square
+degrees, with its inverse rescaled by $f_A = 12{,}300/14{,}000$ to the
+survey area.  It does not depend on the model being fitted.
 
-\section{The base columns}
+\section{The base}
 \label{sec:base}
 
-For each layout the notebooks compute the columns of a base matrix
-$\mB$: derivatives of $m$ at the fiducial point with respect to a fixed
-list of quantities, from which the derivatives of every model are built
-(Section~\ref{sec:models}).  They come in three kinds.
+\subsection{What the base is}
+\label{sec:whatbase}
 
-\subsection{Stencil derivatives}
+The base is the list of elementary knobs the code turns by hand:
+\begin{itemize}
+  \item each cosmological parameter: $10^9 A_s$, the spectral index
+    $n_s$, the Hubble constant $H_0$, the baryon density $\Omega_b$,
+    $\Omega_m$, $w_0$ and $w_a$;
+  \item each of the seven velocity dispersions
+    $\sigma_{v,1}, \ldots, \sigma_{v,7}$, one per set of bins that shares
+    a value.  They smooth each bin's redshift distribution for the
+    random velocities of galaxies (the Fingers-of-God effect);
+  \item separately in every thin bin $i = 1, \ldots, N$: the linear bias
+    $b_{1,i}$; the quadratic and tidal biases $b_{2,i}$ and $b_{s^2,i}$,
+    the galaxies' responses to the squared density and to the tidal
+    field; the counterterms $\alpha_{0,i}$ and $\alpha_{2,i}$, terms
+    proportional to $k^2$ that absorb small-scale physics; and the
+    stochastic amplitudes $\SNzi$ and $\SNti$, noise-like terms from the
+    discreteness of galaxies.
+\end{itemize}
+For each knob, the code computes how every band power changes when that
+knob alone moves: one derivative column, a vector of $n$ numbers.  These
+are the base columns, and they are what the notebooks precompute and
+store (Section~\ref{sec:precomputed}).
+
+The base matrix $\mB$ puts the base columns side by side.  A model
+parameter, such as a group offset, a tilt or a per-bin amplitude, is a
+recipe that moves several knobs at once.  The chain rule turns that
+recipe into a column of the model's derivative matrix: how $m$ changes
+with $p_j$ is the sum, over the knobs, of how $m$ changes with the knob
+times how the knob changes with $p_j$,
+\begin{equation}
+  \frac{\partial m}{\partial p_j}
+  \;=\; \sum_a \frac{\partial m}{\partial \kappa_a}\,
+    \frac{\partial \kappa_a}{\partial p_j} ,
+  \qquad\text{that is}\qquad
+  \mD \;=\; \mB\,\mM ,
+  \qquad
+  \mM_{aj} = \frac{\partial \kappa_a}{\partial p_j} ,
+  \label{eq:dbm}
+\end{equation}
+with $\kappa_a$ the value of knob $a$ and $p_j$ the model's parameter
+$j$.  $\mM$ is the recipes written as numbers: $\mM_{aj}$ is how much
+knob $a$ moves per unit of parameter $j$.  Section~\ref{sec:toy} works
+one out.
+
+\paragraph{There is no single $b_1$.}
+Every bias knob belongs to one bin.  ``The $b_1$ columns'' are therefore
+$N$ columns, $\partial m/\partial b_{1,1}, \ldots,
+\partial m/\partial b_{1,N}$, and the same holds for each of the seven
+bias families $\{b_{1,i}\}$, $\{b_{2,i}\}$, $\{b_{s^2,i}\}$,
+$\{\alpha_{0,i}\}$, $\{\alpha_{2,i}\}$, $\{\SNzi\}$ and $\{\SNti\}$,
+$i = 1, \ldots, N$.  In order, $\mB$ has
+\begin{equation}
+  \nbase \;=\; \underbrace{7}_{\rm cosmology}
+  + \underbrace{7}_{\sigma_v}
+  + \underbrace{7N}_{7\ \text{families} \times N\ \text{bins}}
+  + \underbrace{1}_{\rm check}
+  \;=\; 7N + 15
+  \label{eq:nbase}
+\end{equation}
+columns; the check column is explained in Section~\ref{sec:limits}.  On
+$\Delta d_{\rm com} = 62$~Mpc there are $N = 76$ bins, so $\mB$ has
+$7 + 7 + 532 + 1 = 547$ columns of $n = 9{,}964$ numbers each.
+Table~\ref{tab:sizes} gives every layout.
+
+\begin{table}[tbp]
+  \centering
+  \begin{tabular}{lrrrrr}
+    \hline
+    layout & bins $N$ & cross spectra & entries $n$ & $\nbase$
+      & kept, shipped mask \\
+    \hline
+    $\Delta d_{\rm com} = 62$~Mpc & $76$ & $97$  & $9{,}964$  & $547$ & $5{,}309$ \\
+    $\Delta z = 0.02$             & $90$ & $133$ & $12{,}614$ & $645$ & $7{,}621$ \\
+    $\Delta z = 0.05$             & $36$ & $52$  & $5{,}459$  & $267$ & $2{,}982$ \\
+    $\Delta z = 0.2$              & $10$ & $13$  & $2{,}014$  & $85$  & $744$ \\
+    \hline
+  \end{tabular}
+  \caption{The sizes of one layout's Fisher problem.  Cross spectra: the
+    pairs of bins whose cross spectrum is in the data vector.  $n$:
+    entries of the data vector.  $\nbase = 7N + 15$: columns of the
+    base.  Last column: the band powers the shipped mask keeps (the
+    mask of the data files, before any scale cut), the largest set of
+    rows any cut uses.}
+  \label{tab:sizes}
+\end{table}
+
+\subsection{A toy example}
+\label{sec:toy}
+
+\paragraph{The setup.}
+Take one group $g$ of $N = 3$ bins, with mean redshifts $\bar{z}_1$,
+$\bar{z}_2$, $\bar{z}_3$, their mean $\bar{z}_g$, and
+$D_i \equiv D(\bar{z}_i)$.  Keep one band of each auto spectrum and of
+the two cross spectra of neighboring bins, so the data vector has
+$n = 5$ entries,
+\begin{equation}
+  m = \bigl(C^{11},\, C^{22},\, C^{33},\, C^{12},\, C^{23}\bigr)\T .
+\end{equation}
+Keep one cosmological parameter $\theta$ and two bias families.  The
+knobs are $\theta$, $b_{1,1}$, $b_{1,2}$, $b_{1,3}$, $b_{2,1}$, $b_{2,2}$
+and $b_{2,3}$, so $\nbase = 7$.
+
+\paragraph{The base matrix.}
+Name the base columns $y = \partial m/\partial\theta$,
+$u_i = \partial m/\partial b_{1,i}$ and
+$v_i = \partial m/\partial b_{2,i}$.  Then
+\begin{equation}
+  \mB \;=\; \bordermatrix{
+           & y    & u_1  & u_2  & u_3  & v_1  & v_2  & v_3  \cr
+    C^{11} & \ast & \ast & 0    & 0    & \ast & 0    & 0    \cr
+    C^{22} & \ast & 0    & \ast & 0    & 0    & \ast & 0    \cr
+    C^{33} & \ast & 0    & 0    & \ast & 0    & 0    & \ast \cr
+    C^{12} & \ast & \ast & \ast & 0    & \ast & \ast & 0    \cr
+    C^{23} & \ast & 0    & \ast & \ast & 0    & \ast & \ast \cr} ,
+  \label{eq:toyB}
+\end{equation}
+where $\ast$ marks a nonzero entry.  The column $u_1$ vanishes on
+$C^{22}$, $C^{33}$ and $C^{23}$, because the bias of bin $1$ does not
+enter those spectra.  A cross spectrum, such as $C^{12}$, depends on the
+biases of both its bins.
+
+\paragraph{The model.}
+The model has the parameters
+$p = (\theta, \Delta_{2,g}, t_{2,g}, \beta_1, \beta_2, \beta_3)$, so
+$\npar = 6$, and sets the knobs by two recipes:
+\begin{equation}
+  b_{1,i} = \frac{\beta_i}{D_i} ,
+  \qquad
+  b_{2,i} = b_2^{\rm L}(b_{1,i}) + \Delta_{2,g} + t_{2,g}\,\zeta_i ,
+  \qquad
+  \zeta_i \equiv \bar{z}_i - \bar{z}_g .
+  \label{eq:toymodel}
+\end{equation}
+Here $\beta_i$ is the amplitude of bin $i$, and $b_2^{\rm L}$ a
+calibration: a fitted relation, from simulations, that predicts
+$b_{2,i}$ from $b_{1,i}$ (the Lazeyras et al.\ fit~\cite{Lazeyras2016}).
+$\Delta_{2,g}$ is the group's offset from that calibration and
+$t_{2,g}$ its tilt in redshift.  Let
+$s_i \equiv b_2^{\rm L\,\prime}(b_{1,i})$ be the slope of the
+calibration.
+
+\paragraph{The recipes as numbers.}
+$\mM_{aj}$ is how much knob $a$ moves per unit of parameter $j$:
+\begin{enumerate}
+  \item $\theta$ moves only $\theta$.  ($y$ is computed by moving
+    $\theta$ with the amplitudes $\beta_i$ held fixed, which is how the
+    model holds them, so $\theta$ needs no chain rule.)
+  \item $\Delta_{2,g}$ moves $b_{2,1}$, $b_{2,2}$ and $b_{2,3}$ by $1$
+    each.
+  \item $t_{2,g}$ moves $b_{2,i}$ by $\zeta_i$.
+  \item $\beta_i$ moves $b_{1,i}$ by $1/D_i$ and, through the
+    calibration, $b_{2,i}$ by $s_i/D_i$; the other bins do not move.
+\end{enumerate}
+Each item is one column of
+\begin{equation}
+  \mM \;=\; \bordermatrix{
+            & \theta & \Delta_{2,g} & t_{2,g} & \beta_1 & \beta_2 & \beta_3 \cr
+    \theta  & 1 & 0 & 0       & 0       & 0       & 0       \cr
+    b_{1,1} & 0 & 0 & 0       & 1/D_1   & 0       & 0       \cr
+    b_{1,2} & 0 & 0 & 0       & 0       & 1/D_2   & 0       \cr
+    b_{1,3} & 0 & 0 & 0       & 0       & 0       & 1/D_3   \cr
+    b_{2,1} & 0 & 1 & \zeta_1 & s_1/D_1 & 0       & 0       \cr
+    b_{2,2} & 0 & 1 & \zeta_2 & 0       & s_2/D_2 & 0       \cr
+    b_{2,3} & 0 & 1 & \zeta_3 & 0       & 0       & s_3/D_3 \cr} .
+  \label{eq:toyM}
+\end{equation}
+
+\paragraph{The multiplication.}
+Column $j$ of $\mD = \mB\mM$ is the sum of the columns of $\mB$, weighted
+by column $j$ of $\mM$:
+\begin{align}
+  \frac{\partial m}{\partial \theta} &= y ,
+  &
+  \frac{\partial m}{\partial \Delta_{2,g}} &= v_1 + v_2 + v_3 ,
+  \nonumber \\
+  \frac{\partial m}{\partial t_{2,g}}
+    &= \zeta_1 v_1 + \zeta_2 v_2 + \zeta_3 v_3 ,
+  &
+  \frac{\partial m}{\partial \beta_i}
+    &= \frac{u_i + s_i v_i}{D_i} .
+  \label{eq:toyD}
+\end{align}
+Written out entry by entry, the offset column is
+\begin{equation}
+  \frac{\partial m}{\partial \Delta_{2,g}} \;=\;
+  \left(
+    \frac{\partial C^{11}}{\partial b_{2,1}},\;
+    \frac{\partial C^{22}}{\partial b_{2,2}},\;
+    \frac{\partial C^{33}}{\partial b_{2,3}},\;
+    \frac{\partial C^{12}}{\partial b_{2,1}}
+      + \frac{\partial C^{12}}{\partial b_{2,2}},\;
+    \frac{\partial C^{23}}{\partial b_{2,2}}
+      + \frac{\partial C^{23}}{\partial b_{2,3}}
+  \right)\T :
+\end{equation}
+each auto spectrum responds to its own bin's $b_{2,i}$, and each cross
+spectrum to both of its bins'.
+
+\paragraph{Another model, the same base.}
+The free-per-bin model replaces the group offset and tilt by one offset
+per bin, $b_{2,i} = b_2^{\rm L}(b_{1,i}) + \Delta_{2,i}$.  Each offset
+moves one knob, so its block on the $b_{2,i}$ rows is the $3 \times 3$
+identity:
+\begin{equation}
+  \mM_{\rm free} \;=\; \bordermatrix{
+            & \theta & \Delta_{2,1} & \Delta_{2,2} & \Delta_{2,3}
+            & \beta_1 & \beta_2 & \beta_3 \cr
+    \theta  & 1 & 0 & 0 & 0 & 0       & 0       & 0       \cr
+    b_{1,1} & 0 & 0 & 0 & 0 & 1/D_1   & 0       & 0       \cr
+    b_{1,2} & 0 & 0 & 0 & 0 & 0       & 1/D_2   & 0       \cr
+    b_{1,3} & 0 & 0 & 0 & 0 & 0       & 0       & 1/D_3   \cr
+    b_{2,1} & 0 & 1 & 0 & 0 & s_1/D_1 & 0       & 0       \cr
+    b_{2,2} & 0 & 0 & 1 & 0 & 0       & s_2/D_2 & 0       \cr
+    b_{2,3} & 0 & 0 & 0 & 1 & 0       & 0       & s_3/D_3 \cr} ,
+  \qquad
+  \frac{\partial m}{\partial \Delta_{2,i}} = v_i .
+  \label{eq:toyMfree}
+\end{equation}
+
+\paragraph{The priors.}
+\begin{itemize}
+  \item Group model: $1/w_g^2$ on $\Delta_{2,g}$ (a Gaussian prior of
+    width $w_g$), nothing on $t_{2,g}$ (a flat prior).
+  \item Free per bin: $1/w_g^2$ on each $\Delta_{2,i}$.
+  \item Free per bin, $\sqrt{N}$-scaled: the same $\mM_{\rm free}$, with
+    $1/(3\,w_g^2)$ on each $\Delta_{2,i}$.  The mean of the three
+    offsets then has the width $w_g\sqrt{3}/\sqrt{3} = w_g$ of the group
+    offset.
+\end{itemize}
+Three models, one $\mB$: the group and free models differ in $\mM$, the
+free model and its $\sqrt{N}$-scaled version only in $F_{\rm prior}$.
+The base, the expensive part, never changes.
+
+\subsection{How a derivative column is computed}
 \label{sec:stencil}
 
-Twenty columns are derivatives with respect to sampled parameters of
-the model A likelihood: the seven cosmological parameters ($10^9 A_s$,
-the spectral index $n_s$, the Hubble constant $H_0$, the baryon density
-$\Omega_b$, $\Omega_m$, $w_0$ and $w_a$), the six group amplitudes
-$B_g$, and the seven velocity dispersions $\sigma_v$ that smooth the
-bins' redshift distributions (the Fingers-of-God effect).  $B_g$ sets
-the linear bias of every bin of group $g$ at the fiducial point,
-$b_{1,i} = B_g/D(\bar{z}_i)$.  Each column is a five-point stencil,
+\paragraph{A finite difference.}
+The code cannot differentiate CAMB and CosmoLike by hand.  It moves one
+knob by a small step $\epsilon$, recomputes the data vector, and divides
+the change by the step.  The simplest such finite difference, the
+central difference $[m(\theta_0 + \epsilon) - m(\theta_0 - \epsilon)]
+/(2\epsilon)$, is off by a term of order $\epsilon^2$ times the third
+derivative of $m$: the curvature it ignores.
+
+\paragraph{The five-point stencil.}
+A stencil is the set of points at which $m$ is evaluated, with the
+weights that combine them.  The code uses five points,
+$\theta_0 \pm \epsilon$, $\theta_0 \pm 2\epsilon$ and $\theta_0$, with
+the weights
 \begin{equation}
   \frac{\partial m}{\partial \theta} \;\simeq\;
   \frac{m(\theta_0 - 2\epsilon) - 8\,m(\theta_0 - \epsilon)
-    + 8\,m(\theta_0 + \epsilon) - m(\theta_0 + 2\epsilon)}{12\,\epsilon} ,
+    + 8\,m(\theta_0 + \epsilon) - m(\theta_0 + 2\epsilon)}{12\,\epsilon} .
   \label{eq:stencil}
 \end{equation}
-with every other parameter at its fiducial value.  The weights cancel
-the Taylor terms through fourth order, so the truncation error falls
-as $\epsilon^4$, against $\epsilon^2$ for a central difference, and
-vanishes for any dependence up to quartic.  The center point has zero
-weight, so a column costs four evaluations.  The step is relative,
-$\epsilon = h\,\theta_0$; a parameter whose fiducial value is zero
-($w_a$) takes an absolute step, scaled by its prior width when its
-prior is Gaussian.
+These weights cancel the error terms through fourth order, so the
+remaining error falls as $\epsilon^4$, and the formula is exact for any
+dependence up to quartic.  The center point has weight zero and is
+never evaluated, so one column costs four evaluations.
 
-Each evaluation is a full call of the likelihood, CAMB included
-(\texttt{ModelFisher.dv} in
-\texttt{interface/cosmolike\us lssty1xdesi\us fisher.py}, with cobaya's
-cache disabled so that no stale vector is reused).  The twenty columns
-cost $80$ evaluations.  In the model A and B notebooks the six $B_g$
-columns enter no Fisher matrix, because the per-bin columns below
+\paragraph{The cosmological and $\sigma_v$ columns.}
+These are stencils of sampled parameters of the model A likelihood,
+taken by \texttt{model.derivatives} of the Fisher module
+(\texttt{interface/cosmolike\us lssty1xdesi\us fisher.py}).  The step is
+relative, $\epsilon = h\,\theta_0$ with $h = 0.02$; a parameter whose
+fiducial value is zero ($w_a$) takes an absolute step, scaled by its
+prior width when its prior is Gaussian.  Each evaluation is a full call
+of the likelihood, CAMB included, with the cache of previous results
+of cobaya (the framework that runs the likelihood) disabled, so that no
+stale vector is reused.
+
+The same call also returns the stencils of the six group amplitudes
+$B_g$, which set the linear bias of every bin of group $g$ at the
+fiducial point, $b_{1,i} = B_g/D(\bar{z}_i)$.  They enter no Fisher
+matrix of the model A and B notebooks, because the per-bin columns
 replace them; they are kept for the chain-rule check of
 Section~\ref{sec:limits}.
 
-\subsection{Per-bin operator columns}
+\subsection{The per-bin columns, in batches}
 \label{sec:operators}
 
 In model A the real-space galaxy power spectrum of bin $i$ is
@@ -200,172 +456,616 @@ In model A the real-space galaxy power spectrum of bin $i$ is
   \;+\; \alpha_{0,i}\,k^2 P_{\rm mm}(k) ,
   \label{eq:pgg}
 \end{equation}
-plus the stochastic terms of Section~\ref{sec:templates}.  Here
-$P_{\rm mm}$ is the nonlinear matter power spectrum, $P_{\rm loop}$ the
-one-loop terms of the quadratic bias $b_2$ and the tidal bias $\bstwo$,
-and $\alpha_0$ the $k^2$ counterterm, in $h^{-2}\,{\rm Mpc}^2$.  The
-models need the derivatives with respect to these four operators in
-every bin, each at fixed values of the other three:
-$\partial m/\partial b_{1,i}$, $\partial m/\partial b_{2,i}$,
-$\partial m/\partial b_{s^2,i}$ and $\partial m/\partial \alpha_{0,i}$.
+plus the stochastic terms of Section~\ref{sec:templates}.  $P_{\rm mm}$ is
+the nonlinear matter power spectrum.  $P_{\rm loop}$ holds the one-loop
+terms, the next order of perturbation theory beyond linear, which carry
+$b_{2,i}$ and $b_{s^2,i}$.  $\alpha_{0,i}\,k^2 P_{\rm mm}$ is a
+counterterm, in $h^{-2}\,{\rm Mpc}^2$: a term that absorbs small-scale
+physics the model does not compute.
 
-\paragraph{Why the setter is intercepted.}
-The sampled parameters offer no per-bin handle for these steps: the
-parameter files tie each bin's linear bias to its group amplitude, and
-the likelihood computes $b_2$ and $\bstwo$ from $b_1$ through
-calibrations.  The likelihood also sets every nuisance value at every
-point, so a value written into CosmoLike beforehand would be
-overwritten.  The four per-bin values exist
-separately only in the call through which the likelihood hands them to
-CosmoLike, \texttt{set\us nuisance\us bias\us tidal} of the compiled
-interface.  The notebook replaces that function by a wrapper that adds
-a step to one operator in a chosen set of bins and passes the values
-on, and restores the original after the steps.  CosmoLike's $k^2$ term
-is $2\,b_1 b_K\,k^2 P_{\rm mm}$, with $b_K$ its per-bin coefficient and
-$k$ in units of $H_0/c$, so an $\alpha_0$ step enters as
-$b_K = \alpha_0/[2\,b_1 (c/H_0)^2]$.
+None of the four families $\{b_{1,i}\}$, $\{b_{2,i}\}$, $\{b_{s^2,i}\}$
+and $\{\alpha_{0,i}\}$ enters $m$ linearly, so each needs a stencil.
 
-\paragraph{One set of evaluations per color.}
-A spectrum $C_\ell^{ij}$ depends on the biases of bins $i$ and $j$
-only.  Shift one operator in every bin of a set $S$ at once.  If no
-measured cross pair joins two bins of $S$, each spectrum contains at
-most one shifted bin, so the change of the spectra of bin $i$ (its
-auto spectrum and the cross pairs that contain it) is caused by bin $i$
-alone.  One set of stencil evaluations then yields the column of every
-bin of $S$: the stencil difference on bin $i$'s spectra, and zero
-elsewhere, exactly, since bin $i$'s biases enter no other spectrum.
+\paragraph{The stencil of one bin.}
+For the linear bias of bin $i$, with every other knob at its fiducial
+value:
+\begin{enumerate}
+  \item evaluate $m$ four times, with $b_{1,i}$ replaced by
+    $b_{1,i}(1 \pm \epsilon)$ and $b_{1,i}(1 \pm 2\epsilon)$;
+  \item combine the four vectors with the weights of
+    Eq.~\eqref{eq:stencil}, the step being $\epsilon\, b_{1,i}$:
+    \begin{equation}
+      \frac{\partial m}{\partial b_{1,i}} \simeq
+      \frac{m\bigl(b_{1,i}(1 - 2\epsilon)\bigr)
+        - 8\,m\bigl(b_{1,i}(1 - \epsilon)\bigr)
+        + 8\,m\bigl(b_{1,i}(1 + \epsilon)\bigr)
+        - m\bigl(b_{1,i}(1 + 2\epsilon)\bigr)}{12\,\epsilon\, b_{1,i}} .
+    \end{equation}
+\end{enumerate}
+The step of $b_{1,i}$ is relative, a fraction $\epsilon = 0.01$ of
+$b_{1,i}$.  The steps of the other three are absolute: the four points
+are $b_{2,i} \pm \epsilon$ and $b_{2,i} \pm 2\epsilon$ with
+$\epsilon = 0.02$, the same for $b_{s^2,i}$, and $\epsilon = 5\aunit$
+for $\alpha_{0,i}$.
 
-Sets with this property are the colors of a coloring of the pair graph,
-whose vertices are the bins and whose edges are the measured cross
-pairs.  The notebooks color it greedily (\texttt{pair\us coloring}):
-each bin, in order, takes the smallest color that none of its already
-colored neighbors has.  Every layout gets four colors.  On
-$\Delta z = 0.2$ the two LRG3 bins and the two ELG1 bins overlap in
-redshift and are all paired with each other, so no coloring can use
-fewer.
+\paragraph{The problem: one bin at a time is wasteful.}
+Done bin by bin, a family costs $4$ evaluations per bin: $4 \times 76 =
+304$ on $\Delta d_{\rm com} = 62$~Mpc, and $1{,}216$ for the four
+families.  Most of that work is wasted.  The data vector of that layout
+holds $173$ spectra, $76$ autos and $97$ crosses, and bin $i$ enters at
+most five of them: its own auto spectrum and up to four cross spectra.
+Every other row of $\partial m/\partial b_{1,i}$ is exactly zero, and an
+evaluation that moves one bin leaves $168$ or more spectra unchanged.
 
-\paragraph{The five-point stencil per color.}
-Each operator is stepped by $\pm\epsilon$ and $\pm 2\epsilon$ in every
-bin of one color at once (a relative step for $b_1$, absolute steps for
-$b_2$, $\bstwo$ and $\alpha_0$), and Eq.~\eqref{eq:stencil} combines the
-four vectors.  The four operators then cost $4 \times 4 \times 4 = 64$
-evaluations on every layout, whatever the number of bins; bin by bin
-they would cost $1{,}216$ on $\Delta d_{\rm com} = 62$~Mpc.  The steps
-and the accuracy of these evaluations are the subject of
-Section~\ref{sec:accuracy}.
+\paragraph{The idea: move several bins in one evaluation.}
+Take five bins in a row whose only measured cross spectra join
+neighbors: $1$--$2$, $2$--$3$, $3$--$4$ and $4$--$5$.  Put the bins in
+two batches, sets of bins moved together in one stencil:
+\begin{itemize}
+  \item batch A moves $b_{1,i}$ in bins $1$, $3$ and $5$ together;
+  \item batch B moves $b_{1,i}$ in bins $2$ and $4$ together.
+\end{itemize}
+Each batch is one five-point stencil, four evaluations.
+Table~\ref{tab:passes} shows which batch fills each entry of the five
+columns $\partial m/\partial b_{1,1}, \ldots, \partial m/\partial b_{1,5}$.
+
+\begin{table}[tbp]
+  \centering
+  \begin{tabular}{lccccc}
+    \hline
+    spectrum & $\partial/\partial b_{1,1}$ & $\partial/\partial b_{1,2}$
+      & $\partial/\partial b_{1,3}$ & $\partial/\partial b_{1,4}$
+      & $\partial/\partial b_{1,5}$ \\
+    \hline
+    $C^{11}$ & A & 0 & 0 & 0 & 0 \\
+    $C^{22}$ & 0 & B & 0 & 0 & 0 \\
+    $C^{33}$ & 0 & 0 & A & 0 & 0 \\
+    $C^{44}$ & 0 & 0 & 0 & B & 0 \\
+    $C^{55}$ & 0 & 0 & 0 & 0 & A \\
+    $C^{12}$ & A & B & 0 & 0 & 0 \\
+    $C^{23}$ & 0 & B & A & 0 & 0 \\
+    $C^{34}$ & 0 & 0 & A & B & 0 \\
+    $C^{45}$ & 0 & 0 & 0 & B & A \\
+    \hline
+  \end{tabular}
+  \caption{Five bins in a row, cross spectra between neighbors only.
+    Each entry names the batch whose evaluations fill it: batch A moves
+    bins $1$, $3$ and $5$, batch B moves bins $2$ and $4$.  A $0$ is
+    exactly zero, because the spectrum does not contain that bin.}
+  \label{tab:passes}
+\end{table}
+
+Reading the table:
+\begin{itemize}
+  \item An auto spectrum $C^{ii}$ is filled in the batch that moves
+    bin $i$.
+  \item A cross spectrum $C^{ij}$ appears in two columns, filled from
+    two different batches: $\partial C^{ij}/\partial b_{1,i}$ from the
+    batch where bin $i$ moves and bin $j$ stays put, and
+    $\partial C^{ij}/\partial b_{1,j}$ from the batch where $j$ moves and
+    $i$ stays put.
+  \item A $0$ is not computed: a spectrum that does not contain bin $i$
+    cannot depend on $b_{1,i}$, so the code sets those rows to zero.
+\end{itemize}
+Bin by bin, the five columns would cost $5 \times 4 = 20$ evaluations;
+the two batches cost $2 \times 4 = 8$.
+
+\paragraph{A batch is a set of bins, not of spectra.}
+No batch holds ``the autos'' or ``the crosses''.  In the evaluations of
+the batch that contains bin $i$, bin $i$'s auto spectrum and all of its
+cross spectra receive their derivative with respect to $b_{1,i}$.  A
+cross spectrum $C^{ij}$ is visited twice, once in the batch of each of
+its two bins.
+
+\paragraph{When may two bins move together?}
+Why not move every bin at once and keep, for each column, only its own
+rows?
+\begin{itemize}
+  \item That works for the auto spectra: $C^{ii}$ depends only on bin
+    $i$'s biases.
+  \item It fails for the cross spectra.  If bins $i$ and $j$ move
+    together by $\delta$, $C^{ij}$ changes by
+    $(\partial C^{ij}/\partial b_{1,i}
+    + \partial C^{ij}/\partial b_{1,j})\,\delta$, and one evaluation
+    cannot split the two terms.
+\end{itemize}
+So two bins may share a batch only if no measured spectrum contains
+both.  Batching is ``move as many bins at once as possible, then keep
+each column's own rows'', with the fewest batches this rule allows.
+
+\paragraph{What a batch is, as a picture.}
+Draw each bin as a dot, and join two dots with a line when the data
+vector contains their cross spectrum: this is the cross-pair graph
+(Figure~\ref{fig:batches}).
+\begin{itemize}
+  \item A batch is a set of dots with no line between any two of them,
+    so its bins can move together.
+  \item Batching the bins means giving every dot a batch number, so that
+    two joined dots never share a number.
+  \item The code (\texttt{pair\us coloring}) uses a greedy rule: it goes
+    through the bins in data-vector order and gives each the lowest
+    batch number that none of its already numbered neighbors has.
+\end{itemize}
+Mathematicians call such batches colors, from the picture of labelling
+the dots so that joined dots never share a label; hence the name of the
+code's function.
+
+\begin{figure}[tbp]
+  \centering
+  \begin{tikzpicture}[x=1cm, y=1cm, >=stealth,
+      dot/.style={circle, draw, thick, minimum size=0.6cm, inner sep=0pt,
+        font=\small},
+      b1/.style={dot, fill=white},
+      b2/.style={dot, fill=gray!35},
+      b3/.style={dot, fill=oksky!55},
+      b4/.style={dot, fill=okorange!70}]
+    % the four mutually crossed bins
+    \draw[dashed, gray, rounded corners] (4.3,-0.85) rectangle (6.85,2.5);
+    % bins at their mean redshift: x = 7 (zbar - 0.2)
+    \node[b1] (n1)  at (0.02,1.6) {1};
+    \node[b2] (n2)  at (1.02,1.6) {2};
+    \node[b1] (n3)  at (2.17,1.6) {1};
+    \node[b2] (n4)  at (3.54,1.6) {2};
+    \node[b1] (n5)  at (4.80,1.6) {1};
+    \node[b2] (n6)  at (5.89,1.6) {2};
+    \node[b3] (n7)  at (4.94,0.0) {3};
+    \node[b4] (n8)  at (6.29,0.0) {4};
+    \node[b1] (n9)  at (7.69,0.0) {1};
+    \node[b2] (n10) at (9.04,0.0) {2};
+    \foreach \a/\b in {n1/n2, n2/n3, n3/n4, n4/n5, n4/n7, n5/n6, n5/n7,
+        n5/n8, n6/n7, n6/n8, n7/n8, n8/n9, n9/n10}
+      \draw[thick] (\a) -- (\b);
+    % bin numbers
+    \foreach \n/\l in {n1/1, n2/2, n3/3, n4/4, n5/5, n6/6}
+      \node[font=\scriptsize, above=2pt] at (\n.north) {bin \l};
+    \foreach \n/\l in {n7/7, n8/8, n9/9, n10/10}
+      \node[font=\scriptsize, below=2pt] at (\n.south) {bin \l};
+    % sample rows and the redshift axis
+    \node[anchor=east, font=\scriptsize, align=right] at (-0.5,1.6)
+      {BGS, LRG};
+    \node[anchor=east, font=\scriptsize] at (-0.5,0.0) {ELG};
+    \draw[->] (0,-1.1) -- (9.5,-1.1);
+    \foreach \z/\x in {0.2/0, 0.6/2.8, 1.0/5.6, 1.4/8.4}
+      \draw (\x,-1.05) -- (\x,-1.2) node[below, font=\scriptsize] {$\z$};
+    \node[font=\scriptsize] at (4.75,-1.85) {mean redshift $\bar{z}_i$};
+  \end{tikzpicture}
+  \caption{The cross-pair graph of the $\Delta z = 0.2$ layout, all ten
+    bins.  Each dot is a bin at its mean redshift (top row BGS and LRG,
+    bottom row ELG), and a line joins two bins whose cross spectrum is in
+    the data vector.  The number in each dot is its batch from the
+    greedy rule, repeated by the dot's shade.  Bins $5$ to $8$ (dashed
+    box: two LRG3 and two ELG1 bins, which overlap in redshift) are all
+    joined to each other, so they need four different batches.}
+  \label{fig:batches}
+\end{figure}
+
+\paragraph{The real layout, step by step.}
+Take $\Delta d_{\rm com} = 62$~Mpc.  Its $N = 76$ bins are numbered $1$
+to $76$ in data-vector order, by group and, within a group, by
+redshift (numbers start at $1$ here, as everywhere in this note; the
+code counts from $0$).  DESI's galaxies come in six groups, ordered by
+redshift (Table~\ref{tab:groups}).
+
+\begin{table}[tbp]
+  \centering
+  \begin{tabular}{llcc}
+    \hline
+    group & galaxies & bins & mean redshifts $\bar{z}_i$ \\
+    \hline
+    BGS  & bright galaxies       & $1$--$18$  & $0.11$--$0.38$ \\
+    LRG1 & luminous red galaxies & $19$--$29$ & $0.41$--$0.60$ \\
+    LRG2 & luminous red galaxies & $30$--$38$ & $0.62$--$0.79$ \\
+    LRG3 & luminous red galaxies & $39$--$49$ & $0.81$--$1.06$ \\
+    ELG1 & emission-line galaxies & $50$--$61$ & $0.81$--$1.09$ \\
+    ELG2 & emission-line galaxies & $62$--$76$ & $1.11$--$1.55$ \\
+    \hline
+  \end{tabular}
+  \caption{The six groups of $\Delta d_{\rm com} = 62$~Mpc.  LRG3 and
+    ELG1 cover the same redshifts: they overlap.}
+  \label{tab:groups}
+\end{table}
+
+\paragraph{Which cross spectra are measured.}
+The rule is simple: the data vector holds the cross spectrum of two bins
+when their redshift distributions $n(z)$ overlap or touch, that is, when
+the bins are neighbors in redshift.  Bins far apart in redshift share no
+spectrum.  For the fixed-$\Delta z$ layouts this is the rule of
+\texttt{cross\us pairs} in \texttt{scripts/make\us desi\us dz\us case.py};
+on $\Delta d_{\rm com} = 62$~Mpc the pair list comes from the DESI
+forecast, and the same rule reproduces $96$ of its $97$ pairs (the
+exception is the BGS--LRG1 boundary pair, bins $18$ and $19$).
+
+On $\Delta d_{\rm com} = 62$~Mpc the $97$ cross spectra come in two
+kinds:
+\begin{enumerate}
+  \item $74$ join a bin to the next one along the chain of bins:
+    neighboring thin shells, which touch at their shared edge.  These
+    include the four links at group boundaries: BGS--LRG1, LRG1--LRG2,
+    LRG2--LRG3 and ELG1--ELG2.
+  \item $23$ join an LRG bin to an ELG1 bin at nearly the same redshift:
+    $22$ LRG3--ELG1 pairs and one LRG2--ELG1 pair at $z \approx 0.8$.
+    This is the overlap, explained below.
+\end{enumerate}
+Each bin has $1$ to $4$ cross partners.
+
+\paragraph{Along the chain: batches 1 and 2.}
+The greedy rule walks through the bins in order.  Bin $1$ takes
+batch~1.  Bin $2$ is crossed with bin $1$, so it takes batch~2.  Bin $3$
+is crossed with bin $2$ only, among the bins already numbered, so it
+takes batch~1 again, and so on: along the chain the bins alternate.
+\begin{itemize}
+  \item The evaluations of batch~1 move bins $1, 3, 5, \ldots$  They
+    fill $\partial C^{11}/\partial b_{1,1}$,
+    $\partial C^{33}/\partial b_{1,3}$, \ldots, and the cross spectra
+    $C^{12}$, $C^{23}$, $C^{34}$ through their odd end:
+    $\partial C^{12}/\partial b_{1,1}$, $\partial C^{23}/\partial b_{1,3}$,
+    $\partial C^{34}/\partial b_{1,3}$.
+  \item The evaluations of batch~2 move bins $2, 4, 6, \ldots$ and fill
+    the even ends: $\partial C^{12}/\partial b_{1,2}$,
+    $\partial C^{23}/\partial b_{1,2}$, $\partial C^{34}/\partial b_{1,4}$,
+    and the even auto spectra.
+\end{itemize}
+This is the five-bin example of Table~\ref{tab:passes}, continued
+through every group.
+
+\paragraph{The overlap: why batches 3 and 4 appear.}
+LRG3 and ELG1 are two different galaxy populations, luminous red
+galaxies and emission-line galaxies, observed in the same volume, at
+$z \approx 0.8$--$1.1$ (Table~\ref{tab:groups}).  An LRG3 bin and an
+ELG1 bin at the same redshift trace the same matter, so their cross
+spectrum is measured, roughly $b_{1,i}\,b_{1,j}\,P$ with $P$ the matter
+power spectrum.  It carries no shot-noise term, because the two bins
+hold different galaxies: the $\SNzi$ cross terms exist only within one
+sample.
+
+These pairs obey the same rule: the two bins are neighbors in redshift.
+They only look far apart because the bin numbers run group by group.
+LRG3 bin $44$ ($\bar{z} = 0.932$) and ELG1 bin $55$ ($\bar{z} = 0.931$)
+are $11$ apart in number but at the same redshift, and their cross
+spectrum is measured.  In Figure~\ref{fig:batches}, drawn against
+redshift, the lines between the LRG and ELG rows are short.
+
+For batching this matters because an ELG1 bin's redshift neighbors are
+its ELG neighbors and two LRG bins at nearly the same redshift.  Bin $51$, for example, is crossed with
+bins $50$ and $52$ (ELG1) and with bins $39$ and $40$ (LRG3).  Bins $39$
+and $40$ already sit in batches 1 and 2, and bin $50$ in batch 3, so bin
+$51$ takes batch 4.  The greedy rule puts the eleven ELG1 bins $50$ to
+$60$ in batches 3 (six bins) and 4 (five bins); batch 1 holds $33$
+bins and batch 2 holds $32$.  Batches 3 and 4 appear only in the
+overlap.
+
+\paragraph{Four batches, whatever the number of bins.}
+Every bin's partners are local in redshift, so the number of batches
+does not grow with $N$.  The other layouts follow the same pattern,
+neighbors along the chain plus overlap pairs: $\Delta z = 0.02$ has
+$133$ cross spectra ($88$ along the chain) and $1$ to $5$ partners per
+bin; $\Delta z = 0.05$ has $52$ ($34$) and $1$ to $5$; $\Delta z = 0.2$
+has $13$ ($8$) and $1$ to $4$.  All four layouts get four batches.
+
+A rule of thumb explains why the number stays small: if every bin's
+partners lie within $k$ places of it in redshift order, $k + 1$ batches
+suffice, because going through the bins in that order, each bin has at
+most $k$ numbered partners to avoid.  The partners reach $2$ places
+away on $\Delta d_{\rm com} = 62$~Mpc and $3$ places on the three
+fixed-$\Delta z$ layouts.  Those three need four batches, the minimum:
+each contains four bins all crossed with each other, like bins $5$ to
+$8$ of Figure~\ref{fig:batches}.  On $\Delta d_{\rm com} = 62$~Mpc three
+would suffice; the greedy rule, which goes through the bins in
+data-vector order, all LRG bins before the ELG bins, gives four.
+
+\paragraph{What batching buys.}
+The cost now follows from the number of batches, not from $N$.  On
+$\Delta d_{\rm com} = 62$~Mpc:
+\begin{enumerate}
+  \item one family takes $4$ batches $\times$ $4$ evaluations $= 16$
+    evaluations and fills all $76$ of its columns, instead of
+    $4 \times 76 = 304$;
+  \item the four stenciled families take $4 \times 16 = 64$
+    evaluations, instead of $1{,}216$.
+\end{enumerate}
+The same $64$ hold on every layout, from $10$ bins to $90$.
+
+\paragraph{Why not exact derivatives by hand?}
+If each cross spectrum were a fixed bilinear expression in the biases,
+its derivatives could be written down exactly.  The low-rank
+non-Limber engine of CosmoLike does not compute it that way.  For each
+bin it approximates $\sqrt{P_{g,i}(k, z)}$, with $P_{g,i}$ the one-loop
+galaxy power spectrum of bin $i$, by a short sum of products of a
+function of $k$ and a function of $z$: a truncated singular-value
+decomposition, which makes the projection fast.
+
+It builds a cross spectrum from the geometric mean
+$\sqrt{P_{g,i}}\sqrt{P_{g,j}}$ of the two bins' spectra.  Before the
+square root it floors $P_{g,i}$ at $10^{-15}\,b_{1,i}^2 P_\delta$, with
+$P_\delta$ the matter power spectrum, so the root always exists.  The
+square root, the truncation and the floor make the spectra not exactly
+bilinear in the biases.  Finite differences through the full likelihood
+differentiate the model exactly as it is computed.
+
+\paragraph{Why the call to CosmoLike is intercepted.}
+The sampled parameters offer no per-bin handle: the parameter files tie
+each bin's linear bias to its group amplitude, and the likelihood
+computes $b_{2,i}$ and $b_{s^2,i}$ from $b_{1,i}$ through calibrations.
+The likelihood also sets every value at every evaluation, so a value
+written into CosmoLike beforehand would be overwritten.
+
+The per-bin values exist separately in one place only: the setter, the
+function \texttt{set\us nuisance\us bias\us tidal} through which the
+likelihood hands them to CosmoLike's C code.  The notebook replaces it
+by a wrapper, its own function that changes the values of one batch and
+then calls the original.  The original is restored after the steps.
+
+\paragraph{The loop in the code.}
+\texttt{model\us a\us derivatives} of the model A notebook does exactly
+this:
+\begin{enumerate}
+  \item The wrapper records the per-bin arrays the likelihood passes:
+    \texttt{B1}, \texttt{B2}, \texttt{BS2} and \texttt{BK}, one entry
+    per bin.  In a batch evaluation it changes the entries of the bins of
+    that batch.  \texttt{B1} is multiplied by $1 + o\,\epsilon$;
+    \texttt{B2} and \texttt{BS2} get $o\,\epsilon$ added; an
+    $\alpha_{0,i}$ step $o\,\epsilon$ enters \texttt{BK} as
+    $o\,\epsilon/[2\,b_{1,i} (c/H_0)^2]$, because CosmoLike's $k^2$ term
+    is $2\,b_{1,i} b_{K,i}\,k^2 P_{\rm mm}$ with $k$ in units of $H_0/c$.
+    Here $o$ runs over the stencil offsets $(2, 1, -1, -2)$
+    (\texttt{fm.FIVE\us POINT\us OFFSETS}).
+  \item For each family and each of the four batches it evaluates the
+    full data vector at the four offsets and combines them with
+    \texttt{fm.five\us point}, Eq.~\eqref{eq:stencil}.
+  \item Column $i$ of the family's block gets that derivative on the
+    rows of every spectrum that contains bin $i$, and zero elsewhere.
+    The $b_{1,i}$ column is divided by $b_{1,i}$, because its step is
+    relative.
+\end{enumerate}
 
 \subsection{Exact templates}
 \label{sec:templates}
 
-Three terms of the models are linear in their amplitude, so their
-derivative is the term itself per unit amplitude, with no truncation
-error: the white noise beyond Poisson $\SNz$, in units of the bin's
-Poisson power $1/\bar{n}_i$ ($\bar{n}_i$ its tracer density); the
-stochastic term $\SNt\,k^2\mu^2$, with $\mu$ the cosine of the angle to
-the line of sight, in units of $f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}_i$
-($f_{\rm sat}$ the satellite fraction, $\sigma_{\rm sat}$ the
-satellites' velocity dispersion in distance units); and the radial
-counterterm $\alpha_2$ of model B, in $h^{-2}\,{\rm Mpc}^2$, which
-enters the counterterm density
-$\tfrac{1}{2}(b_1\alpha_0 + f\mu^2\alpha_2)\,k^2\delta_{\rm L}$ ($f$ the
-linear growth rate, $\delta_{\rm L}$ the linear density contrast).
+A template is the exact derivative of a term that is linear in its
+amplitude: the term itself, per unit amplitude.  Three families are
+linear:
+\begin{itemize}
+  \item the white noise beyond Poisson $\SNzi$, in units of the bin's
+    Poisson power $1/\bar{n}_i$ ($\bar{n}_i$ its tracer density);
+  \item the stochastic term $\SNti\,k^2\mu^2$, with $\mu$ the cosine of
+    the angle to the line of sight, in units of
+    $f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}_i$ ($f_{\rm sat}$ the
+    satellite fraction, $\sigma_{\rm sat}$ the satellites' velocity
+    dispersion in distance units);
+  \item the radial counterterm $\alpha_{2,i}$ of model B, in
+    $h^{-2}\,{\rm Mpc}^2$, which enters the counterterm density
+    $\tfrac{1}{2}(b_{1,i}\alpha_{0,i} + f\mu^2\alpha_{2,i})\,
+    k^2\delta_{\rm L}$ ($f$ the linear growth rate, $\delta_{\rm L}$ the
+    linear density contrast).
+\end{itemize}
 
-The likelihood projects $\SNz$ and $\SNt$ directly through each bin's
-Fingers-of-God-convolved kernel $W_i(\chi)$, with $\chi$ the comoving
-distance (\texttt{stochastic\us templates} of
-\texttt{likelihood/desi\us cl.py}, orders $0$ and $2$): $\SNz$ through
-$\int d\chi\, W_i W_j/\chi^2$, and $\SNt$ through
-$\int d\chi\, W_i' W_j'/\chi^2$, because $k^2\mu^2 = k_\parallel^2$ is a
-second radial derivative (the correlated-prior note, section ``Model
-A'').  These templates need only the kernels of one fiducial
-evaluation.  $\alpha_2$ has its own per-bin setter,
-\texttt{set\us nuisance\us bias\us alpha2}, intercepted the same way; a
-central difference on each color gives its columns, exact because the
-term is linear, in eight evaluations.
+The likelihood projects the $\SNzi$ and $\SNti$ terms directly
+(\texttt{stochastic\us templates} of \texttt{likelihood/desi\us cl.py},
+orders $0$ and $2$).  It uses each bin's kernel $W_i(\chi)$: the bin's
+redshift distribution as a function of comoving distance $\chi$, after
+the Fingers-of-God smoothing.  $\SNzi$ projects through
+$\int d\chi\, W_i W_j/\chi^2$, and $\SNti$ through
+$\int d\chi\, W_i' W_j'/\chi^2$, with $W' = dW/d\chi$, because
+$k^2\mu^2 = k_\parallel^2$ is a second derivative along the line of
+sight (the correlated-prior note, section ``Model A'').  These templates
+need only the kernels of one fiducial evaluation.
 
-\subsection{What the base matrix holds}
-\label{sec:holds}
+$\alpha_{2,i}$ has its own per-bin setter,
+\texttt{set\us nuisance\us bias\us alpha2}, wrapped the same way.  A
+central difference on each batch gives its columns, exact because the
+term is linear: two evaluations per batch, eight in all.
 
-$\mB$ has $14$ stencil columns (the cosmology and $\sigma_v$), seven
-blocks of one column per bin ($b_1$, $b_2$, $\bstwo$, $\alpha_0$,
-$\alpha_2$, $\SNz$, $\SNt$), and one check column
-(Section~\ref{sec:limits}): with $N$ bins, $\nbase = 7N + 15$
-(Table~\ref{tab:sizes}).  It takes about $150$ likelihood evaluations
-per layout: $80$ for the stencil, $64$ for the operators, $8$ for
-$\alpha_2$ and a few fiducial vectors.  During development, at the
-exploration settings of Section~\ref{sec:accuracy}, one layout took
-roughly $15$ to $45$ minutes, a rough figure and not a benchmark.
+\subsection{What is precomputed, and what is computed at every run}
+\label{sec:precomputed}
+
+The work splits into three levels.
+\begin{enumerate}
+  \item \textbf{On disk, once per layout (hours):} the base columns and
+    the fiducial vector $m(p_0)$.  Table~\ref{tab:arrays} lists every
+    array on $\Delta d_{\rm com} = 62$~Mpc.
+  \item \textbf{In memory, at every run (seconds):} for each scale cut
+    $m$, its kept rows $K_m$ and the matrix
+    $\mG_m = f_A\,\mB_K\T\Cov_{KK}^{-1}\mB_K$, $547 \times 547$ on
+    $\Delta d_{\rm com} = 62$~Mpc (Section~\ref{sec:cuts}).  The
+    covariance is read fresh from its file at every run.
+  \item \textbf{For every model and prior (a fraction of a second):}
+    $\mM$, then $F = \mM\T\mG_m\mM + F_{\rm prior}$, its inverse, the
+    FoMs, the shifts and $\langle\chi^2\rangle$
+    (Sections~\ref{sec:cuts} and~\ref{sec:downstream}).  No evaluation
+    of the data vector at all.
+\end{enumerate}
 
 \begin{table}[tbp]
   \centering
-  \begin{tabular}{lrrrrr}
+  \small
+  \begin{tabular}{lll}
     \hline
-    layout & bins $N$ & cross pairs & entries $n$ & $\nbase$
-      & kept, shipped mask \\
+    array & shape & what it is \\
     \hline
-    $\Delta d_{\rm com} = 62$~Mpc & $76$ & $97$  & $9{,}964$  & $547$ & $5{,}309$ \\
-    $\Delta z = 0.02$             & $90$ & $133$ & $12{,}614$ & $645$ & $7{,}621$ \\
-    $\Delta z = 0.05$             & $36$ & $52$  & $5{,}459$  & $267$ & $2{,}982$ \\
-    $\Delta z = 0.2$              & $10$ & $13$  & $2{,}014$  & $85$  & $744$ \\
+    \multicolumn{3}{l}{\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us A\us DERIVATIVES\us 1.pkl}
+      (32~MB)} \\
+    \texttt{m0} & $9{,}964$ & the fiducial band powers $m(p_0)$ \\
+    \texttt{D} & $9{,}964 \times 20$ & stencil columns: 7 cosmology, 7 $\sigma_v$,
+      6 $B_g$ (check only) \\
+    \texttt{ops['b1']} & $9{,}964 \times 76$ & column $i$: $\partial m/\partial b_{1,i}$,
+      the linear bias of bin $i$ alone \\
+    \texttt{ops['b2']} & $9{,}964 \times 76$ & column $i$: $\partial m/\partial b_{2,i}$ \\
+    \texttt{ops['bs2']} & $9{,}964 \times 76$ & column $i$: $\partial m/\partial b_{s^2,i}$ \\
+    \texttt{ops['a0']} & $9{,}964 \times 76$ & column $i$: $\partial m/\partial \alpha_{0,i}$,
+      per $h^{-2}\,{\rm Mpc}^2$ \\
+    \texttt{T} & $9{,}964 \times 76$ & column $i$: $\partial m/\partial \SNzi$ \\
+    \texttt{b1}, \texttt{b2}, \texttt{bs2} & $76$ each & the fiducial
+      $b_{1,i}$, $b_{2,i}$, $b_{s^2,i}$ of every bin \\
+    \multicolumn{3}{l}{\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us A\us SN2\us 1.pkl}
+      (12~MB)} \\
+    \texttt{T2} & $9{,}964 \times 76$ & column $i$: $\partial m/\partial \SNti$ \\
+    \multicolumn{3}{l}{\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us B\us TEMPLATES\us 1.pkl}
+      (18~MB)} \\
+    \texttt{a2} & $9{,}964 \times 76$ & column $i$: $\partial m/\partial \alpha_{2,i}$,
+      per $h^{-2}\,{\rm Mpc}^2$ \\
     \hline
   \end{tabular}
-  \caption{The sizes of one layout's Fisher problem.  $n$: entries of
-    the data vector; $\nbase = 7N + 15$: columns of the base matrix;
-    last column: the band powers the shipped mask keeps, the largest
-    covariance block any cut uses.}
-  \label{tab:sizes}
+  \caption{The precomputed arrays of $\Delta d_{\rm com} = 62$~Mpc, in
+    Python's pickle files: $n = 9{,}964$ band powers and $N = 76$ bins.
+    Each $9{,}964 \times 76$ block is $6.1$~MB in double precision.  The
+    files also hold the settings they were made with, and the second and
+    third repeat \texttt{m0} and the $\partial m/\partial\SNzi$ columns
+    for the checks of Section~\ref{sec:limits}.  In the toy's notation,
+    \texttt{ops['b1']} is $[u_1, \ldots, u_N]$ and \texttt{ops['b2']} is
+    $[v_1, \ldots, v_N]$.}
+  \label{tab:arrays}
 \end{table}
+
+\paragraph{What makes the disk part stale.}
+Only what changes the knobs' responses: the fiducial point, the
+likelihood settings (accuracy, options, parameter files) and the code.
+The fingerprint of Section~\ref{sec:accuracy} catches changes of the
+input; a change of the code needs a flag set by hand
+(Section~\ref{sec:usage}).  The recipe $\mM$, the priors, the scale cut
+and the covariance file do not make it stale.
+
+\subsection{How many data-vector evaluations, and how long}
+\label{sec:evals}
+
+Counted in the builders and the Fisher module, the base of one layout
+takes
+\begin{equation}
+  N_{\rm eval} \;=\; 1 + 4\,N_{\rm stencil}
+  + 4\,N_{\rm batch}\,N_{\rm fam} + (2\,N_{\rm batch} + 2) + 1
+  \label{eq:neval}
+\end{equation}
+evaluations of the data vector, term by term in Table~\ref{tab:count}.
+It is $156$ on every layout, because no term grows with the number of
+bins.
+
+\begin{table}[tbp]
+  \centering
+  \begin{tabular}{lll}
+    \hline
+    term & what it is & evaluations \\
+    \hline
+    $1$ & the fiducial vector & $1$ \\
+    $4\,N_{\rm stencil}$ & $20$ stencil parameters: 7 cosmology, 7 $\sigma_v$, 6 $B_g$
+      & $80$ \\
+    $4\,N_{\rm batch}\,N_{\rm fam}$ & $4$ batches, $4$ families
+      $\{b_{1,i}\}$, $\{b_{2,i}\}$, $\{b_{s^2,i}\}$, $\{\alpha_{0,i}\}$ & $64$ \\
+    $2\,N_{\rm batch} + 2$ & $\{\alpha_{2,i}\}$: $2$ per batch, plus a fiducial
+      vector before and after & $10$ \\
+    $1$ & the fiducial run of the $\{\SNti\}$ templates & $1$ \\
+    \hline
+    & total & $156$ \\
+    \hline
+  \end{tabular}
+  \caption{The evaluations behind one layout's base.  The $\{\SNzi\}$
+    and $\{\SNti\}$ templates cost no evaluation beyond a fiducial one.}
+  \label{tab:count}
+\end{table}
+
+\paragraph{The cost of one evaluation.}
+Each evaluation is a complete data vector: CAMB, then CosmoLike's
+non-Limber projection of every thin bin.  Its cost depends mostly on
+$g$, the refinement factor of the comoving-distance grid on which the
+non-Limber projection integrates (Section~\ref{sec:accuracy}).
+Table~\ref{tab:time} gives the times the convergence study measured on
+$\Delta z = 0.05$ ($36$ bins), on AC power.  The MCMC settings are those
+of the example yamls used for Markov-chain Monte Carlo runs, the
+sampling of the full likelihood.
+
+\begin{table}[tbp]
+  \centering
+  \begin{tabular}{lcr}
+    \hline
+    configuration & grid factor $g$ & seconds per evaluation \\
+    \hline
+    MCMC settings                 & $32$  & $3.9$ \\
+    reference, grid lowered       & $64$  & $11.4$ \\
+    reference                     & $128$ & $17.0$ \\
+    reference, grid raised        & $256$ & $28.0$ \\
+    reference, grid raised        & $512$ & $48.4$ \\
+    candidate final configuration & $256$ & $19.5$ \\
+    \hline
+  \end{tabular}
+  \caption{The cost of one data-vector evaluation on $\Delta z = 0.05$,
+    measured by the convergence study on AC power with no other heavy job
+    running, except the $g = 256$ reference run, which started while one
+    other job was running.  The candidate final configuration ran $130$
+    evaluations in $42$ minutes.  Section~\ref{sec:accuracy} describes
+    the configurations.}
+  \label{tab:time}
+\end{table}
+
+\paragraph{The total time.}
+The base of a layout takes $N_{\rm eval} \times t_{\rm eval}$, with
+$t_{\rm eval}$ the time of one evaluation.  At the candidate final
+configuration:
+\begin{itemize}
+  \item $\Delta z = 0.05$, from the measured $t_{\rm eval}$:
+    $156 \times 19.5$~s $\approx 51$ minutes.
+  \item The other layouts, a rough estimate that scales $t_{\rm eval}$
+    with the number of bins: $\Delta d_{\rm com} = 62$~Mpc
+    ($76$ bins) $156 \times 41$~s $\approx 1.8$ hours;
+    $\Delta z = 0.02$ ($90$ bins) $156 \times 49$~s $\approx 2.1$ hours;
+    $\Delta z = 0.2$ ($10$ bins) $156 \times 5.4$~s $\approx 14$ minutes.
+\end{itemize}
+The four layouts then take about five hours.  The recompute at the
+final settings will replace these estimates by measured times
+(Section~\ref{sec:accuracy}).
 
 \section{Derivative accuracy}
 \label{sec:accuracy}
 
 \paragraph{Why a derivative needs more than a $\chi^2$.}
-Every evaluation of $m$ carries numerical noise: the integration
-grids, the non-Limber $\chi$ grid and CAMB's tolerances change the
-vector by small amounts that are not smooth in the parameters.  A
-finite difference divides that noise by the step, so a setting that
-converges a $\chi^2$ (the MCMC criterion is $|\Delta\chi^2| < 0.2$) can
-leave a derivative noisy.  The noise biases the forecast one way.  A
-column $d_j + e_j$, with $e_j$ its noise, gives
-$F_{jj} = (d_j + e_j)\T\Cov^{-1}(d_j + e_j)$, whose average exceeds the
-true value by $\langle e_j\T\Cov^{-1}e_j\rangle > 0$: noise looks like
-information, and the FoM comes out too high.
+Every evaluation of $m$ carries numerical noise: the integration grids,
+the non-Limber distance grid and CAMB's tolerances change the vector by
+small amounts that do not vary smoothly with the parameters.  A finite
+difference divides that noise by the step, so a setting that converges
+a $\chi^2$ (the MCMC criterion is $|\Delta\chi^2| < 0.2$) can leave a
+derivative noisy.
+
+The noise biases the forecast one way.  A column $d_j + e_j$, with $e_j$
+its noise, gives $F_{jj} = (d_j + e_j)\T\Cov^{-1}(d_j + e_j)$, whose
+average exceeds the true value by $\langle e_j\T\Cov^{-1}e_j\rangle > 0$:
+noise looks like information, and the FoM comes out too high.
 
 The convergence study, \texttt{tests/studies/run\us fisher\us
 derivatives.py}, measures this on $\Delta z = 0.05$ for the paper model,
 model B + tilts on the pessimistic prior.  It scores the marginalized
-errors of $w_0$, $w_a$, $\Omega_m$ and $A_s$, both FoMs and the shifts of
-the break-test truths at $\kmax = 0.075$ and $0.2\hMpc$.  The MCMC
-settings raise ${\rm FoM}(w_0, w_a)$ by $57\%$ at $0.075\hMpc$ and by
-$10\%$ at $0.2\hMpc$, although their fiducial vector differs from the
-reference by only $\Delta\chi^2 = 0.015$.  The old central-difference
-caches gave ${\rm FoM}(w_0, w_a) = 0.227$ at $0.075\hMpc$ on this layout,
-against $0.157$ converged.
+errors of $w_0$, $w_a$, $\Omega_m$ and $A_s$, both FoMs, and the shifts
+of the break-test truths (truths that carry a term the fit lacks or
+holds with a prior; the correlated-prior note, ``Model B and the reach
+of model A''), at $\kmax = 0.075$ and $0.2\hMpc$.  The MCMC settings
+raise ${\rm FoM}(w_0, w_a)$ by $57\%$ at $0.075\hMpc$ and by $10\%$ at
+$0.2\hMpc$, although their fiducial vector differs from the reference by
+only $\Delta\chi^2 = 0.015$.
 
-\paragraph{The reference and the ladder.}
-The reference configuration sets every control high: CosmoLike's
-\texttt{accuracyboost} $4$ and \texttt{integration\us accuracy} $2$, the
-low-rank engine's rank $8$ and multipole cap $2000$, a $\chi$-grid factor
-$g = 128$, and CAMB's \texttt{AccuracyBoost} $2.0$,
-\texttt{k\us per\us logint} $30$ and transfer $k_{\rm max} = 80\,{\rm
-Mpc}^{-1}$.  Here $g$ is the product
+\paragraph{The reference, and one control at a time.}
+The reference configuration sets every accuracy control high:
+CosmoLike's \texttt{accuracyboost} $4$ and \texttt{integration\us
+accuracy} $2$, the low-rank engine's rank $8$ (the number of terms kept
+in its sum) and multipole cap $2000$, a grid factor $g = 128$, and
+CAMB's \texttt{AccuracyBoost} $2.0$, \texttt{k\us per\us logint} $30$
+and maximum wavenumber $80\,{\rm Mpc}^{-1}$.  Here $g$ is the product
 $\texttt{accuracyboost} \times \texttt{nonlimber\us accuracyboost}$, and
-the non-Limber projection samples the comoving distance at $511\,g + 1$
-points; the MCMC value on $\Delta z = 0.05$ is $g = 32$.  Each other
-configuration lowers one control, and $g$ is also raised to $256$.
+the non-Limber projection integrates over $511\,g + 1$ comoving
+distances; the MCMC value on $\Delta z = 0.05$ is $g = 32$.  Each other
+configuration lowers one control, and $g$ is also raised to $256$ and
+$512$.
 
 \paragraph{The noise of one evaluation.}
-Through five equally spaced stencil points, the fourth difference
+Through five equally spaced stencil points, the combination
 $m(-2) - 4m(-1) + 6m(0) - 4m(1) + m(2)$ of a smooth vector is of order
 $\epsilon^4$ times its fourth derivative, negligible at these steps,
 while noise independent from point to point gives it
-$1 + 16 + 36 + 16 + 1 = 70$ times the variance of one point.  Whitened
-by the covariance and divided by $\sqrt{70}$, its norm estimates the
-noise of one evaluation in $\sqrt{\chi^2}$ units (Table~\ref{tab:noise}).
+$1 + 16 + 36 + 16 + 1 = 70$ times the variance of one point.  The study
+whitens it, multiplying by $L^{-1}$ with $\Cov = LL\T$, so that every
+entry counts in units of the data errors, and divides its length by
+$\sqrt{70}$.  The result is the noise of one evaluation in
+$\sqrt{\chi^2}$ units (Table~\ref{tab:noise}).
+
 At the MCMC settings the $\Omega_m$, $w_0$ and $w_a$ columns are seven
 to twelve times noisier than the $H_0$ column, which does not change
-with the grid.  The finer $\chi$ grid quiets $w_0$ and $w_a$ most: the
-$w_a$ noise falls fortyfold from the MCMC settings to $g = 256$.
+with the grid.  The finer grid quiets $w_0$ and $w_a$ most: the $w_a$
+noise falls fortyfold from the MCMC settings to $g = 256$.
 
 \begin{table}[tbp]
   \centering
@@ -381,11 +1081,11 @@ $w_a$ noise falls fortyfold from the MCMC settings to $g = 256$.
   \end{tabular}
   \caption{The noise of one evaluation along each stencil parameter,
     in $\sqrt{\chi^2}$ units, on $\Delta z = 0.05$.  The rows with a
-    $\chi$-grid factor $g$ keep every other control at the reference.}
+    grid factor $g$ keep every other control at the reference.}
   \label{tab:noise}
 \end{table}
 
-\paragraph{The $\chi$ grid dominates.}
+\paragraph{The distance grid dominates.}
 Table~\ref{tab:grid} gives the offset of ${\rm FoM}(w_0, w_a)$ from its
 value at $g = 256$, every other control at the reference.  Swapping
 single columns between configurations shows where the offset comes
@@ -396,7 +1096,7 @@ per-bin and $\sigma_v$ columns move the FoM by less than $0.1\%$.
   \centering
   \begin{tabular}{lcc}
     \hline
-    $\chi$-grid factor $g$ & $\kmax = 0.075\hMpc$ & $\kmax = 0.2\hMpc$ \\
+    grid factor $g$ & $\kmax = 0.075\hMpc$ & $\kmax = 0.2\hMpc$ \\
     \hline
     $32$ (MCMC)       & $+38\%$  & $+6.7\%$ \\
     $64$ (old caches) & $+31\%$  & $+5.1\%$ \\
@@ -415,29 +1115,34 @@ The truncation error of a stencil grows with the step, as $\epsilon^4$
 for five points, while the noise it divides falls as $1/\epsilon$.  A
 derivative is converged when neither matters: when the FoMs, the errors
 and the shifts stay put as the step changes, every step scaled
-together, and as the stencil changes order.  At $g = 128$ the
-five-point stencil at $h/2$ raises the FoM by $18\%$, the noise divided
-by a smaller step.  At $g = 256$ the FoM is flat within about $\pm1\%$
-(${\rm FoM}(\Omega_m, 10^9 A_s)$ within $\pm1.4\%$) from $h/2$ to $3h$,
-and the three-point stencil agrees with the five-point one.  The
-tolerance on the FoMs is about $1$ to $2\%$; $g = 128$ agrees with
-$g = 256$ to $0.9\%$ only at $h = 0.02$, so it stays a documented
-cross-check, and the final tier uses $g = 256$ on this layout.
+together, and as the stencil changes from three points to five.
+
+At $g = 128$ the five-point stencil at $h/2$ raises the FoM by $18\%$:
+the noise divided by a smaller step.  At $g = 256$ the FoM is flat
+within about $\pm1\%$ (${\rm FoM}(\Omega_m, 10^9 A_s)$ within $\pm1.4\%$)
+from $h/2$ to $3h$, and the three-point stencil agrees with the
+five-point one.  The tolerance on the FoMs is about $1$ to $2\%$;
+$g = 128$ agrees with $g = 256$ to $0.9\%$ only at $h = 0.02$, so it
+stays a documented cross-check, and the final tier uses $g = 256$ on
+this layout.
 
 \paragraph{The CAMB halofit patch.}
-Halofit finds the nonlinear scale by bisection on $\sigma(R)$, the rms
-linear density contrast smoothed on the scale $R$; stock CAMB stops at
-$|\sigma(R) - 1| \le 10^{-3}$.  Where the bisection stops jumps between
-nearby cosmologies and shifts the nonlinear power spectrum by about
-$0.3\%$, a noise that a finite difference divides by its step.  Cocoa's
-installation key \texttt{PATCH\us CAMB\us HALOFIT\us TOLERANCE}, on by
-default, tightens the test to $10^{-7}$.  The final tier requires it:
-the builders stop at start unless \texttt{halofit.f90} holds the
+Halofit is CAMB's fitting formula for the nonlinear matter power
+spectrum.  It finds the nonlinear scale by bisection (repeated halving
+of an interval) on $\sigma(R)$, the rms linear density contrast smoothed
+on the scale $R$; stock CAMB stops at $|\sigma(R) - 1| \le 10^{-3}$.
+Where the bisection stops jumps between nearby cosmologies and shifts
+the nonlinear power spectrum by about $0.3\%$, a noise that a finite
+difference divides by its step.
+
+Cocoa's installation key \texttt{PATCH\us CAMB\us HALOFIT\us TOLERANCE},
+on by default, tightens the test to $10^{-7}$.  The final tier requires
+it: the builders stop at start unless \texttt{halofit.f90} holds the
 $10^{-7}$ test and the compiled CAMB library is newer than that file
 (\texttt{check\us halofit\us patch}).
 
 \paragraph{Two tiers.}
-The project fixes two accuracy tiers, which
+The project fixes two sets of accuracy settings, two tiers, which
 \texttt{derivative\us settings} returns per layout.
 \begin{itemize}
   \item \textbf{Exploration}: fast settings for quick looks; its FoMs
@@ -448,14 +1153,21 @@ The project fixes two accuracy tiers, which
     runtime is not a criterion.
 \end{itemize}
 Both tiers use five-point stencils for every stencil and per-bin column,
-and exact templates for $\SNz$, $\SNt$ and $\alpha_2$.  Each cache
-records its tier and settings, and a fingerprint
-(\texttt{settings\us fingerprint}): the sha256 of the resolved cobaya
-input, which is the example yaml merged with the likelihood's options
-and parameter files, the accuracy settings, the priors and the ties
-between parameters, together with the fiducial point and the tier.
-Unlike a comparison of file names, it changes when a yaml is edited
-under the same name and stays the same when a file only moves.
+and exact templates for $\{\SNzi\}$, $\{\SNti\}$ and $\{\alpha_{2,i}\}$.
+The caches on disk today are the exploration tier, made with central
+differences for the four per-bin families (on $\Delta z = 0.05$ they
+gave ${\rm FoM}(w_0, w_a) = 0.227$ at $0.075\hMpc$, against $0.157$
+converged), and the builders refuse them until the final-tier recompute.
+
+Each cache records its tier, its settings, and a fingerprint
+(\texttt{settings\us fingerprint}): a 64-character code (a sha256 hash)
+computed from the full model input, so that any change of the input
+changes the code.  The input is the example yaml merged with the
+likelihood's options and parameter files, the accuracy settings, the
+priors and the ties between parameters, together with the fiducial point
+and the tier.  Unlike a comparison of file names, the fingerprint changes
+when a yaml is edited under the same name, and stays the same when a
+file only moves.
 
 \medskip
 \noindent
@@ -464,219 +1176,281 @@ under the same name and stays the same when a file only moves.
   \item The full final settings of each layout: CosmoLike's
     \texttt{accuracyboost} and \texttt{integration\us accuracy}, the
     low-rank rank and multipole cap, and CAMB's \texttt{AccuracyBoost},
-    $k$ sampling and transfer $k_{\rm max}$.
+    $k$ sampling and maximum wavenumber.
   \item The step check on $\Delta d_{\rm com} = 62$~Mpc at $g = 256$.
-  \item The comparison with DerivKit (adaptive polynomial fits;
-    Cocoa's \texttt{DERIVKIT} keys; \texttt{get\us ddv\us dkit}).
-  \item The agreement of the production route, setter interception
+  \item The comparison with DerivKit, an external package that fits
+    polynomials through many points (Cocoa's \texttt{DERIVKIT} keys;
+    \texttt{get\us ddv\us dkit}).
+  \item The agreement of the production route, the wrapped setter
     (Section~\ref{sec:operators}), with the study's route, which unties
     the per-bin parameters and steps them through the likelihood.
+  \item The measured time of the final-tier recompute on each layout,
+    to replace the estimates of Section~\ref{sec:evals}.
 \end{itemize}}
 
-\section{A model is a matrix}
+\section{The models of the notebooks as matrices}
 \label{sec:models}
 
-Every parameter of the models moves the per-bin operators in a fixed
-linear way at the fiducial point.  By the chain rule its derivative is
-a fixed combination of base columns, and for all parameters together
-\begin{equation}
-  \mD \;=\; \mB\,\mM ,
-  \label{eq:dbm}
-\end{equation}
-with $\mM$ an $\nbase \times \npar$ matrix of numbers that the notebooks
-write down without any evaluation (\texttt{variant\us columns} in the
-model B notebook; Figure~\ref{fig:schematic}).  The column of $\mM$ for
-each kind of parameter:
+The toy's recipes carry over to the real models, with seven bias
+families instead of two and six groups (BGS, LRG1, LRG2, LRG3, ELG1,
+ELG2) instead of one.  Every model is a matrix $\mM$ of
+Eq.~\eqref{eq:dbm} on the same $\mB$, written down without any
+evaluation (\texttt{variant\us columns} in the model B notebook).
+Figure~\ref{fig:schematic} draws its structure.  Its columns:
 \begin{itemize}
-  \item \textbf{Cosmology and $\sigma_v$}: a unit vector that picks the
-    stencil column.
-  \item \textbf{A group offset.}  Model A sets
-    $b_{2,i} = b_2^{\rm L}(b_{1,i}) + \Delta_{2,g}$ in every bin $i$ of
-    group $g$, with $b_2^{\rm L}$ the Lazeyras et al.\
-    fit~\cite{Lazeyras2016}, so
-    $\partial m/\partial \Delta_{2,g} = \sum_{i \in g}
-    \partial m/\partial b_{2,i}$: ones on the $b_2$ entries of the
-    group's bins.  The tidal offset $\Delta_{s,g}$ and the group's
-    $\alpha_0$, $\alpha_2$, $\SNz$ and $\SNt$ are built the same way on
-    their own blocks.
-  \item \textbf{A tilt.}  The + tilts variants let an offset change
-    linearly across the group,
-    $\Delta_{2,i} = \Delta_{2,g} + t_{2,g}(\bar{z}_i - \bar{z}_g)$, with
-    $\bar{z}_g$ the mean of the group's $\bar{z}_i$, so
-    $\partial m/\partial t_{2,g} = \sum_{i \in g}
-    (\bar{z}_i - \bar{z}_g)\,\partial m/\partial b_{2,i}$: the same
-    entries, weighted by $\bar{z}_i - \bar{z}_g$.  Tilts exist in groups
-    of more than one bin and have flat priors; $\SNz$ and $\SNt$ never
-    tilt.
-  \item \textbf{The per-bin amplitude with its calibration slopes.}  The
-    linear bias of bin $i$ is parametrized by
-    $\beta_i = b_{1,i}\,D(\bar{z}_i)$, equal to $B_g$ at the fiducial
-    point.  $b_2$ follows $b_1$ through $b_2^{\rm L}$, and $\bstwo$
-    through co-evolution,
-    $b_{s^2,i} = -\tfrac{4}{7}(b_{1,i} - 1) + \Delta_{s,g}$, so
+  \item \textbf{Cosmology and $\sigma_v$}: unit vectors, as $\theta$ in
+    the toy.
+  \item \textbf{A group offset}: ones on the rows of the group's bins in
+    its family's block, as $\Delta_{2,g}$ in the toy.  The offsets
+    $\Delta_{2,g}$ and $\Delta_{s,g}$ sit on the $b_{2,i}$ and
+    $b_{s^2,i}$ blocks, and the group's $\alpha_{0,g}$, $\alpha_{2,g}$,
+    ${\rm SN}_{0,g}$ and ${\rm SN}_{2,g}$ on the $\alpha_{0,i}$,
+    $\alpha_{2,i}$, $\SNzi$ and $\SNti$ blocks.
+  \item \textbf{A tilt}: the weights $\bar{z}_i - \bar{z}_g$ on the same
+    rows, as $t_{2,g}$ in the toy.  Model A + tilts tilts $\Delta_{2,g}$,
+    $\Delta_{s,g}$ and $\alpha_{0,g}$, and model B + tilts also
+    $\alpha_{2,g}$, in every group of more than one bin, with flat
+    priors; ${\rm SN}_{0,g}$ and ${\rm SN}_{2,g}$ never tilt.
+  \item \textbf{The per-bin amplitude}: as $\beta_i$ in the toy, plus
+    the tidal bias, which follows $b_{1,i}$ by co-evolution (the relation
+    for galaxies that form with no tidal bias and then move with the
+    matter), $b_{s^2,i} = -\tfrac{4}{7}(b_{1,i} - 1) + \Delta_{s,g}$.  The column
+    has three entries:
     \begin{equation}
       \frac{\partial m}{\partial \beta_i} \;=\;
       \frac{1}{D(\bar{z}_i)} \left[
         \frac{\partial m}{\partial b_{1,i}}
         + b_2^{\rm L\,\prime}(b_{1,i})\,\frac{\partial m}{\partial b_{2,i}}
-        - \frac{4}{7}\,\frac{\partial m}{\partial b_{s^2,i}} \right] ,
+        - \frac{4}{7}\,\frac{\partial m}{\partial b_{s^2,i}} \right] .
       \label{eq:chain}
     \end{equation}
-    with $b_2^{\rm L\,\prime}$ the slope of the fit: three entries, on
-    bin $i$'s $b_1$, $b_2$ and $\bstwo$ columns.
   \item \textbf{The growth-tied prior}: one amplitude per group,
     $b_{1,i} = B_g/D(\bar{z}_i)$, whose column is the sum of the group's
     $\beta_i$ columns.
-  \item \textbf{Free per bin.}  A comparison fit, on the free
-    linear-bias prior, frees every higher-order parameter in every bin:
-    one $\Delta_{2,i}$, $\Delta_{s,i}$, $\alpha_{0,i}$, $\alpha_{2,i}$,
-    ${\rm SN}_{0,i}$ and ${\rm SN}_{2,i}$ per bin, each a unit vector on
-    its per-bin block, with the Gaussian width $w_g$ that the model
-    gives the group parameter.
-  \item \textbf{Free per bin, $\sqrt{N}$-scaled}: the same columns with
-    widths $w_g\sqrt{N_g}$, $N_g$ the number of bins in the group.  The
-    mean of $N_g$ independent per-bin values then has the width $w_g$
-    of the group parameter, so the comparison isolates what the grouping
-    buys.
+  \item \textbf{Free per bin, and $\sqrt{N}$-scaled}: as in the toy, for
+    all six families, on the free linear-bias prior; the widths are the
+    group parameter's $w_g$, or $w_g\sqrt{N_g}$ with $N_g$ the number of
+    bins in the group.
 \end{itemize}
 
 The four variants of the notebooks are four matrices $\mM$ on one
-$\mB$: model A (one $\Delta_2$, $\Delta_s$, $\alpha_0$, $\SNz$ and
-$\SNt$ per group, nothing on the $\alpha_2$ block), model A + tilts
-(with the tilts of $\Delta_2$, $\Delta_s$ and $\alpha_0$), model B
-(adds $\alpha_2$ per group and widens the offset priors) and model B +
-tilts (which also tilts $\alpha_2$).  Switching between them, or to any
-other model built from the same operators, needs no likelihood
-evaluation.
+$\mB$: model A (one $\Delta_{2,g}$, $\Delta_{s,g}$, $\alpha_{0,g}$,
+${\rm SN}_{0,g}$ and ${\rm SN}_{2,g}$ per group, nothing on the
+$\alpha_{2,i}$ block), model A + tilts, model B (adds one
+$\alpha_{2,g}$ per group and widens the offset priors) and model B +
+tilts.  On $\Delta d_{\rm com} = 62$~Mpc, model A has
+$\npar = 14 + 5 \times 6 + 76 = 120$ parameters (the cosmology and
+$\sigma_v$, five families in six groups, one amplitude per bin), and
+model B + tilts $14 + 6 \times 6 + 4 \times 6 + 76 = 150$.  Switching
+between them, or to any other model built from the same knobs, needs
+no evaluation of the data vector.
 
 \begin{figure}[tbp]
   \centering
   \begin{tikzpicture}[x=1cm, y=1cm, font=\small, >=stealth]
-    % --- the base matrix B (n x n_base); shaded rows: one cut
-    \foreach \ya/\yb in {0.3/0.8, 1.2/2.0, 2.4/2.7, 3.0/3.5}
-      \fill[oksky!35] (0,\ya) rectangle (3.2,\yb);
-    \draw[thick] (0,0) rectangle (3.2,3.8);
-    \foreach \x in {0.6,0.97,1.34,1.71,2.08,2.45,2.82}
-      \draw (\x,0) -- (\x,3.8);
-    \node[rotate=90, anchor=west, font=\scriptsize] at (0.3,3.85)
-      {cosmology, $\sigma_v$};
-    \foreach \x/\l in {0.785/$b_1$, 1.155/$b_2$, 1.525/$b_{s^2}$,
-        1.895/$\alpha_0$, 2.265/$\alpha_2$, 2.635/$\SNz$, 3.005/$\SNt$}
-      \node[rotate=90, anchor=west, font=\scriptsize] at (\x,3.85) {\l};
+    % ---------------- the base matrix B (n x n_base) ----------------
+    % shaded rows: the rows one cut keeps
+    \foreach \ya/\yb in {0.25/0.6, 1.0/1.6, 1.9/2.1, 2.35/2.6}
+      \fill[oksky!35] (0,\ya) rectangle (6.65,\yb);
+    % the 7 + 7 single stencil columns
+    \foreach \k in {1,...,13}
+      \draw[gray!60] ({0.1*\k},0) -- ({0.1*\k},2.8);
+    % the seven per-bin blocks, each N thin columns
+    \foreach \b in {0,...,6}
+      \foreach \k in {1,...,9}
+        \draw[gray!45] ({1.4 + 0.75*\b + 0.075*\k},0)
+          -- ({1.4 + 0.75*\b + 0.075*\k},2.8);
+    \foreach \x in {0.7, 1.4, 2.15, 2.9, 3.65, 4.4, 5.15, 5.9}
+      \draw[thick] (\x,0) -- (\x,2.8);
+    \draw[thick] (0,0) rectangle (6.65,2.8);
+    \node[font=\scriptsize] at (0.35,3.05) {$\theta_k$};
+    \node[font=\scriptsize] at (1.05,3.05) {$\sigma_{v,k}$};
+    \foreach \b/\l in {0/$b_{1,i}$, 1/$b_{2,i}$, 2/$b_{s^2,i}$,
+        3/$\alpha_{0,i}$, 4/$\alpha_{2,i}$, 5/$\SNzi$, 6/$\SNti$}
+      \node[font=\scriptsize] at ({1.775 + 0.75*\b},3.05) {\l};
+    \node[font=\scriptsize] at (3.3,3.5)
+      {one column per knob: $\partial m/\partial(\text{knob})$};
+    \node[anchor=east] at (-0.1,2.6) {$\mB$};
     \node[anchor=east, align=right, font=\scriptsize, text=okblue]
-      at (-0.1,1.9) {rows kept\\by cut $m$};
-    \node[below] at (1.6,0) {$\mB$: $n \times \nbase$, cached};
-    % --- times the model M (n_base x n_par); its rows are B's columns
-    \node at (3.7,1.9) {$\times$};
-    \draw[thick] (4.2,0.3) rectangle (6.2,3.5);
-    \foreach \u in {0.6,0.97,1.34,1.71,2.08,2.45,2.82}
-      \draw[gray!50] (4.2,3.5-\u) -- (6.2,3.5-\u);
-    \draw[gray!50, dashed] (4.5,0.3) -- (4.5,3.5);
-    \draw[gray!50, dashed] (5.4,0.3) -- (5.4,3.5);
-    % one column range per family of group parameters
-    \foreach \k in {1,...,5}
-      \draw[gray!35] ({4.5 + \k*0.15},0.3) -- ({4.5 + \k*0.15},2.53);
+      at (-0.1,1.3) {rows kept\\by cut $m$};
+    \node[anchor=east, font=\scriptsize] at (-0.1,0.3) {$n$ rows};
+    \draw[decorate, decoration={brace, mirror, amplitude=4pt}]
+      (0,-0.08) -- (1.4,-0.08)
+      node[midway, below=5pt, font=\scriptsize, align=center]
+      {$7 + 7$ single\\columns};
+    \draw[decorate, decoration={brace, mirror, amplitude=4pt}]
+      (1.4,-0.08) -- (2.15,-0.08);
+    \node[anchor=north west, font=\scriptsize, align=left]
+      at (1.55,-0.3)
+      {$N$ columns, one per bin:\\
+       $\partial m/\partial b_{1,1}, \ldots, \partial m/\partial b_{1,N}$;\\
+       every bias block likewise};
+    % ---------------- the recipe matrix M (n_base x n_par) ----------------
+    \draw[thick] (2.2,-6.8) rectangle (6.4,-2.6);
+    \foreach \y in {-2.95, -3.3, -3.8, -4.3, -4.8, -5.3, -5.8, -6.3}
+      \draw[gray!50] (2.2,\y) -- (6.4,\y);
+    \draw[gray!50, dashed] (2.9,-6.8) -- (2.9,-2.6);
+    \draw[gray!50, dashed] (4.9,-6.8) -- (4.9,-2.6);
     % identity on the cosmology and sigma_v
-    \draw[okorange, very thick] (4.2,3.5) -- (4.5,2.9);
-    % one staircase per family of group parameters (three groups drawn)
-    \foreach \k/\top in {0/2.53, 1/2.16, 2/1.79, 3/1.42, 4/1.05, 5/0.68}
-      \foreach \j in {0,1,2}
-        \draw[okorange, very thick]
-          ({4.5 + \k*0.15 + 0.03 + \j*0.045}, {\top - \j*0.1233})
-          -- ++(0,-0.1233);
+    \draw[okorange, very thick] (2.2,-2.6) -- (2.9,-3.3);
+    % one group g: offsets (ones) and tilts (weights, drawn as a gradient)
+    \fill[okorange] (3.06,-3.97) rectangle (3.14,-4.13);
+    \shade[bottom color=okorange, top color=okorange!10]
+      (3.36,-3.97) rectangle (3.44,-4.13);
+    \fill[okorange] (3.66,-4.47) rectangle (3.74,-4.63);
+    \shade[bottom color=okorange, top color=okorange!10]
+      (3.96,-4.47) rectangle (4.04,-4.63);
+    \fill[okorange] (4.26,-4.97) rectangle (4.34,-5.13);
+    \node at (4.62,-4.55) {$\cdots$};
     % the per-bin amplitudes: three diagonals (the chain rule)
-    \draw[okorange, very thick] (5.4,2.9) -- (6.2,2.53);
-    \draw[okorange, very thick] (5.4,2.53) -- (6.2,2.16);
-    \draw[okorange, very thick] (5.4,2.16) -- (6.2,1.79);
-    \node[rotate=90, anchor=west, font=\scriptsize] at (4.35,3.55)
-      {cosmology, $\sigma_v$};
-    \node[rotate=90, anchor=west, font=\scriptsize] at (4.95,3.55)
-      {group parameters};
-    \node[rotate=90, anchor=west, font=\scriptsize] at (5.8,3.55)
-      {amplitudes $\beta_i$};
-    \node[below] at (5.2,0.3) {$\mM$: $\nbase \times \npar$};
-    % --- equals the model's derivatives D (n x n_par)
-    \node at (6.7,1.9) {$=$};
-    \draw[thick] (7.2,0) rectangle (8.8,3.8);
-    \node[below] at (8.0,0) {$\mD$: $n \times \npar$};
-    % --- the cut reduced once to G_m, then every model and prior
-    \draw[->, thick] (1.6,-0.6) -- (1.6,-1.25)
-      node[midway, right, font=\scriptsize]
-      {kept rows, $f_A\,\Cov_{KK}^{-1}$: once per cut};
-    \draw[thick] (0.6,-3.3) rectangle (2.6,-1.3);
-    \node at (1.6,-2.3) {$\mG_m$};
-    \node[below] at (1.6,-3.3) {$\nbase \times \nbase$};
-    \draw[->, thick] (2.75,-2.3) -- (6.15,-2.3)
-      node[midway, above, font=\scriptsize]
-      {$\mM\T \mG_m \mM + F_{\rm prior}$}
-      node[midway, below, font=\scriptsize] {every model and prior};
-    \draw[thick] (6.3,-2.9) rectangle (7.5,-1.7);
-    \node at (6.9,-2.3) {$F$};
-    \node[below] at (6.9,-2.9) {$\npar \times \npar$};
-    \draw[->, thick] (7.65,-2.3) -- (8.45,-2.3);
-    \node[anchor=west, align=left, font=\scriptsize] at (8.55,-2.3)
-      {FoM, $\sigma$,\\ shifts $\delta p$,\\ $\langle\chi^2\rangle$};
+    \draw[okorange, very thick] (4.9,-3.3) -- (6.4,-3.8);
+    \draw[okorange, very thick] (4.9,-3.8) -- (6.4,-4.3);
+    \draw[okorange, very thick] (4.9,-4.3) -- (6.4,-4.8);
+    % row labels: the knobs, in the column order of B
+    \foreach \y/\l in {-2.775/$\theta_k$, -3.125/$\sigma_{v,k}$,
+        -3.55/$b_{1,i}$, -4.05/$b_{2,i}$, -4.55/$b_{s^2,i}$,
+        -5.05/$\alpha_{0,i}$, -5.55/$\alpha_{2,i}$,
+        -6.05/$\SNzi$, -6.55/$\SNti$}
+      \node[anchor=east, font=\scriptsize] at (2.15,\y) {\l};
+    % column labels: the model's parameters
+    \node[rotate=90, anchor=west, font=\scriptsize] at (2.55,-2.55)
+      {$\theta_k, \sigma_{v,k}$};
+    \foreach \x/\l in {3.1/$\Delta_{2,g}$, 3.4/$t_{2,g}$,
+        3.7/$\Delta_{s,g}$, 4.0/$t_{s,g}$, 4.3/$\alpha_{0,g}$}
+      \node[rotate=90, anchor=west, font=\scriptsize] at (\x,-2.55) {\l};
+    \node[font=\scriptsize] at (5.65,-2.4) {$\beta_1, \ldots, \beta_N$};
+    \node[anchor=east, align=right, font=\scriptsize] at (1.2,-4.7)
+      {$\mM$: a row\\per knob,\\a column per\\parameter};
+    \node[below] at (4.3,-6.8) {$\mM$: $\nbase \times \npar$};
+    % ---------------- the flow: one cut, then every model ----------------
+    \tikzset{flow/.style={draw, rounded corners, align=center,
+        font=\scriptsize, text width=4.0cm, inner sep=4pt}}
+    \node[flow] (cut) at (9.8,1.6)
+      {cut $m$ keeps the rows $K_m$\\(shaded in $\mB$)};
+    \node[flow] (gram) at (9.8,-0.3)
+      {$\mG_m = f_A\,\mB_K\T\,\Cov_{KK}^{-1}\,\mB_K$\\
+       $\nbase \times \nbase$, once per cut};
+    \node[flow] (fish) at (9.8,-2.4)
+      {$F = \mM\T\mG_m\mM + F_{\rm prior}$\\
+       $\npar \times \npar$, every model and prior};
+    \node[flow] (out) at (9.8,-4.3)
+      {FoM, $\sigma$, shifts $\delta p$, $\langle\chi^2\rangle$};
+    \draw[->, thick] (cut) -- (gram);
+    \draw[->, thick] (gram) -- (fish);
+    \draw[->, thick] (fish) -- (out);
+    \draw[->, thick] (6.75,1.6) -- (cut.west);
+    \draw[->, thick] (6.5,-4.0) -- (fish.west);
+    \node[font=\scriptsize, align=center] at (9.8,-5.8)
+      {$\mD = \mB\mM$ are the model's\\derivatives; the scan never\\forms them};
   \end{tikzpicture}
-  \caption{How the notebooks assemble a Fisher matrix.  Top: a model is
-    a matrix $\mM$ on the cached base columns $\mB$, and $\mD = \mB\mM$
-    are its derivatives.  Orange: the nonzero entries of $\mM$, which
-    are the identity on the cosmology and $\sigma_v$, one staircase per
-    family of group parameters (ones on the bins of each group; three
-    groups drawn), and three diagonals for the per-bin amplitudes
-    $\beta_i$ (the chain rule).  Bottom: a cut keeps some rows of $\mB$
-    (shaded) and is reduced once to $\mG_m$; every model and prior at
-    that cut is then $\mM\T\mG_m\mM$ plus priors.  The check column of
-    $\mB$ is not drawn.}
+  \caption{How the notebooks assemble a Fisher matrix.  Top left: the
+    base $\mB$ of one layout.  Each cosmological parameter $\theta_k$ and
+    each velocity dispersion $\sigma_{v,k}$ has one column; every bias
+    family is a block of $N$ columns, one per thin bin (thin gray
+    lines).  Shaded: the rows a cut $m$ keeps.  Bottom left: a model's
+    recipe matrix $\mM$, with a row per knob, in the column order of
+    $\mB$, and a column per model parameter.  Orange marks its nonzero
+    entries: the identity on the cosmology and $\sigma_v$; for one group
+    $g$, the offset $\Delta_{2,g}$ (ones on the group's bins in the
+    $b_{2,i}$ block), its tilt $t_{2,g}$ (the weights
+    $\bar{z}_i - \bar{z}_g$, drawn as a gradient), and likewise
+    $\Delta_{s,g}$, $t_{s,g}$ and $\alpha_{0,g}$; and three diagonals for
+    the per-bin amplitudes $\beta_i$, Eq.~\eqref{eq:chain}.  Right: a cut
+    is reduced once to $\mG_m$, and every model and prior at that cut is
+    $\mM\T\mG_m\mM$ plus priors.  The check column of $\mB$ is not
+    drawn.}
   \label{fig:schematic}
 \end{figure}
 
 \section{A scale cut is a set of rows}
 \label{sec:cuts}
 
-A cut at $\kmax$, quoted at $z = 0$, cuts bin $i$ at $\kmax/D(\bar{z}_i)$
-by the non-Limber ultraviolet-fraction criterion of Saraivanov et
-al.~\cite{Saraivanov2026}, within the shipped mask: a band is kept while
-less than $5\%$ of it comes from the power spectrum above that
-wavenumber.  The cut changes no derivative; it selects the set $K_m$ of
-rows that cut $m$ keeps.  With $\mB_K$ the kept rows of $\mB$ and
-$\Cov_{KK}$ the kept block of the covariance,
-\begin{equation}
-  \mG_m \;=\; f_A\, \mB_K\T\, \Cov_{KK}^{-1}\, \mB_K
-  \label{eq:gram}
-\end{equation}
-is an $\nbase \times \nbase$ matrix that holds everything the data of
-cut $m$ say about the base columns.  The notebooks compute it once per
-cut (\texttt{layout\us grams}): they factorize $\Cov_{KK} = L L\T$ with
-$L$ lower triangular (the Cholesky factorization), solve
-$W = L^{-1}\mB_K$ by forward substitution, and form
-$\mG_m = f_A\, W\T W$.  The inverse covariance is never formed, which
-saves work and avoids amplifying round-off on an ill-conditioned
-block, and $\mG_m$ is symmetric and positive semidefinite by
-construction.  Each layout gets eight such matrices: the seven cuts
+A scale cut removes the band powers that small, nonlinear scales
+dominate.  A cut at $\kmax$, quoted at $z = 0$, cuts bin $i$ at
+$\kmax/D(\bar{z}_i)$, by the non-Limber ultraviolet-fraction criterion of
+Saraivanov et al.~\cite{Saraivanov2026} within the shipped mask: a band
+is kept while less than $5\%$ of it comes from the power spectrum above
+that wavenumber.  The Fisher matrix at a cut follows in four steps.
+\begin{enumerate}
+  \item The cut keeps a set $K_m$ of rows of $m$.  It drops the other
+    rows of $\mB$ and keeps every column: a cut never changes a
+    derivative.  $\mB_K$ is the kept rows of $\mB$, and $\Cov_{KK}$ the
+    kept block of the covariance.
+  \item The data part of the Fisher matrix of a model at this cut is
+    $F_{\rm data} = \mD_K\T\, f_A\,\Cov_{KK}^{-1}\, \mD_K$.  Since
+    $\mD_K = \mB_K\mM$,
+    \begin{equation}
+      F_{\rm data} \;=\; \mM\T \bigl(f_A\,\mB_K\T\,\Cov_{KK}^{-1}\,\mB_K\bigr)\mM
+      \;=\; \mM\T\, \mG_m\, \mM ,
+      \qquad
+      \mG_m \;\equiv\; f_A\, \mB_K\T\, \Cov_{KK}^{-1}\, \mB_K .
+      \label{eq:fdata}
+    \end{equation}
+    $\mG_m$ is what the data of cut $m$ say about every pair of knobs:
+    its entry $(a, b)$ is the information shared by knobs $a$ and $b$.
+  \item $\mG_m$ contains neither $\mM$ nor a prior.  It depends only on
+    the base, the cut and the covariance, so the notebooks compute it
+    once per cut, and every model and prior at that cut reuses it.
+  \item The priors add their precision:
+    $F = \mM\T\mG_m\mM + F_{\rm prior}$.
+\end{enumerate}
+
+\paragraph{The toy, cut.}
+Suppose cut $m$ drops the cross spectrum $C^{23}$, which fails the
+ultraviolet criterion.  Then:
+\begin{itemize}
+  \item $K = \{C^{11}, C^{22}, C^{33}, C^{12}\}$, and $\mB_K$ is the
+    $4 \times 7$ matrix of the first four rows of Eq.~\eqref{eq:toyB};
+  \item $\Cov_{KK}$ is $4 \times 4$, and $\mG_m$ is $7 \times 7$;
+  \item the group model's $F$ is
+    $(6 \times 7)(7 \times 7)(7 \times 6) = 6 \times 6$, and the free
+    model's $7 \times 7$, both from the same $\mG_m$.
+\end{itemize}
+After this cut, $v_3$ survives only on $C^{33}$.
+
+\paragraph{The real sizes.}
+On $\Delta d_{\rm com} = 62$~Mpc, $\mB$ is $9{,}964 \times 547$.  The
+shipped mask keeps $5{,}309$ rows, so $\mB_K$ is $5{,}309 \times 547$,
+$\Cov_{KK}$ is $5{,}309 \times 5{,}309$ and $\mG_m$ is $547 \times 547$.
+$F$ is $120 \times 120$ for model A and $150 \times 150$ for model B +
+tilts.  The large block is handled once per cut, and the $12$ Fisher
+systems at that cut (four variants, three priors; a Fisher system is one
+Fisher matrix with its inverse and results) reuse $\mG_m$.
+
+\paragraph{How $\mG_m$ is computed.}
+The notebooks compute $\mG_m$ in \texttt{layout\us grams}, without ever
+inverting the covariance:
+\begin{enumerate}
+  \item they write $\Cov_{KK} = L L\T$ with $L$ lower triangular, the
+    Cholesky factorization, a matrix analogue of the square root;
+  \item they solve $L\,W = \mB_K$ for $W$ row by row, which a
+    triangular $L$ allows (forward substitution);
+  \item they form $\mG_m = f_A\, W\T W$.
+\end{enumerate}
+This saves work, avoids amplifying round-off when the covariance is
+ill-conditioned (when its inverse magnifies small errors), and makes
+$\mG_m$ symmetric with no negative information, by construction.
+
+Each layout gets eight such matrices: the seven cuts
 $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$, and the shipped mask alone,
-the reference of the information test below.  With
-Eq.~\eqref{eq:dbm}, the data part of the Fisher matrix of any model at
-any cut is
-\begin{equation}
-  F_{\rm data} \;=\; \mD_K\T\, f_A\,\Cov_{KK}^{-1}\, \mD_K
-  \;=\; \mM\T\, \mG_m\, \mM .
-  \label{eq:fdata}
-\end{equation}
-The model A notebook, which works at one cut, forms $\mD = \mB\mM$
-explicitly and multiplies it by the inverse of the kept covariance
-block; the two routes agree (Section~\ref{sec:limits}).
+the reference of the information test below.  The model A notebook,
+which works at one cut, forms $\mD = \mB\mM$ explicitly and multiplies
+it by the inverse of the kept covariance block; the two routes agree
+(Section~\ref{sec:limits}).
 
 \paragraph{The priors.}
-$F_{\rm prior}$ adds precision and needs no data.  The diagonal
-Gaussian priors, all centered on zero, sit on $\sigma_v$ (from the
-example yaml) and on the model's group parameters; the counterterm
-widths, $0.5/\kmax^2$, change with the cut, so the diagonal is rebuilt
-for each cut (\texttt{prior\us diagonal}).  The linear-bias prior acts
-on the block of the $\beta_i$: the baseline and pessimistic priors add
-the projected precision of the memory model, group by group
+$F_{\rm prior}$ adds precision and needs no data.  The diagonal Gaussian
+priors, all centered on zero, sit on $\sigma_v$ (from the example yaml)
+and on the model's group parameters.  The counterterm widths,
+$0.5/\kmax^2$, change with the cut, so the diagonal is rebuilt for each
+cut (\texttt{prior\us diagonal}).
+
+The linear-bias prior acts on the block of the $\beta_i$.  The baseline
+and pessimistic priors add, group by group, the penalty of their memory
+model on bin-to-bin wiggles of the linear biases
 (\texttt{group\us bias\us precision}; the correlated-prior note,
 sections ``What the prior charges'' and ``How the prior enters the
-Fisher matrix''), the free prior adds nothing, and the growth-tied
+Fisher matrix'').  The free prior adds nothing, and the growth-tied
 prior is a change of $\mM$.
 
 \paragraph{Parameters without data.}
@@ -690,50 +1464,66 @@ cosmological parameter without data gives no fit.
 \paragraph{The pseudo-inverse.}
 A plain inverse fails in one more case.  On
 $\Delta d_{\rm com} = 62$~Mpc at $\kmax = 0.075\hMpc$ only $7$ of the
-$18$ BGS bins keep a band, and under model A + tilts on the free prior
-the flat-prior BGS tilts leave one combination of parameters with no
+$18$ BGS bins keep a band.  Under model A + tilts on the free prior, the
+flat-prior BGS tilts then leave one combination of parameters with no
 information at all.  Along such a direction a plain inverse amplifies
 round-off by about $10^{16}$; it once produced a spurious $2\sigma$
-shift.  \texttt{stable\us inverse} therefore scales $F$ to unit
-diagonal, $\tilde{F} = S F S$ with $S = {\rm diag}(F)^{-1/2}$, so that
-the parameters' units do not matter, diagonalizes
-$\tilde{F} = V \Lambda V\T$, drops the directions whose eigenvalue is
-below $10^{-12}$ of the largest, and returns
-\begin{equation}
-  F^{-1} \;=\; S\, V_\kappa\, \Lambda_\kappa^{-1}\, V_\kappa\T\, S ,
-  \label{eq:pinv}
-\end{equation}
-with $\kappa$ the kept directions.  A dropped direction must leave
-$(w_0, w_a)$, $\Omega_m$ and $A_s$ alone: the scan gives no fit when one
-touches them by more than $10^{-6}$.
+shift.
+
+\texttt{stable\us inverse} therefore takes a pseudo-inverse, an inverse
+that skips the directions with no information:
+\begin{enumerate}
+  \item it scales $F$ to unit diagonal, $\tilde{F} = S F S$ with
+    $S = {\rm diag}(F)^{-1/2}$, so that the parameters' units do not
+    matter;
+  \item it diagonalizes $\tilde{F} = V \Lambda V\T$: the columns of $V$
+    are the parameter combinations measured independently, and the
+    eigenvalues in $\Lambda$ the information in each;
+  \item it drops the directions whose eigenvalue is below $10^{-12}$ of
+    the largest, and returns
+    \begin{equation}
+      F^{-1} \;=\; S\, V_\kappa\, \Lambda_\kappa^{-1}\, V_\kappa\T\, S ,
+      \label{eq:pinv}
+    \end{equation}
+    with $\kappa$ the kept directions.
+\end{enumerate}
+A dropped direction must leave $(w_0, w_a)$, $\Omega_m$ and $A_s$ alone:
+the scan gives no fit when one touches them by more than $10^{-6}$.
 
 \section{Everything downstream reuses $\mG$}
 \label{sec:downstream}
 
 Once $\mG_m$ is built, nothing in the notebooks touches an $n \times n$
-matrix or the likelihood again.  $F$ is Eq.~\eqref{eq:fdata} plus the
+matrix or the data vector again.  $F$ is Eq.~\eqref{eq:fdata} plus the
 priors, inverted by Eq.~\eqref{eq:pinv}, and $\sigma_j$ and the FoMs
 follow as in Section~\ref{sec:linear}.
 
 \paragraph{Shifts.}
-A truth that departs from the fitted model moves the data by $\delta m$.
-When $\delta m$ lies in the span of the base columns, $\delta m = \mB c$
-with $c$ a vector of $\nbase$ coefficients: $\alpha_2 = 12.5\aunit$ in
-every bin is $c = 12.5$ on the $\alpha_2$ block, an offset truth puts
-its values on the $b_2$ and $\bstwo$ blocks, and a fractional drift $\delta_i$ of the
-linear biases is $c = \sum_i \beta_i\,\delta_i\, \mM_{\beta_i}$, with
-$\mM_{\beta_i}$ the column of Eq.~\eqref{eq:chain}.  To first order the
-fit moves by
+A truth is an assumed true universe that departs from the fitted model,
+for example one with $\alpha_{2,i} \neq 0$ when the fit has no
+$\alpha_{2,i}$.  It moves the data by $\delta m$.  When $\delta m$ lies
+in the span of the base columns, $\delta m = \mB c$, with $c$ a vector
+of $\nbase$ coefficients:
+\begin{itemize}
+  \item $\alpha_{2,i} = 12.5\aunit$ in every bin $i$ is $c = 12.5$ on the
+    $\alpha_{2,i}$ block;
+  \item an offset truth puts its values on the $b_{2,i}$ and
+    $b_{s^2,i}$ blocks;
+  \item a fractional drift $\delta_i$ of the linear biases is
+    $c = \sum_i \beta_i\,\delta_i\, \mM_{\beta_i}$, with
+    $\mM_{\beta_i}$ the column of Eq.~\eqref{eq:chain}.
+\end{itemize}
+To first order the best fit then moves by
 \begin{equation}
   \delta p \;=\; F^{-1} \mD\T \Cov^{-1} \delta m
   \;=\; F^{-1} \mM\T\, \mG_m\, c
   \label{eq:shift}
 \end{equation}
 (the correlated-prior note, ``The shift formula'').  $\delta m = \mB c$
-is exact for the $\alpha_2$, $\SNz$ and $\SNt$ truths, whose terms are
-linear, and first order for truths in $b_1$, $b_2$ and $\bstwo$, since
-the band powers are quadratic in the biases.  A truth costs one product
-with $\mG_m$.
+is exact for the $\alpha_{2,i}$, $\SNzi$ and $\SNti$ truths, whose terms
+are linear, and first order for truths in $b_{1,i}$, $b_{2,i}$ and
+$b_{s^2,i}$, since the band powers are quadratic in them.  A truth costs
+one product with $\mG_m$.
 
 \paragraph{Random truths.}
 Eq.~\eqref{eq:shift} is linear in $c$, so a family of random truths
@@ -755,17 +1545,23 @@ correlated-prior note, ``The test statistic''):
     + R\,\Sigma_\theta\,R\T + N_w\right)\right] .
   \label{eq:chi2}
 \end{equation}
-Here $\Delta_{\rm drift}$ is the $(w_0, w_a)$ shift of the known drift
-alone, in units of the ellipse; $\Sigma$ the covariance of the truth's
-linear-bias residuals; $R$ and $\Sigma_\theta$ the response to, and the
-prior variance of, any other parameter drawn at random ($\alpha_2$ per
-group in the random test of model B); and $N_w$ the $(w_0, w_a)$ block
-of $F^{-1}F_0F^{-1}$, the share of the data noise and the Gaussian
-priors, with $F_0$ the Fisher matrix without the linear-bias
-precision.  The notebooks report $\chidof$, with $n_{\rm dof} = 2$ for
-$(w_0, w_a)$, and $n_{\rm dof} = 1$ for $\Omega_m$ or $A_s$ with that
-parameter's own row; $1$ means honest error bars.  The random draws
-only make the percentile bars of the figures.
+\begin{itemize}
+  \item $\Delta_{\rm drift}$ is the $(w_0, w_a)$ shift, in units of the
+    ellipse, of the known drift alone: the smooth change of the linear
+    biases with redshift that physics predicts.
+  \item $\Sigma$ is the covariance of the truth's remaining scatter of
+    the linear biases.
+  \item $R$ and $\Sigma_\theta$ are the response to, and the prior
+    variance of, any other parameter drawn at random ($\alpha_{2,g}$ per
+    group in the random test of model B).
+  \item $N_w$ is the $(w_0, w_a)$ block of $F^{-1}F_0F^{-1}$, the share of
+    the data noise and the Gaussian priors, with $F_0$ the Fisher matrix
+    without the linear-bias prior.
+\end{itemize}
+The notebooks report $\chidof$, with $n_{\rm dof} = 2$ for $(w_0, w_a)$,
+and $n_{\rm dof} = 1$ for $\Omega_m$ or $A_s$ with that parameter's own
+row; $1$ means honest error bars.  The random draws only make the
+percentile bars of the figures.
 
 \paragraph{The cost.}
 Each $\mG_m$ costs one Cholesky factorization of at most $7{,}621$
@@ -775,35 +1571,34 @@ system then costs $\mM\T\mG_m\mM$, with $\nbase \le 645$ and
 $\npar \le 164$ (model B + tilts on $\Delta z = 0.02$), about
 $2\,\nbase^2 \npar \approx 1.4\times10^{8}$ operations, plus the
 diagonalization of an $\npar \times \npar$ matrix: a fraction of a
-second.  The $\kmax$ scan of the model B notebook has $336$ systems
-(four layouts, seven cuts, four variants, and the baseline,
-pessimistic and free priors; the growth-tied prior fails the accuracy
-test and is left out), $324$ with a fit and $12$ without any band.  In
-operations, all of them together cost less than the Cholesky
-factorizations of one layout.  Without the decomposition, each variant
-would need its own derivatives, at the cost of
-Section~\ref{sec:holds} per layout, and each truth its own data
+second.
+
+The $\kmax$ scan of the model B notebook has $336$ systems (four
+layouts, seven cuts, four variants, and the baseline, pessimistic and
+free priors; the growth-tied prior fails the accuracy test and is left
+out), $324$ with a fit and $12$ without any band.  In operations, all of
+them together cost less than the Cholesky factorizations of one layout.
+Without the base, each variant would need its own derivatives, at the
+cost of Section~\ref{sec:evals} per layout, and each truth its own data
 vector.
 
 \section{Limits and checks}
 \label{sec:limits}
 
-\paragraph{What needs new likelihood evaluations.}
+\paragraph{What needs new evaluations of the data vector.}
 \begin{itemize}
-  \item \textbf{A physical term outside the span of $\mB$.}  A term
-    that is no combination of the per-bin operators and templates,
-    such as a nonzero third-order bias $b_3$ or redshift-space one-loop
-    terms (which CosmoLike lacks), needs new base columns.  A new
-    combination of existing operators, such as a quadratic tilt or
-    another calibration slope at the same fiducial values, is only a
-    new $\mM$.
+  \item \textbf{A physical term outside the base.}  A term that is no
+    combination of the knobs, such as a nonzero third-order bias or
+    redshift-space one-loop terms (which CosmoLike lacks), needs new
+    base columns.  A new combination of existing knobs, such as a
+    quadratic tilt or another calibration slope at the same fiducial
+    values, is only a new $\mM$.
   \item \textbf{A different fiducial point.}  Every derivative is taken
     at $p_0$.  A new fiducial cosmology, new fiducial biases, or a
-    calibration law that moves the fiducial $b_2$ needs new base
+    calibration law that moves the fiducial $b_{2,i}$ needs new base
     columns, and a new covariance, which sits at the one-loop fiducial.
-    A new covariance alone needs no likelihood evaluation: the
-    notebooks rebuild every $\mG_m$ from the current covariance file at
-    every run.
+    A new covariance alone needs no evaluation: the notebooks rebuild
+    every $\mG_m$ from the current covariance file at every run.
   \item \textbf{Dependence beyond first order.}  The forecast is the
     curvature at $p_0$, and Eq.~\eqref{eq:shift} is first order in
     $\delta m$.  The band powers are quadratic in the biases, so a large
@@ -816,28 +1611,29 @@ vector.
 \paragraph{The checks that guard the machinery.}
 \begin{itemize}
   \item \textbf{The chain rule.}  The per-bin columns, obtained through
-    the intercepted setter and summed over a group,
+    the wrapped setter and summed over a group,
     $\sum_{i \in g} \partial m/\partial \beta_i$ with
     Eq.~\eqref{eq:chain}, must equal the stencil derivative
     $\partial m/\partial B_g$, obtained through the full likelihood.
     The two routes share no evaluation; they agree to
     $1.2\times10^{-7}$ of the stencil column's largest entry (the
     correlated-prior note, ``Numerical checks'').
-  \item \textbf{Bitwise template checks.}  The order-$0$ templates of a
-    template run must equal the cached $\SNz$ templates exactly, and the
-    run's fiducial vector the cached one.  $\mB$ carries the difference
-    of the two vectors as its check column, so their $\Delta\chi^2$ is a
-    diagonal entry of $\mG$ on the shipped mask; it is zero.  After the
-    $\alpha_2$ steps the vector must equal the one before bit for bit
-    (the setter is back at zero), and the forward and backward
-    $\alpha_2$ differences must agree (the term is linear).
+  \item \textbf{Bit-for-bit template checks.}  The $\partial
+    m/\partial\SNzi$ templates of a template run must equal the cached
+    ones exactly, and the run's fiducial vector the cached one.  $\mB$
+    carries the difference of the two vectors as its check column, so
+    their $\Delta\chi^2$ is a diagonal entry of $\mG$ on the shipped
+    mask; it is zero.  After the $\alpha_{2,i}$ steps the vector must
+    equal the one before bit for bit (the setter is back at zero), and
+    the forward and backward $\alpha_{2,i}$ differences must agree (the
+    term is linear).
   \item \textbf{The matched-prior check.}  When the truth's linear-bias
     scatter equals the fit's prior and every other parameter is drawn
-    from the fit's own priors, the projected precision $\mathsf{P}$
-    obeys $\mathsf{P}\Sigma\mathsf{P} = \mathsf{P}$, and the scatter
-    and noise terms of Eq.~\eqref{eq:chi2} add up to exactly
-    $n_{\rm dof}$ (the correlated-prior note, ``The test statistic'').
-    The notebooks verify this on every system to round-off, which tests
+    from the fit's own priors, the scatter and noise terms of
+    Eq.~\eqref{eq:chi2} must add up to exactly $n_{\rm dof}$: the
+    widening the prior gives the ellipse equals the error the scatter
+    causes (the correlated-prior note, ``The test statistic'').  The
+    notebooks verify this on every system to round-off, which tests
     $\mG$, $\mM$, the priors and the pseudo-inverse together.  The
     model A FoMs of the model B notebook's scan also equal those of the
     model A notebook, assembled by the other route of
@@ -851,40 +1647,33 @@ vector.
 \section{Using the caches}
 \label{sec:usage}
 
-The caches live in \texttt{chains/}, which git ignores: a fresh clone
-recomputes them (hours), and every later run reads them.  Their names
-start with \texttt{EXAMPLE\us EVALUATE\us FISHER}, and
-$\langle n\rangle = 1$ to $4$ numbers the layouts in the order
-$\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$, $0.2$.
+The caches are the pickle files of Table~\ref{tab:arrays}, one set per
+layout, in \texttt{chains/}, which git ignores: a fresh clone recomputes
+them (hours), and every later run reads them.  Their names start with
+\texttt{EXAMPLE\us EVALUATE\us FISHER}, and $\langle n\rangle = 1$ to
+$4$ numbers the layouts in the order $\Delta d_{\rm com} = 62$~Mpc,
+$\Delta z = 0.02$, $0.05$, $0.2$.
 \begin{itemize}
   \item \texttt{\us SCALE\us CUTS.pkl}, written by the linear notebook,
     \texttt{EXAMPLE\us EVALUATE\us FISHER.ipynb}: the bands each
     ultraviolet-fraction cut keeps, at
     $\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$; the scans use the seven
     cuts up to $0.2$.
-  \item \texttt{\us MODEL\us A\us DERIVATIVES\us<n>.pkl}, written by the
-    model A notebook,
-    \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us A.ipynb}, flag
-    \texttt{RECOMPUTE}: the fiducial point and vector, the $20$ stencil
-    columns, the per-bin columns of $b_1$, $b_2$, $\bstwo$ and
-    $\alpha_0$, the $\SNz$ templates, the fiducial per-bin biases, the
-    group of each bin, the Gaussian prior widths, and the settings with
-    their tier and fingerprint.
-  \item \texttt{\us MODEL\us A\us SN2\us<n>.pkl}, model A notebook, flag
-    \texttt{RECOMPUTE\us SN2}: the $\SNt$ templates, kept apart so that
-    the derivative caches stay as they are.
+  \item \texttt{\us MODEL\us A\us DERIVATIVES\us<n>.pkl} and
+    \texttt{\us MODEL\us A\us SN2\us<n>.pkl}, written by the model A
+    notebook, \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us
+    A.ipynb}, with the flags \texttt{RECOMPUTE} and
+    \texttt{RECOMPUTE\us SN2}.
   \item \texttt{\us MODEL\us B\us TEMPLATES\us<n>.pkl}, written by the
-    model B notebook,
-    \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us B.ipynb}, flag
-    \texttt{RECOMPUTE\us TEMPLATES}: the $\alpha_2$ columns and the
-    $\SNz$ and $\SNt$ templates.
+    model B notebook, \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us
+    B.ipynb}, with the flag \texttt{RECOMPUTE\us TEMPLATES}.
 \end{itemize}
 The model A and B notebooks cache no Fisher matrix, $\mG_m$ or FoM:
 these depend on the covariance and are rebuilt at every run.
 
 \paragraph{The flags.}
 With a flag at \texttt{False}, the default, a notebook reads an
-existing cache after the settings check and computes a missing one;
+existing cache after the cache check and computes a missing one;
 \texttt{True} recomputes it and overwrites the file.  The layouts are
 computed cheapest first, and each cache is written as soon as its
 layout is done, so an interrupted run keeps the finished layouts.  The
@@ -893,25 +1682,25 @@ stops when one is missing or was made with other settings.  For a
 fresh clone, run the linear notebook (for the cuts), then the model A
 notebook, then the model B notebook.
 
-\paragraph{What invalidates a cache.}
+\paragraph{What makes a cache stale.}
 \begin{itemize}
-  \item \textbf{Detected automatically}: any change of the resolved
-    cobaya input that the fingerprint hashes (a likelihood option, a
-    CAMB argument, a prior, a tie between parameters, the fiducial
-    point), of the tier, of the stencil rule or of the steps.  The
-    notebook stops and asks for the flag.  A file that moves or is
-    renamed with the same content keeps its cache.
+  \item \textbf{Detected automatically}: any change of the model input
+    that the fingerprint covers (a likelihood option, a CAMB argument, a
+    prior, a tie between parameters, the fiducial point), of the tier,
+    of the stencil rule or of the steps.  The notebook stops and asks
+    for the flag.  A file that moves or is renamed with the same content
+    keeps its cache.
   \item \textbf{Not detected, so set the flag by hand}: a change of the
     code itself (the likelihood's Python, CosmoLike, CAMB beyond the
-    halofit check), since the fingerprint hashes the input, not the
+    halofit check), since the fingerprint covers the input, not the
     code.  No check compares a cache with the current code unless a
     cache is recomputed; the fiducial-vector check then catches a change
     that moves the fiducial vector.
   \item \textbf{Needs no recomputation}: a new covariance, a new prior
-    or prior width, a new model built from the cached operators, and
-    any cut already in the cut cache.  A $\kmax$ outside it needs the
-    linear notebook to compute that cut (CosmoLike's split of each band
-    into the power below and above the cut), but no new derivative.
+    or prior width, a new model built from the cached knobs, and any cut
+    already in the cut cache.  A $\kmax$ outside it needs the linear
+    notebook to compute that cut (CosmoLike's split of each band into the
+    power below and above the cut), but no new derivative.
 \end{itemize}
 
 \begin{thebibliography}{99}
