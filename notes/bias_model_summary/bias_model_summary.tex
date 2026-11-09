@@ -5,6 +5,7 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{xcolor}
 \usepackage[font=small,labelfont=bf,labelsep=period]{caption}
 \usepackage[hidelinks]{hyperref}
 
@@ -34,6 +35,15 @@
 % drift sizes, survey numbers) and the properties of the templates,
 % which the derivatives do not change.
 %
+% Every macro of Part 1 written as \refresh{...} comes from the
+% final-tier run of EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb of 2026-11-09
+% (section 9, cells 26-30, and the summary_* data.json it wrote).  A
+% later rerun refreshes them again: set \numbersfinalfalse to print them
+% in red with a note under the title while they are stale, put in the
+% new values, set \numbersfinaltrue, rebuild, and check the statements
+% listed further down.  Part 2, Part 3 and the LSST Y1 values are not
+% refreshed by that run.
+%
 % Layout suffixes: Com = Delta d_com = 62 Mpc, Two = Delta z = 0.02,
 % Five = Delta z = 0.05, Twenty = Delta z = 0.2.  Low = k_max = 0.075,
 % High = k_max = 0.2 (h/Mpc, at z = 0).
@@ -42,66 +52,102 @@
 % refresh:
 %   - DESI C_ell^gg alone stays below LSST Y1 3x2pt in both FoMs at
 %     every cut (Summary; Section 5);
-%   - from k_max = 0.075 on, FoM(w0, wa) of the thin layouts is several
-%     times that of Delta z = 0.05 and tens of times that of 0.2;
-%   - the largest shift is set mostly by alpha_2 on the three thinner
-%     layouts from k_max = 0.1 on, and by the offsets on Delta z = 0.2;
-%   - the per-bin version of width w lies above the model on most
-%     layouts; the version of width w sqrt(N) lies above it on
-%     Delta z = 0.2; the cost of untying falls from k_max = 0.075 to
-%     0.2 (Section 6).
+%   - the thin layouts carry most of the information: their
+%     FoM(w0, wa) is the largest at every cut from k_max = 0.075 on
+%     (Section 5);
+%   - alpha_2 sets the largest shift on Delta d_com = 62 Mpc and
+%     Delta z = 0.02 at every cut from k_max = 0.075 on, and the overall
+%     maximum (Summary; Section 5); the offsets set it on Delta z = 0.2
+%     (Section 5);
+%   - "per bin, group width" lies above the model on every layout at
+%     every cut from k_max = 0.075 on; "per bin, group width x sqrt(N)"
+%     lies above it on Delta z = 0.2; "per bin, x sqrt(N) + group tilt"
+%     stays at or below 1 (largest ratio 0.98); the costs fall from
+%     k_max = 0.075 to 0.2; correlated residuals cost more than
+%     independent per-bin terms on the three thinner layouts and nothing
+%     on Delta z = 0.2 (Section 6).
+% ---------------------------------------------------------------------
+% The refresh switch: \numbersfinalfalse prints every \refresh value in
+% red and the note under the title; \numbersfinaltrue prints them plain.
+\newif\ifnumbersfinal
+\numbersfinaltrue
+\newcommand{\refresh}[1]{\ifnumbersfinal#1\else\textcolor{red}{#1}\fi}
+% A value the exploration tier does not have yet.
+\newcommand{\pending}{[pending]}
 % ---------------------------------------------------------------------
 % Part 1: results.
 %
 % FoM(w0, wa) at k_max = 0.075 and 0.2 (summary_fom_kmax/data.json, fom)
-\newcommand{\FoMwLowCom}{1.29}
-\newcommand{\FoMwLowTwo}{1.34}
-\newcommand{\FoMwLowFive}{0.227}
-\newcommand{\FoMwLowTwenty}{0.0495}
-\newcommand{\FoMwHighCom}{10.9}
-\newcommand{\FoMwHighTwo}{13.9}
-\newcommand{\FoMwHighFive}{2.64}
-\newcommand{\FoMwHighTwenty}{0.289}
+\newcommand{\FoMwLowCom}{\refresh{0.411}}
+\newcommand{\FoMwLowTwo}{\refresh{0.244}}
+\newcommand{\FoMwLowFive}{\refresh{0.160}}
+\newcommand{\FoMwLowTwenty}{\refresh{0.0496}}
+\newcommand{\FoMwHighCom}{\refresh{7.54}}
+\newcommand{\FoMwHighTwo}{\refresh{8.43}}
+\newcommand{\FoMwHighFive}{\refresh{2.48}}
+\newcommand{\FoMwHighTwenty}{\refresh{0.288}}
 % FoM(Omega_m, 10^9 A_s) at k_max = 0.2 (summary_fom_kmax/data.json,
 % fom_om_as)
-\newcommand{\FoMoHighCom}{70.8}
-\newcommand{\FoMoHighTwo}{81.3}
-\newcommand{\FoMoHighFive}{23.1}
-\newcommand{\FoMoHighTwenty}{2.98}
+\newcommand{\FoMoHighCom}{\refresh{55.9}}
+\newcommand{\FoMoHighTwo}{\refresh{58.2}}
+\newcommand{\FoMoHighFive}{\refresh{21.8}}
+\newcommand{\FoMoHighTwenty}{\refresh{2.97}}
 % LSST Y1 3x2pt alone, FoM(w0, wa) and FoM(Omega_m, 10^9 A_s): the
 % lsst_y1 project's forecast (summary_fom_kmax/data.json, lsst_y1_*);
-% the DESI recompute leaves them unchanged
+% not refreshed, since the DESI recompute leaves them unchanged
 \newcommand{\LSSTw}{17.3}
 \newcommand{\LSSTo}{215}
 % The largest shift over the fixed truths, the maximum over (w0, wa),
 % Omega_m and A_s (summary_shifts_kmax/data.json, largest) [sigma]:
 % its smallest and largest values from k_max = 0.1 on over the three
-% thinner layouts, and its maximum on Delta z = 0.2 over every cut
-\newcommand{\ShiftThinMin}{0.32}
-\newcommand{\ShiftThinMax}{0.59}
-\newcommand{\ShiftWideMax}{0.23}
+% thinner layouts (0.329, Delta z = 0.05 at 0.15; 1.093, Delta z = 0.02
+% at 0.1, also the largest anywhere), and its maximum on Delta z = 0.2
+% over every cut.  Low*: the largest shift at k_max = 0.075 on
+% Delta d_com = 62 Mpc, Delta z = 0.02 and 0.05, set by alpha_2 on each;
+% NoAlphaLow: the largest shift at 0.075 on the two thin layouts over
+% the other truths (0.2245, Delta d_com = 62 Mpc).
+\newcommand{\ShiftThinMin}{\refresh{0.33}}
+\newcommand{\ShiftThinMax}{\refresh{1.09}}
+\newcommand{\ShiftWideMax}{\refresh{0.22}}
+\newcommand{\ShiftLowCom}{\refresh{0.99}}
+\newcommand{\ShiftLowTwo}{\refresh{0.57}}
+\newcommand{\ShiftLowFive}{\refresh{0.24}}
+\newcommand{\ShiftNoAlphaLow}{\refresh{0.22}}
 % The error-bar test under the known drifts plus a residual drawn from
-% the prior (EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, section 9): the largest
-% sqrt(<chi^2>/n_dof) over layouts and cuts, overall and for (w0, wa),
-% Omega_m and A_s, and the smallest coverage of the 1 sigma region
-\newcommand{\EtaMax}{1.023}
-\newcommand{\EtaW}{1.0125}
-\newcommand{\EtaOm}{1.0232}
-\newcommand{\EtaAs}{1.0034}
-\newcommand{\CoverMin}{67.1\%}
-% Untying (summary_fom_untied/data.json, ratio_fom).  The cost is
-% 1/ratio of the versions sqrtn_tilt and nested: its range on the two
-% thin layouts at k_max = 0.075, its range on the three thinner layouts
-% at 0.2, and its maximum on Delta z = 0.2 over every cut.  The gain is
-% the largest ratio of the version gauss over every layout and cut.
-% FoMwSmallCut bounds the model's own FoM(w0, wa) at k_max = 0.05.
-\newcommand{\UntieLowMin}{2.0}
-\newcommand{\UntieLowMax}{5.5}
-\newcommand{\UntieHighMin}{1.1}
-\newcommand{\UntieHighMax}{1.6}
-\newcommand{\UntieWideMax}{1.1}
-\newcommand{\UntieGainMax}{1.5}
-\newcommand{\FoMwSmallCut}{0.1}
+% the prior (EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, section 9): the
+% largest sqrt(<chi^2>/n_dof) over layouts and cuts, overall and for
+% (w0, wa), Omega_m and A_s, and the smallest coverage of the 1 sigma
+% region
+\newcommand{\EtaMax}{\refresh{1.028}}
+\newcommand{\EtaW}{\refresh{1.018}}
+\newcommand{\EtaOm}{\refresh{1.028}}
+\newcommand{\EtaAs}{\refresh{1.004}}
+\newcommand{\CoverMin}{\refresh{66.9\%}}
+% Untying (summary_fom_untied/data.json, ratio_fom, from k_max = 0.075
+% on).  A cost is 1/ratio.  CostNested*: the version nested ("per bin,
+% on top of the model"): Low* its range on the two thin layouts at
+% k_max = 0.075, High* its range on the three thinner layouts at 0.2.
+% CostCorr*: the version correlated_residuals ("correlated residuals on
+% top of the model"): LowTwo on Delta z = 0.02 at 0.075; on
+% Delta d_com = 62 Mpc that fit is not well defined at 0.075 (a gap in
+% the figure, cause not diagnosed), and MidCom is its cost there at 0.1;
+% High* its range on the three thinner layouts at 0.2; it equals the
+% model on Delta z = 0.2 (ratio 1).  WideMax: the largest cost of both
+% versions on Delta z = 0.2 at any cut.  GainMax: the largest ratio of
+% the version gauss ("per bin, group width"), Delta z = 0.02 at 0.075.
+% FoMwSmallCut bounds the model's own FoM(w0, wa) at k_max = 0.05
+% (largest 0.038, Delta z = 0.05).
+\newcommand{\CostNestedLowMin}{\refresh{1.17}}
+\newcommand{\CostNestedLowMax}{\refresh{1.25}}
+\newcommand{\CostNestedHighMin}{\refresh{1.05}}
+\newcommand{\CostNestedHighMax}{\refresh{1.09}}
+\newcommand{\CostCorrLowTwo}{\refresh{3.2}}
+\newcommand{\CostCorrMidCom}{\refresh{3.0}}
+\newcommand{\CostCorrHighMin}{\refresh{1.36}}
+\newcommand{\CostCorrHighMax}{\refresh{1.55}}
+\newcommand{\CostWideMax}{\refresh{1.1}}
+\newcommand{\UntieGainMax}{\refresh{2.2}}
+\newcommand{\FoMwSmallCut}{\refresh{0.04}}
 % ---------------------------------------------------------------------
 % Part 2: inputs and template properties (not moved by the recompute).
 %
@@ -161,7 +207,105 @@
 \newcommand{\NbinsTwenty}{10}
 \newcommand{\Nbands}{53}
 \newcommand{\KparCom}{0.075}
+% The measured cross pairs on Delta d_com = 62 Mpc: in all, in the DESI
+% pair list, and the added LRG3 x ELG1 pairs (notes/cross_correlations)
+\newcommand{\NcrossCom}{107}
+\newcommand{\NcrossDESI}{97}
+\newcommand{\NcrossExtra}{ten}
+% The correlation length of the residuals added in the untied version
+% "correlated residuals on top of the model" (b1's L)
+\newcommand{\LcorrHO}{0.05}
+% The toy example of Section 6: N bins of the group width of Delta_2
+% (wDtwo); the width of their average, wDtwo/sqrt(ToyN); and the factor
+% by which it is tighter than the group width
+\newcommand{\ToyN}{9}
+\newcommand{\ToyAvg}{2/3}
+\newcommand{\ToyFactor}{three}
 \newcommand{\kMask}{0.176}
+% ---------------------------------------------------------------------
+% Part 3: the Fisher machinery and its convergence (notes/fisher_machinery,
+% sections "The base", "Derivative accuracy", "A scale cut is a set of
+% rows").  These values are FINAL: they come from the convergence study
+% (tests/studies/run_fisher_derivatives.py) and the builders, and the
+% final run of the model B notebook does not refresh them.
+%
+% The stencil step (relative); the pseudo-inverse: the eigenvalue
+% threshold relative to the largest, and the largest component a
+% dropped direction may have on (w0, wa), Omega_m or A_s
+\newcommand{\StepH}{0.02}
+\newcommand{\PinvTol}{10^{-12}}
+\newcommand{\PinvTouch}{10^{-6}}
+% Batching: batches per layout, evaluations per per-bin family
+\newcommand{\Nbatch}{four}
+\newcommand{\NevalFamily}{16}
+% The MCMC chi^2 criterion; what MCMC-grade settings do to
+% FoM(w0, wa) on Delta z = 0.05 at k_max = 0.075 and 0.2; the inflation
+% of the earlier (exploration) derivatives on Delta d_com = 62 Mpc at
+% k_max = 0.075 (1.29 against 0.39)
+\newcommand{\MCMCdchi}{0.2}
+\newcommand{\ConvMCMCLow}{58\%}
+\newcommand{\ConvMCMCHigh}{11\%}
+\newcommand{\ConvOldCom}{three}
+% The grids: the converged grid, the study's starting grid, the final
+% grid, the MCMC grid of Delta z = 0.05 and the ratio of the last two;
+% the distances per unit of grid factor
+\newcommand{\GridConv}{512}
+\newcommand{\GridStart}{128}
+\newcommand{\GridFinal}{256}
+\newcommand{\GridMCMC}{32}
+\newcommand{\GridRatio}{eight}
+\newcommand{\GridUnit}{511}
+% The final settings: CosmoLike accuracyboost and integration_accuracy;
+% CAMB AccuracyBoost, k_per_logint, maximum wavenumber [1/Mpc]; the
+% halofit bisection tolerance, stock and patched
+\newcommand{\FinAccBoost}{3}
+\newcommand{\FinIntAcc}{1}
+\newcommand{\FinCambBoost}{2.0}
+\newcommand{\FinKlog}{30}
+\newcommand{\FinKmax}{60}
+\newcommand{\HalofitStock}{10^{-3}}
+\newcommand{\HalofitPatch}{10^{-7}}
+% The study's starting configuration (g = GridStart with every other
+% control raised; the grid scan holds these other controls): CosmoLike
+% accuracyboost and integration_accuracy, low-rank rank and multipole
+% cap, CAMB AccuracyBoost, k_per_logint, maximum wavenumber [1/Mpc].
+% It is not the final setting (g = GridFinal) and not the converged one
+% (g = GridConv).
+\newcommand{\StartAccBoost}{4}
+\newcommand{\StartIntAcc}{2}
+\newcommand{\StartRank}{8}
+\newcommand{\StartCap}{2000}
+\newcommand{\StartCambBoost}{2}
+\newcommand{\StartKlog}{30}
+\newcommand{\StartKmax}{80}
+% The final settings against the converged value on Delta z = 0.05:
+% FoM(w0, wa) and FoM(Omega_m, 10^9 A_s) at k_max = 0.075 and 0.2, the
+% largest change of a marginalized error, the largest change of a shift
+% [sigma]; the step independence from h/2 to 3h on Delta z = 0.05 and
+% on Delta d_com = 62 Mpc
+\newcommand{\ConvFoMwLow}{$+1.8\%$}
+\newcommand{\ConvFoMwHigh}{$-0.5\%$}
+\newcommand{\ConvFoMoLow}{$+1.6\%$}
+\newcommand{\ConvFoMoHigh}{$-0.5\%$}
+\newcommand{\ConvSigma}{1.6\%}
+\newcommand{\ConvShift}{0.007}
+\newcommand{\ConvStep}{1.6\%}
+\newcommand{\ConvStepCom}{0.3\%}
+% DerivKit: its least number of evaluations per column, and its
+% agreement with the stencils at the final settings
+\newcommand{\DkitPoints}{seven}
+\newcommand{\DkitAgree}{2.1\%}
+% The setter route against the study's untied-parameter route: b1, and
+% the stencil columns (b2, bs2 and alpha_0 agree exactly)
+\newcommand{\RouteBone}{5\times10^{-11}}
+\newcommand{\RouteStencil}{5\times10^{-14}}
+% The cost: evaluations of the data vector per layout, seconds per
+% evaluation at the final settings, hours per thin layout
+\newcommand{\Neval}{156}
+\newcommand{\TevalMin}{20}
+\newcommand{\TevalMax}{40}
+\newcommand{\HoursMin}{one}
+\newcommand{\HoursMax}{two}
 % =====================================================================
 
 \emergencystretch=2em
@@ -184,6 +328,11 @@
     redshift bins\par}
   \vspace{0.6em}
   {\large November 2026\par}
+  \ifnumbersfinal\else
+    \vspace{0.6em}
+    {\color{red}Numbers in red are being refreshed with the final-tier
+      Fisher derivatives.\par}
+  \fi
 \end{center}
 \vspace{1em}
 
@@ -217,16 +366,21 @@ alone grows from \FoMwLowCom{} and \FoMwLowTwo{} at
 $\kmax = 0.075\hMpc$ to \FoMwHighCom{} and \FoMwHighTwo{} at $0.2\hMpc$,
 below the \LSSTw{} of LSST Y1 3x2pt alone; ${\rm FoM}(\Omega_m, 10^9
 A_s)$ stays below LSST Y1 as well (Section~\ref{sec:forecast}).  Truths
-that hold one bias term at a full prior width in every bin move the fit
-by at most $\ShiftThinMax\sigma$.  Over random bias histories, the
-known drifts plus scatter drawn from the prior, the quoted error bars
-are honest at every cut and on every layout.
+inside the model's priors, each holding one bias term at a full prior
+width in every bin, move the fit by at most $\ShiftThinMax\sigma$; the
+largest shifts come from the line-of-sight counterterm $\alpha_2$,
+whose prior the constraint leans on at small $\kmax$.  Over random bias
+histories, the known drifts plus scatter drawn from the prior, the
+quoted error bars are honest at every cut and on every layout.
 
 \paragraph{What the grouping is worth.}
-Untying the bias bin by bin costs up to a factor of \UntieLowMax{} in
-${\rm FoM}(w_0, w_a)$ on the thin layouts at $\kmax = 0.075\hMpc$,
-while a per-bin prior that looks looser than the model gains
-spuriously from the slicing (Section~\ref{sec:grouping}).
+A per-bin prior that looks looser than the model gains information by
+accident, from the slicing alone, up to a factor of \UntieGainMax{} in
+${\rm FoM}(w_0, w_a)$.  Untied bins that keep the freedom of the wide
+samples cost a factor of \CostNestedLowMin{} to \CostNestedLowMax{} in
+${\rm FoM}(w_0, w_a)$ on the thin layouts at $\kmax = 0.075\hMpc$ with
+independent per-bin terms, and up to \CostCorrLowTwo{} with residuals
+correlated in redshift (Section~\ref{sec:grouping}).
 
 \section{Data and scale cut}
 \label{sec:data}
@@ -234,7 +388,11 @@ spuriously from the slicing (Section~\ref{sec:grouping}).
 The data are the DESI angular galaxy power spectra $C_\ell^{gg}$ in
 \Nbands{} bands of width $\Delta\ell = 10$ over $15 \le \ell \le 544$,
 with $\ell$ the multipole: the auto spectrum of every redshift bin and
-the cross spectra of neighboring and overlapping bins.  The galaxies
+the cross spectra of neighboring and overlapping bins.  On
+$\Delta d_{\rm com} = 62$~Mpc these are \NcrossCom{} pairs: the
+\NcrossDESI{} of the DESI forecast's pair list and \NcrossExtra{} LRG3$\times$ELG1
+pairs at the same redshift, whose Fingers-of-God-blurred kernels
+overlap (\texttt{notes/cross\_correlations}).  The galaxies
 form six tracer groups $g$, each a wide sample selected as a whole: BGS
 (the Bright Galaxy Survey), \mbox{LRG1--3} (luminous red galaxies) and
 \mbox{ELG1--2} (emission-line galaxies).  Four layouts slice them:
@@ -292,7 +450,8 @@ The band-power covariance is Gaussian, computed at the one-loop
 fiducial (every bin's linear bias on its group's trend, $b_2$ and
 $\bstwo$ on their calibrations, every other bias term zero) for
 \AreaCov{} square degrees, with its inverse rescaled to the forecast's
-\AreaSurvey{}.  The data vector sits at the same fiducial.
+\AreaSurvey{}.  The data vectors are the model's own prediction at
+that fiducial.
 
 \section{The bias model}
 \label{sec:model}
@@ -533,46 +692,69 @@ and \FoMwLowTwenty{} at $\kmax = 0.075\hMpc$ and \FoMwHighCom{},
 layout order ($\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$,
 $0.2$); ${\rm FoM}(\Omega_m, 10^9 A_s)$ at $0.2\hMpc$ is
 \FoMoHighCom{}, \FoMoHighTwo{}, \FoMoHighFive{} and \FoMoHighTwenty{}.
-The thin layouts carry the information: from $\kmax = 0.075\hMpc$ on,
-their ${\rm FoM}(w_0, w_a)$ is several times that of $\Delta z = 0.05$
-and tens of times that of $\Delta z = 0.2$.  LSST Y1 3x2pt alone gives
-\LSSTw{} and \LSSTo{}; DESI $C_\ell^{gg}$ alone stays below it in both
+The thin layouts carry most of the information.  LSST Y1 3x2pt alone
+gives \LSSTw{} and \LSSTo{}; DESI $C_\ell^{gg}$ alone stays below it in both
 FoMs at every cut.
 
 \begin{figure}[htbp]
-  \begin{minipage}[c]{3.43in}
+  \begin{minipage}[c]{3.46in}
     \includegraphics{plots/summary_fom_kmax/summary_fom_kmax.pdf}
   \end{minipage}\hfill
-  \begin{minipage}[c]{\dimexpr\linewidth-3.43in-\sidegap\relax}
+  \begin{minipage}[c]{\dimexpr\linewidth-3.46in-\sidegap\relax}
   \captionsetup{justification=raggedright,singlelinecheck=false}
   \caption{${\rm FoM}(w_0, w_a)$ (top) and
     ${\rm FoM}(\Omega_m, 10^9 A_s)$ (bottom) of DESI $C_\ell^{gg}$ alone
-    against $\kmax$.  Color, line width and marker: the layouts.  Gray
-    dashed line (top) and text (bottom): LSST Y1 3x2pt alone.  On
+    against $\kmax$.  Color, line width and marker: the layouts.  Text in
+    each panel: LSST Y1 3x2pt alone.  On
     $\Delta z = 0.02$ the cut at $0.05$ keeps no band.  \kmaxclause}
   \label{fig:fom}
   \end{minipage}
 \end{figure}
 
 \paragraph{A stress test.}
-Figure~\ref{fig:shifts} confronts the model with truths at the edge of
-its priors, each holding one term at a full prior width with the same
+Figure~\ref{fig:shifts} confronts the model with truths inside its
+priors, each holding one term at a full prior width with the same
 value in every bin: $\alpha_2 = \pm\ctFrac/\kmax^2$, $\SNt = \pm\wSNt$,
 or $(\Delta_2, \Delta_s) = \pm(\wDtwo, \wDs)$; a fourth, the
-calibration drift, is absorbed exactly by the tilts.  A fit's shift is its linear response
-(Section~\ref{sec:method}), in units of its own marginalized ellipse
-for $(w_0, w_a)$ and of $\sigma$ for $\Omega_m$ and $A_s$.  From
-$\kmax = 0.1\hMpc$ on, the largest shift on the three thinner layouts
-lies between $\ShiftThinMin\sigma$ and $\ShiftThinMax\sigma$, set
-mostly by $\alpha_2$; on $\Delta z = 0.2$, whose wide bins barely see
+calibration drift, is absorbed exactly by the tilts.  A fit's shift is
+its linear response (Section~\ref{sec:method}), in units of its own
+marginalized ellipse for $(w_0, w_a)$ and of $\sigma$ for $\Omega_m$
+and $A_s$.  On $\Delta d_{\rm com} = 62$~Mpc and $\Delta z = 0.02$ the
+line-of-sight counterterm $\alpha_2$ sets the largest shift at every
+cut from $\kmax = 0.075\hMpc$ on.  At $0.075\hMpc$ it moves the fit by
+$\ShiftLowCom\sigma$, $\ShiftLowTwo\sigma$ and $\ShiftLowFive\sigma$ on
+$\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$ and $0.05$, while the
+other truths move the two thin layouts by at most
+$\ShiftNoAlphaLow\sigma$.  From $0.1\hMpc$ on, the largest shift on the
+three thinner layouts lies between $\ShiftThinMin\sigma$ and
+$\ShiftThinMax\sigma$; on $\Delta z = 0.2$, whose wide bins barely see
 $\alpha_2$, the offsets set it, at most $\ShiftWideMax\sigma$ at any
 cut.
 
+A truth inside a Gaussian prior can move the fit by about $1\sigma$
+without making the error bars dishonest.  With $\mathbf{p}_{\rm t}$
+the truth's departure from the fiducial point and $F_{\rm prior}$ the
+prior precision (Section~\ref{sec:method}), the fitted departure is
+$\mathbf{p}_{\rm t} - F^{-1}F_{\rm prior}\,\mathbf{p}_{\rm t}$: the
+prior pulls the fit back toward its center.  For a truth at one prior
+width in a single prior-held parameter $\alpha$, the shift of a
+parameter $\theta$, in units of its own $\sigma$, is
+$-\rho\,\sigma_{\alpha,{\rm post}}/\sigma_{\alpha,{\rm prior}}$, with
+$\rho$ the correlation of $\theta$ and $\alpha$ in $F^{-1}$ and
+$\sigma_{\alpha,{\rm post}}$ and $\sigma_{\alpha,{\rm prior}}$ the
+marginalized and prior widths of $\alpha$; its size is at most $1$, and
+the $\alpha_2$ truths add such shifts over the six groups.  A shift near
+$1\sigma$ therefore means that the constraint at that cut leans on the
+$\alpha_2$ prior, whose width $\ctFrac/\kmax^2$ is largest at small
+$\kmax$.  The marginalized errors already include that prior: averaged
+over $\alpha_2$ truths drawn from it, the shift and the data noise
+together have a covariance no larger than $F^{-1}$ in any direction.
+
 \begin{figure}[htbp]
-  \begin{minipage}[c]{3.78in}
+  \begin{minipage}[c]{3.61in}
     \includegraphics{plots/summary_shifts_kmax/summary_shifts_kmax.pdf}
   \end{minipage}\hfill
-  \begin{minipage}[c]{\dimexpr\linewidth-3.78in-\sidegap\relax}
+  \begin{minipage}[c]{\dimexpr\linewidth-3.61in-\sidegap\relax}
   \captionsetup{justification=raggedright,singlelinecheck=false}
   \caption{The largest shift of a fit over four truths, each the same
     in every bin: $\alpha_2$, $\SNt$ and the offsets
@@ -606,85 +788,319 @@ $A_s$), and the $1\sigma$ region covers the truth in at least
 \section{What the grouping is worth}
 \label{sec:grouping}
 
-A thin-bin prior can look loose and still add knowledge the wide
-sample does not have.  Figure~\ref{fig:untied} compares the model with
-four versions that untie the bias bin by bin, with $b_{1,i}$ free and
-one value per bin of every other quantity; $w$ is the width the model
-gives a group parameter and $N$ the number of bins of the group.
+The principle of Section~\ref{sec:prior} says that a thin-bin prior
+must keep the freedom of the wide original samples, and add nothing to
+it.  Figure~\ref{fig:untied} puts the principle to a test: it divides
+the FoM of five versions that untie the bias bin by bin by the FoM of
+the model.  The group width of a parameter is the width the model gives
+it (Table~\ref{tab:params}), and $N$ is the number of bins of its
+group.  The first four versions free $b_{1,i}$ in every bin and give
+$\Delta_2$, $\Delta_s$, $\alpha_0$, $\alpha_2$, $\SNz$ and $\SNt$ one
+value per bin; the fifth keeps the model whole, its $b_1$ prior
+included.
+
+\paragraph{Why a naive per-bin prior gains.}
+Give each of $N$ bins its own offset, independent of the others, each
+with a Gaussian prior of width $\sigma$.  Their average is the sum of
+the $N$ offsets divided by $N$.  Variances of independent numbers add,
+so the sum has variance $N\sigma^2$ and the average
+$N\sigma^2/N^2 = \sigma^2/N$: the average has width $\sigma/\sqrt{N}$.
+With $\sigma = \wDtwo$, the group width of $\Delta_2$, and
+$N = \ToyN$, the prior pins the group's average offset to $\ToyAvg$,
+\ToyFactor{} times tighter than the wide sample knows it.  Slice the same sample into more bins and the
+pin tightens further, with no new knowledge of the bias.
+
+\paragraph{The five versions,} in the words of the figure's legend:
 \begin{itemize}
-  \item \textbf{Width $w$ per bin} looks looser than the model, yet its
-    FoM lies above the model's on most layouts, by up to a factor of
-    about \UntieGainMax{}: $N$ independent values of width $w$ pin
-    their average to $w/\sqrt{N}$, so the group's common shift, which
-    the wide sample knows only to $w$, becomes better known the finer
-    the slicing.  The gain is spurious.
-  \item \textbf{Width $w\sqrt{N}$ per bin} gives the common shift back
-    its width $w$, but on $\Delta z = 0.2$, whose groups hold one or
-    two bins, it still fixes the trend that the model leaves free.
-  \item \textbf{Width $w\sqrt{N}$ plus a free tilt per group} restores
-    the trend too.  Its prior is at least as loose as the model's in
-    every direction (a variance $Nw^2$ per bin against $w^2$ for a
-    group's common shift), so it can only lose FoM: it measures what
-    untying every bin costs.
-  \item \textbf{Width $w$ on top of the model} gives the same cost from
-    the other side.
+  \item \textbf{per bin, group width}: looks looser than the model, but
+    pins each group's average to the group width over $\sqrt{N}$.  It
+    lies above the model on every layout and at every cut, by up to a
+    factor of \UntieGainMax{}: a gain by accident, from the slicing.
+  \item \textbf{per bin, group width $\times\sqrt{N}$}: gives each
+    group's average back the group width.  On $\Delta z = 0.2$, whose
+    groups hold one or two bins, it still gains, because it fixes the
+    trend inside a group that the model leaves free.
+  \item \textbf{per bin, $\times\sqrt{N}$ + group tilt}: frees that
+    trend too, and so restores the whole wide-sample freedom.  Its
+    prior is at least as loose as the model's in every direction (each
+    bin's variance is $N$ times the squared group width, against one
+    squared group width for the shift common to all bins), so it can
+    only lose FoM.
+  \item \textbf{per bin, on top of the model}: keeps the model's group
+    offsets and tilts, the wide-sample freedom, and adds an independent
+    per-bin value of the group width to every term.
+  \item \textbf{correlated residuals on top of the model}: keeps the
+    model exactly and adds to each of $\Delta_2$, $\Delta_s$,
+    $\alpha_0$ and $\alpha_2$ a per-bin residual with the prior of
+    $b_1$'s: Gaussian, of the term's group width, correlated in redshift
+    over $L = \LcorrHO$, and charged only on the deviations from the
+    group's line.  In the form of Eq.~\eqref{eq:generic} it fills the
+    residual column of Table~\ref{tab:params} for these four terms.  In
+    a group of one or two bins the offset and the tilt already fix
+    every bin, so on $\Delta z = 0.2$ this version is the model.
 \end{itemize}
-The last two agree roughly: untying costs a factor of \UntieLowMin{}
-to \UntieLowMax{} in ${\rm FoM}(w_0, w_a)$ on the thin layouts at
-$\kmax = 0.075\hMpc$, \UntieHighMin{} to \UntieHighMax{} on the three
-thinner layouts at $0.2\hMpc$, and at most \UntieWideMax{} on
-$\Delta z = 0.2$; at $0.05\hMpc$, where the model's own
-${\rm FoM}(w_0, w_a)$ is below \FoMwSmallCut{}, it costs more.
+
+\paragraph{What untying the bins costs.}
+The last two versions keep the wide-sample freedom and add only the
+freedom of untied bins, so they measure what untying really costs, and
+they differ sharply.  Independent per-bin terms on top of the model
+cost a factor of \CostNestedLowMin{} to \CostNestedLowMax{} in
+${\rm FoM}(w_0, w_a)$ on the thin layouts at $\kmax = 0.075\hMpc$, and
+\CostNestedHighMin{} to \CostNestedHighMax{} on the three thinner
+layouts at $0.2\hMpc$.  Correlated residuals cost a factor of
+\CostCorrLowTwo{} on $\Delta z = 0.02$ at $0.075\hMpc$ and
+\CostCorrHighMin{} to \CostCorrHighMax{} on the three thinner layouts at
+$0.2\hMpc$; on $\Delta d_{\rm com} = 62$~Mpc their fit is not well
+defined at $0.075\hMpc$, and they cost \CostCorrMidCom{} at $0.1\hMpc$.
+A residual that is smooth in redshift can mimic a change of the
+cosmology across neighboring bins, while independent per-bin terms
+average down over the bins of a group.  On $\Delta z = 0.2$ neither
+version costs more than a factor of \CostWideMax{} at any cut.
 
 \begin{figure}[tbp]
   \centering
   \includegraphics{plots/summary_fom_untied/summary_fom_untied.pdf}
-  \caption{The FoM of four versions with the bias untied bin by bin,
+  \caption{The FoM of five versions with the bias untied bin by bin,
     divided by that of the model: ${\rm FoM}(w_0, w_a)$ (top row) and
     ${\rm FoM}(\Omega_m, 10^9 A_s)$ (bottom row), one column per
-    layout.  Every version frees $b_{1,i}$ in each bin and gives
-    $\Delta_2$, $\Delta_s$, $\alpha_0$, $\alpha_2$, $\SNz$ and $\SNt$
-    one value per bin; the group width is the width the model gives
-    the group parameter, and $N$ the number of bins of the group.
+    layout.  The group width is the width the model gives a group
+    parameter, and $N$ the number of bins of the group.  The first four
+    versions free $b_{1,i}$ in each bin and give $\Delta_2$, $\Delta_s$,
+    $\alpha_0$, $\alpha_2$, $\SNz$ and $\SNt$ one value per bin.
     Dotted, open left triangles: the group width; dash-dot, filled
     right triangles: the group width times $\sqrt{N}$; dashed, filled
     pentagons: the same plus a free tilt per group; solid, open
     hexagons: the group width on top of the model's offsets and tilts.
-    The line width grows in that order.  Thin gray line: a ratio of
-    $1$.  The cuts start at $\kmax = 0.075\hMpc$: at $0.05\hMpc$ the
-    model's own ${\rm FoM}(w_0, w_a)$ is below \FoMwSmallCut{}.
-    \kmaxclause}
+    The line width grows in that order.  The fifth keeps the model, its
+    $b_1$ prior included, and adds correlated per-bin residuals to
+    $\Delta_2$, $\Delta_s$, $\alpha_0$ and $\alpha_2$: thin
+    dash-dot-dot line, crosses; on $\Delta d_{\rm com} = 62$~Mpc it has
+    no well-defined fit at $\kmax = 0.075\hMpc$, hence the gap.  Thin
+    gray line: a ratio of $1$.  The cuts start at $\kmax = 0.075\hMpc$:
+    at $0.05\hMpc$ the model's own ${\rm FoM}(w_0, w_a)$ is below
+    \FoMwSmallCut{}.  \kmaxclause}
   \label{fig:untied}
 \end{figure}
 
-\section{Method}
+\section{Fisher forecast and its numerical convergence}
 \label{sec:method}
 
-Every forecast is a Fisher forecast at the fiducial point.  With
-$\mathbf{m}$ the band powers, $\mathsf{C}$ their covariance and
-$\mathsf{D}$ the derivatives of $\mathbf{m}$ with respect to the
-parameters (sans-serif, unlike the growth factor $D$), a fit's Fisher
-matrix on the band powers its cut keeps is
-$F = \mathsf{D}\T \mathsf{C}^{-1} \mathsf{D} + F_{\rm prior}$, and
-$F^{-1}$ gives the errors and the FoMs.  The derivatives with respect
-to the cosmology, the $\sigma_v$ and four operators in every bin
-($b_1$, $b_2$, $\bstwo$, $\alpha_0$) are five-point stencils of the
-full likelihood, CAMB included, which the chain rule combines into the
-column of every parameter of the model; the terms linear in their
-amplitude, $\alpha_2$, $\SNz$ and $\SNt$, enter as exact templates.
-$F_{\rm prior}$ holds the Gaussian priors and, for each group and each
-quantity that carries a residual (Table~\ref{tab:params}), the inverse
-of the kernel of Eq.~\eqref{eq:kernel} projected orthogonally to the
-level and the line, so that it charges only the residual around the
-best straight line.
+\paragraph{The Fisher matrix.}
+Let $\mathbf{m}(\mathbf{p})$ be the model band powers at the parameters
+$\mathbf{p}$, $\mathbf{p}_0$ the fiducial point, $\mathsf{C}$ the
+band-power covariance, and $\mathsf{D} = \partial\mathbf{m}/\partial
+\mathbf{p}$ at $\mathbf{p}_0$ (sans-serif, unlike the growth factor
+$D$).  At a scale cut that keeps the set $K$ of band powers, the Fisher
+matrix of a fit is
+\begin{equation}
+  F \;=\; \mathsf{D}_K\T\,\mathsf{C}_{KK}^{-1}\,\mathsf{D}_K
+  \;+\; F_{\rm prior} ,
+  \label{eq:fisher}
+\end{equation}
+with $\mathsf{D}_K$ the kept rows of $\mathsf{D}$ and $\mathsf{C}_{KK}$
+the kept block of $\mathsf{C}$.  $F_{\rm prior}$ adds
+$1/\sigma_{\rm pr}^2$ to the diagonal for a Gaussian prior of width
+$\sigma_{\rm pr}$ and nothing for a flat one.  For each group and each
+quantity that carries a residual (Table~\ref{tab:params}) it adds the
+precision $\mathsf{P} = \mathsf{Q} - \mathsf{Q}\mathsf{U}(\mathsf{U}\T
+\mathsf{Q}\mathsf{U})^{-1}\mathsf{U}\T\mathsf{Q}$ on the bins'
+deviations from the group value ($\delta_i$ for $b_1$), with
+$\mathsf{Q}$ the inverse kernel matrix of Eq.~\eqref{eq:kernel} and
+$\mathsf{U}$ the matrix with columns $1$ and $\bar{z}_i - \bar{z}_g$:
+it charges only the residual around the group's best straight line.
+The marginalized error of parameter $j$ is
+$\sigma_j = [(F^{-1})_{jj}]^{1/2}$, and the FoMs of
+Section~\ref{sec:data} are $[\det \mathsf{C}_p]^{-1/2}$, with
+$\mathsf{C}_p$ the $2 \times 2$ block of $F^{-1}$ of the two
+parameters.  Where a cut leaves a combination of nuisance parameters
+without information, for instance the flat tilts of a group most of
+whose bins have lost their bands, $F$ is inverted as a pseudo-inverse:
+scaled to unit diagonal, diagonalized, and restricted to the
+eigen-directions above $\PinvTol$ of the largest eigenvalue.  A dropped
+direction may not touch $(w_0, w_a)$, $\Omega_m$ or $A_s$ by more than
+$\PinvTouch$; otherwise the cut gives no fit.
 
-A truth that moves the band powers by $\delta\mathbf{m}$ moves the fit
-by $\delta\mathbf{p} = F^{-1} \mathsf{D}\T \mathsf{C}^{-1}\,
-\delta\mathbf{m}$, exactly for the $\alpha_2$ and $\SNt$ truths, whose
-terms are linear, and to first order otherwise.  The response is
-linear in the bias history, so $\langle\chi^2\rangle$ is the exact
-average over infinitely many histories and data realizations, in
-closed form.
+\paragraph{Derivatives.}
+The columns of $\mathsf{D}$ come from three kinds of derivatives at the
+fiducial point.
+\begin{enumerate}
+  \item The cosmological parameters, the $\sigma_v$ and the per-bin
+    $b_{1,i}$, $b_{2,i}$, $b_{s^2,i}$ and $\alpha_{0,i}$, on which the
+    band powers depend nonlinearly, take the five-point central stencil
+    \begin{equation}
+      \frac{\partial\mathbf{m}}{\partial\theta} \;\simeq\;
+      \frac{\mathbf{m}(\theta_0 - 2\epsilon)
+        - 8\,\mathbf{m}(\theta_0 - \epsilon)
+        + 8\,\mathbf{m}(\theta_0 + \epsilon)
+        - \mathbf{m}(\theta_0 + 2\epsilon)}{12\,\epsilon} ,
+      \label{eq:stencil}
+    \end{equation}
+    with $\theta_0$ the fiducial value and $\epsilon = h\,\theta_0$,
+    $h = \StepH$ (an absolute step where $\theta_0 = 0$); its truncation
+    error is of order $\epsilon^4$.  Every evaluation is a full call of
+    the likelihood, CAMB included.
+  \item $\SNz$, $\SNt$ and $\alpha_2$ enter linearly, so their columns
+    are exact: the projected templates per unit amplitude for the
+    stochastic terms (Eq.~\eqref{eq:sn2} for $\SNt$), and a two-point
+    difference for $\alpha_2$.
+  \item The per-bin columns are computed in batches.  A spectrum
+    $C^{ij}_\ell$ depends on the biases of bins $i$ and $j$ only, so the
+    bins of a set $\mathcal{S}$ in which no two bins share a measured
+    spectrum can be stepped together.  With $\partial_{\mathcal{S}}
+    \mathbf{m}$ the stencil of Eq.~\eqref{eq:stencil} with the bias $x$
+    stepped in every bin of $\mathcal{S}$,
+    \begin{equation}
+      \frac{\partial m_r}{\partial x_i} \;=\;
+      \begin{cases}
+        (\partial_{\mathcal{S}}\mathbf{m})_r & \text{if band power $r$
+          belongs to a spectrum that contains bin } i \in \mathcal{S} ,
+          \\
+        0 & \text{otherwise.}
+      \end{cases}
+      \label{eq:batch}
+    \end{equation}
+    A greedy coloring of the graph of measured pairs gives \Nbatch{}
+    such batches on every layout, so each per-bin family costs
+    \NevalFamily{} evaluations, whatever the number of bins.
+\end{enumerate}
+
+\paragraph{One base, every model.}
+The columns of one layout, for the cosmology, the $\sigma_v$ and the
+seven per-bin families $b_1$, $b_2$, $\bstwo$, $\alpha_0$, $\alpha_2$,
+$\SNz$ and $\SNt$, form a base matrix $\mathsf{B}$, computed once and
+cached.  A model is a fixed linear map from its parameters $p_j$ to the
+base quantities $\kappa_a$,
+\begin{equation}
+  \mathsf{D} \;=\; \mathsf{B}\,\mathsf{M} ,
+  \qquad
+  \mathsf{M}_{aj} \;=\; \frac{\partial\kappa_a}{\partial p_j} :
+  \label{eq:dbm}
+\end{equation}
+a group offset puts ones on its group's bins in its family's block, a
+tilt the weights $\bar{z}_i - \bar{z}_g$, a bin's linear bias the chain
+rule through the calibrations of Eq.~\eqref{eq:calibrations}, and the
+untied versions of Section~\ref{sec:grouping} per-bin identities.  With
+$\mathsf{G}_K = \mathsf{B}_K\T\mathsf{C}_{KK}^{-1}\mathsf{B}_K$ computed
+once per cut, every model and prior at that cut has
+$F = \mathsf{M}\T\mathsf{G}_K\mathsf{M} + F_{\rm prior}$: a change of
+model, prior, cut or truth needs no new evaluation of the data vector.
+
+\paragraph{Shifts and the error-bar test.}
+A truth that departs from the fitted model moves the band powers by
+$\Delta\mathbf{m}$, and the best fit, to first order, by
+\begin{equation}
+  \delta\mathbf{p} \;=\; F^{-1}\,\mathsf{D}_K\T\,\mathsf{C}_{KK}^{-1}\,
+  \Delta\mathbf{m}_K ,
+  \label{eq:shift}
+\end{equation}
+exactly for the terms linear in their amplitude ($\alpha_2$, $\SNz$,
+$\SNt$) and to first order for the biases, on which the band powers
+depend quadratically.  Because $\delta\mathbf{p}$ is linear in the
+truth, the average behind the error-bar test of
+Section~\ref{sec:forecast} is exact in closed form; for
+$(w_0, w_a)$,
+\begin{equation}
+  \langle\chi^2\rangle \;=\; \Delta_{\rm drift}^2
+  \;+\; {\rm tr}\bigl[\mathsf{C}_p^{-1}\bigl(\mathsf{A}\,\Sigma\,
+  \mathsf{A}\T + \mathsf{N}_p\bigr)\bigr] ,
+  \label{eq:chi2}
+\end{equation}
+with $\Delta_{\rm drift}$ the shift of the known drift alone in units
+of the ellipse, $\mathsf{A}$ the response of $(w_0, w_a)$ to the bins'
+deviations $\delta_i$, $\Sigma$ the covariance of the residuals drawn
+from the prior, and $\mathsf{N}_p$ the $(w_0, w_a)$ block of
+$F^{-1}F_0F^{-1}$, the share of the data noise and the other priors,
+$F_0$ being $F$ without the correlated prior.  For $\Omega_m$ or $A_s$
+the same holds with the parameter's own row.
+
+\paragraph{Numerical convergence.}
+Noise in the data vector, from its integration grids and CAMB's
+tolerances, enters a finite difference divided by the step.  A column
+$\mathbf{d}_j + \mathbf{e}_j$ with noise $\mathbf{e}_j$ raises $F_{jj}$
+on average by $\langle\mathbf{e}_j\T\mathsf{C}^{-1}\mathbf{e}_j\rangle
+> 0$: noise reads as information and inflates the FoM.  Settings that
+converge a $\chi^2$ to the standard of MCMC runs,
+$|\Delta\chi^2| < \MCMCdchi$, are therefore not enough.  On
+$\Delta z = 0.05$ they inflate ${\rm FoM}(w_0, w_a)$ by \ConvMCMCLow{}
+at $\kmax = 0.075\hMpc$ and \ConvMCMCHigh{} at $0.2\hMpc$, and the
+earlier derivatives inflated it about \ConvOldCom{}fold on
+$\Delta d_{\rm com} = 62$~Mpc at $0.075\hMpc$; the excess comes from
+noise in the $w_0$, $w_a$ and $\Omega_m$ columns.  That spurious
+information also weakened the degeneracy between $\alpha_2$ and the
+cosmology, so the earlier derivatives understated the $\alpha_2$ shifts
+of Figure~\ref{fig:shifts}.  The criterion of
+convergence is step independence: the FoMs, the errors and the shifts
+must not move when the stencil step changes or the numerical controls
+are refined further.  A study on $\Delta z = 0.05$
+(Figure~\ref{fig:convergence}) starts from a configuration with every
+control raised: the grid factor $g = \GridStart$, where $g$ counts the
+comoving distances of the non-Limber integrals in units of
+\GridUnit{}; CosmoLike's \texttt{accuracyboost} \StartAccBoost{} and
+\texttt{integration\_accuracy} \StartIntAcc{}; the low-rank engine's
+rank \StartRank{} and multipole cap \StartCap{}; and CAMB's
+\texttt{AccuracyBoost} \StartCambBoost{}, \texttt{k\_per\_logint}
+\StartKlog{} and maximum wavenumber \StartKmax{}~Mpc$^{-1}$.  From
+there it changes one control at a time and compares each configuration
+with the converged value, the five-point stencil at step $h$ on
+$g = \GridConv$.  The final settings are:
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \item the final grid $g = \GridFinal$, \GridRatio{} times the MCMC grid of
+    $\Delta z = 0.05$, with CosmoLike's \texttt{accuracyboost}
+    \FinAccBoost{} and \texttt{integration\_accuracy} \FinIntAcc{};
+  \item CAMB's \texttt{AccuracyBoost} \FinCambBoost{},
+    \texttt{k\_per\_logint} \FinKlog{} and a maximum wavenumber of
+    \FinKmax{}~Mpc$^{-1}$, with halofit's bisection tolerance tightened
+    from $\HalofitStock$ to $\HalofitPatch$ (the halofit tolerance
+    patch);
+  \item five-point stencils for every stencil and per-bin column.
+\end{itemize}
+Against the converged value they give ${\rm FoM}(w_0, w_a)$
+\ConvFoMwLow{} at $\kmax = 0.075\hMpc$ and \ConvFoMwHigh{} at
+$0.2\hMpc$ (${\rm FoM}(\Omega_m, 10^9 A_s)$ \ConvFoMoLow{} and
+\ConvFoMoHigh{}), marginalized errors within \ConvSigma{} and shifts
+within $\ConvShift\sigma$.  From step $h/2$ to $3h$ both FoMs stay
+within \ConvStep{} on $\Delta z = 0.05$ and within \ConvStepCom{} on
+$\Delta d_{\rm com} = 62$~Mpc.  Two cross-checks agree.  DerivKit,
+which fits a polynomial through at least \DkitPoints{} evaluations
+around the fiducial point, matches the stencils within \DkitAgree{}.
+The study's route, which unties the per-bin parameters in the
+likelihood, matches the production route, which steps them through
+CosmoLike's setter: exactly for $b_2$, $\bstwo$ and $\alpha_0$, within
+$\RouteBone$ for $b_1$ and within $\RouteStencil$ for the stencil
+columns.
+
+\paragraph{Cost.}
+A layout's base takes \Neval{} evaluations of the data vector, about
+\TevalMin{} to \TevalMax{}~s each at the final settings, so \HoursMin{}
+to \HoursMax{} hours per thin layout; every model, prior, cut and truth
+then costs a fraction of a second.  \texttt{notes/fisher\_machinery}
+gives the details.
+
+\begin{figure}[htbp]
+  \begin{minipage}[c]{3.78in}
+    \includegraphics{plots/fom_convergence/fom_convergence.pdf}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{\dimexpr\linewidth-3.78in-\sidegap\relax}
+  \captionsetup{justification=raggedright,singlelinecheck=false}
+  \caption{Convergence of the forecast on $\Delta z = 0.05$: the FoMs
+    of the model divided by their converged values (five-point stencils
+    at step $h$ on the grid factor $g = \GridConv$).  From the top,
+    ${\rm FoM}(w_0, w_a)$ and ${\rm FoM}(\Omega_m, 10^9 A_s)$ at
+    $\kmax = 0.075$ and $0.2\hMpc$.  Diamonds on the line: the scan in
+    $g$ at step $h$, which holds every other control at the study's
+    starting configuration ($g = \GridStart$ with the other controls
+    raised; Section~\ref{sec:method}); $g = \GridFinal$ is the final
+    setting.  Filled down-triangles,
+    up-triangles and squares beside a grid: steps $h/2$, $2h$ and $3h$.
+    Plus: five-point stencils at the MCMC settings.  Open and filled
+    stars: DerivKit at the MCMC and at the final settings.  Open blue
+    markers: $\Delta d_{\rm com} = 62$~Mpc at the final settings, steps
+    $h/2$ (down-triangle) and $2h$ (up-triangle) against its own step-$h$
+    value (ring).  Gray band: $1 \pm 1\%$.  \kmaxclause}
+  \label{fig:convergence}
+  \end{minipage}
+\end{figure}
 
 \section{Where the details are}
 \label{sec:details}
@@ -700,8 +1116,11 @@ closed form.
     validation.
   \item \texttt{notes/linear\_bias\_kmax}: the reach of linear bias,
     which motivates the one-loop terms.
-  \item \texttt{notes/fisher\_machinery}: the Fisher derivatives and the
-    assembly of every Fisher matrix, shift and $\langle\chi^2\rangle$.
+  \item \texttt{notes/fisher\_machinery}: the Fisher derivatives, their
+    convergence study, and the assembly of every Fisher matrix, shift
+    and $\langle\chi^2\rangle$.
+  \item \texttt{notes/cross\_correlations}: which thin-bin pairs the data
+    vector measures, and the Fingers-of-God blur.
 \end{itemize}
 
 \footnotesize

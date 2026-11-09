@@ -79,8 +79,12 @@ KMAX_TOLERANCE = 1.0e-9
 # highest marker stays inside the panel
 ROUND_TOPS = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.5, 2.0, 3.0, 5.0]
 Y_MARGIN = 1.1
-# the spacing of the labeled and of the unlabeled y ticks [sigma]
+# the spacing of the labeled and of the unlabeled y ticks [sigma]; above
+# Y_WIDE_TOP the labels step by Y_MAJOR_WIDE, so a short panel shows at
+# most four of them
 Y_MAJOR = 0.2
+Y_MAJOR_WIDE = 0.5
+Y_WIDE_TOP = 0.8
 Y_MINOR = 0.1
 # The "sigma/3" text of the threshold line: its font size [pt], its
 # horizontal anchor (axes units, right-aligned near the line's right end)
@@ -89,6 +93,8 @@ Y_MINOR = 0.1
 # line, a marker radius included.
 THRESHOLD_TEXT_SIZE = 7.5
 THRESHOLD_TEXT_X = 0.985
+# the positions tried along the threshold line, right end first [axes fraction]
+THRESHOLD_TEXT_XS = (THRESHOLD_TEXT_X, 0.8, 0.6, 0.4, 0.2)
 THRESHOLD_TEXT_GAP = 1.5
 # the height of one panel [in]
 PANEL_HEIGHT = 1.15
@@ -163,31 +169,34 @@ def touches_lines(box, axes, skip=()):
 
 
 def place_threshold_text(fig, axes, threshold_lines):
-    '''Write "sigma/3" next to the threshold line near its right end: just
-    above the line, else just below, in the first panel (top to bottom)
-    where the text stays inside the panel and clears every line, the
-    threshold lines included; against the data lines its box is also grown
-    by a marker radius. Raise when no panel has room.'''
+    '''Write "sigma/3" next to the threshold line: just above the line, else
+    just below, near its right end first and then further left along it
+    (THRESHOLD_TEXT_XS), in the first panel (top to bottom) where the text
+    stays inside the panel and clears every line, the threshold lines
+    included; against the data lines its box is also grown by a marker
+    radius. Raise when no position has room.'''
     renderer = fig.canvas.get_renderer()
     # a marker radius in display units: line_points samples the line centers
     radius = 0.5*MARKER_SIZE*fig.dpi/72.0
-    for ax in axes:
-        for sign, va in ((1.0, 'bottom'), (-1.0, 'top')):
-            candidate = ax.annotate(
-                r'$\sigma/3$', xy=(THRESHOLD_TEXT_X, threshold),
-                xycoords=('axes fraction', 'data'),
-                xytext=(0.0, sign*THRESHOLD_TEXT_GAP), textcoords='offset points',
-                ha='right', va=va, fontsize=THRESHOLD_TEXT_SIZE)
-            fig.canvas.draw()
-            box = candidate.get_window_extent(renderer)
-            span = ax.get_window_extent(renderer)
-            inside = (box.x0 >= span.x0 and box.x1 <= span.x1
-                      and box.y0 >= span.y0 and box.y1 <= span.y1)
-            clear = (not touches_lines(box, axes)
-                     and not touches_lines(box.padded(radius), axes, skip=threshold_lines))
-            if inside and clear:
-                return candidate
-            candidate.remove()
+    for text_x in THRESHOLD_TEXT_XS:
+        for ax in axes:
+            for sign, va in ((1.0, 'bottom'), (-1.0, 'top')):
+                candidate = ax.annotate(
+                    r'$\sigma/3$', xy=(text_x, threshold),
+                    xycoords=('axes fraction', 'data'),
+                    xytext=(0.0, sign*THRESHOLD_TEXT_GAP), textcoords='offset points',
+                    ha='right', va=va, fontsize=THRESHOLD_TEXT_SIZE)
+                fig.canvas.draw()
+                box = candidate.get_window_extent(renderer)
+                span = ax.get_window_extent(renderer)
+                inside = (box.x0 >= span.x0 and box.x1 <= span.x1
+                          and box.y0 >= span.y0 and box.y1 <= span.y1)
+                clear = (not touches_lines(box, axes)
+                         and not touches_lines(box.padded(radius), axes,
+                                               skip=threshold_lines))
+                if inside and clear:
+                    return candidate
+                candidate.remove()
     raise RuntimeError('summary_shifts_kmax: the sigma/3 text touches a line in every panel')
 
 
@@ -259,9 +268,14 @@ for ax, (score, name) in zip(axes, PANELS):
 # tick labels as plain numbers (0, 0.2, 0.4, ...)
 y_top = next(top for top in ROUND_TOPS if top >= Y_MARGIN*max(values))
 axes[0].set_ylim(0.0, y_top)
-axes[0].yaxis.set_major_locator(MultipleLocator(Y_MAJOR))
+y_major = Y_MAJOR_WIDE if y_top > Y_WIDE_TOP else Y_MAJOR
+axes[0].yaxis.set_major_locator(MultipleLocator(y_major))
 axes[0].yaxis.set_minor_locator(MultipleLocator(Y_MINOR))
-axes[0].yaxis.set_major_formatter(FuncFormatter(plain_number))
+# the top of the axis stays unlabeled: the panels are stacked with a thin
+# gap, and its label would touch the 0 of the panel above
+axes[0].yaxis.set_major_formatter(FuncFormatter(
+    lambda value, position: '' if value > y_top - KMAX_TOLERANCE
+    else plain_number(value, position)))
 axes[-1].set_xlim(kmax[0] - 0.01, kmax[-1] + 0.01)
 axes[-1].set_xticks([0.05, 0.1, 0.15, 0.2])
 axes[-1].set_xticklabels(['0.05', '0.1', '0.15', '0.2'])
