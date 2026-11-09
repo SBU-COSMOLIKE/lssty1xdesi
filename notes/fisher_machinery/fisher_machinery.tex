@@ -496,6 +496,9 @@ holds $173$ spectra, $76$ autos and $97$ crosses, and bin $i$ enters at
 most five of them: its own auto spectrum and up to four cross spectra.
 Every other row of $\partial m/\partial b_{1,i}$ is exactly zero, and an
 evaluation that moves one bin leaves $168$ or more spectra unchanged.
+Counted per spectrum, the block of one family, $173$ spectra by $76$
+columns, is $98\%$ zeros; in the cached arrays no column has a nonzero
+entry outside its own bin's spectra.
 
 \paragraph{The idea: move several bins in one evaluation.}
 Take five bins in a row whose only measured cross spectra join
@@ -555,7 +558,7 @@ No batch holds ``the autos'' or ``the crosses''.  In the evaluations of
 the batch that contains bin $i$, bin $i$'s auto spectrum and all of its
 cross spectra receive their derivative with respect to $b_{1,i}$.  A
 cross spectrum $C^{ij}$ is visited twice, once in the batch of each of
-its two bins.
+its two bins.  Figure~\ref{fig:batching}c shows this on a real block.
 
 \paragraph{When may two bins move together?}
 Why not move every bin at once and keep, for each column, only its own
@@ -642,9 +645,38 @@ code's function.
 \paragraph{The real layout, step by step.}
 Take $\Delta d_{\rm com} = 62$~Mpc.  Its $N = 76$ bins are numbered $1$
 to $76$ in data-vector order, by group and, within a group, by
-redshift (numbers start at $1$ here, as everywhere in this note; the
-code counts from $0$).  DESI's galaxies come in six groups, ordered by
-redshift (Table~\ref{tab:groups}).
+redshift (numbers start at $1$, as everywhere in this note and in
+Figure~\ref{fig:batching}; the code counts from $0$).  DESI's galaxies come in six groups, ordered by redshift
+(Table~\ref{tab:groups}).  Figure~\ref{fig:batching} draws the whole
+layout and its batches; the steps below walk through it.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{plots/batching/batching.pdf}
+  \caption{How the per-bin bias columns of $\Delta d_{\rm com} = 62$~Mpc
+    are computed in batches.
+    (a) Every bin at its mean redshift, BGS and LRG on the top row, ELG
+    on the bottom; an arc or line is a measured cross spectrum, and the
+    marker gives the batch.  Look first at the long chains: each bin is
+    crossed only with its neighbors, so the markers alternate between
+    batch 1 (circle) and batch 2 (square).  Then look at the shaded
+    strip, where LRG3 and ELG1 cover the same redshifts: the short lines
+    between the rows are their cross spectra, and only there do batches 3
+    (diamond) and 4 (triangle) appear.
+    (b) A zoom on that strip.  No line joins two markers of the same
+    batch.  Follow the greedy rule at bin $51$: its partners $39$, $40$
+    and $50$ already hold batches 1, 2 and 3, so it takes batch 4.
+    (c) The block $\partial m/\partial b_{2,i}$ of those eight bins, with
+    a row per spectrum and a column per bin.  A column is nonzero only on
+    the spectra that contain its bin; white cells are exactly zero.  The
+    outlined cells are what the four evaluations of batch 3 fill at once.
+    A cross spectrum such as $C_{39,50}$ is filled twice: in column $39$
+    by batch 1, and in column $50$ by batch 3.
+    (d) Evaluations per bias family against the number of bins $N$: bin
+    by bin the cost grows as $4N$ (open markers, dashed line); in batches
+    it stops at $4 \times 4 = 16$ (filled markers), whatever $N$.}
+  \label{fig:batching}
+\end{figure}
 
 \begin{table}[tbp]
   \centering
@@ -706,7 +738,8 @@ takes batch~1 again, and so on: along the chain the bins alternate.
     and the even auto spectra.
 \end{itemize}
 This is the five-bin example of Table~\ref{tab:passes}, continued
-through every group.
+through every group: the alternating circles and squares of
+Figure~\ref{fig:batching}a.
 
 \paragraph{The overlap: why batches 3 and 4 appear.}
 LRG3 and ELG1 are two different galaxy populations, luminous red
@@ -730,9 +763,10 @@ its ELG neighbors and two LRG bins at nearly the same redshift.  Bin $51$, for e
 bins $50$ and $52$ (ELG1) and with bins $39$ and $40$ (LRG3).  Bins $39$
 and $40$ already sit in batches 1 and 2, and bin $50$ in batch 3, so bin
 $51$ takes batch 4.  The greedy rule puts the eleven ELG1 bins $50$ to
-$60$ in batches 3 (six bins) and 4 (five bins); batch 1 holds $33$
-bins and batch 2 holds $32$.  Batches 3 and 4 appear only in the
-overlap.
+$60$ in batches 3 (bins $50, 52, \ldots, 60$) and 4 (bins
+$51, 53, \ldots, 59$); batch 1 holds $33$ bins and batch 2 holds $32$,
+and the last ELG1 bin, $61$, lands in batch 2.  Batches 3 and 4 appear
+only in the overlap (Figure~\ref{fig:batching}b).
 
 \paragraph{Four batches, whatever the number of bins.}
 Every bin's partners are local in redshift, so the number of batches
@@ -748,10 +782,19 @@ suffice, because going through the bins in that order, each bin has at
 most $k$ numbered partners to avoid.  The partners reach $2$ places
 away on $\Delta d_{\rm com} = 62$~Mpc and $3$ places on the three
 fixed-$\Delta z$ layouts.  Those three need four batches, the minimum:
-each contains four bins all crossed with each other, like bins $5$ to
-$8$ of Figure~\ref{fig:batches}.  On $\Delta d_{\rm com} = 62$~Mpc three
-would suffice; the greedy rule, which goes through the bins in
-data-vector order, all LRG bins before the ELG bins, gives four.
+each contains four bins all crossed with each other, two LRG3 and two
+ELG1 bins at the same redshift (bins $36$, $37$, $51$ and $52$ on
+$\Delta z = 0.02$; $15$, $16$, $21$ and $22$ on $\Delta z = 0.05$; $5$
+to $8$ on $\Delta z = 0.2$, Figure~\ref{fig:batches}).  On
+$\Delta d_{\rm com} = 62$~Mpc no four bins are all crossed with each
+other, only three, such as bins $39$, $50$ and $51$, and three batches
+would suffice; the greedy rule,
+which goes through the bins in data-vector order, all LRG bins before
+the ELG bins, gives four.
+
+On every layout batches 3 and 4 hold only ELG1 bins.  On
+$\Delta d_{\rm com} = 62$~Mpc they are $11$ of the $76$ bins, about
+$15\%$, yet they take half of each family's evaluations.
 
 \paragraph{What batching buys.}
 The cost now follows from the number of batches, not from $N$.  On
@@ -763,7 +806,8 @@ $\Delta d_{\rm com} = 62$~Mpc:
   \item the four stenciled families take $4 \times 16 = 64$
     evaluations, instead of $1{,}216$.
 \end{enumerate}
-The same $64$ hold on every layout, from $10$ bins to $90$.
+The same $64$ hold on every layout, from $10$ bins to $90$
+(Figure~\ref{fig:batching}d).
 
 \paragraph{Why not exact derivatives by hand?}
 If each cross spectrum were a fixed bilinear expression in the biases,

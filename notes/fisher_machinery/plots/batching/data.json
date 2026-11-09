@@ -1,0 +1,5040 @@
+{
+ "about": "Written by make_batching_data.py (this folder) from the bin tables and pair lists of data/ (lssty1xdesi_desi_*_bins.txt, *_pairs.txt), batched with pair_coloring of the model A and model B notebook builders. Batches are numbered from 1 (color 0 of the code is batch 1). Bin indices in this file (bin, partners, pairs, groups, batches, row_map, stretch) are 0-based, as in the data files and the code; the figure and the note number bins from 1, so index i is drawn as bin i + 1. largest_clique and fewest_batches are diagnostics of the pair graph, not drawn.",
+ "focus_layout": "Delta d_com = 62 Mpc",
+ "families": [
+  "b1",
+  "b2",
+  "bs2",
+  "a0"
+ ],
+ "five_point_offsets": [
+  2.0,
+  1.0,
+  -1.0,
+  -2.0
+ ],
+ "evaluations_per_batch": 4,
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "dataset": "lssty1xdesi_desi_dr3",
+   "nbins": 76,
+   "npairs": 97,
+   "nell": 53,
+   "n": 9964,
+   "n_ee": 795,
+   "batches": 4,
+   "batch_sizes": [
+    33,
+    32,
+    6,
+    5
+   ],
+   "largest_clique": 3,
+   "fewest_batches": 3,
+   "partners_min": 1,
+   "partners_max": 4,
+   "partners_typical": 2,
+   "partners_histogram": {
+    "1": 2,
+    "2": 50,
+    "3": 4,
+    "4": 20
+   },
+   "evaluations_per_family_batched": 16,
+   "evaluations_per_family_per_bin": 304
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "dataset": "lssty1xdesi_desi_dr1_dz0p02",
+   "nbins": 90,
+   "npairs": 133,
+   "nell": 53,
+   "n": 12614,
+   "n_ee": 795,
+   "batches": 4,
+   "batch_sizes": [
+    38,
+    37,
+    8,
+    7
+   ],
+   "largest_clique": 4,
+   "fewest_batches": 4,
+   "partners_min": 1,
+   "partners_max": 5,
+   "partners_typical": 2,
+   "partners_histogram": {
+    "1": 2,
+    "2": 56,
+    "3": 2,
+    "4": 4,
+    "5": 26
+   },
+   "evaluations_per_family_batched": 16,
+   "evaluations_per_family_per_bin": 360
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "dataset": "lssty1xdesi_desi_dr1_dz0p05",
+   "nbins": 36,
+   "npairs": 52,
+   "nell": 53,
+   "n": 5459,
+   "n_ee": 795,
+   "batches": 4,
+   "batch_sizes": [
+    15,
+    15,
+    3,
+    3
+   ],
+   "largest_clique": 4,
+   "fewest_batches": 4,
+   "partners_min": 1,
+   "partners_max": 5,
+   "partners_typical": 2,
+   "partners_histogram": {
+    "1": 2,
+    "2": 20,
+    "3": 2,
+    "4": 4,
+    "5": 8
+   },
+   "evaluations_per_family_batched": 16,
+   "evaluations_per_family_per_bin": 144
+  },
+  {
+   "name": "Delta z = 0.2",
+   "label": "$\\Delta z = 0.2$",
+   "dataset": "lssty1xdesi_desi_dr1_dz0p20",
+   "nbins": 10,
+   "npairs": 13,
+   "nell": 53,
+   "n": 2014,
+   "n_ee": 795,
+   "batches": 4,
+   "batch_sizes": [
+    4,
+    4,
+    1,
+    1
+   ],
+   "largest_clique": 4,
+   "fewest_batches": 4,
+   "partners_min": 1,
+   "partners_max": 4,
+   "partners_typical": 2,
+   "partners_histogram": {
+    "1": 2,
+    "2": 3,
+    "3": 2,
+    "4": 3
+   },
+   "evaluations_per_family_batched": 16,
+   "evaluations_per_family_per_bin": 40
+  }
+ ],
+ "focus": {
+  "bins": [
+   {
+    "bin": 0,
+    "group": "BGS",
+    "zbar": 0.10764829,
+    "batch": 1,
+    "partners": [
+     1
+    ]
+   },
+   {
+    "bin": 1,
+    "group": "BGS",
+    "zbar": 0.12281306,
+    "batch": 2,
+    "partners": [
+     0,
+     2
+    ]
+   },
+   {
+    "bin": 2,
+    "group": "BGS",
+    "zbar": 0.13772718,
+    "batch": 1,
+    "partners": [
+     1,
+     3
+    ]
+   },
+   {
+    "bin": 3,
+    "group": "BGS",
+    "zbar": 0.15294715,
+    "batch": 2,
+    "partners": [
+     2,
+     4
+    ]
+   },
+   {
+    "bin": 4,
+    "group": "BGS",
+    "zbar": 0.16834438,
+    "batch": 1,
+    "partners": [
+     3,
+     5
+    ]
+   },
+   {
+    "bin": 5,
+    "group": "BGS",
+    "zbar": 0.1837386,
+    "batch": 2,
+    "partners": [
+     4,
+     6
+    ]
+   },
+   {
+    "bin": 6,
+    "group": "BGS",
+    "zbar": 0.19929416,
+    "batch": 1,
+    "partners": [
+     5,
+     7
+    ]
+   },
+   {
+    "bin": 7,
+    "group": "BGS",
+    "zbar": 0.21500959,
+    "batch": 2,
+    "partners": [
+     6,
+     8
+    ]
+   },
+   {
+    "bin": 8,
+    "group": "BGS",
+    "zbar": 0.23090003,
+    "batch": 1,
+    "partners": [
+     7,
+     9
+    ]
+   },
+   {
+    "bin": 9,
+    "group": "BGS",
+    "zbar": 0.24698068,
+    "batch": 2,
+    "partners": [
+     8,
+     10
+    ]
+   },
+   {
+    "bin": 10,
+    "group": "BGS",
+    "zbar": 0.26330041,
+    "batch": 1,
+    "partners": [
+     9,
+     11
+    ]
+   },
+   {
+    "bin": 11,
+    "group": "BGS",
+    "zbar": 0.27963901,
+    "batch": 2,
+    "partners": [
+     10,
+     12
+    ]
+   },
+   {
+    "bin": 12,
+    "group": "BGS",
+    "zbar": 0.29609177,
+    "batch": 1,
+    "partners": [
+     11,
+     13
+    ]
+   },
+   {
+    "bin": 13,
+    "group": "BGS",
+    "zbar": 0.31271763,
+    "batch": 2,
+    "partners": [
+     12,
+     14
+    ]
+   },
+   {
+    "bin": 14,
+    "group": "BGS",
+    "zbar": 0.32969269,
+    "batch": 1,
+    "partners": [
+     13,
+     15
+    ]
+   },
+   {
+    "bin": 15,
+    "group": "BGS",
+    "zbar": 0.34682989,
+    "batch": 2,
+    "partners": [
+     14,
+     16
+    ]
+   },
+   {
+    "bin": 16,
+    "group": "BGS",
+    "zbar": 0.36393504,
+    "batch": 1,
+    "partners": [
+     15,
+     17
+    ]
+   },
+   {
+    "bin": 17,
+    "group": "BGS",
+    "zbar": 0.38123804,
+    "batch": 2,
+    "partners": [
+     16,
+     18
+    ]
+   },
+   {
+    "bin": 18,
+    "group": "LRG1",
+    "zbar": 0.40897118,
+    "batch": 1,
+    "partners": [
+     17,
+     19
+    ]
+   },
+   {
+    "bin": 19,
+    "group": "LRG1",
+    "zbar": 0.42705526,
+    "batch": 2,
+    "partners": [
+     18,
+     20
+    ]
+   },
+   {
+    "bin": 20,
+    "group": "LRG1",
+    "zbar": 0.44526161,
+    "batch": 1,
+    "partners": [
+     19,
+     21
+    ]
+   },
+   {
+    "bin": 21,
+    "group": "LRG1",
+    "zbar": 0.46354529,
+    "batch": 2,
+    "partners": [
+     20,
+     22
+    ]
+   },
+   {
+    "bin": 22,
+    "group": "LRG1",
+    "zbar": 0.48219412,
+    "batch": 1,
+    "partners": [
+     21,
+     23
+    ]
+   },
+   {
+    "bin": 23,
+    "group": "LRG1",
+    "zbar": 0.50090305,
+    "batch": 2,
+    "partners": [
+     22,
+     24
+    ]
+   },
+   {
+    "bin": 24,
+    "group": "LRG1",
+    "zbar": 0.52001353,
+    "batch": 1,
+    "partners": [
+     23,
+     25
+    ]
+   },
+   {
+    "bin": 25,
+    "group": "LRG1",
+    "zbar": 0.53922411,
+    "batch": 2,
+    "partners": [
+     24,
+     26
+    ]
+   },
+   {
+    "bin": 26,
+    "group": "LRG1",
+    "zbar": 0.55866496,
+    "batch": 1,
+    "partners": [
+     25,
+     27
+    ]
+   },
+   {
+    "bin": 27,
+    "group": "LRG1",
+    "zbar": 0.57837833,
+    "batch": 2,
+    "partners": [
+     26,
+     28
+    ]
+   },
+   {
+    "bin": 28,
+    "group": "LRG1",
+    "zbar": 0.59840624,
+    "batch": 1,
+    "partners": [
+     27,
+     29
+    ]
+   },
+   {
+    "bin": 29,
+    "group": "LRG2",
+    "zbar": 0.61844227,
+    "batch": 2,
+    "partners": [
+     28,
+     30
+    ]
+   },
+   {
+    "bin": 30,
+    "group": "LRG2",
+    "zbar": 0.63894895,
+    "batch": 1,
+    "partners": [
+     29,
+     31
+    ]
+   },
+   {
+    "bin": 31,
+    "group": "LRG2",
+    "zbar": 0.65976554,
+    "batch": 2,
+    "partners": [
+     30,
+     32
+    ]
+   },
+   {
+    "bin": 32,
+    "group": "LRG2",
+    "zbar": 0.68078722,
+    "batch": 1,
+    "partners": [
+     31,
+     33
+    ]
+   },
+   {
+    "bin": 33,
+    "group": "LRG2",
+    "zbar": 0.70189792,
+    "batch": 2,
+    "partners": [
+     32,
+     34
+    ]
+   },
+   {
+    "bin": 34,
+    "group": "LRG2",
+    "zbar": 0.72351664,
+    "batch": 1,
+    "partners": [
+     33,
+     35
+    ]
+   },
+   {
+    "bin": 35,
+    "group": "LRG2",
+    "zbar": 0.74544171,
+    "batch": 2,
+    "partners": [
+     34,
+     36
+    ]
+   },
+   {
+    "bin": 36,
+    "group": "LRG2",
+    "zbar": 0.76765873,
+    "batch": 1,
+    "partners": [
+     35,
+     37
+    ]
+   },
+   {
+    "bin": 37,
+    "group": "LRG2",
+    "zbar": 0.79019848,
+    "batch": 2,
+    "partners": [
+     36,
+     38,
+     49
+    ]
+   },
+   {
+    "bin": 38,
+    "group": "LRG3",
+    "zbar": 0.8129942,
+    "batch": 1,
+    "partners": [
+     37,
+     39,
+     49,
+     50
+    ]
+   },
+   {
+    "bin": 39,
+    "group": "LRG3",
+    "zbar": 0.83606099,
+    "batch": 2,
+    "partners": [
+     38,
+     40,
+     50,
+     51
+    ]
+   },
+   {
+    "bin": 40,
+    "group": "LRG3",
+    "zbar": 0.85943993,
+    "batch": 1,
+    "partners": [
+     39,
+     41,
+     51,
+     52
+    ]
+   },
+   {
+    "bin": 41,
+    "group": "LRG3",
+    "zbar": 0.88324428,
+    "batch": 2,
+    "partners": [
+     40,
+     42,
+     52,
+     53
+    ]
+   },
+   {
+    "bin": 42,
+    "group": "LRG3",
+    "zbar": 0.90730787,
+    "batch": 1,
+    "partners": [
+     41,
+     43,
+     53,
+     54
+    ]
+   },
+   {
+    "bin": 43,
+    "group": "LRG3",
+    "zbar": 0.93196385,
+    "batch": 2,
+    "partners": [
+     42,
+     44,
+     54,
+     55
+    ]
+   },
+   {
+    "bin": 44,
+    "group": "LRG3",
+    "zbar": 0.95683205,
+    "batch": 1,
+    "partners": [
+     43,
+     45,
+     55,
+     56
+    ]
+   },
+   {
+    "bin": 45,
+    "group": "LRG3",
+    "zbar": 0.98195489,
+    "batch": 2,
+    "partners": [
+     44,
+     46,
+     56,
+     57
+    ]
+   },
+   {
+    "bin": 46,
+    "group": "LRG3",
+    "zbar": 1.00753155,
+    "batch": 1,
+    "partners": [
+     45,
+     47,
+     57,
+     58
+    ]
+   },
+   {
+    "bin": 47,
+    "group": "LRG3",
+    "zbar": 1.03374103,
+    "batch": 2,
+    "partners": [
+     46,
+     48,
+     58,
+     59
+    ]
+   },
+   {
+    "bin": 48,
+    "group": "LRG3",
+    "zbar": 1.06021086,
+    "batch": 1,
+    "partners": [
+     47,
+     59,
+     60
+    ]
+   },
+   {
+    "bin": 49,
+    "group": "ELG1",
+    "zbar": 0.81177304,
+    "batch": 3,
+    "partners": [
+     37,
+     38,
+     50
+    ]
+   },
+   {
+    "bin": 50,
+    "group": "ELG1",
+    "zbar": 0.83511565,
+    "batch": 4,
+    "partners": [
+     38,
+     39,
+     49,
+     51
+    ]
+   },
+   {
+    "bin": 51,
+    "group": "ELG1",
+    "zbar": 0.85850251,
+    "batch": 3,
+    "partners": [
+     39,
+     40,
+     50,
+     52
+    ]
+   },
+   {
+    "bin": 52,
+    "group": "ELG1",
+    "zbar": 0.88232691,
+    "batch": 4,
+    "partners": [
+     40,
+     41,
+     51,
+     53
+    ]
+   },
+   {
+    "bin": 53,
+    "group": "ELG1",
+    "zbar": 0.90634739,
+    "batch": 3,
+    "partners": [
+     41,
+     42,
+     52,
+     54
+    ]
+   },
+   {
+    "bin": 54,
+    "group": "ELG1",
+    "zbar": 0.93084212,
+    "batch": 4,
+    "partners": [
+     42,
+     43,
+     53,
+     55
+    ]
+   },
+   {
+    "bin": 55,
+    "group": "ELG1",
+    "zbar": 0.95600549,
+    "batch": 3,
+    "partners": [
+     43,
+     44,
+     54,
+     56
+    ]
+   },
+   {
+    "bin": 56,
+    "group": "ELG1",
+    "zbar": 0.98091464,
+    "batch": 4,
+    "partners": [
+     44,
+     45,
+     55,
+     57
+    ]
+   },
+   {
+    "bin": 57,
+    "group": "ELG1",
+    "zbar": 1.00680198,
+    "batch": 3,
+    "partners": [
+     45,
+     46,
+     56,
+     58
+    ]
+   },
+   {
+    "bin": 58,
+    "group": "ELG1",
+    "zbar": 1.03275933,
+    "batch": 4,
+    "partners": [
+     46,
+     47,
+     57,
+     59
+    ]
+   },
+   {
+    "bin": 59,
+    "group": "ELG1",
+    "zbar": 1.05936072,
+    "batch": 3,
+    "partners": [
+     47,
+     48,
+     58,
+     60
+    ]
+   },
+   {
+    "bin": 60,
+    "group": "ELG1",
+    "zbar": 1.0861598,
+    "batch": 2,
+    "partners": [
+     48,
+     59,
+     61
+    ]
+   },
+   {
+    "bin": 61,
+    "group": "ELG2",
+    "zbar": 1.11350021,
+    "batch": 1,
+    "partners": [
+     60,
+     62
+    ]
+   },
+   {
+    "bin": 62,
+    "group": "ELG2",
+    "zbar": 1.14143397,
+    "batch": 2,
+    "partners": [
+     61,
+     63
+    ]
+   },
+   {
+    "bin": 63,
+    "group": "ELG2",
+    "zbar": 1.16968441,
+    "batch": 1,
+    "partners": [
+     62,
+     64
+    ]
+   },
+   {
+    "bin": 64,
+    "group": "ELG2",
+    "zbar": 1.19855388,
+    "batch": 2,
+    "partners": [
+     63,
+     65
+    ]
+   },
+   {
+    "bin": 65,
+    "group": "ELG2",
+    "zbar": 1.2278088,
+    "batch": 1,
+    "partners": [
+     64,
+     66
+    ]
+   },
+   {
+    "bin": 66,
+    "group": "ELG2",
+    "zbar": 1.25727142,
+    "batch": 2,
+    "partners": [
+     65,
+     67
+    ]
+   },
+   {
+    "bin": 67,
+    "group": "ELG2",
+    "zbar": 1.28745064,
+    "batch": 1,
+    "partners": [
+     66,
+     68
+    ]
+   },
+   {
+    "bin": 68,
+    "group": "ELG2",
+    "zbar": 1.31844351,
+    "batch": 2,
+    "partners": [
+     67,
+     69
+    ]
+   },
+   {
+    "bin": 69,
+    "group": "ELG2",
+    "zbar": 1.34952648,
+    "batch": 1,
+    "partners": [
+     68,
+     70
+    ]
+   },
+   {
+    "bin": 70,
+    "group": "ELG2",
+    "zbar": 1.38146147,
+    "batch": 2,
+    "partners": [
+     69,
+     71
+    ]
+   },
+   {
+    "bin": 71,
+    "group": "ELG2",
+    "zbar": 1.41373971,
+    "batch": 1,
+    "partners": [
+     70,
+     72
+    ]
+   },
+   {
+    "bin": 72,
+    "group": "ELG2",
+    "zbar": 1.44671587,
+    "batch": 2,
+    "partners": [
+     71,
+     73
+    ]
+   },
+   {
+    "bin": 73,
+    "group": "ELG2",
+    "zbar": 1.48021483,
+    "batch": 1,
+    "partners": [
+     72,
+     74
+    ]
+   },
+   {
+    "bin": 74,
+    "group": "ELG2",
+    "zbar": 1.51398108,
+    "batch": 2,
+    "partners": [
+     73,
+     75
+    ]
+   },
+   {
+    "bin": 75,
+    "group": "ELG2",
+    "zbar": 1.54936111,
+    "batch": 1,
+    "partners": [
+     74
+    ]
+   }
+  ],
+  "pairs": [
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    4,
+    5
+   ],
+   [
+    5,
+    6
+   ],
+   [
+    6,
+    7
+   ],
+   [
+    7,
+    8
+   ],
+   [
+    8,
+    9
+   ],
+   [
+    9,
+    10
+   ],
+   [
+    10,
+    11
+   ],
+   [
+    11,
+    12
+   ],
+   [
+    12,
+    13
+   ],
+   [
+    13,
+    14
+   ],
+   [
+    14,
+    15
+   ],
+   [
+    15,
+    16
+   ],
+   [
+    16,
+    17
+   ],
+   [
+    17,
+    18
+   ],
+   [
+    18,
+    19
+   ],
+   [
+    19,
+    20
+   ],
+   [
+    20,
+    21
+   ],
+   [
+    21,
+    22
+   ],
+   [
+    22,
+    23
+   ],
+   [
+    23,
+    24
+   ],
+   [
+    24,
+    25
+   ],
+   [
+    25,
+    26
+   ],
+   [
+    26,
+    27
+   ],
+   [
+    27,
+    28
+   ],
+   [
+    28,
+    29
+   ],
+   [
+    29,
+    30
+   ],
+   [
+    30,
+    31
+   ],
+   [
+    31,
+    32
+   ],
+   [
+    32,
+    33
+   ],
+   [
+    33,
+    34
+   ],
+   [
+    34,
+    35
+   ],
+   [
+    35,
+    36
+   ],
+   [
+    36,
+    37
+   ],
+   [
+    37,
+    38
+   ],
+   [
+    37,
+    49
+   ],
+   [
+    38,
+    39
+   ],
+   [
+    38,
+    49
+   ],
+   [
+    38,
+    50
+   ],
+   [
+    39,
+    40
+   ],
+   [
+    39,
+    50
+   ],
+   [
+    39,
+    51
+   ],
+   [
+    40,
+    41
+   ],
+   [
+    40,
+    51
+   ],
+   [
+    40,
+    52
+   ],
+   [
+    41,
+    42
+   ],
+   [
+    41,
+    52
+   ],
+   [
+    41,
+    53
+   ],
+   [
+    42,
+    43
+   ],
+   [
+    42,
+    53
+   ],
+   [
+    42,
+    54
+   ],
+   [
+    43,
+    44
+   ],
+   [
+    43,
+    54
+   ],
+   [
+    43,
+    55
+   ],
+   [
+    44,
+    45
+   ],
+   [
+    44,
+    55
+   ],
+   [
+    44,
+    56
+   ],
+   [
+    45,
+    46
+   ],
+   [
+    45,
+    56
+   ],
+   [
+    45,
+    57
+   ],
+   [
+    46,
+    47
+   ],
+   [
+    46,
+    57
+   ],
+   [
+    46,
+    58
+   ],
+   [
+    47,
+    48
+   ],
+   [
+    47,
+    58
+   ],
+   [
+    47,
+    59
+   ],
+   [
+    48,
+    59
+   ],
+   [
+    48,
+    60
+   ],
+   [
+    49,
+    50
+   ],
+   [
+    50,
+    51
+   ],
+   [
+    51,
+    52
+   ],
+   [
+    52,
+    53
+   ],
+   [
+    53,
+    54
+   ],
+   [
+    54,
+    55
+   ],
+   [
+    55,
+    56
+   ],
+   [
+    56,
+    57
+   ],
+   [
+    57,
+    58
+   ],
+   [
+    58,
+    59
+   ],
+   [
+    59,
+    60
+   ],
+   [
+    60,
+    61
+   ],
+   [
+    61,
+    62
+   ],
+   [
+    62,
+    63
+   ],
+   [
+    63,
+    64
+   ],
+   [
+    64,
+    65
+   ],
+   [
+    65,
+    66
+   ],
+   [
+    66,
+    67
+   ],
+   [
+    67,
+    68
+   ],
+   [
+    68,
+    69
+   ],
+   [
+    69,
+    70
+   ],
+   [
+    70,
+    71
+   ],
+   [
+    71,
+    72
+   ],
+   [
+    72,
+    73
+   ],
+   [
+    73,
+    74
+   ],
+   [
+    74,
+    75
+   ]
+  ],
+  "groups": [
+   {
+    "name": "BGS",
+    "bins": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17
+    ],
+    "zbar_range": [
+     0.10764829,
+     0.38123804
+    ]
+   },
+   {
+    "name": "LRG1",
+    "bins": [
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28
+    ],
+    "zbar_range": [
+     0.40897118,
+     0.59840624
+    ]
+   },
+   {
+    "name": "LRG2",
+    "bins": [
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37
+    ],
+    "zbar_range": [
+     0.61844227,
+     0.79019848
+    ]
+   },
+   {
+    "name": "LRG3",
+    "bins": [
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48
+    ],
+    "zbar_range": [
+     0.8129942,
+     1.06021086
+    ]
+   },
+   {
+    "name": "ELG1",
+    "bins": [
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60
+    ],
+    "zbar_range": [
+     0.81177304,
+     1.0861598
+    ]
+   },
+   {
+    "name": "ELG2",
+    "bins": [
+     61,
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75
+    ],
+    "zbar_range": [
+     1.11350021,
+     1.54936111
+    ]
+   }
+  ],
+  "batches": [
+   {
+    "batch": 1,
+    "bins": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10,
+     12,
+     14,
+     16,
+     18,
+     20,
+     22,
+     24,
+     26,
+     28,
+     30,
+     32,
+     34,
+     36,
+     38,
+     40,
+     42,
+     44,
+     46,
+     48,
+     61,
+     63,
+     65,
+     67,
+     69,
+     71,
+     73,
+     75
+    ]
+   },
+   {
+    "batch": 2,
+    "bins": [
+     1,
+     3,
+     5,
+     7,
+     9,
+     11,
+     13,
+     15,
+     17,
+     19,
+     21,
+     23,
+     25,
+     27,
+     29,
+     31,
+     33,
+     35,
+     37,
+     39,
+     41,
+     43,
+     45,
+     47,
+     60,
+     62,
+     64,
+     66,
+     68,
+     70,
+     72,
+     74
+    ]
+   },
+   {
+    "batch": 3,
+    "bins": [
+     49,
+     51,
+     53,
+     55,
+     57,
+     59
+    ]
+   },
+   {
+    "batch": 4,
+    "bins": [
+     50,
+     52,
+     54,
+     56,
+     58
+    ]
+   }
+  ],
+  "row_map": {
+   "n": 9964,
+   "n_ee": 795,
+   "nell": 53,
+   "spectra": [
+    {
+     "spectrum": 0,
+     "bins": [
+      0,
+      0
+     ],
+     "rows": [
+      795,
+      848
+     ]
+    },
+    {
+     "spectrum": 1,
+     "bins": [
+      1,
+      1
+     ],
+     "rows": [
+      848,
+      901
+     ]
+    },
+    {
+     "spectrum": 2,
+     "bins": [
+      2,
+      2
+     ],
+     "rows": [
+      901,
+      954
+     ]
+    },
+    {
+     "spectrum": 3,
+     "bins": [
+      3,
+      3
+     ],
+     "rows": [
+      954,
+      1007
+     ]
+    },
+    {
+     "spectrum": 4,
+     "bins": [
+      4,
+      4
+     ],
+     "rows": [
+      1007,
+      1060
+     ]
+    },
+    {
+     "spectrum": 5,
+     "bins": [
+      5,
+      5
+     ],
+     "rows": [
+      1060,
+      1113
+     ]
+    },
+    {
+     "spectrum": 6,
+     "bins": [
+      6,
+      6
+     ],
+     "rows": [
+      1113,
+      1166
+     ]
+    },
+    {
+     "spectrum": 7,
+     "bins": [
+      7,
+      7
+     ],
+     "rows": [
+      1166,
+      1219
+     ]
+    },
+    {
+     "spectrum": 8,
+     "bins": [
+      8,
+      8
+     ],
+     "rows": [
+      1219,
+      1272
+     ]
+    },
+    {
+     "spectrum": 9,
+     "bins": [
+      9,
+      9
+     ],
+     "rows": [
+      1272,
+      1325
+     ]
+    },
+    {
+     "spectrum": 10,
+     "bins": [
+      10,
+      10
+     ],
+     "rows": [
+      1325,
+      1378
+     ]
+    },
+    {
+     "spectrum": 11,
+     "bins": [
+      11,
+      11
+     ],
+     "rows": [
+      1378,
+      1431
+     ]
+    },
+    {
+     "spectrum": 12,
+     "bins": [
+      12,
+      12
+     ],
+     "rows": [
+      1431,
+      1484
+     ]
+    },
+    {
+     "spectrum": 13,
+     "bins": [
+      13,
+      13
+     ],
+     "rows": [
+      1484,
+      1537
+     ]
+    },
+    {
+     "spectrum": 14,
+     "bins": [
+      14,
+      14
+     ],
+     "rows": [
+      1537,
+      1590
+     ]
+    },
+    {
+     "spectrum": 15,
+     "bins": [
+      15,
+      15
+     ],
+     "rows": [
+      1590,
+      1643
+     ]
+    },
+    {
+     "spectrum": 16,
+     "bins": [
+      16,
+      16
+     ],
+     "rows": [
+      1643,
+      1696
+     ]
+    },
+    {
+     "spectrum": 17,
+     "bins": [
+      17,
+      17
+     ],
+     "rows": [
+      1696,
+      1749
+     ]
+    },
+    {
+     "spectrum": 18,
+     "bins": [
+      18,
+      18
+     ],
+     "rows": [
+      1749,
+      1802
+     ]
+    },
+    {
+     "spectrum": 19,
+     "bins": [
+      19,
+      19
+     ],
+     "rows": [
+      1802,
+      1855
+     ]
+    },
+    {
+     "spectrum": 20,
+     "bins": [
+      20,
+      20
+     ],
+     "rows": [
+      1855,
+      1908
+     ]
+    },
+    {
+     "spectrum": 21,
+     "bins": [
+      21,
+      21
+     ],
+     "rows": [
+      1908,
+      1961
+     ]
+    },
+    {
+     "spectrum": 22,
+     "bins": [
+      22,
+      22
+     ],
+     "rows": [
+      1961,
+      2014
+     ]
+    },
+    {
+     "spectrum": 23,
+     "bins": [
+      23,
+      23
+     ],
+     "rows": [
+      2014,
+      2067
+     ]
+    },
+    {
+     "spectrum": 24,
+     "bins": [
+      24,
+      24
+     ],
+     "rows": [
+      2067,
+      2120
+     ]
+    },
+    {
+     "spectrum": 25,
+     "bins": [
+      25,
+      25
+     ],
+     "rows": [
+      2120,
+      2173
+     ]
+    },
+    {
+     "spectrum": 26,
+     "bins": [
+      26,
+      26
+     ],
+     "rows": [
+      2173,
+      2226
+     ]
+    },
+    {
+     "spectrum": 27,
+     "bins": [
+      27,
+      27
+     ],
+     "rows": [
+      2226,
+      2279
+     ]
+    },
+    {
+     "spectrum": 28,
+     "bins": [
+      28,
+      28
+     ],
+     "rows": [
+      2279,
+      2332
+     ]
+    },
+    {
+     "spectrum": 29,
+     "bins": [
+      29,
+      29
+     ],
+     "rows": [
+      2332,
+      2385
+     ]
+    },
+    {
+     "spectrum": 30,
+     "bins": [
+      30,
+      30
+     ],
+     "rows": [
+      2385,
+      2438
+     ]
+    },
+    {
+     "spectrum": 31,
+     "bins": [
+      31,
+      31
+     ],
+     "rows": [
+      2438,
+      2491
+     ]
+    },
+    {
+     "spectrum": 32,
+     "bins": [
+      32,
+      32
+     ],
+     "rows": [
+      2491,
+      2544
+     ]
+    },
+    {
+     "spectrum": 33,
+     "bins": [
+      33,
+      33
+     ],
+     "rows": [
+      2544,
+      2597
+     ]
+    },
+    {
+     "spectrum": 34,
+     "bins": [
+      34,
+      34
+     ],
+     "rows": [
+      2597,
+      2650
+     ]
+    },
+    {
+     "spectrum": 35,
+     "bins": [
+      35,
+      35
+     ],
+     "rows": [
+      2650,
+      2703
+     ]
+    },
+    {
+     "spectrum": 36,
+     "bins": [
+      36,
+      36
+     ],
+     "rows": [
+      2703,
+      2756
+     ]
+    },
+    {
+     "spectrum": 37,
+     "bins": [
+      37,
+      37
+     ],
+     "rows": [
+      2756,
+      2809
+     ]
+    },
+    {
+     "spectrum": 38,
+     "bins": [
+      38,
+      38
+     ],
+     "rows": [
+      2809,
+      2862
+     ]
+    },
+    {
+     "spectrum": 39,
+     "bins": [
+      39,
+      39
+     ],
+     "rows": [
+      2862,
+      2915
+     ]
+    },
+    {
+     "spectrum": 40,
+     "bins": [
+      40,
+      40
+     ],
+     "rows": [
+      2915,
+      2968
+     ]
+    },
+    {
+     "spectrum": 41,
+     "bins": [
+      41,
+      41
+     ],
+     "rows": [
+      2968,
+      3021
+     ]
+    },
+    {
+     "spectrum": 42,
+     "bins": [
+      42,
+      42
+     ],
+     "rows": [
+      3021,
+      3074
+     ]
+    },
+    {
+     "spectrum": 43,
+     "bins": [
+      43,
+      43
+     ],
+     "rows": [
+      3074,
+      3127
+     ]
+    },
+    {
+     "spectrum": 44,
+     "bins": [
+      44,
+      44
+     ],
+     "rows": [
+      3127,
+      3180
+     ]
+    },
+    {
+     "spectrum": 45,
+     "bins": [
+      45,
+      45
+     ],
+     "rows": [
+      3180,
+      3233
+     ]
+    },
+    {
+     "spectrum": 46,
+     "bins": [
+      46,
+      46
+     ],
+     "rows": [
+      3233,
+      3286
+     ]
+    },
+    {
+     "spectrum": 47,
+     "bins": [
+      47,
+      47
+     ],
+     "rows": [
+      3286,
+      3339
+     ]
+    },
+    {
+     "spectrum": 48,
+     "bins": [
+      48,
+      48
+     ],
+     "rows": [
+      3339,
+      3392
+     ]
+    },
+    {
+     "spectrum": 49,
+     "bins": [
+      49,
+      49
+     ],
+     "rows": [
+      3392,
+      3445
+     ]
+    },
+    {
+     "spectrum": 50,
+     "bins": [
+      50,
+      50
+     ],
+     "rows": [
+      3445,
+      3498
+     ]
+    },
+    {
+     "spectrum": 51,
+     "bins": [
+      51,
+      51
+     ],
+     "rows": [
+      3498,
+      3551
+     ]
+    },
+    {
+     "spectrum": 52,
+     "bins": [
+      52,
+      52
+     ],
+     "rows": [
+      3551,
+      3604
+     ]
+    },
+    {
+     "spectrum": 53,
+     "bins": [
+      53,
+      53
+     ],
+     "rows": [
+      3604,
+      3657
+     ]
+    },
+    {
+     "spectrum": 54,
+     "bins": [
+      54,
+      54
+     ],
+     "rows": [
+      3657,
+      3710
+     ]
+    },
+    {
+     "spectrum": 55,
+     "bins": [
+      55,
+      55
+     ],
+     "rows": [
+      3710,
+      3763
+     ]
+    },
+    {
+     "spectrum": 56,
+     "bins": [
+      56,
+      56
+     ],
+     "rows": [
+      3763,
+      3816
+     ]
+    },
+    {
+     "spectrum": 57,
+     "bins": [
+      57,
+      57
+     ],
+     "rows": [
+      3816,
+      3869
+     ]
+    },
+    {
+     "spectrum": 58,
+     "bins": [
+      58,
+      58
+     ],
+     "rows": [
+      3869,
+      3922
+     ]
+    },
+    {
+     "spectrum": 59,
+     "bins": [
+      59,
+      59
+     ],
+     "rows": [
+      3922,
+      3975
+     ]
+    },
+    {
+     "spectrum": 60,
+     "bins": [
+      60,
+      60
+     ],
+     "rows": [
+      3975,
+      4028
+     ]
+    },
+    {
+     "spectrum": 61,
+     "bins": [
+      61,
+      61
+     ],
+     "rows": [
+      4028,
+      4081
+     ]
+    },
+    {
+     "spectrum": 62,
+     "bins": [
+      62,
+      62
+     ],
+     "rows": [
+      4081,
+      4134
+     ]
+    },
+    {
+     "spectrum": 63,
+     "bins": [
+      63,
+      63
+     ],
+     "rows": [
+      4134,
+      4187
+     ]
+    },
+    {
+     "spectrum": 64,
+     "bins": [
+      64,
+      64
+     ],
+     "rows": [
+      4187,
+      4240
+     ]
+    },
+    {
+     "spectrum": 65,
+     "bins": [
+      65,
+      65
+     ],
+     "rows": [
+      4240,
+      4293
+     ]
+    },
+    {
+     "spectrum": 66,
+     "bins": [
+      66,
+      66
+     ],
+     "rows": [
+      4293,
+      4346
+     ]
+    },
+    {
+     "spectrum": 67,
+     "bins": [
+      67,
+      67
+     ],
+     "rows": [
+      4346,
+      4399
+     ]
+    },
+    {
+     "spectrum": 68,
+     "bins": [
+      68,
+      68
+     ],
+     "rows": [
+      4399,
+      4452
+     ]
+    },
+    {
+     "spectrum": 69,
+     "bins": [
+      69,
+      69
+     ],
+     "rows": [
+      4452,
+      4505
+     ]
+    },
+    {
+     "spectrum": 70,
+     "bins": [
+      70,
+      70
+     ],
+     "rows": [
+      4505,
+      4558
+     ]
+    },
+    {
+     "spectrum": 71,
+     "bins": [
+      71,
+      71
+     ],
+     "rows": [
+      4558,
+      4611
+     ]
+    },
+    {
+     "spectrum": 72,
+     "bins": [
+      72,
+      72
+     ],
+     "rows": [
+      4611,
+      4664
+     ]
+    },
+    {
+     "spectrum": 73,
+     "bins": [
+      73,
+      73
+     ],
+     "rows": [
+      4664,
+      4717
+     ]
+    },
+    {
+     "spectrum": 74,
+     "bins": [
+      74,
+      74
+     ],
+     "rows": [
+      4717,
+      4770
+     ]
+    },
+    {
+     "spectrum": 75,
+     "bins": [
+      75,
+      75
+     ],
+     "rows": [
+      4770,
+      4823
+     ]
+    },
+    {
+     "spectrum": 76,
+     "bins": [
+      0,
+      1
+     ],
+     "rows": [
+      4823,
+      4876
+     ]
+    },
+    {
+     "spectrum": 77,
+     "bins": [
+      1,
+      2
+     ],
+     "rows": [
+      4876,
+      4929
+     ]
+    },
+    {
+     "spectrum": 78,
+     "bins": [
+      2,
+      3
+     ],
+     "rows": [
+      4929,
+      4982
+     ]
+    },
+    {
+     "spectrum": 79,
+     "bins": [
+      3,
+      4
+     ],
+     "rows": [
+      4982,
+      5035
+     ]
+    },
+    {
+     "spectrum": 80,
+     "bins": [
+      4,
+      5
+     ],
+     "rows": [
+      5035,
+      5088
+     ]
+    },
+    {
+     "spectrum": 81,
+     "bins": [
+      5,
+      6
+     ],
+     "rows": [
+      5088,
+      5141
+     ]
+    },
+    {
+     "spectrum": 82,
+     "bins": [
+      6,
+      7
+     ],
+     "rows": [
+      5141,
+      5194
+     ]
+    },
+    {
+     "spectrum": 83,
+     "bins": [
+      7,
+      8
+     ],
+     "rows": [
+      5194,
+      5247
+     ]
+    },
+    {
+     "spectrum": 84,
+     "bins": [
+      8,
+      9
+     ],
+     "rows": [
+      5247,
+      5300
+     ]
+    },
+    {
+     "spectrum": 85,
+     "bins": [
+      9,
+      10
+     ],
+     "rows": [
+      5300,
+      5353
+     ]
+    },
+    {
+     "spectrum": 86,
+     "bins": [
+      10,
+      11
+     ],
+     "rows": [
+      5353,
+      5406
+     ]
+    },
+    {
+     "spectrum": 87,
+     "bins": [
+      11,
+      12
+     ],
+     "rows": [
+      5406,
+      5459
+     ]
+    },
+    {
+     "spectrum": 88,
+     "bins": [
+      12,
+      13
+     ],
+     "rows": [
+      5459,
+      5512
+     ]
+    },
+    {
+     "spectrum": 89,
+     "bins": [
+      13,
+      14
+     ],
+     "rows": [
+      5512,
+      5565
+     ]
+    },
+    {
+     "spectrum": 90,
+     "bins": [
+      14,
+      15
+     ],
+     "rows": [
+      5565,
+      5618
+     ]
+    },
+    {
+     "spectrum": 91,
+     "bins": [
+      15,
+      16
+     ],
+     "rows": [
+      5618,
+      5671
+     ]
+    },
+    {
+     "spectrum": 92,
+     "bins": [
+      16,
+      17
+     ],
+     "rows": [
+      5671,
+      5724
+     ]
+    },
+    {
+     "spectrum": 93,
+     "bins": [
+      17,
+      18
+     ],
+     "rows": [
+      5724,
+      5777
+     ]
+    },
+    {
+     "spectrum": 94,
+     "bins": [
+      18,
+      19
+     ],
+     "rows": [
+      5777,
+      5830
+     ]
+    },
+    {
+     "spectrum": 95,
+     "bins": [
+      19,
+      20
+     ],
+     "rows": [
+      5830,
+      5883
+     ]
+    },
+    {
+     "spectrum": 96,
+     "bins": [
+      20,
+      21
+     ],
+     "rows": [
+      5883,
+      5936
+     ]
+    },
+    {
+     "spectrum": 97,
+     "bins": [
+      21,
+      22
+     ],
+     "rows": [
+      5936,
+      5989
+     ]
+    },
+    {
+     "spectrum": 98,
+     "bins": [
+      22,
+      23
+     ],
+     "rows": [
+      5989,
+      6042
+     ]
+    },
+    {
+     "spectrum": 99,
+     "bins": [
+      23,
+      24
+     ],
+     "rows": [
+      6042,
+      6095
+     ]
+    },
+    {
+     "spectrum": 100,
+     "bins": [
+      24,
+      25
+     ],
+     "rows": [
+      6095,
+      6148
+     ]
+    },
+    {
+     "spectrum": 101,
+     "bins": [
+      25,
+      26
+     ],
+     "rows": [
+      6148,
+      6201
+     ]
+    },
+    {
+     "spectrum": 102,
+     "bins": [
+      26,
+      27
+     ],
+     "rows": [
+      6201,
+      6254
+     ]
+    },
+    {
+     "spectrum": 103,
+     "bins": [
+      27,
+      28
+     ],
+     "rows": [
+      6254,
+      6307
+     ]
+    },
+    {
+     "spectrum": 104,
+     "bins": [
+      28,
+      29
+     ],
+     "rows": [
+      6307,
+      6360
+     ]
+    },
+    {
+     "spectrum": 105,
+     "bins": [
+      29,
+      30
+     ],
+     "rows": [
+      6360,
+      6413
+     ]
+    },
+    {
+     "spectrum": 106,
+     "bins": [
+      30,
+      31
+     ],
+     "rows": [
+      6413,
+      6466
+     ]
+    },
+    {
+     "spectrum": 107,
+     "bins": [
+      31,
+      32
+     ],
+     "rows": [
+      6466,
+      6519
+     ]
+    },
+    {
+     "spectrum": 108,
+     "bins": [
+      32,
+      33
+     ],
+     "rows": [
+      6519,
+      6572
+     ]
+    },
+    {
+     "spectrum": 109,
+     "bins": [
+      33,
+      34
+     ],
+     "rows": [
+      6572,
+      6625
+     ]
+    },
+    {
+     "spectrum": 110,
+     "bins": [
+      34,
+      35
+     ],
+     "rows": [
+      6625,
+      6678
+     ]
+    },
+    {
+     "spectrum": 111,
+     "bins": [
+      35,
+      36
+     ],
+     "rows": [
+      6678,
+      6731
+     ]
+    },
+    {
+     "spectrum": 112,
+     "bins": [
+      36,
+      37
+     ],
+     "rows": [
+      6731,
+      6784
+     ]
+    },
+    {
+     "spectrum": 113,
+     "bins": [
+      37,
+      38
+     ],
+     "rows": [
+      6784,
+      6837
+     ]
+    },
+    {
+     "spectrum": 114,
+     "bins": [
+      37,
+      49
+     ],
+     "rows": [
+      6837,
+      6890
+     ]
+    },
+    {
+     "spectrum": 115,
+     "bins": [
+      38,
+      39
+     ],
+     "rows": [
+      6890,
+      6943
+     ]
+    },
+    {
+     "spectrum": 116,
+     "bins": [
+      38,
+      49
+     ],
+     "rows": [
+      6943,
+      6996
+     ]
+    },
+    {
+     "spectrum": 117,
+     "bins": [
+      38,
+      50
+     ],
+     "rows": [
+      6996,
+      7049
+     ]
+    },
+    {
+     "spectrum": 118,
+     "bins": [
+      39,
+      40
+     ],
+     "rows": [
+      7049,
+      7102
+     ]
+    },
+    {
+     "spectrum": 119,
+     "bins": [
+      39,
+      50
+     ],
+     "rows": [
+      7102,
+      7155
+     ]
+    },
+    {
+     "spectrum": 120,
+     "bins": [
+      39,
+      51
+     ],
+     "rows": [
+      7155,
+      7208
+     ]
+    },
+    {
+     "spectrum": 121,
+     "bins": [
+      40,
+      41
+     ],
+     "rows": [
+      7208,
+      7261
+     ]
+    },
+    {
+     "spectrum": 122,
+     "bins": [
+      40,
+      51
+     ],
+     "rows": [
+      7261,
+      7314
+     ]
+    },
+    {
+     "spectrum": 123,
+     "bins": [
+      40,
+      52
+     ],
+     "rows": [
+      7314,
+      7367
+     ]
+    },
+    {
+     "spectrum": 124,
+     "bins": [
+      41,
+      42
+     ],
+     "rows": [
+      7367,
+      7420
+     ]
+    },
+    {
+     "spectrum": 125,
+     "bins": [
+      41,
+      52
+     ],
+     "rows": [
+      7420,
+      7473
+     ]
+    },
+    {
+     "spectrum": 126,
+     "bins": [
+      41,
+      53
+     ],
+     "rows": [
+      7473,
+      7526
+     ]
+    },
+    {
+     "spectrum": 127,
+     "bins": [
+      42,
+      43
+     ],
+     "rows": [
+      7526,
+      7579
+     ]
+    },
+    {
+     "spectrum": 128,
+     "bins": [
+      42,
+      53
+     ],
+     "rows": [
+      7579,
+      7632
+     ]
+    },
+    {
+     "spectrum": 129,
+     "bins": [
+      42,
+      54
+     ],
+     "rows": [
+      7632,
+      7685
+     ]
+    },
+    {
+     "spectrum": 130,
+     "bins": [
+      43,
+      44
+     ],
+     "rows": [
+      7685,
+      7738
+     ]
+    },
+    {
+     "spectrum": 131,
+     "bins": [
+      43,
+      54
+     ],
+     "rows": [
+      7738,
+      7791
+     ]
+    },
+    {
+     "spectrum": 132,
+     "bins": [
+      43,
+      55
+     ],
+     "rows": [
+      7791,
+      7844
+     ]
+    },
+    {
+     "spectrum": 133,
+     "bins": [
+      44,
+      45
+     ],
+     "rows": [
+      7844,
+      7897
+     ]
+    },
+    {
+     "spectrum": 134,
+     "bins": [
+      44,
+      55
+     ],
+     "rows": [
+      7897,
+      7950
+     ]
+    },
+    {
+     "spectrum": 135,
+     "bins": [
+      44,
+      56
+     ],
+     "rows": [
+      7950,
+      8003
+     ]
+    },
+    {
+     "spectrum": 136,
+     "bins": [
+      45,
+      46
+     ],
+     "rows": [
+      8003,
+      8056
+     ]
+    },
+    {
+     "spectrum": 137,
+     "bins": [
+      45,
+      56
+     ],
+     "rows": [
+      8056,
+      8109
+     ]
+    },
+    {
+     "spectrum": 138,
+     "bins": [
+      45,
+      57
+     ],
+     "rows": [
+      8109,
+      8162
+     ]
+    },
+    {
+     "spectrum": 139,
+     "bins": [
+      46,
+      47
+     ],
+     "rows": [
+      8162,
+      8215
+     ]
+    },
+    {
+     "spectrum": 140,
+     "bins": [
+      46,
+      57
+     ],
+     "rows": [
+      8215,
+      8268
+     ]
+    },
+    {
+     "spectrum": 141,
+     "bins": [
+      46,
+      58
+     ],
+     "rows": [
+      8268,
+      8321
+     ]
+    },
+    {
+     "spectrum": 142,
+     "bins": [
+      47,
+      48
+     ],
+     "rows": [
+      8321,
+      8374
+     ]
+    },
+    {
+     "spectrum": 143,
+     "bins": [
+      47,
+      58
+     ],
+     "rows": [
+      8374,
+      8427
+     ]
+    },
+    {
+     "spectrum": 144,
+     "bins": [
+      47,
+      59
+     ],
+     "rows": [
+      8427,
+      8480
+     ]
+    },
+    {
+     "spectrum": 145,
+     "bins": [
+      48,
+      59
+     ],
+     "rows": [
+      8480,
+      8533
+     ]
+    },
+    {
+     "spectrum": 146,
+     "bins": [
+      48,
+      60
+     ],
+     "rows": [
+      8533,
+      8586
+     ]
+    },
+    {
+     "spectrum": 147,
+     "bins": [
+      49,
+      50
+     ],
+     "rows": [
+      8586,
+      8639
+     ]
+    },
+    {
+     "spectrum": 148,
+     "bins": [
+      50,
+      51
+     ],
+     "rows": [
+      8639,
+      8692
+     ]
+    },
+    {
+     "spectrum": 149,
+     "bins": [
+      51,
+      52
+     ],
+     "rows": [
+      8692,
+      8745
+     ]
+    },
+    {
+     "spectrum": 150,
+     "bins": [
+      52,
+      53
+     ],
+     "rows": [
+      8745,
+      8798
+     ]
+    },
+    {
+     "spectrum": 151,
+     "bins": [
+      53,
+      54
+     ],
+     "rows": [
+      8798,
+      8851
+     ]
+    },
+    {
+     "spectrum": 152,
+     "bins": [
+      54,
+      55
+     ],
+     "rows": [
+      8851,
+      8904
+     ]
+    },
+    {
+     "spectrum": 153,
+     "bins": [
+      55,
+      56
+     ],
+     "rows": [
+      8904,
+      8957
+     ]
+    },
+    {
+     "spectrum": 154,
+     "bins": [
+      56,
+      57
+     ],
+     "rows": [
+      8957,
+      9010
+     ]
+    },
+    {
+     "spectrum": 155,
+     "bins": [
+      57,
+      58
+     ],
+     "rows": [
+      9010,
+      9063
+     ]
+    },
+    {
+     "spectrum": 156,
+     "bins": [
+      58,
+      59
+     ],
+     "rows": [
+      9063,
+      9116
+     ]
+    },
+    {
+     "spectrum": 157,
+     "bins": [
+      59,
+      60
+     ],
+     "rows": [
+      9116,
+      9169
+     ]
+    },
+    {
+     "spectrum": 158,
+     "bins": [
+      60,
+      61
+     ],
+     "rows": [
+      9169,
+      9222
+     ]
+    },
+    {
+     "spectrum": 159,
+     "bins": [
+      61,
+      62
+     ],
+     "rows": [
+      9222,
+      9275
+     ]
+    },
+    {
+     "spectrum": 160,
+     "bins": [
+      62,
+      63
+     ],
+     "rows": [
+      9275,
+      9328
+     ]
+    },
+    {
+     "spectrum": 161,
+     "bins": [
+      63,
+      64
+     ],
+     "rows": [
+      9328,
+      9381
+     ]
+    },
+    {
+     "spectrum": 162,
+     "bins": [
+      64,
+      65
+     ],
+     "rows": [
+      9381,
+      9434
+     ]
+    },
+    {
+     "spectrum": 163,
+     "bins": [
+      65,
+      66
+     ],
+     "rows": [
+      9434,
+      9487
+     ]
+    },
+    {
+     "spectrum": 164,
+     "bins": [
+      66,
+      67
+     ],
+     "rows": [
+      9487,
+      9540
+     ]
+    },
+    {
+     "spectrum": 165,
+     "bins": [
+      67,
+      68
+     ],
+     "rows": [
+      9540,
+      9593
+     ]
+    },
+    {
+     "spectrum": 166,
+     "bins": [
+      68,
+      69
+     ],
+     "rows": [
+      9593,
+      9646
+     ]
+    },
+    {
+     "spectrum": 167,
+     "bins": [
+      69,
+      70
+     ],
+     "rows": [
+      9646,
+      9699
+     ]
+    },
+    {
+     "spectrum": 168,
+     "bins": [
+      70,
+      71
+     ],
+     "rows": [
+      9699,
+      9752
+     ]
+    },
+    {
+     "spectrum": 169,
+     "bins": [
+      71,
+      72
+     ],
+     "rows": [
+      9752,
+      9805
+     ]
+    },
+    {
+     "spectrum": 170,
+     "bins": [
+      72,
+      73
+     ],
+     "rows": [
+      9805,
+      9858
+     ]
+    },
+    {
+     "spectrum": 171,
+     "bins": [
+      73,
+      74
+     ],
+     "rows": [
+      9858,
+      9911
+     ]
+    },
+    {
+     "spectrum": 172,
+     "bins": [
+      74,
+      75
+     ],
+     "rows": [
+      9911,
+      9964
+     ]
+    }
+   ],
+   "rows_of_bin": [
+    {
+     "bin": 0,
+     "spectra": [
+      0,
+      76
+     ],
+     "rows": [
+      [
+       795,
+       848
+      ],
+      [
+       4823,
+       4876
+      ]
+     ]
+    },
+    {
+     "bin": 1,
+     "spectra": [
+      1,
+      76,
+      77
+     ],
+     "rows": [
+      [
+       848,
+       901
+      ],
+      [
+       4823,
+       4929
+      ]
+     ]
+    },
+    {
+     "bin": 2,
+     "spectra": [
+      2,
+      77,
+      78
+     ],
+     "rows": [
+      [
+       901,
+       954
+      ],
+      [
+       4876,
+       4982
+      ]
+     ]
+    },
+    {
+     "bin": 3,
+     "spectra": [
+      3,
+      78,
+      79
+     ],
+     "rows": [
+      [
+       954,
+       1007
+      ],
+      [
+       4929,
+       5035
+      ]
+     ]
+    },
+    {
+     "bin": 4,
+     "spectra": [
+      4,
+      79,
+      80
+     ],
+     "rows": [
+      [
+       1007,
+       1060
+      ],
+      [
+       4982,
+       5088
+      ]
+     ]
+    },
+    {
+     "bin": 5,
+     "spectra": [
+      5,
+      80,
+      81
+     ],
+     "rows": [
+      [
+       1060,
+       1113
+      ],
+      [
+       5035,
+       5141
+      ]
+     ]
+    },
+    {
+     "bin": 6,
+     "spectra": [
+      6,
+      81,
+      82
+     ],
+     "rows": [
+      [
+       1113,
+       1166
+      ],
+      [
+       5088,
+       5194
+      ]
+     ]
+    },
+    {
+     "bin": 7,
+     "spectra": [
+      7,
+      82,
+      83
+     ],
+     "rows": [
+      [
+       1166,
+       1219
+      ],
+      [
+       5141,
+       5247
+      ]
+     ]
+    },
+    {
+     "bin": 8,
+     "spectra": [
+      8,
+      83,
+      84
+     ],
+     "rows": [
+      [
+       1219,
+       1272
+      ],
+      [
+       5194,
+       5300
+      ]
+     ]
+    },
+    {
+     "bin": 9,
+     "spectra": [
+      9,
+      84,
+      85
+     ],
+     "rows": [
+      [
+       1272,
+       1325
+      ],
+      [
+       5247,
+       5353
+      ]
+     ]
+    },
+    {
+     "bin": 10,
+     "spectra": [
+      10,
+      85,
+      86
+     ],
+     "rows": [
+      [
+       1325,
+       1378
+      ],
+      [
+       5300,
+       5406
+      ]
+     ]
+    },
+    {
+     "bin": 11,
+     "spectra": [
+      11,
+      86,
+      87
+     ],
+     "rows": [
+      [
+       1378,
+       1431
+      ],
+      [
+       5353,
+       5459
+      ]
+     ]
+    },
+    {
+     "bin": 12,
+     "spectra": [
+      12,
+      87,
+      88
+     ],
+     "rows": [
+      [
+       1431,
+       1484
+      ],
+      [
+       5406,
+       5512
+      ]
+     ]
+    },
+    {
+     "bin": 13,
+     "spectra": [
+      13,
+      88,
+      89
+     ],
+     "rows": [
+      [
+       1484,
+       1537
+      ],
+      [
+       5459,
+       5565
+      ]
+     ]
+    },
+    {
+     "bin": 14,
+     "spectra": [
+      14,
+      89,
+      90
+     ],
+     "rows": [
+      [
+       1537,
+       1590
+      ],
+      [
+       5512,
+       5618
+      ]
+     ]
+    },
+    {
+     "bin": 15,
+     "spectra": [
+      15,
+      90,
+      91
+     ],
+     "rows": [
+      [
+       1590,
+       1643
+      ],
+      [
+       5565,
+       5671
+      ]
+     ]
+    },
+    {
+     "bin": 16,
+     "spectra": [
+      16,
+      91,
+      92
+     ],
+     "rows": [
+      [
+       1643,
+       1696
+      ],
+      [
+       5618,
+       5724
+      ]
+     ]
+    },
+    {
+     "bin": 17,
+     "spectra": [
+      17,
+      92,
+      93
+     ],
+     "rows": [
+      [
+       1696,
+       1749
+      ],
+      [
+       5671,
+       5777
+      ]
+     ]
+    },
+    {
+     "bin": 18,
+     "spectra": [
+      18,
+      93,
+      94
+     ],
+     "rows": [
+      [
+       1749,
+       1802
+      ],
+      [
+       5724,
+       5830
+      ]
+     ]
+    },
+    {
+     "bin": 19,
+     "spectra": [
+      19,
+      94,
+      95
+     ],
+     "rows": [
+      [
+       1802,
+       1855
+      ],
+      [
+       5777,
+       5883
+      ]
+     ]
+    },
+    {
+     "bin": 20,
+     "spectra": [
+      20,
+      95,
+      96
+     ],
+     "rows": [
+      [
+       1855,
+       1908
+      ],
+      [
+       5830,
+       5936
+      ]
+     ]
+    },
+    {
+     "bin": 21,
+     "spectra": [
+      21,
+      96,
+      97
+     ],
+     "rows": [
+      [
+       1908,
+       1961
+      ],
+      [
+       5883,
+       5989
+      ]
+     ]
+    },
+    {
+     "bin": 22,
+     "spectra": [
+      22,
+      97,
+      98
+     ],
+     "rows": [
+      [
+       1961,
+       2014
+      ],
+      [
+       5936,
+       6042
+      ]
+     ]
+    },
+    {
+     "bin": 23,
+     "spectra": [
+      23,
+      98,
+      99
+     ],
+     "rows": [
+      [
+       2014,
+       2067
+      ],
+      [
+       5989,
+       6095
+      ]
+     ]
+    },
+    {
+     "bin": 24,
+     "spectra": [
+      24,
+      99,
+      100
+     ],
+     "rows": [
+      [
+       2067,
+       2120
+      ],
+      [
+       6042,
+       6148
+      ]
+     ]
+    },
+    {
+     "bin": 25,
+     "spectra": [
+      25,
+      100,
+      101
+     ],
+     "rows": [
+      [
+       2120,
+       2173
+      ],
+      [
+       6095,
+       6201
+      ]
+     ]
+    },
+    {
+     "bin": 26,
+     "spectra": [
+      26,
+      101,
+      102
+     ],
+     "rows": [
+      [
+       2173,
+       2226
+      ],
+      [
+       6148,
+       6254
+      ]
+     ]
+    },
+    {
+     "bin": 27,
+     "spectra": [
+      27,
+      102,
+      103
+     ],
+     "rows": [
+      [
+       2226,
+       2279
+      ],
+      [
+       6201,
+       6307
+      ]
+     ]
+    },
+    {
+     "bin": 28,
+     "spectra": [
+      28,
+      103,
+      104
+     ],
+     "rows": [
+      [
+       2279,
+       2332
+      ],
+      [
+       6254,
+       6360
+      ]
+     ]
+    },
+    {
+     "bin": 29,
+     "spectra": [
+      29,
+      104,
+      105
+     ],
+     "rows": [
+      [
+       2332,
+       2385
+      ],
+      [
+       6307,
+       6413
+      ]
+     ]
+    },
+    {
+     "bin": 30,
+     "spectra": [
+      30,
+      105,
+      106
+     ],
+     "rows": [
+      [
+       2385,
+       2438
+      ],
+      [
+       6360,
+       6466
+      ]
+     ]
+    },
+    {
+     "bin": 31,
+     "spectra": [
+      31,
+      106,
+      107
+     ],
+     "rows": [
+      [
+       2438,
+       2491
+      ],
+      [
+       6413,
+       6519
+      ]
+     ]
+    },
+    {
+     "bin": 32,
+     "spectra": [
+      32,
+      107,
+      108
+     ],
+     "rows": [
+      [
+       2491,
+       2544
+      ],
+      [
+       6466,
+       6572
+      ]
+     ]
+    },
+    {
+     "bin": 33,
+     "spectra": [
+      33,
+      108,
+      109
+     ],
+     "rows": [
+      [
+       2544,
+       2597
+      ],
+      [
+       6519,
+       6625
+      ]
+     ]
+    },
+    {
+     "bin": 34,
+     "spectra": [
+      34,
+      109,
+      110
+     ],
+     "rows": [
+      [
+       2597,
+       2650
+      ],
+      [
+       6572,
+       6678
+      ]
+     ]
+    },
+    {
+     "bin": 35,
+     "spectra": [
+      35,
+      110,
+      111
+     ],
+     "rows": [
+      [
+       2650,
+       2703
+      ],
+      [
+       6625,
+       6731
+      ]
+     ]
+    },
+    {
+     "bin": 36,
+     "spectra": [
+      36,
+      111,
+      112
+     ],
+     "rows": [
+      [
+       2703,
+       2756
+      ],
+      [
+       6678,
+       6784
+      ]
+     ]
+    },
+    {
+     "bin": 37,
+     "spectra": [
+      37,
+      112,
+      113,
+      114
+     ],
+     "rows": [
+      [
+       2756,
+       2809
+      ],
+      [
+       6731,
+       6890
+      ]
+     ]
+    },
+    {
+     "bin": 38,
+     "spectra": [
+      38,
+      113,
+      115,
+      116,
+      117
+     ],
+     "rows": [
+      [
+       2809,
+       2862
+      ],
+      [
+       6784,
+       6837
+      ],
+      [
+       6890,
+       7049
+      ]
+     ]
+    },
+    {
+     "bin": 39,
+     "spectra": [
+      39,
+      115,
+      118,
+      119,
+      120
+     ],
+     "rows": [
+      [
+       2862,
+       2915
+      ],
+      [
+       6890,
+       6943
+      ],
+      [
+       7049,
+       7208
+      ]
+     ]
+    },
+    {
+     "bin": 40,
+     "spectra": [
+      40,
+      118,
+      121,
+      122,
+      123
+     ],
+     "rows": [
+      [
+       2915,
+       2968
+      ],
+      [
+       7049,
+       7102
+      ],
+      [
+       7208,
+       7367
+      ]
+     ]
+    },
+    {
+     "bin": 41,
+     "spectra": [
+      41,
+      121,
+      124,
+      125,
+      126
+     ],
+     "rows": [
+      [
+       2968,
+       3021
+      ],
+      [
+       7208,
+       7261
+      ],
+      [
+       7367,
+       7526
+      ]
+     ]
+    },
+    {
+     "bin": 42,
+     "spectra": [
+      42,
+      124,
+      127,
+      128,
+      129
+     ],
+     "rows": [
+      [
+       3021,
+       3074
+      ],
+      [
+       7367,
+       7420
+      ],
+      [
+       7526,
+       7685
+      ]
+     ]
+    },
+    {
+     "bin": 43,
+     "spectra": [
+      43,
+      127,
+      130,
+      131,
+      132
+     ],
+     "rows": [
+      [
+       3074,
+       3127
+      ],
+      [
+       7526,
+       7579
+      ],
+      [
+       7685,
+       7844
+      ]
+     ]
+    },
+    {
+     "bin": 44,
+     "spectra": [
+      44,
+      130,
+      133,
+      134,
+      135
+     ],
+     "rows": [
+      [
+       3127,
+       3180
+      ],
+      [
+       7685,
+       7738
+      ],
+      [
+       7844,
+       8003
+      ]
+     ]
+    },
+    {
+     "bin": 45,
+     "spectra": [
+      45,
+      133,
+      136,
+      137,
+      138
+     ],
+     "rows": [
+      [
+       3180,
+       3233
+      ],
+      [
+       7844,
+       7897
+      ],
+      [
+       8003,
+       8162
+      ]
+     ]
+    },
+    {
+     "bin": 46,
+     "spectra": [
+      46,
+      136,
+      139,
+      140,
+      141
+     ],
+     "rows": [
+      [
+       3233,
+       3286
+      ],
+      [
+       8003,
+       8056
+      ],
+      [
+       8162,
+       8321
+      ]
+     ]
+    },
+    {
+     "bin": 47,
+     "spectra": [
+      47,
+      139,
+      142,
+      143,
+      144
+     ],
+     "rows": [
+      [
+       3286,
+       3339
+      ],
+      [
+       8162,
+       8215
+      ],
+      [
+       8321,
+       8480
+      ]
+     ]
+    },
+    {
+     "bin": 48,
+     "spectra": [
+      48,
+      142,
+      145,
+      146
+     ],
+     "rows": [
+      [
+       3339,
+       3392
+      ],
+      [
+       8321,
+       8374
+      ],
+      [
+       8480,
+       8586
+      ]
+     ]
+    },
+    {
+     "bin": 49,
+     "spectra": [
+      49,
+      114,
+      116,
+      147
+     ],
+     "rows": [
+      [
+       3392,
+       3445
+      ],
+      [
+       6837,
+       6890
+      ],
+      [
+       6943,
+       6996
+      ],
+      [
+       8586,
+       8639
+      ]
+     ]
+    },
+    {
+     "bin": 50,
+     "spectra": [
+      50,
+      117,
+      119,
+      147,
+      148
+     ],
+     "rows": [
+      [
+       3445,
+       3498
+      ],
+      [
+       6996,
+       7049
+      ],
+      [
+       7102,
+       7155
+      ],
+      [
+       8586,
+       8692
+      ]
+     ]
+    },
+    {
+     "bin": 51,
+     "spectra": [
+      51,
+      120,
+      122,
+      148,
+      149
+     ],
+     "rows": [
+      [
+       3498,
+       3551
+      ],
+      [
+       7155,
+       7208
+      ],
+      [
+       7261,
+       7314
+      ],
+      [
+       8639,
+       8745
+      ]
+     ]
+    },
+    {
+     "bin": 52,
+     "spectra": [
+      52,
+      123,
+      125,
+      149,
+      150
+     ],
+     "rows": [
+      [
+       3551,
+       3604
+      ],
+      [
+       7314,
+       7367
+      ],
+      [
+       7420,
+       7473
+      ],
+      [
+       8692,
+       8798
+      ]
+     ]
+    },
+    {
+     "bin": 53,
+     "spectra": [
+      53,
+      126,
+      128,
+      150,
+      151
+     ],
+     "rows": [
+      [
+       3604,
+       3657
+      ],
+      [
+       7473,
+       7526
+      ],
+      [
+       7579,
+       7632
+      ],
+      [
+       8745,
+       8851
+      ]
+     ]
+    },
+    {
+     "bin": 54,
+     "spectra": [
+      54,
+      129,
+      131,
+      151,
+      152
+     ],
+     "rows": [
+      [
+       3657,
+       3710
+      ],
+      [
+       7632,
+       7685
+      ],
+      [
+       7738,
+       7791
+      ],
+      [
+       8798,
+       8904
+      ]
+     ]
+    },
+    {
+     "bin": 55,
+     "spectra": [
+      55,
+      132,
+      134,
+      152,
+      153
+     ],
+     "rows": [
+      [
+       3710,
+       3763
+      ],
+      [
+       7791,
+       7844
+      ],
+      [
+       7897,
+       7950
+      ],
+      [
+       8851,
+       8957
+      ]
+     ]
+    },
+    {
+     "bin": 56,
+     "spectra": [
+      56,
+      135,
+      137,
+      153,
+      154
+     ],
+     "rows": [
+      [
+       3763,
+       3816
+      ],
+      [
+       7950,
+       8003
+      ],
+      [
+       8056,
+       8109
+      ],
+      [
+       8904,
+       9010
+      ]
+     ]
+    },
+    {
+     "bin": 57,
+     "spectra": [
+      57,
+      138,
+      140,
+      154,
+      155
+     ],
+     "rows": [
+      [
+       3816,
+       3869
+      ],
+      [
+       8109,
+       8162
+      ],
+      [
+       8215,
+       8268
+      ],
+      [
+       8957,
+       9063
+      ]
+     ]
+    },
+    {
+     "bin": 58,
+     "spectra": [
+      58,
+      141,
+      143,
+      155,
+      156
+     ],
+     "rows": [
+      [
+       3869,
+       3922
+      ],
+      [
+       8268,
+       8321
+      ],
+      [
+       8374,
+       8427
+      ],
+      [
+       9010,
+       9116
+      ]
+     ]
+    },
+    {
+     "bin": 59,
+     "spectra": [
+      59,
+      144,
+      145,
+      156,
+      157
+     ],
+     "rows": [
+      [
+       3922,
+       3975
+      ],
+      [
+       8427,
+       8533
+      ],
+      [
+       9063,
+       9169
+      ]
+     ]
+    },
+    {
+     "bin": 60,
+     "spectra": [
+      60,
+      146,
+      157,
+      158
+     ],
+     "rows": [
+      [
+       3975,
+       4028
+      ],
+      [
+       8533,
+       8586
+      ],
+      [
+       9116,
+       9222
+      ]
+     ]
+    },
+    {
+     "bin": 61,
+     "spectra": [
+      61,
+      158,
+      159
+     ],
+     "rows": [
+      [
+       4028,
+       4081
+      ],
+      [
+       9169,
+       9275
+      ]
+     ]
+    },
+    {
+     "bin": 62,
+     "spectra": [
+      62,
+      159,
+      160
+     ],
+     "rows": [
+      [
+       4081,
+       4134
+      ],
+      [
+       9222,
+       9328
+      ]
+     ]
+    },
+    {
+     "bin": 63,
+     "spectra": [
+      63,
+      160,
+      161
+     ],
+     "rows": [
+      [
+       4134,
+       4187
+      ],
+      [
+       9275,
+       9381
+      ]
+     ]
+    },
+    {
+     "bin": 64,
+     "spectra": [
+      64,
+      161,
+      162
+     ],
+     "rows": [
+      [
+       4187,
+       4240
+      ],
+      [
+       9328,
+       9434
+      ]
+     ]
+    },
+    {
+     "bin": 65,
+     "spectra": [
+      65,
+      162,
+      163
+     ],
+     "rows": [
+      [
+       4240,
+       4293
+      ],
+      [
+       9381,
+       9487
+      ]
+     ]
+    },
+    {
+     "bin": 66,
+     "spectra": [
+      66,
+      163,
+      164
+     ],
+     "rows": [
+      [
+       4293,
+       4346
+      ],
+      [
+       9434,
+       9540
+      ]
+     ]
+    },
+    {
+     "bin": 67,
+     "spectra": [
+      67,
+      164,
+      165
+     ],
+     "rows": [
+      [
+       4346,
+       4399
+      ],
+      [
+       9487,
+       9593
+      ]
+     ]
+    },
+    {
+     "bin": 68,
+     "spectra": [
+      68,
+      165,
+      166
+     ],
+     "rows": [
+      [
+       4399,
+       4452
+      ],
+      [
+       9540,
+       9646
+      ]
+     ]
+    },
+    {
+     "bin": 69,
+     "spectra": [
+      69,
+      166,
+      167
+     ],
+     "rows": [
+      [
+       4452,
+       4505
+      ],
+      [
+       9593,
+       9699
+      ]
+     ]
+    },
+    {
+     "bin": 70,
+     "spectra": [
+      70,
+      167,
+      168
+     ],
+     "rows": [
+      [
+       4505,
+       4558
+      ],
+      [
+       9646,
+       9752
+      ]
+     ]
+    },
+    {
+     "bin": 71,
+     "spectra": [
+      71,
+      168,
+      169
+     ],
+     "rows": [
+      [
+       4558,
+       4611
+      ],
+      [
+       9699,
+       9805
+      ]
+     ]
+    },
+    {
+     "bin": 72,
+     "spectra": [
+      72,
+      169,
+      170
+     ],
+     "rows": [
+      [
+       4611,
+       4664
+      ],
+      [
+       9752,
+       9858
+      ]
+     ]
+    },
+    {
+     "bin": 73,
+     "spectra": [
+      73,
+      170,
+      171
+     ],
+     "rows": [
+      [
+       4664,
+       4717
+      ],
+      [
+       9805,
+       9911
+      ]
+     ]
+    },
+    {
+     "bin": 74,
+     "spectra": [
+      74,
+      171,
+      172
+     ],
+     "rows": [
+      [
+       4717,
+       4770
+      ],
+      [
+       9858,
+       9964
+      ]
+     ]
+    },
+    {
+     "bin": 75,
+     "spectra": [
+      75,
+      172
+     ],
+     "rows": [
+      [
+       4770,
+       4823
+      ],
+      [
+       9911,
+       9964
+      ]
+     ]
+    }
+   ]
+  },
+  "block": {
+   "rows": 9964,
+   "columns": 76,
+   "spectra": 173,
+   "filled_spectrum_cells": 270,
+   "spectrum_cells": 13148,
+   "filled_entries": 14310,
+   "entries": 757264
+  },
+  "stretch": [
+   36,
+   37,
+   38,
+   39,
+   40,
+   49,
+   50,
+   51
+  ]
+ }
+}
