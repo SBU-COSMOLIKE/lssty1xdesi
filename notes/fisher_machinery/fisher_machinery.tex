@@ -1026,22 +1026,21 @@ sampling of the full likelihood.
     reference                     & $128$ & $17.0$ \\
     reference, grid raised        & $256$ & $28.0$ \\
     reference, grid raised        & $512$ & $48.4$ \\
-    candidate final configuration & $256$ & $19.5$ \\
+    final settings                & $256$ & $19.5$ \\
     \hline
   \end{tabular}
   \caption{The cost of one data-vector evaluation on $\Delta z = 0.05$,
     measured by the convergence study on AC power with no other heavy job
     running, except the $g = 256$ reference run, which started while one
-    other job was running.  The candidate final configuration ran $130$
-    evaluations in $42$ minutes.  Section~\ref{sec:accuracy} describes
-    the configurations.}
+    other job was running.  The final settings ran $130$ evaluations in
+    $42$ minutes.  Section~\ref{sec:accuracy} describes the
+    configurations.}
   \label{tab:time}
 \end{table}
 
 \paragraph{The total time.}
 The base of a layout takes $N_{\rm eval} \times t_{\rm eval}$, with
-$t_{\rm eval}$ the time of one evaluation.  At the candidate final
-configuration:
+$t_{\rm eval}$ the time of one evaluation.  At the final settings:
 \begin{itemize}
   \item $\Delta z = 0.05$, from the measured $t_{\rm eval}$:
     $156 \times 19.5$~s $\approx 51$ minutes.
@@ -1071,18 +1070,29 @@ its noise, gives $F_{jj} = (d_j + e_j)\T\Cov^{-1}(d_j + e_j)$, whose
 average exceeds the true value by $\langle e_j\T\Cov^{-1}e_j\rangle > 0$:
 noise looks like information, and the FoM comes out too high.
 
-The convergence study, \texttt{tests/studies/run\us fisher\us
-derivatives.py}, measures this on $\Delta z = 0.05$ for the paper model,
-model B + tilts on the pessimistic prior.  It scores the marginalized
-errors of $w_0$, $w_a$, $\Omega_m$ and $A_s$, both FoMs, and the shifts
-of the break-test truths (truths that carry a term the fit lacks or
-holds with a prior; the correlated-prior note, ``Model B and the reach
-of model A''), at $\kmax = 0.075$ and $0.2\hMpc$.  The MCMC settings
-raise ${\rm FoM}(w_0, w_a)$ by $57\%$ at $0.075\hMpc$ and by $10\%$ at
-$0.2\hMpc$, although their fiducial vector differs from the reference by
-only $\Delta\chi^2 = 0.015$.
+\paragraph{How much the old caches were off.}
+The caches the notebooks used before the study show the size of the
+effect.  On $\Delta d_{\rm com} = 62$~Mpc, with converged derivatives,
+the paper model's ${\rm FoM}(w_0, w_a)$ (model B + tilts on the
+pessimistic prior) falls from $1.29$ to $0.39$ at $\kmax = 0.075\hMpc$
+and from $10.9$ to $7.44$ at $0.2\hMpc$.  Model A on the baseline prior
+at $0.075\hMpc$ falls from $4.33$ to $1.09$.  On $\Delta z = 0.05$ the old
+FoM was $45\%$ high.
 
-\paragraph{The reference, and one control at a time.}
+Where did the inflation come from?  Put the old cache's $w_0$ and $w_a$
+stencil columns back into the new Fisher matrix, and the old FoMs come
+back exactly, $1.288$ and $10.9$: the inflation was the noise in those
+two columns.
+
+\paragraph{The study: a reference, and one control at a time.}
+The convergence study, \texttt{tests/studies/run\us fisher\us
+derivatives.py}, measures the effect on $\Delta z = 0.05$ for the paper
+model.  It scores the marginalized errors of $w_0$, $w_a$, $\Omega_m$
+and $A_s$, both FoMs, and the shifts of the break-test truths (truths
+that carry a term the fit lacks or holds with a prior; the
+correlated-prior note, ``Model B and the reach of model A''), at
+$\kmax = 0.075$ and $0.2\hMpc$.
+
 The reference configuration sets every accuracy control high:
 CosmoLike's \texttt{accuracyboost} $4$ and \texttt{integration\us
 accuracy} $2$, the low-rank engine's rank $8$ (the number of terms kept
@@ -1090,10 +1100,11 @@ in its sum) and multipole cap $2000$, a grid factor $g = 128$, and
 CAMB's \texttt{AccuracyBoost} $2.0$, \texttt{k\us per\us logint} $30$
 and maximum wavenumber $80\,{\rm Mpc}^{-1}$.  Here $g$ is the product
 $\texttt{accuracyboost} \times \texttt{nonlimber\us accuracyboost}$, and
-the non-Limber projection integrates over $511\,g + 1$ comoving
+the non-Limber projection integrates over about $511\,g$ comoving
 distances; the MCMC value on $\Delta z = 0.05$ is $g = 32$.  Each other
-configuration lowers one control, and $g$ is also raised to $256$ and
-$512$.
+configuration lowers one control.  The grid is also raised to $256$ and
+$512$, and the five-point stencil at step $h$ on $g = 512$ is the
+converged value every result is compared with.
 
 \paragraph{The noise of one evaluation.}
 Through five equally spaced stencil points, the combination
@@ -1130,11 +1141,16 @@ noise falls fortyfold from the MCMC settings to $g = 256$.
 \end{table}
 
 \paragraph{The distance grid dominates.}
-Table~\ref{tab:grid} gives the offset of ${\rm FoM}(w_0, w_a)$ from its
-value at $g = 256$, every other control at the reference.  Swapping
-single columns between configurations shows where the offset comes
-from: the $w_a$ column carries it, then $w_0$ and $\Omega_m$; the
-per-bin and $\sigma_v$ columns move the FoM by less than $0.1\%$.
+Table~\ref{tab:grid} and Figure~\ref{fig:convergence} give the offset of
+the FoMs from the converged value, every control but the grid at the
+reference.  The MCMC settings as a whole raise ${\rm FoM}(w_0, w_a)$ by
+$58\%$ at $0.075\hMpc$ and by $11\%$ at $0.2\hMpc$, although their
+fiducial vector differs from the reference by only
+$\Delta\chi^2 = 0.015$.  The grid alone accounts for most of it.
+
+Which columns carry the offset?  Swapping single columns between
+configurations shows it: the $w_a$ column, then $w_0$ and $\Omega_m$.
+The per-bin and $\sigma_v$ columns move the FoM by less than $0.1\%$.
 
 \begin{table}[tbp]
   \centering
@@ -1145,14 +1161,46 @@ per-bin and $\sigma_v$ columns move the FoM by less than $0.1\%$.
     $32$ (MCMC)       & $+38\%$  & $+6.7\%$ \\
     $64$ (old caches) & $+31\%$  & $+5.1\%$ \\
     $128$             & $+0.9\%$ & $+0.3\%$ \\
+    $256$             & $0.0\%$  & $0.0\%$ \\
     \hline
   \end{tabular}
   \caption{The offset of ${\rm FoM}(w_0, w_a)$ of the paper model from
-    its value at $g = 256$, on $\Delta z = 0.05$, every other control at
-    the reference.  $\kmax$ quoted at $z = 0$; each bin is cut at
-    $\kmax/D(\bar{z}_i)$.}
+    the converged value ($g = 512$), on $\Delta z = 0.05$, every other
+    control at the reference.  $\kmax$ quoted at $z = 0$; each bin is
+    cut at $\kmax/D(\bar{z}_i)$.}
   \label{tab:grid}
 \end{table}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics{plots/fom_convergence/fom_convergence.pdf}
+  \caption{How the paper model's FoMs converge on $\Delta z = 0.05$, as
+    ratios to the converged value (the five-point stencil at step $h$ on
+    the grid $g = 512$).  From the top: ${\rm FoM}(w_0, w_a)$ at
+    $\kmax = 0.075$ and $0.2\hMpc$, then ${\rm FoM}(\Omega_m, 10^9 A_s)$
+    at the same cuts.
+    Follow the diamonds from left to right first.  This grid scan, at
+    step $h$, holds the reference's other settings: CosmoLike's
+    \texttt{accuracyboost} 4 and \texttt{integration\us accuracy} 2,
+    low-rank rank 8 and multipole cap 2000, CAMB's
+    \texttt{AccuracyBoost} 2, \texttt{k\us per\us logint} 30 and maximum
+    wavenumber $80\,{\rm Mpc}^{-1}$.  At $0.075\hMpc$ the FoMs fall by
+    $30$ to $40\%$ until $g = 128$ and then stay put: the coarse grids
+    add noise that the FoM reads as information.
+    Then compare the step markers beside each grid (down-triangle $h/2$,
+    up-triangle $2h$, square $3h$).  At $g = 128$ halving the step still
+    raises the FoM, by $19\%$ at $0.075\hMpc$; at $g = 256$ every step
+    lands within $1.6\%$ of $1$, so the final tier uses $g = 256$.
+    The plus is the five-point stencil at the MCMC settings; the open
+    star is DerivKit at the MCMC settings, which halves that error
+    without removing it, and the filled star DerivKit at the final
+    settings, within $1\%$ of $1$.  Open blue markers:
+    $\Delta d_{\rm com} = 62$~Mpc at the final settings, steps $h/2$ and
+    $2h$ against its own step-$h$ value (ring), within $0.3\%$.  Gray
+    band: $1 \pm 1\%$.  $\kmax$ quoted at $z = 0$; each bin is cut at
+    $\kmax/D(\bar{z}_i)$.}
+  \label{fig:convergence}
+\end{figure}
 
 \paragraph{The criterion: independence of the step.}
 The truncation error of a stencil grows with the step, as $\epsilon^4$
@@ -1161,14 +1209,78 @@ derivative is converged when neither matters: when the FoMs, the errors
 and the shifts stay put as the step changes, every step scaled
 together, and as the stencil changes from three points to five.
 
-At $g = 128$ the five-point stencil at $h/2$ raises the FoM by $18\%$:
-the noise divided by a smaller step.  At $g = 256$ the FoM is flat
-within about $\pm1\%$ (${\rm FoM}(\Omega_m, 10^9 A_s)$ within $\pm1.4\%$)
-from $h/2$ to $3h$, and the three-point stencil agrees with the
-five-point one.  The tolerance on the FoMs is about $1$ to $2\%$;
-$g = 128$ agrees with $g = 256$ to $0.9\%$ only at $h = 0.02$, so it
-stays a documented cross-check, and the final tier uses $g = 256$ on
-this layout.
+At $g = 128$ the five-point stencil at $h/2$ raises the FoM by $19\%$:
+the noise divided by a smaller step.  At $g = 256$, from $h/2$ to $3h$,
+both FoMs stay within $1.6\%$, the shifts move by at most $0.027\sigma$,
+and the three-point stencil agrees with the five-point one.  The
+tolerance on the FoMs is about $1$ to $2\%$; $g = 128$ agrees with
+$g = 256$ to $0.9\%$ only at $h = 0.02$, so it stays a documented
+cross-check, and the final tier uses $g = 256$.
+
+The same check on $\Delta d_{\rm com} = 62$~Mpc, at the final settings:
+the five-point stencil at $h/2$ and $2h$ stays within $0.3\%$ of step
+$h$ on both FoMs at both cuts ($0.6\%$ for model A), so $g = 256$ is
+step independent there too.
+
+\paragraph{CAMB's accuracy.}
+CAMB's \texttt{AccuracyBoost} scales its internal precision.  At $1.05$,
+the MCMC value, the FoM is $17\%$ high; at $1.5$, $2.7\%$; going from
+$2$ to $3$ moves it by $0.7\%$.  Every other control moves the FoM by at
+most $1.9\%$.
+
+\paragraph{The final settings.}
+The final tier (\texttt{DERIVATIVE\us OVERRIDES} and
+\texttt{DERIVATIVE\us CAMB} of the Fisher module) uses, on every
+layout:
+\begin{enumerate}
+  \item CosmoLike's \texttt{accuracyboost} $3$, which refines its tables
+    in redshift, wavenumber and multipole, and \texttt{integration\us
+    accuracy} $1$, the number of points of its Limber integrals;
+  \item the grid factor $g = 256$: \texttt{nonlimber\us accuracyboost}
+    $64$, since $3 \times 64 = 192$ and the code rounds the factor up to
+    the next power of two;
+  \item the low-rank rank $5$ and multipole cap $1000$, the values of
+    the yamls;
+  \item CAMB's \texttt{AccuracyBoost} $2.0$, \texttt{k\us per\us logint}
+    $30$ (wavenumbers per logarithmic interval of its output) and
+    maximum wavenumber $60\,{\rm Mpc}^{-1}$, the likelihood's
+    \texttt{kmax\us boltzmann} $20$ times \texttt{accuracyboost} $3$;
+  \item the halofit patch below;
+  \item five-point stencils for every stencil and per-bin column.
+\end{enumerate}
+
+Against the converged value on $\Delta z = 0.05$, these settings give
+${\rm FoM}(w_0, w_a)$ $+1.8\%$ at $0.075\hMpc$ and $-0.5\%$ at
+$0.2\hMpc$, and ${\rm FoM}(\Omega_m, 10^9 A_s)$ $+1.6\%$ and $-0.5\%$.
+The errors $\sigma$ move by at most $1.6\%$, and the largest shift by at
+most $0.007\sigma$.
+
+The remaining $1.8\%$ sits in the $w_0$, $w_a$ and $\Omega_m$ columns
+together.  At $0.075\hMpc$ these three parameters are nearly degenerate,
+and swapping any one of their columns alone moves the FoM by up to
+$3.5\%$, in opposite directions that largely cancel.
+
+\paragraph{DerivKit, the cross-check.}
+DerivKit is an external package that differentiates in another way: it
+evaluates $m$ at several points around the fiducial value (at least
+seven here), fits a polynomial through them and differentiates the fit
+(\texttt{get\us ddv\us dkit}, with \texttt{min\us samples} $7$ and
+\texttt{poly\us at\us floor}).  Noise then averages over the points
+instead of entering at full strength.  The study applied it to the
+cosmological and $\sigma_v$ columns and to the $\{b_{1,i}\}$ and
+$\{b_{2,i}\}$ families, batch by batch.
+\begin{itemize}
+  \item At the MCMC settings DerivKit's FoM is $27.5\%$ high, against
+    $58\%$ for the five-point stencil: it reduces the noise but cannot
+    remove the error of a coarse grid.
+  \item At the final settings it agrees with the five-point stencil
+    within $2.1\%$ ($\sigma$ within $2.2\%$, shifts within $0.006\sigma$)
+    and sits $0.3$ to $0.9\%$ from the converged value.
+  \item It costs $11$ evaluations per column against $4$, about $210$~s
+    against $78$~s per column.
+\end{itemize}
+The final tier therefore uses five-point stencils everywhere, with
+DerivKit as the documented cross-check.
 
 \paragraph{The CAMB halofit patch.}
 Halofit is CAMB's fitting formula for the nonlinear matter power
@@ -1191,17 +1303,16 @@ The project fixes two sets of accuracy settings, two tiers, which
 \begin{itemize}
   \item \textbf{Exploration}: fast settings for quick looks; its FoMs
     are not converged.
-  \item \textbf{Final}: the settings the study converged, for every
-    figure and number of a paper or of a note's final version.  The
-    criterion is the stability of the FoMs, the errors and the shifts;
-    runtime is not a criterion.
+  \item \textbf{Final}: the settings above, for every figure and number
+    of a paper or of a note's final version.  The criterion is the
+    stability of the FoMs, the errors and the shifts; runtime is not a
+    criterion.
 \end{itemize}
 Both tiers use five-point stencils for every stencil and per-bin column,
 and exact templates for $\{\SNzi\}$, $\{\SNti\}$ and $\{\alpha_{2,i}\}$.
-The caches on disk today are the exploration tier, made with central
-differences for the four per-bin families (on $\Delta z = 0.05$ they
-gave ${\rm FoM}(w_0, w_a) = 0.227$ at $0.075\hMpc$, against $0.157$
-converged), and the builders refuse them until the final-tier recompute.
+The caches made before the study are the exploration tier, with central
+differences for the four per-bin families, and the builders refuse them
+until the final-tier recompute.
 
 Each cache records its tier, its settings, and a fingerprint
 (\texttt{settings\us fingerprint}): a 64-character code (a sha256 hash)
@@ -1217,19 +1328,12 @@ file only moves.
 \noindent
 {\color{red}\textbf{TODO, still being measured.}
 \begin{itemize}
-  \item The full final settings of each layout: CosmoLike's
-    \texttt{accuracyboost} and \texttt{integration\us accuracy}, the
-    low-rank rank and multipole cap, and CAMB's \texttt{AccuracyBoost},
-    $k$ sampling and maximum wavenumber.
-  \item The step check on $\Delta d_{\rm com} = 62$~Mpc at $g = 256$.
-  \item The comparison with DerivKit, an external package that fits
-    polynomials through many points (Cocoa's \texttt{DERIVKIT} keys;
-    \texttt{get\us ddv\us dkit}).
-  \item The agreement of the production route, the wrapped setter
-    (Section~\ref{sec:operators}), with the study's route, which unties
-    the per-bin parameters and steps them through the likelihood.
   \item The measured time of the final-tier recompute on each layout,
     to replace the estimates of Section~\ref{sec:evals}.
+  \item The agreement of the production route, the wrapped setter
+    (Section~\ref{sec:operators}), with the study's route, which unties
+    the per-bin parameters and steps them through the likelihood; it
+    runs once the new $\Delta z = 0.05$ model A cache exists.
 \end{itemize}}
 
 \section{The models of the notebooks as matrices}
