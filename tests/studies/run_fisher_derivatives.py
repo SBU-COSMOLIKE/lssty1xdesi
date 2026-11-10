@@ -810,11 +810,14 @@ def run_dkit(layout, config, work):
     DerivKit (external_modules/code/derivkit, installed by Cocoa) samples
     the vector at the center and at +-1, 1.5, 2.25, 3.4 and 5% of the
     central value, fits a straight line weighted by the inverse distance to
-    the center, prunes the points of largest relative residual down to
-    min_samples, and returns the slope; the calls and defaults are those of
-    cosmolike_notebook_utils.get_ddv_dkit (min_samples 7, fallback_mode
-    "poly_at_floor"), the ones the roman_real Fisher notebook uses. A
-    parameter whose fiducial is zero (wa, the b2 offsets) would get
+    the center, and returns the slope. The weights pin the line to the
+    center sample, so the slope is the mean of the five symmetric central
+    differences. Points are pruned (largest relative residual first, down
+    to min_samples) only when a relative residual exceeds the 5% fit
+    tolerance, which never happens on data vectors. The calls and defaults
+    are those of cosmolike_notebook_utils.get_ddv_dkit (min_samples 7,
+    fallback_mode "poly_at_floor"), the ones the roman_real Fisher notebook
+    uses. A parameter whose fiducial is zero (wa, the b2 offsets) would get
     absolute steps of 1e-6 to 4e-5 there, far below the noise of the
     vector, so each is sampled through a shifted variable u = 1 + (p -
     p0)/s with s = 1: the steps are 0.01 to 0.05 in p, the range of the
