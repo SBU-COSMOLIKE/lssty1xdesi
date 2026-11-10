@@ -689,6 +689,76 @@ cost precision, by the information the unmeasured spectra carry, but it
 cannot bias a fit: a bias would need a wrong prediction for a spectrum
 that is kept, and leaving another spectrum out changes no prediction.
 
+\section{How much do the low-overlap pairs carry?}
+\label{sec:threshold}
+
+\paragraph{The test.}
+How much information do the weakly overlapping pairs contribute?  The
+test keeps a cross spectrum only when its blurred overlap at the
+default dispersions reaches a floor, $O_{ij} \ge O_{\min}$
+(Eq.~\eqref{eq:overlap}), applied to \emph{every} measured pair, the
+DESI-imported ones included; the auto spectra are always kept, a kept
+pair keeps its bands, and the covariance is rebuilt on the kept rows.
+The fit is the forecast's model (model B + tilts on the pessimistic
+linear-bias prior; \texttt{notes/correlated\us bias\us prior\us v2}),
+scored by the dark-energy figure of merit
+${\rm FoM}(w_0, w_a) = [\det{\rm Cov}(w_0, w_a)]^{-1/2}$, the inverse
+area of the marginalized ellipse of $w_0$ and $w_a$ (the dark-energy
+equation of state $w(a) = w_0 + w_a(1 - a)$, $a$ the scale factor),
+and by ${\rm FoM}(\Omega_m, 10^9 A_s)$, defined the same way for the
+matter density $\Omega_m$ and the primordial amplitude $A_s$.  The fit
+carries the forecast's scale cut: bin $i$ keeps wavenumbers below
+$k_{\rm max}/D(\bar{z}_i)$, with $D$ the linear growth factor
+($D(0) = 1$) and $k_{\rm max}$ always quoted at $z = 0$;
+Figure~\ref{fig:threshold} shows $k_{\rm max} = 0.075$ and
+$0.2\,h$/Mpc.
+
+\paragraph{Which pairs drop.}
+Every measured pair but one overlaps by at least $0.028$ on \dcom{},
+$0.043$ on $\Delta z = 0.02$, $0.015$ on $\Delta z = 0.05$ and
+$0.0034$ on $\Delta z = 0.2$.  The exception is the BGS--LRG1 boundary
+pair of \dcom{}, bins $18$ and $19$, whose blurred kernels overlap by
+$3.4\times10^{-7}$ (Section~\ref{sec:rule}).  So the floors
+$O_{\min} = 10^{-6}$, $10^{-4}$ and $10^{-3}$ all drop that one pair
+and nothing else, and $O_{\min} = 10^{-2}$ additionally drops $10$ of
+the $13$ pairs of $\Delta z = 0.2$, whose overlaps all sit below
+$10^{-2}$ (Section~\ref{sec:overlap}).
+
+\paragraph{What it costs.}
+Dropping the boundary pair changes ${\rm FoM}(w_0, w_a)$ by a factor
+$0.999$ at $k_{\rm max} = 0.2\,h$/Mpc and nothing at the smaller cuts,
+and every other layout is unchanged at every floor up to $10^{-3}$
+(Figure~\ref{fig:threshold}).  At $10^{-2}$ the $\Delta z = 0.2$
+figures of merit fall to $0.73$--$0.92$ of the full vector's for
+$(w_0, w_a)$ and $0.59$--$0.77$ for $(\Omega_m, 10^9 A_s)$.
+
+\paragraph{The reading.}
+The only listed pair with overlap below $10^{-3}$ is the boundary
+pair, and it costs $0.1\%$ of one figure of merit at the largest cut.
+The list holds no pair between $3.4\times10^{-7}$ and
+$3.4\times10^{-3}$ -- on the layouts other than $\Delta z = 0.2$ the
+next-smallest overlap is $0.015$--$0.043$ -- so this test cannot say
+where between those overlaps a pair begins to matter.  And a small
+overlap does not mean little information: the $13$ pairs of
+$\Delta z = 0.2$ overlap by only $0.3$--$0.9\%$, yet removing ten of
+them costs up to $41\%$ of ${\rm FoM}(\Omega_m, 10^9 A_s)$.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=3.5in]{plots/pair_threshold/pair_threshold.pdf}
+  \caption{The forecast model's figures of merit with only the cross
+    pairs whose blurred overlap at the default dispersions reaches
+    $O_{\min}$, over the full data vector's, against $O_{\min}$;
+    ``all'', every measured pair, sits left of the separator.  Upper
+    panel: ${\rm FoM}(w_0, w_a)$; lower: ${\rm FoM}(\Omega_m,
+    10^9 A_s)$; the panels share the $y$ axis.  Color, line width and
+    marker: the layout; solid, filled markers: $k_{\rm max} =
+    0.2\,h$/Mpc; dashed, open: $0.075$; gray: one.  $k_{\rm max}$
+    quoted at $z = 0$; each bin is cut at
+    $k_{\rm max}/D(\bar{z}_i)$.}
+  \label{fig:threshold}
+\end{figure}
+
 \section{Open issues}
 \label{sec:open}
 
@@ -703,13 +773,24 @@ that is kept, and leaving another spectrum out changes no prediction.
     but not which pairs are measured.  Within two prior widths of the
     defaults no unmeasured pair of any layout reaches an overlap of
     $10^{-4}$.
+  \item \textbf{The pair list at the $\sv$ prior edge.}  Just beyond
+    those two prior widths the thin layouts' bins two apart begin to
+    overlap by more than $10^{-6}$
+    (\texttt{notes/fog\us parameter\us degeneracy\us study}, section
+    ``The pair list at the edges of the $\sv$ prior'').  Building the
+    list at the prior edge, which adds those pairs and needs new
+    spectra, covariances and derivative caches, is queued as an
+    overnight study.
 \end{itemize}
 
 \paragraph{Reproducing the figures.}
 \texttt{plots/make\us cross\us correlations\us data.py} reads the
 project's \texttt{data/} and \texttt{likelihood/} files and writes the
-\texttt{data.json} of the three figure folders, with every number
-quoted here.  Each folder's \texttt{plot\us <name>.py} redraws its
+\texttt{data.json} of the first three figure folders, with every
+number quoted for them here;
+\texttt{plots/pair\us threshold/data.json} is written by the Fisher
+notebook \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us B.ipynb}
+(section 11).  Each folder's \texttt{plot\us <name>.py} redraws its
 figure from that file alone.
 
 \begin{thebibliography}{99}

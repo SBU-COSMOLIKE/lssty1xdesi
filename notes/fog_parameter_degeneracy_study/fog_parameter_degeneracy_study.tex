@@ -110,6 +110,16 @@ degenerate with the $\sv$ already in the model?
     ratio is $0.96$--$1.22$ and the gain is gone
     (Figure~\ref{fig:sigvwidth}).  Widening one sample's dispersions
     alone never suffices at $0.1$ and above.
+  \item \textbf{Sampling $\sv$ can outgrow the pair list.}  The data
+    vector's cross pairs are fixed by an overlap rule at the fiducial
+    $\sv$ ($O_{ij} \ge 10^{-6}$, Section~\ref{sec:pairs}).  Chains
+    over the current priors stay inside the list: the nearest unlisted
+    pair reaches $7.6\times10^{-7}$ at the $+2\sigma$ edge on \dcom{},
+    which crosses the threshold at $+2.1$ prior widths.  With the
+    widened priors of item 5 the crossing sits at $0.5$--$0.8$ of the
+    widened width, and with flat $\sv$ a DESI-size negative $\alpha_2$
+    pushes $\Delta z = 0.02$ across at
+    $|\alpha_2| \approx 16$--$19\aunit$.
 \end{enumerate}
 Here $w_0$ and $w_a$ parameterize the dark-energy equation of state
 $w(a) = w_0 + w_a(1 - a)$; $\Omega_m$ is the matter density today in
@@ -588,6 +598,112 @@ dispersions widened together.
   \label{fig:sigvwidth}
 \end{figure}
 
+\section{The pair list at the edges of the $\sv$ prior}
+\label{sec:pairs}
+
+\paragraph{The rule.}
+The data vector measures a fixed list of cross spectra, chosen by the
+Fingers-of-God overlap rule (\texttt{scripts/make\us desi\us
+pairs.py}; \texttt{notes/cross\us correlations} derives it).  With the
+normalized overlap of two bins' blurred $n(z)$,
+\begin{equation}
+  O_{ij} \;=\; \frac{\int dz\, n_i(z)\, n_j(z)}
+  {\sqrt{\int dz\, n_i^2(z)\,\int dz\, n_j^2(z)}} ,
+  \label{eq:overlap}
+\end{equation}
+$1$ for two identical shapes, $0$ for disjoint ones and, at high
+$\ell$, close to the correlation coefficient of the two bins' spectra,
+the list holds DESI's measured pairs plus every pair with
+$O_{ij} \ge 10^{-6}$ at the fiducial $\sv$.  The list and the
+covariance are built once, at the fiducial dispersions; a sampled
+$\sv$ changes every kernel but never the list.
+
+\paragraph{Raising $\sv$ pushes unlisted pairs toward the threshold.}
+A larger $\sv$ widens every kernel, so every overlap grows -- the
+listed ones, and those of the pairs outside the list, bins of one
+sample two apart, whose blurred kernels are separated by a full bin.
+Figure~\ref{fig:pairoverlap} follows the largest unlisted overlap as
+every dispersion group moves to
+$\sv^{\rm fid} + k\,s\,\Delta\sv$, with $k$ the offset in prior
+widths and $s$ the width factor of Section~\ref{sec:width}.  At the
+fiducial it is zero on every layout: no unlisted kernels meet.  At
+$k = 1$, $2$ and $3$ with $s = 1$ it reaches $1.7\times10^{-10}$,
+$7.6\times10^{-7}$ and $2.9\times10^{-5}$ on \dcom{} (a pair of BGS
+bins two apart), and $8.6\times10^{-10}$, $5.0\times10^{-8}$ and
+$7.9\times10^{-7}$ on $\Delta z = 0.02$ (ELG2, then LRG3 bins two
+apart), while $\Delta z = 0.05$ and $0.2$ stay at zero.  The threshold
+is crossed at $k = 2.06$ on \dcom{}, $3.11$ on $\Delta z = 0.02$,
+$12.5$ on $\Delta z = 0.05$ and nowhere on $\Delta z = 0.2$.  With the
+priors widened by $s = 4$, the order Section~\ref{sec:width} requires
+at $0.1$--$0.2$, the thin layouts cross already at $k \approx
+0.5$--$0.8$.
+
+\paragraph{The paper model stays inside the list.}
+At the $+2\sigma$ edge of the current priors the largest unlisted
+overlap is $7.6\times10^{-7}$ on \dcom{} -- a factor $1.3$ below the
+threshold -- and $5.0\times10^{-8}$ on $\Delta z = 0.02$; at $+2$
+posterior widths of the paper model it is the same (at $0.075$, where
+the posterior equals the prior) or smaller (at $0.2$).  A chain over
+the current priors therefore keeps every pair it needs in the list;
+\dcom{} crosses only just beyond, at $+2.1$ prior widths.
+
+\paragraph{What $\alpha_2$ asks of $\sv$.}
+Only a \emph{negative} $\alpha_2$ drives the dispersions up: a
+positive $\alpha_2$ looks like a smaller $\sv$
+(Section~\ref{sec:results}), so its mirror image raises them.  In the
+linear response of the fit without $\alpha_2$, one unit of $\alpha_2$
+moves the most responsive dispersion by $0.1$--$2.2$~km/s with the
+priors on (the pull grows with the cut) and by $5.4$--$7.2$~km/s with
+flat priors (on every layout but $\Delta z = 0.2$).  The $|\alpha_2|$
+at which an unlisted pair first reaches $10^{-6}$ is, with flat $\sv$:
+$16$--$19\aunit$ on $\Delta z = 0.02$ -- $1.3$--$1.5$ times the DESI
+prior width $12.5\aunit$ -- through a pair of ELG2 bins two apart;
+$53$--$59$ on \dcom{} (ELG1); $105$--$133$ on $\Delta z = 0.05$; and
+$394$--$462$ on $\Delta z = 0.2$.  With the current priors it is at
+least $68\aunit$ at $\kmax = 0.2\hMpc$ and at least $1000\aunit$ at
+$0.075$.
+
+\paragraph{The caution for chains.}
+The pair list and the covariance are built once, at the fiducial
+$\sv$.  The range of $\alpha_2$ a chain treats as reasonable therefore
+bounds how far $\sv$ travels when it has to absorb $\alpha_2$, and the
+widened or flat $\sv$ of Section~\ref{sec:width} is exactly the regime
+where the list stops being complete: dispersions high enough to mimic
+a DESI-size negative $\alpha_2$ also raise unlisted pairs -- bins two
+apart -- past the threshold, so more cross-correlations would have to
+enter the data vector.  Either the chain bounds $\sv$ (or $\alpha_2$)
+within the ranges above, or the list and covariance are rebuilt at the
+prior edge.
+
+\paragraph{The listed pairs' own overlaps.}
+The complementary test -- keeping only the listed pairs whose overlap
+reaches a floor $O_{\min}$, DESI-measured pairs included -- drops, for
+every floor up to $10^{-3}$, one pair: the BGS--LRG1 boundary pair of
+\dcom{} ($O = 3.4\times10^{-7}$), at a cost of $0.1\%$ of
+${\rm FoM}(w_0, w_a)$ at $\kmax = 0.2\hMpc$ and nothing elsewhere, so
+none of this note's conclusions rests on a low-overlap pair.  The
+study and its limits are in \texttt{notes/cross\us correlations},
+section ``How much do the low-overlap pairs carry?''.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=3.5in]{plots/fog_pair_overlap/fog_pair_overlap.pdf}
+  \caption{How far the pair rule holds away from the fiducial
+    dispersions: the largest overlap $O_{ij}$ of
+    Eq.~\eqref{eq:overlap} over the pairs \emph{outside} each layout's
+    pair list, against the offset $k$ of every $\sv$ group from its
+    fiducial, in units of its prior width times the width factor $s$
+    ($\sv = \sv^{\rm fid} + k\,s\,\Delta\sv$), per layout (color, line
+    width and marker; legend).  Solid, filled markers: $s = 1$, the
+    current priors; dashed, open: $s = 4$, the order of the widths
+    that let $\sv$ absorb a DESI-size $\alpha_2$; markers at $k = 0$,
+    $1$, $2$, $3$.  Dotted: the rule's threshold $O_{ij} = 10^{-6}$,
+    above which a pair belongs in the data vector.  Overlaps below the
+    axis floor, zero included (kernels that do not meet), are drawn on
+    the floor.}
+  \label{fig:pairoverlap}
+\end{figure}
+
 \section{What this means}
 \label{sec:meaning}
 
@@ -698,6 +814,11 @@ backward differences agree) are listed with that notebook.
   \item \textbf{Linear response.}  The largest absorption-test shifts
     ($1.5$--$2.6$ ellipse units) are linear extrapolations; a refit
     could move them.
+  \item \textbf{The pair list at the $\sv$ prior edge.}  Building the
+    pair list at the prior edge adds the pairs of bins two apart
+    (Section~\ref{sec:pairs}); it needs new spectra, the four
+    covariances and new derivative caches, and is queued as an
+    overnight study.
 \end{itemize}
 
 \begin{thebibliography}{99}
