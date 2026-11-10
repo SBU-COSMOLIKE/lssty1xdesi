@@ -1,0 +1,178 @@
+{
+ "about": "Band powers kept by the UV-fraction scale cut (arXiv:2603.13031; a band is kept while |C_UV|/(|C_UV| + |C_IR|) < 0.05, C_IR from P(k) times a step at k_max/D(zbar_i)), intersected with the shipped mask, split into clustering autos and cross-bin pairs, with the cut computed on the linear-bias fiducial (kept_*_linear: the linear notebook's cache, chains/EXAMPLE_EVALUATE_FISHER_SCALE_CUTS.pkl, which run_cuts reproduces at its reference settings) and on the paper model's fiducial (kept_*_paper: b2 and bs2 on their calibrations, every other higher-order term zero). k_max [h/Mpc] is the z = 0 value of the per-bin cut. Written by make_scale_cut_fiducial_data.py in notes/scale_cut_fiducial_dependence/plots/, from the scale-cut fiducial study (cuts_fid.py: run_cuts of tests/studies/run_fisher_derivatives.py at its reference settings on the paper yamls EXAMPLE_EVALUATE1-4.yaml; score_fid.py: the model B notebook builder's scoring functions).",
+ "kmax_h_per_Mpc": [
+  0.05,
+  0.075,
+  0.1,
+  0.125,
+  0.15,
+  0.175,
+  0.2
+ ],
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "color": "#0072B2",
+   "kept_autos_linear": [
+    167,
+    903,
+    1585,
+    2049,
+    2220,
+    2268,
+    2276
+   ],
+   "kept_autos_paper": [
+    165,
+    893,
+    1567,
+    2042,
+    2216,
+    2267,
+    2276
+   ],
+   "kept_pairs_linear": [
+    74,
+    812,
+    1186,
+    1510,
+    2242,
+    3004,
+    3254
+   ],
+   "kept_pairs_paper": [
+    74,
+    804,
+    1165,
+    1503,
+    2223,
+    2993,
+    3250
+   ]
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "color": "#E69F00",
+   "kept_autos_linear": [
+    0,
+    904,
+    1928,
+    2755,
+    2982,
+    3016,
+    3016
+   ],
+   "kept_autos_paper": [
+    0,
+    896,
+    1910,
+    2736,
+    2978,
+    3013,
+    3016
+   ],
+   "kept_pairs_linear": [
+    0,
+    952,
+    2471,
+    3062,
+    3118,
+    3556,
+    4496
+   ],
+   "kept_pairs_paper": [
+    0,
+    939,
+    2461,
+    3003,
+    3055,
+    3513,
+    4484
+   ]
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "color": "#CC79A7",
+   "kept_autos_linear": [
+    367,
+    663,
+    945,
+    1148,
+    1195,
+    1204,
+    1205
+   ],
+   "kept_autos_paper": [
+    365,
+    645,
+    932,
+    1146,
+    1195,
+    1204,
+    1205
+   ],
+   "kept_pairs_linear": [
+    70,
+    183,
+    269,
+    522,
+    623,
+    1091,
+    1242
+   ],
+   "kept_pairs_paper": [
+    69,
+    174,
+    266,
+    517,
+    620,
+    1022,
+    1194
+   ]
+  },
+  {
+   "name": "Delta z = 0.2",
+   "label": "$\\Delta z = 0.2$",
+   "color": "#56B4E9",
+   "kept_autos_linear": [
+    122,
+    198,
+    267,
+    307,
+    319,
+    325,
+    325
+   ],
+   "kept_autos_paper": [
+    122,
+    196,
+    267,
+    307,
+    319,
+    325,
+    326
+   ],
+   "kept_pairs_linear": [
+    44,
+    82,
+    111,
+    138,
+    156,
+    263,
+    306
+   ],
+   "kept_pairs_paper": [
+    44,
+    80,
+    111,
+    138,
+    156,
+    236,
+    340
+   ]
+  }
+ ]
+}
