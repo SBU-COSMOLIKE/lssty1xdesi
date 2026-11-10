@@ -1,6 +1,8 @@
 # The paper's model on the DESI DR1 fixed-width Delta z = 0.02 layout:
-# model B + tilts of notes/higher_order_bias on the pessimistic linear-bias
-# prior of notes/correlated_bias_prior_v2 (likelihood
+# model B + tilts of notes/higher_order_bias with alpha_2 = 0 in every bin
+# (the velocity dispersions, on priors 6x wider than the exploration ones,
+# absorb it), on the pessimistic linear-bias prior of
+# notes/correlated_bias_prior_v2 (likelihood
 # desi_cl_dr1_dz0p02_model_b), evaluated at the fiducial: every higher-order
 # offset and tilt, every linear-bias tilt s_g
 # (DESI_TB1_<g>) and every whitened residual u_n (DESI_UB1_<n>) is zero, so
@@ -399,18 +401,6 @@ sampler:
       DESI_TA0_LRG3: 0.0
       DESI_TA0_ELG1: 0.0
       DESI_TA0_ELG2: 0.0
-      DESI_A2_BGS: 0.0
-      DESI_A2_LRG1: 0.0
-      DESI_A2_LRG2: 0.0
-      DESI_A2_LRG3: 0.0
-      DESI_A2_ELG1: 0.0
-      DESI_A2_ELG2: 0.0
-      DESI_TA2_BGS: 0.0
-      DESI_TA2_LRG1: 0.0
-      DESI_TA2_LRG2: 0.0
-      DESI_TA2_LRG3: 0.0
-      DESI_TA2_ELG1: 0.0
-      DESI_TA2_ELG2: 0.0
       DESI_SN0_BGS: 0.0
       DESI_SN0_LRG1: 0.0
       DESI_SN0_LRG2: 0.0

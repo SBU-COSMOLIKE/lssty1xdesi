@@ -1,11 +1,13 @@
 # The paper's model on the Delta d_com = 62 Mpc layout, sampled with
 # cobaya's Metropolis-Hastings MCMC: model B + tilts of
-# notes/higher_order_bias on the pessimistic linear-bias prior of
-# notes/correlated_bias_prior_v2 (likelihood desi_cl_model_b), on the main
-# dataset, whose data vector is this model at the fiducial point of
-# EXAMPLE_EVALUATE1.yaml. Likelihood, priors and theory are those of
-# EXAMPLE_EVALUATE1.yaml; exploration/EXAMPLE_MCMC_LINEAR1.yaml is the same
-# chain with the growth-tied linear bias.
+# notes/higher_order_bias with alpha_2 = 0 in every bin (the velocity
+# dispersions, on priors 6x wider than the exploration ones, absorb it), on
+# the pessimistic linear-bias prior of notes/correlated_bias_prior_v2
+# (likelihood desi_cl_model_b), on the main dataset, whose data vector is
+# this model at the fiducial point of EXAMPLE_EVALUATE1.yaml. Likelihood,
+# priors and theory are those of EXAMPLE_EVALUATE1.yaml;
+# exploration/EXAMPLE_MCMC_LINEAR1.yaml is the same chain with the
+# growth-tied linear bias.
 timing: True
 debug: False
 stop_at_error: True
@@ -237,7 +239,7 @@ sampler:
     # the shipped mask, in the sampled parameterization (the yaml names),
     # with the Gaussian priors of the residuals, the higher-order offsets
     # and the velocity dispersions. Without it the chain would start from a
-    # diagonal proposal in 163 correlated parameters. mnu has no
+    # diagonal proposal in 151 correlated parameters. mnu has no
     # Fisher column and keeps its proposal width (0.05), uncorrelated.
     covmat: ./projects/lssty1xdesi/EXAMPLE_MCMC1.covmat
     covmat_params:

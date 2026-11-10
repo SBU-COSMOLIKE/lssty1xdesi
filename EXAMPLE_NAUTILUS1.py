@@ -4,10 +4,11 @@ Nested sampling estimates the Bayesian evidence and weighted posterior
 samples: a set of live points shrinks from the full prior toward high
 likelihood, and neural networks learn the likelihood boundary to propose
 new points (the Nautilus package). This file samples the model of
-EXAMPLE_EVALUATE1.yaml - the paper's model, model B + tilts on the
-pessimistic linear-bias prior (likelihood lssty1xdesi.desi_cl_model_b), on
-the Delta d_com = 62 Mpc main dataset, with its CAMB theory block - whose
-sampler.evaluate.override block is the fiducial point.
+EXAMPLE_EVALUATE1.yaml - the paper's model, model B + tilts with alpha_2 = 0
+on the pessimistic linear-bias prior (likelihood
+lssty1xdesi.desi_cl_model_b), on the Delta d_com = 62 Mpc main dataset,
+with its CAMB theory block - whose sampler.evaluate.override block is the
+fiducial point.
 
 The structure and the options follow the hybrid-emulator driver of the
 other projects (cosmolike_core/cocoa_hybrid_sampling.py, its nautilus
@@ -22,8 +23,8 @@ file), --root (folder whose chains/ subfolder receives the outputs, default
 this project), --outroot (default EXAMPLE_NAUTILUS1), --seed (default 42),
 --check, and the Nautilus settings --nlive (1000), --maxfeval (100000),
 --neff (10000), --flive (0.01) and --nnetworks (4), the defaults of the
-hybrid driver. The model samples 163 parameters: 1000 live points are about
-six per dimension, and a run that reaches --maxfeval stops without
+hybrid driver. The model samples 151 parameters: 1000 live points are about
+seven per dimension, and a run that reaches --maxfeval stops without
 convergence, which the JSON record states.
 
 From the Cocoa/ folder, with Cocoa activated (start_cocoa.sh), check the

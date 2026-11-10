@@ -49,7 +49,8 @@ likelihood/params_desi[_<case>]_bias_pessimistic.yaml: the pessimistic
 linear-bias prior of notes/correlated_bias_prior_v2 (a free amplitude
 and tilt per group, and a correlated Gaussian residual per bin; see
 emit_bias_pessimistic), with the velocity dispersions of
-params_desi.yaml. The desi_cl*_model_b likelihoods read it.
+params_desi.yaml at PAPER_SIGV_WIDTH_FACTOR times their prior widths.
+The desi_cl*_model_b likelihoods read it.
 
 With --model-a (alone or with --case) it writes the model A fragments
 of the higher-order bias note instead, into likelihood/exploration/:
@@ -65,10 +66,10 @@ likelihood/exploration/params_desi[_<case>]_model_b.yaml (model B: one
 offset per chunk for b2, bs2, alpha_0, alpha_2, SN0 and SN2, the tilts
 fixed at zero, at the wider DESI DR1 prior widths; read by the
 exploration.desi_cl*_model_b_growth_tied likelihoods) and
-likelihood/params_desi[_<case>]_model_b_tilts.yaml (model B + tilts:
-the b2, bs2, alpha_0 and alpha_2 tilts free; read by the
-desi_cl*_model_b likelihoods of the paper model, next to the
-pessimistic linear fragment).
+likelihood/params_desi[_<case>]_model_b_tilts.yaml (the paper model:
+model B + tilts with alpha_2 fixed to 0 in every bin, the b2, bs2 and
+alpha_0 tilts free; read by the desi_cl*_model_b likelihoods, next to
+the pessimistic linear fragment).
 """
 import argparse
 import os
@@ -155,7 +156,9 @@ SIGV_SCALE = 5.0
 # wander to dispersions the simulations exclude; the Gaussian keeps
 # the chains inside the measured band. The prior is truncated at zero
 # only to remove the unphysical negative tail (the BGS0 fiducial sits
-# 2.6 prior sigma above zero).
+# 2.6 prior sigma above zero). These are the widths of the exploration
+# fragments (params_desi.yaml and its cases); the paper model widens
+# them by PAPER_SIGV_WIDTH_FACTOR.
 SIGV_PRIOR_SIGMA = {
     "BGS0": 145.0,
     "BGS1": 105.0,
@@ -165,6 +168,24 @@ SIGV_PRIOR_SIGMA = {
     "ELG1": 40.0,
     "ELG2": 30.0,
 }
+
+# The paper model has no radial counterterm alpha_2 (PAPER_FAMILIES) and
+# multiplies every width of SIGV_PRIOR_SIGMA by this one factor, on every
+# layout. On these thin-bin kernels alpha_2 is about 99% degenerate with
+# the velocity dispersions sigma_v: both damp the line-of-sight modes
+# (notes/fog_parameter_degeneracy_study). A fit without alpha_2 whose
+# sigma_v priors are wide enough absorbs an alpha_2 of the DESI DR1 prior
+# size (12.5 h^-2 Mpc^2 in every group) at about the same dark-energy
+# figure of merit for k_max >= 0.1 h/Mpc (the z = 0 value of a per-bin
+# cut). The factor covers the most demanding case of the sigma_v
+# prior-width scan (section 11 of EXAMPLE_EVALUATE_FISHER_MODEL.ipynb), the
+# Delta z = 0.02 layout at
+# k_max = 0.1 h/Mpc, where the cosmological shifts of that test fall
+# below a third of their error bars only from about 6x. At 6x the
+# truncation at zero is no longer a
+# formality: the fiducials sit 0.4 (BGS0) to 1.6 (ELG2) widened prior
+# sigma above zero.
+PAPER_SIGV_WIDTH_FACTOR = 6.0
 
 
 def group_key(sample, chunk, mode):
@@ -468,6 +489,15 @@ MODEL_B_TILT_RANGE = {
     "DESI_TA0": 1000.0,
     "DESI_TA2": 1000.0,
 }
+# The paper model: model B + tilts without the radial counterterm.
+# DESI_A2 is fixed to 0 in every bin (a width of None, no offset and no
+# tilt), which the one-loop likelihood reads as the term switched off;
+# sigma_v takes over the line-of-sight damping, on the priors widened by
+# PAPER_SIGV_WIDTH_FACTOR.
+PAPER_FAMILIES = tuple(
+    (prefix, None, None, symbol) if prefix == "DESI_A2"
+    else (prefix, tilt, width, symbol)
+    for prefix, tilt, width, symbol in MODEL_B_FAMILIES)
 
 
 def emit_offsets(out, chunks, zbars, tilts, families, tilt_range):
@@ -497,7 +527,8 @@ def emit_offsets(out, chunks, zbars, tilts, families, tilt_range):
       tilts       = True frees the tilts.
       families    = the model's (per-bin prefix, tilt prefix or None,
                     Gaussian width or None, latex symbol) rows, in output
-                    order (MODEL_A_FAMILIES or MODEL_B_FAMILIES).
+                    order (MODEL_A_FAMILIES, MODEL_B_FAMILIES or
+                    PAPER_FAMILIES).
       tilt_range  = tilt prefix -> half width of the flat tilt prior,
                     per unit redshift (read only when tilts is True).
     """
@@ -581,18 +612,20 @@ def emit_model_a(out, chunks, zbars, tilts):
                  families=MODEL_A_FAMILIES, tilt_range=MODEL_A_TILT_RANGE)
 
 
-def emit_model_b(out, chunks, zbars, tilts):
+def emit_model_b(out, chunks, zbars, tilts, families=MODEL_B_FAMILIES):
     """Write the model B parameters of one bin table.
 
     Model B has six families: DESI_DB2, DESI_DBS, DESI_A0 and DESI_A2,
     each with a tilt, and DESI_SN0 and DESI_SN2 (MODEL_B_FAMILIES). The
-    offsets, tilts and per-bin ties follow emit_offsets.
+    paper model (PAPER_FAMILIES) is the same with DESI_A2 fixed to 0 in
+    every bin. The offsets, tilts and per-bin ties follow emit_offsets.
 
     Arguments:
       out, chunks, zbars, tilts = as in emit_offsets.
+      families = MODEL_B_FAMILIES, or PAPER_FAMILIES for the paper model.
     """
     emit_offsets(out, chunks, zbars, tilts,
-                 families=MODEL_B_FAMILIES, tilt_range=MODEL_B_TILT_RANGE)
+                 families=families, tilt_range=MODEL_B_TILT_RANGE)
 
 
 def main():
@@ -623,8 +656,8 @@ def main():
         help="write the model B fragments instead: "
              "likelihood/exploration/params_desi[_<case>]_model_b.yaml "
              "(model B: offsets per chunk, tilts fixed) and "
-             "likelihood/params_desi[_<case>]_model_b_tilts.yaml (model B "
-             "+ tilts: tilts free, the paper model)")
+             "likelihood/params_desi[_<case>]_model_b_tilts.yaml (the "
+             "paper model: model B + tilts with alpha_2 fixed to 0)")
     args = parser.parse_args()
     bin_table = BIN_TABLE
     models = MODELS
@@ -670,11 +703,18 @@ def main():
                       "emit_bias_pessimistic).\n"
                       "# Velocity dispersions [km/s]: the seven groups of "
                       "params_desi.yaml, leaders sampled,\n"
-                      "# members tied by value.\n")
+                      "# members tied by value, at "
+                      f"{PAPER_SIGV_WIDTH_FACTOR:g}x the prior widths of "
+                      "params_desi.yaml (PAPER_SIGV_WIDTH_FACTOR:\n"
+                      "# without alpha_2, sigma_v carries the "
+                      "line-of-sight damping alone).\n")
             emit_bias_pessimistic(out, chunks, zbars,
                                   values=default["bias_values"])
+            # the paper model's widened velocity-dispersion widths
+            paper_sigma = {g: PAPER_SIGV_WIDTH_FACTOR*w
+                           for g, w in SIGV_PRIOR_SIGMA.items()}
             emit_blocks(out, "DESI_SIGV", sigv_groups,
-                        default["sigv_values"], SIGV_PRIOR_SIGMA,
+                        default["sigv_values"], paper_sigma,
                         SIGV_SCALE, sigv_latex)
         print(f"wrote {path}")
         return 0
@@ -709,8 +749,9 @@ def main():
                 else f"params_desi_{args.case}")
         # the counterterm width of MODEL_B_FAMILIES, quoted in the header
         width = 0.5/MODEL_B_KMAX**2
-        # model B without tilts is an exploration fragment; model B +
-        # tilts is the paper model's higher-order fragment
+        # model B without tilts is an exploration fragment; the paper
+        # model's higher-order fragment is model B + tilts with alpha_2
+        # fixed to 0 (PAPER_FAMILIES)
         for suffix, tilts, folder in (("_model_b", False, EXPLORATION_DIR),
                                       ("_model_b_tilts", True, OUT_DIR)):
             path = os.path.join(folder, f"{stem}{suffix}.yaml")
@@ -718,24 +759,39 @@ def main():
                 out.write("# Generated by scripts/make_desi_params.py "
                           "--model-b: the model B parameters of "
                           "notes/higher_order_bias")
-                out.write(" (model B + tilts: free tilts on Delta_2, "
-                          "Delta_s, alpha_0 and alpha_2).\n"
-                          if tilts else
-                          " (model B: one offset per chunk).\n")
-                out.write("# Units: DESI_A0 and DESI_A2 in h^-2 Mpc^2, "
-                          "DESI_SN0 in units of each bin's Poisson power,\n"
-                          "# DESI_SN2 in units of f_sat sigma_v^2 times "
+                if tilts:
+                    out.write(" for the paper model:\n"
+                              "# model B + tilts with free tilts on "
+                              "Delta_2, Delta_s and alpha_0, and DESI_A2 "
+                              "(alpha_2) fixed to 0 in\n"
+                              "# every bin (the velocity dispersions of "
+                              "the linear fragment absorb it).\n")
+                    out.write("# Units: DESI_A0 in h^-2 Mpc^2, DESI_SN0 in "
+                              "units of each bin's Poisson power,\n")
+                else:
+                    out.write(" (model B: one offset per chunk).\n")
+                    out.write("# Units: DESI_A0 and DESI_A2 in h^-2 Mpc^2, "
+                              "DESI_SN0 in units of each bin's Poisson "
+                              "power,\n")
+                out.write("# DESI_SN2 in units of f_sat sigma_v^2 times "
                           "it (f_sat the satellite fraction, sigma_v the\n"
                           "# satellites' velocity dispersion in Mpc/h); "
                           "the per-bin values are tied to the chunk\n"
                           "# parameters (see emit_model_b).\n")
                 out.write("# Scale cut: the shipped mask, k_max = 0.1185/Mpc "
                           f"= {MODEL_B_KMAX:.3f} h/Mpc at every redshift "
-                          "(h = 0.6732),\n"
-                          "# the same in every case; the alpha_0 and "
-                          "alpha_2 prior widths are 0.5/k_max^2 = "
-                          f"{width:.1f} h^-2 Mpc^2.\n")
-                emit_model_b(out, chunks, zbars, tilts)
+                          "(h = 0.6732),\n")
+                if tilts:
+                    out.write("# the same in every case; the alpha_0 prior "
+                              "width is 0.5/k_max^2 = "
+                              f"{width:.1f} h^-2 Mpc^2.\n")
+                    emit_model_b(out, chunks, zbars, tilts,
+                                 families=PAPER_FAMILIES)
+                else:
+                    out.write("# the same in every case; the alpha_0 and "
+                              "alpha_2 prior widths are 0.5/k_max^2 = "
+                              f"{width:.1f} h^-2 Mpc^2.\n")
+                    emit_model_b(out, chunks, zbars, tilts)
             print(f"wrote {path}")
         return 0
 

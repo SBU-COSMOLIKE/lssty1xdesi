@@ -7,7 +7,8 @@
 # group and u_n = DESI_UB1_<n> ~ N(0, 1). Groups of one or two bins carry no residuals
 # (and one bin no tilt): their bins are free (see emit_bias_pessimistic).
 # Velocity dispersions [km/s]: the seven groups of params_desi.yaml, leaders sampled,
-# members tied by value.
+# members tied by value, at 6x the prior widths of params_desi.yaml (PAPER_SIGV_WIDTH_FACTOR:
+# without alpha_2, sigma_v carries the line-of-sight damping alone).
   DESI_B1_BGS: # amplitude B_g of group BGS
     prior:
       min: 0.8
@@ -137,10 +138,10 @@
   DESI_SIGV_1: # leader of group BGS0
     prior:
       dist: truncnorm
-      a: -2.558621
+      a: -0.426437
       b: .inf
       loc: 371.0
-      scale: 145.0
+      scale: 870.0
     ref:
       dist: norm
       loc: 371.0
@@ -150,10 +151,10 @@
   DESI_SIGV_2: # leader of group BGS1
     prior:
       dist: truncnorm
-      a: -3.409524
+      a: -0.568254
       b: .inf
       loc: 358.0
-      scale: 105.0
+      scale: 630.0
     ref:
       dist: norm
       loc: 358.0
@@ -163,10 +164,10 @@
   DESI_SIGV_3: # leader of group LRG1
     prior:
       dist: truncnorm
-      a: -5.100000
+      a: -0.850000
       b: .inf
       loc: 357.0
-      scale: 70.0
+      scale: 420.0
     ref:
       dist: norm
       loc: 357.0
@@ -176,10 +177,10 @@
   DESI_SIGV_4: # leader of group LRG2
     prior:
       dist: truncnorm
-      a: -6.960000
+      a: -1.160000
       b: .inf
       loc: 348.0
-      scale: 50.0
+      scale: 300.0
     ref:
       dist: norm
       loc: 348.0
@@ -189,10 +190,10 @@
   DESI_SIGV_5: # leader of group LRG3
     prior:
       dist: truncnorm
-      a: -6.860000
+      a: -1.143333
       b: .inf
       loc: 343.0
-      scale: 50.0
+      scale: 300.0
     ref:
       dist: norm
       loc: 343.0
@@ -204,10 +205,10 @@
   DESI_SIGV_7: # leader of group ELG1
     prior:
       dist: truncnorm
-      a: -7.600000
+      a: -1.266667
       b: .inf
       loc: 304.0
-      scale: 40.0
+      scale: 240.0
     ref:
       dist: norm
       loc: 304.0
@@ -219,10 +220,10 @@
   DESI_SIGV_9: # leader of group ELG2
     prior:
       dist: truncnorm
-      a: -9.633333
+      a: -1.605556
       b: .inf
       loc: 289.0
-      scale: 30.0
+      scale: 180.0
     ref:
       dist: norm
       loc: 289.0

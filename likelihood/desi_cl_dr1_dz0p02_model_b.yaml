@@ -1,12 +1,13 @@
-# desi_cl_dr1_dz0p02 with the paper model, model B + tilts on the
-# pessimistic linear-bias prior; every option not set here is
-# desi_cl_dr1_dz0p02.yaml's.
+# desi_cl_dr1_dz0p02 with the paper model, model B + tilts with
+# alpha_2 = 0 on the pessimistic linear-bias prior; every option not set
+# here is desi_cl_dr1_dz0p02.yaml's.
 # the one-loop model of notes/higher_order_bias (see desi_cl.py)
 higher_order_bias: 1
 # the one-loop model hands cosmolike every bias per bin, with b3 = 0
 bias_model: [0,0,0,0,0,0]
 # the pessimistic linear-bias fragment (amplitude B_g and tilt s_g per
-# group, a correlated residual per bin, the velocity dispersions) and the
-# model B + tilts one (per group, offsets of Delta_2, Delta_s, alpha_0 and
-# alpha_2, each with a free tilt in redshift, and SN0 and SN2)
+# group, a correlated residual per bin, the velocity dispersions on priors
+# 6x wider than the exploration ones) and the model B + tilts one without
+# alpha_2 (per group, offsets of Delta_2, Delta_s and alpha_0, each with a
+# free tilt in redshift, and SN0 and SN2; alpha_2 = 0 in every bin)
 params: !defaults [params_desi_dr1_dz0p02_bias_pessimistic, params_desi_dr1_dz0p02_model_b_tilts]
