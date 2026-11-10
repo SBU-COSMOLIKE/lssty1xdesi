@@ -13,259 +13,6 @@
 \providecommand{\T}{^{\mathsf{T}}}
 \providecommand{\bstwo}{b_{s^2}}
 
-\section{The accuracy test}
-\label{app:bias}
-
-This appendix gives the method of Section~\ref{sec:accuracy} and of
-the break test of Section~\ref{sec:modelb}.
-
-\subsection{The shift formula}
-\label{sec:biasformula}
-
-Let $m$ be the expected data vector (the band powers), $\mathsf{C}_d$
-its covariance, $\mathsf{D}$ the matrix of derivatives of $m$ with
-respect to the parameters (sans-serif, not the growth factor $D$), and
-$F = \mathsf{D}\T \mathsf{C}_d^{-1} \mathsf{D} + F_{\rm priors}$ the
-Fisher matrix of one fit, its priors included (Appendix~\ref{sec:fisher}).
-If the truth moves the data vector by $\delta m$, the maximum of the
-posterior moves, to first order, by
-\begin{equation}
-  \delta p \;=\; F^{-1} \mathsf{D}\T \mathsf{C}_d^{-1}\, \delta m :
-  \label{eq:fisherbias}
-\end{equation}
-the score (the gradient of the log posterior) at the old maximum
-becomes $\mathsf{D}\T \mathsf{C}_d^{-1} \delta m$ instead of zero, and
-the curvature $F$ converts it into a displacement.  With
-$\mathsf{C}_w$ the fit's marginalized $2 \times 2$ covariance of
-$(w_0, w_a)$ and $\delta w$ the $(w_0, w_a)$ entries of $\delta p$,
-the shift
-\begin{equation}
-  \Delta_w \;=\; \sqrt{\delta w\T\, \mathsf{C}_w^{-1}\, \delta w}
-  \label{eq:shiftw}
-\end{equation}
-is the displacement of the dark-energy ellipse in units of its own
-size; $\Omega_m$ and $A_s$ shifts are $|\delta p|/\sigma_p$.  The
-threshold is $1/3$, a shift that widens the effective error by a few
-percent.  Ellipse and response use the same $F$, so a rigid model is
-punished twice: it absorbs little of the drift, and its ellipse is
-small.
-
-A drift of the bin biases enters as
-$\delta m = \sum_i (\partial m / \partial \beta_i)\, B_g\, \delta_i$,
-with $\beta_i$ the amplitudes of Eq.~\eqref{eq:beta}; under model A
-the column is that of Eq.~\eqref{eq:chain} divided by $D(\bar{z}_i)$,
-so a drift of $b_1$ drags $b_2$ and $\bstwo$ along.  The growth-tied
-prior is evaluated in its own parameter basis.  For the free prior the
-bias derivatives span the drift exactly, so the cosmology does not
-move, and that accuracy is bought with the information the prior gives
-up.
-
-\subsection{The drift laws}
-\label{sec:driftlaws}
-
-The conserved-population drift applies to every group: the deviation
-of Eq.~\eqref{eq:tilt}, anchored at the group's mean redshift, nearly
-a straight line of a few percent across each group.  The BGS
-flux-limit drift applies to BGS alone: the convex deviation of
-Appendix~\ref{app:bgsflux}, a $22\%$ span whose best line leaves a
-$2.4\%$ rms curvature.  Both come from
-\texttt{plots/make\_theory\_data.py}; only their shapes matter, because
-the free amplitudes remove the level.
-
-\subsection{Random truths}
-\label{sec:randomtruths}
-
-A random truth sets the bias of bin $i$ in group $g$ to
-\begin{equation}
-  b_i \;=\; \frac{B_g}{D(\bar{z}_i)}\,
-  \bigl(1 + \delta_i^{\rm drift} + \varepsilon_i\bigr)
-  \label{eq:randomtruth}
-\end{equation}
-at the fiducial cosmology, with $\delta_i^{\rm drift}$ the known drift
-(the flux limit in BGS, the conserved population elsewhere) and
-$\varepsilon_i$ one draw from $\mathcal{N}(0, \Sigma)$, whose covariance
-$\Sigma_{ij} = \sigma_g^2 e^{-|\bar{z}_i - \bar{z}_j|/L}$ inside a group,
-zero across groups, is the kernel of one of the two stated priors.
-Two families of $2000$ truths are drawn, baseline and pessimistic
-scatter, and every truth is fitted under every prior, each centered on
-the growth-tied shape.  No fit is told which truth it faces.
-
-Equation~\eqref{eq:fisherbias} is linear in $\delta m$, and $\delta m$
-in the bias deviations, so the $(w_0, w_a)$ rows of the response
-collapse into one $2 \times n_{\rm bins}$ matrix $\mathsf{A}$ per
-prior, layout and variant,
-\begin{equation}
-  \delta w \;=\; \mathsf{A}\,\delta,
-  \qquad
-  \delta_i \;=\; \delta_i^{\rm drift} + \varepsilon_i ,
-  \label{eq:linearmap}
-\end{equation}
-and the $2000$ truths cost one matrix product.  The band powers are
-quadratic in the bin biases, so the dropped second-order term is a few
-percent of the shift for $1$--$3\%$ residuals and perhaps $10$--$20\%$
-for the $22\%$ BGS drift.  Where the fit's prior equals the truth's
-scatter, the average shift is not a bias: that fit's ellipse is wider
-than the growth-tied one precisely because it marginalizes over the
-scatter the truth has.
-
-\subsection{The test statistic}
-\label{sec:inflation}
-
-A fit is correctly specified when its ellipse covers the truth with
-the stated probability.  The squared distance of the fitted
-$(w_0, w_a)$, $\hat{w}$, from the truth $w_{\rm true}$ in units of the
-ellipse is
-$\chi^2_w = (\hat{w} - w_{\rm true})\T \mathsf{C}_w^{-1}
-(\hat{w} - w_{\rm true})$.  Averaged over the bias history and the
-data noise,
-\begin{equation}
-  \langle \chi^2_w \rangle
-  \;=\;
-  \Delta_{\rm drift}^2
-  \;+\;
-  \mathrm{tr}\!\left(\mathsf{C}_w^{-1} \mathsf{A}\,\Sigma\,\mathsf{A}\T\right)
-  \;+\;
-  \mathrm{tr}\!\left(\mathsf{C}_w^{-1} \mathsf{C}_w^{\rm noise}\right):
-  \label{eq:chi2w}
-\end{equation}
-the shift $\Delta_{\rm drift}$ of the known drift alone, squared; the
-scatter that the fit's bias parameters, held back by their prior, did
-not follow; and the noise.  $\mathsf{C}_w^{\rm noise}$ is the share of
-$\mathsf{C}_w$ from the data noise and the Gaussian priors other than
-the bias prior; the cross terms average to zero.  Eq.~\eqref{eq:chi2w}
-is evaluated in closed form, the exact average over infinitely many
-universes; the $2000$ draws only make the percentile bars of
-Figure~\ref{fig:scatter}, and carry no noise.  The quoted value is
-$\eta = \sqrt{\langle \chi^2_w \rangle/2}$.  An honest ellipse gives
-$\langle \chi^2_w \rangle = \mathrm{tr}(\mathsf{C}_w^{-1}\mathsf{C}_w)
-= 2$, one unit per parameter, and growing both axes by $\eta$ restores
-that.
-
-\paragraph{Coverage of one parameter.}
-For one parameter $p$, in units of its marginalized error $\sigma_p$,
-\begin{equation}
-  \langle \chi^2_p \rangle \;=\; \mu^2 \;+\; \mathsf{A}_p\T \Sigma\, \mathsf{A}_p \;+\; \nu ,
-  \label{eq:chi2p}
-\end{equation}
-with $\mu$ the shift of the known drift alone, $\mathsf{A}_p$ the row
-of the response that carries the bias deviations into $p$, divided by
-$\sigma_p$, and $\nu$ the noise term, the $(p, p)$ entry of
-$F^{-1}F_0F^{-1}$ over $\sigma_p^2$, where
-$F_0 = \mathsf{D}\T\mathsf{C}_d^{-1}\mathsf{D} + F_{\rm other}$ holds the
-data and the Gaussian priors other than the bias prior.  The bias
-prior adds a positive semidefinite precision, $F \succeq F_0$, so
-$F^{-1}F_0F^{-1} \preceq F^{-1}$ and $\nu \le 1$ (with $X \preceq Y$
-meaning $x\T X x \le x\T Y x$ for every $x$): the rms displacement
-beyond the noise is at least $(\eta^2 - 1)^{1/2}$ error bars.
-
-The response is linear and both the noise and the residual are
-Gaussian, so the pull $\zeta = (\hat{p} - p_{\rm true})/\sigma_p$ is
-Gaussian with mean $\mu$ and variance
-$V = \langle \chi^2_p \rangle - \mu^2$, and the $1\sigma$ bar covers the
-truth in a fraction
-\begin{equation}
-  P(|\zeta| < 1) \;=\;
-  \Phi\!\left(\frac{1 - \mu}{\sqrt{V}}\right)
-  - \Phi\!\left(\frac{-1 - \mu}{\sqrt{V}}\right)
-  \label{eq:coverage}
-\end{equation}
-of the universes, with
-$\Phi(x) = \tfrac{1}{2}\bigl[1 + {\rm erf}(x/\sqrt{2})\bigr]$.  When the
-prior absorbs the known drift ($\mu \approx 0$),
-\begin{equation}
-  P(|\zeta| < 1) \;=\; 2\,\Phi(1/\eta) - 1 :
-  \label{eq:quickcoverage}
-\end{equation}
-$68\%$ at $\eta = 1$, $50\%$ at $1.5$, $38\%$ at $2$.  For
-$\eta \geq 1$ a nonzero $\mu$ only lowers the coverage, so
-Eq.~\eqref{eq:quickcoverage} is then an upper bound.  For the baseline,
-pessimistic and free priors it
-agrees with Eq.~\eqref{eq:coverage} within $0.12$ percentage points;
-for the growth-tied prior only Eq.~\eqref{eq:coverage} is right.
-
-Under the pessimistic scatter and model A, on
-$\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$ and $0.2$, the
-bar covers the truth in $67$, $66$, $60$ and $68\%$ of universes for
-$\Omega_m$ and $67$, $66$, $64$ and $68\%$ for $A_s$ under the baseline
-prior; $64$--$68\%$ under the pessimistic prior; $68.3\%$ under the
-free prior; and $12$, $1.9$, $0.4$ and $7.4\%$ for $\Omega_m$ under the
-growth-tied prior, where Eq.~\eqref{eq:quickcoverage} would give $22$,
-$16$, $15$ and $23\%$.  For $(w_0, w_a)$ the coverage depends on how the
-excess of $\langle \chi^2_w \rangle$ splits between the two directions,
-so only $\eta$ is quoted.
-
-\paragraph{The baseline prior against a pessimistic truth.}
-The baseline prior charges a large penalty for bin biases that follow
-the $3\%$ wiggles of a pessimistic truth, which change over
-$\Delta z \approx 0.05$, so they follow only in part and the fit moves
-the cosmology to absorb the rest, differently for every truth.  At
-$\eta = 2$ the real scatter of the best-fit $(w_0, w_a)$ is twice as
-wide per axis as the reported ellipse, and the FoM four times too
-large.  The opposite mismatch gives $\eta$ below $1$: a conservative
-ellipse.
-
-\paragraph{The matched case.}
-Collect all parameters in $\theta$, with every prior centered on the
-fiducial, and let $\Delta\theta$ be the truth's departure from it:
-zero in the cosmology and in every parameter with another Gaussian
-prior, $B_g\,\delta_i$ in the amplitude $\beta_i$.  With
-$\mathbf{n}_d$ the data noise, of covariance $\mathsf{C}_d$, and
-$F = \mathsf{D}\T\mathsf{C}_d^{-1}\mathsf{D} + F_{\rm bias}
-+ F_{\rm other}$, where $F_{\rm bias}$ is the bias prior's precision,
-the linear response gives the fit's error
-\begin{equation}
-  \hat{\theta} - \theta_{\rm true}
-  \;=\;
-  F^{-1}\bigl(\mathsf{D}\T\mathsf{C}_d^{-1} \mathbf{n}_d
-  \;-\; F_{\rm bias}\,\Delta\theta\bigr) :
-  \label{eq:fiterror}
-\end{equation}
-the noise, of covariance $F^{-1}F_0F^{-1}$, plus the part of the
-truth's departure that the bias prior held back.  In the matched case
-$\Prec_{\rm mem}$ is built from the truth's kernel $\Sigma$, and every
-projection of that form obeys
-\begin{equation}
-  \Prec_{\rm mem}\,\Sigma\,\Prec_{\rm mem} \;=\; \Prec_{\rm mem} :
-  \label{eq:matched}
-\end{equation}
-with $\mathsf{Q} = \Sigma^{-1}$ and
-$\mathsf{M} = (\mathsf{U}\T\mathsf{Q}\mathsf{U})^{-1}$,
-$\Sigma\,\Prec_{\rm mem} = \mathsf{I} - \mathsf{U}\mathsf{M}\mathsf{U}\T\mathsf{Q}$,
-and $\Prec_{\rm mem}\mathsf{U} = 0$ removes the second term.  The
-scatter part of Eq.~\eqref{eq:fiterror} then has covariance
-$F^{-1}F_{\rm bias}F^{-1}$, the two covariances add up to $F^{-1}$, and
-the scatter and noise terms of Eq.~\eqref{eq:chi2w} sum to exactly $2$:
-the widening the prior adds to the ellipse equals the error the
-scatter inflicts.  The matched value is
-$\eta = (1 + \Delta_{\rm drift}^2/2)^{1/2}$ for $(w_0, w_a)$ and
-$(1 + \Delta_{{\rm drift},p}^2)^{1/2}$ for one parameter; under model A
-it stays within $6\%$ of $1$ for $(w_0, w_a)$, and a single parameter
-reaches $1.11$ ($\Omega_m$ on $\Delta z = 0.05$, where the BGS flux
-limit is absorbed least well).
-
-\paragraph{When a fit is conservative.}
-Write $\Prec_{\rm mem}$ in its null-space form, Eq.~\eqref{eq:memnull},
-with the fit's kernel $\Sigma_{\rm fit}$, and let $\Sigma_{\rm true}$
-be the truth's.  If
-$\mathsf{N}\T\Sigma_{\rm true}\mathsf{N} \preceq
-\mathsf{N}\T\Sigma_{\rm fit}\mathsf{N}$, then
-$\Prec_{\rm mem}\Sigma_{\rm true}\Prec_{\rm mem} \preceq \Prec_{\rm mem}$
-and $\eta \le (1 + \Delta_{\rm drift}^2/2)^{1/2}$: a prior wider than the
-truth wastes information but does not understate the error.  The free
-prior has $F_{\rm bias} = 0$, so only the noise remains in
-Eq.~\eqref{eq:fiterror} and $\eta = 1$ for every truth expressible
-through the bin biases.
-
-\subsection{The same test for $\Omega_m$ and $A_s$}
-\label{sec:inflationomas}
-
-$\Omega_m$ and $A_s$ are scored the same way, each in units of its own
-marginalized error, with $\eta = \langle \chi^2_p \rangle^{1/2}$, the
-case $n_{\rm dof} = 1$ of Eq.~\eqref{eq:gof}.  They can react more
-strongly to a bias error than $(w_0, w_a)$, because a bias error moves
-the clustering amplitude $b_i^2 A_s D^2(\bar{z}_i)$ of bin $i$, which
-$A_s$ scales directly and $\Omega_m$ moves through the growth factor.
-
 \section{The projected precision for two bins}
 \label{sec:twobins}
 
@@ -661,6 +408,259 @@ A bin that lost all its band powers to the scale cut has zero rows in
 $F_{\rm data}$: under the free prior its amplitude is dropped, while a
 correlated prior ties it to its neighbors and keeps the matrix
 invertible as long as the group's data fix its level and tilt.
+
+\section{The accuracy test}
+\label{app:bias}
+
+This appendix gives the method of Section~\ref{sec:accuracy} and of
+the break test of Section~\ref{sec:modelb}.
+
+\subsection{The shift formula}
+\label{sec:biasformula}
+
+Let $m$ be the expected data vector (the band powers), $\mathsf{C}_d$
+its covariance, $\mathsf{D}$ the matrix of derivatives of $m$ with
+respect to the parameters (sans-serif, not the growth factor $D$), and
+$F = \mathsf{D}\T \mathsf{C}_d^{-1} \mathsf{D} + F_{\rm priors}$ the
+Fisher matrix of one fit, its priors included (Appendix~\ref{sec:fisher}).
+If the truth moves the data vector by $\delta m$, the maximum of the
+posterior moves, to first order, by
+\begin{equation}
+  \delta p \;=\; F^{-1} \mathsf{D}\T \mathsf{C}_d^{-1}\, \delta m :
+  \label{eq:fisherbias}
+\end{equation}
+the score (the gradient of the log posterior) at the old maximum
+becomes $\mathsf{D}\T \mathsf{C}_d^{-1} \delta m$ instead of zero, and
+the curvature $F$ converts it into a displacement.  With
+$\mathsf{C}_w$ the fit's marginalized $2 \times 2$ covariance of
+$(w_0, w_a)$ and $\delta w$ the $(w_0, w_a)$ entries of $\delta p$,
+the shift
+\begin{equation}
+  \Delta_w \;=\; \sqrt{\delta w\T\, \mathsf{C}_w^{-1}\, \delta w}
+  \label{eq:shiftw}
+\end{equation}
+is the displacement of the dark-energy ellipse in units of its own
+size; $\Omega_m$ and $A_s$ shifts are $|\delta p|/\sigma_p$.  The
+threshold is $1/3$, a shift that widens the effective error by a few
+percent.  Ellipse and response use the same $F$, so a rigid model is
+punished twice: it absorbs little of the drift, and its ellipse is
+small.
+
+A drift of the bin biases enters as
+$\delta m = \sum_i (\partial m / \partial \beta_i)\, B_g\, \delta_i$,
+with $\beta_i$ the amplitudes of Eq.~\eqref{eq:beta}; under model A
+the column is that of Eq.~\eqref{eq:chain} divided by $D(\bar{z}_i)$,
+so a drift of $b_1$ drags $b_2$ and $\bstwo$ along.  The growth-tied
+prior is evaluated in its own parameter basis.  For the free prior the
+bias derivatives span the drift exactly, so the cosmology does not
+move, and that accuracy is bought with the information the prior gives
+up.
+
+\subsection{The drift laws}
+\label{sec:driftlaws}
+
+The conserved-population drift applies to every group: the deviation
+of Eq.~\eqref{eq:tilt}, anchored at the group's mean redshift, nearly
+a straight line of a few percent across each group.  The BGS
+flux-limit drift applies to BGS alone: the convex deviation of
+Appendix~\ref{app:bgsflux}, a $22\%$ span whose best line leaves a
+$2.4\%$ rms curvature.  Both come from
+\texttt{plots/make\_theory\_data.py}; only their shapes matter, because
+the free amplitudes remove the level.
+
+\subsection{Random truths}
+\label{sec:randomtruths}
+
+A random truth sets the bias of bin $i$ in group $g$ to
+\begin{equation}
+  b_i \;=\; \frac{B_g}{D(\bar{z}_i)}\,
+  \bigl(1 + \delta_i^{\rm drift} + \varepsilon_i\bigr)
+  \label{eq:randomtruth}
+\end{equation}
+at the fiducial cosmology, with $\delta_i^{\rm drift}$ the known drift
+(the flux limit in BGS, the conserved population elsewhere) and
+$\varepsilon_i$ one draw from $\mathcal{N}(0, \Sigma)$, whose covariance
+$\Sigma_{ij} = \sigma_g^2 e^{-|\bar{z}_i - \bar{z}_j|/L}$ inside a group,
+zero across groups, is the kernel of one of the two stated priors.
+Two families of $2000$ truths are drawn, baseline and pessimistic
+scatter, and every truth is fitted under every prior, each centered on
+the growth-tied shape.  No fit is told which truth it faces.
+
+Equation~\eqref{eq:fisherbias} is linear in $\delta m$, and $\delta m$
+in the bias deviations, so the $(w_0, w_a)$ rows of the response
+collapse into one $2 \times n_{\rm bins}$ matrix $\mathsf{A}$ per
+prior, layout and variant,
+\begin{equation}
+  \delta w \;=\; \mathsf{A}\,\delta,
+  \qquad
+  \delta_i \;=\; \delta_i^{\rm drift} + \varepsilon_i ,
+  \label{eq:linearmap}
+\end{equation}
+and the $2000$ truths cost one matrix product.  The band powers are
+quadratic in the bin biases, so the dropped second-order term is a few
+percent of the shift for $1$--$3\%$ residuals and perhaps $10$--$20\%$
+for the $22\%$ BGS drift.  Where the fit's prior equals the truth's
+scatter, the average shift is not a bias: that fit's ellipse is wider
+than the growth-tied one precisely because it marginalizes over the
+scatter the truth has.
+
+\subsection{The test statistic}
+\label{sec:inflation}
+
+A fit is correctly specified when its ellipse covers the truth with
+the stated probability.  The squared distance of the fitted
+$(w_0, w_a)$, $\hat{w}$, from the truth $w_{\rm true}$ in units of the
+ellipse is
+$\chi^2_w = (\hat{w} - w_{\rm true})\T \mathsf{C}_w^{-1}
+(\hat{w} - w_{\rm true})$.  Averaged over the bias history and the
+data noise,
+\begin{equation}
+  \langle \chi^2_w \rangle
+  \;=\;
+  \Delta_{\rm drift}^2
+  \;+\;
+  \mathrm{tr}\!\left(\mathsf{C}_w^{-1} \mathsf{A}\,\Sigma\,\mathsf{A}\T\right)
+  \;+\;
+  \mathrm{tr}\!\left(\mathsf{C}_w^{-1} \mathsf{C}_w^{\rm noise}\right):
+  \label{eq:chi2w}
+\end{equation}
+the shift $\Delta_{\rm drift}$ of the known drift alone, squared; the
+scatter that the fit's bias parameters, held back by their prior, did
+not follow; and the noise.  $\mathsf{C}_w^{\rm noise}$ is the share of
+$\mathsf{C}_w$ from the data noise and the Gaussian priors other than
+the bias prior; the cross terms average to zero.  Eq.~\eqref{eq:chi2w}
+is evaluated in closed form, the exact average over infinitely many
+universes; the $2000$ draws only make the percentile bars of
+Figure~\ref{fig:scatter}, and carry no noise.  The quoted value is
+$\eta = \sqrt{\langle \chi^2_w \rangle/2}$.  An honest ellipse gives
+$\langle \chi^2_w \rangle = \mathrm{tr}(\mathsf{C}_w^{-1}\mathsf{C}_w)
+= 2$, one unit per parameter, and growing both axes by $\eta$ restores
+that.
+
+\paragraph{Coverage of one parameter.}
+For one parameter $p$, in units of its marginalized error $\sigma_p$,
+\begin{equation}
+  \langle \chi^2_p \rangle \;=\; \mu^2 \;+\; \mathsf{A}_p\T \Sigma\, \mathsf{A}_p \;+\; \nu ,
+  \label{eq:chi2p}
+\end{equation}
+with $\mu$ the shift of the known drift alone, $\mathsf{A}_p$ the row
+of the response that carries the bias deviations into $p$, divided by
+$\sigma_p$, and $\nu$ the noise term, the $(p, p)$ entry of
+$F^{-1}F_0F^{-1}$ over $\sigma_p^2$, where
+$F_0 = \mathsf{D}\T\mathsf{C}_d^{-1}\mathsf{D} + F_{\rm other}$ holds the
+data and the Gaussian priors other than the bias prior.  The bias
+prior adds a positive semidefinite precision, $F \succeq F_0$, so
+$F^{-1}F_0F^{-1} \preceq F^{-1}$ and $\nu \le 1$ (with $X \preceq Y$
+meaning $x\T X x \le x\T Y x$ for every $x$): the rms displacement
+beyond the noise is at least $(\eta^2 - 1)^{1/2}$ error bars.
+
+The response is linear and both the noise and the residual are
+Gaussian, so the pull $\zeta = (\hat{p} - p_{\rm true})/\sigma_p$ is
+Gaussian with mean $\mu$ and variance
+$V = \langle \chi^2_p \rangle - \mu^2$, and the $1\sigma$ bar covers the
+truth in a fraction
+\begin{equation}
+  P(|\zeta| < 1) \;=\;
+  \Phi\!\left(\frac{1 - \mu}{\sqrt{V}}\right)
+  - \Phi\!\left(\frac{-1 - \mu}{\sqrt{V}}\right)
+  \label{eq:coverage}
+\end{equation}
+of the universes, with
+$\Phi(x) = \tfrac{1}{2}\bigl[1 + {\rm erf}(x/\sqrt{2})\bigr]$.  When the
+prior absorbs the known drift ($\mu \approx 0$),
+\begin{equation}
+  P(|\zeta| < 1) \;=\; 2\,\Phi(1/\eta) - 1 :
+  \label{eq:quickcoverage}
+\end{equation}
+$68\%$ at $\eta = 1$, $50\%$ at $1.5$, $38\%$ at $2$.  For
+$\eta \geq 1$ a nonzero $\mu$ only lowers the coverage, so
+Eq.~\eqref{eq:quickcoverage} is then an upper bound.  For the baseline,
+pessimistic and free priors it
+agrees with Eq.~\eqref{eq:coverage} within $0.12$ percentage points;
+for the growth-tied prior only Eq.~\eqref{eq:coverage} is right.
+
+Under the pessimistic scatter and model A, on
+$\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$ and $0.2$, the
+bar covers the truth in $67$, $66$, $60$ and $68\%$ of universes for
+$\Omega_m$ and $67$, $66$, $64$ and $68\%$ for $A_s$ under the baseline
+prior; $64$--$68\%$ under the pessimistic prior; $68.3\%$ under the
+free prior; and $12$, $1.9$, $0.4$ and $7.4\%$ for $\Omega_m$ under the
+growth-tied prior, where Eq.~\eqref{eq:quickcoverage} would give $22$,
+$16$, $15$ and $23\%$.  For $(w_0, w_a)$ the coverage depends on how the
+excess of $\langle \chi^2_w \rangle$ splits between the two directions,
+so only $\eta$ is quoted.
+
+\paragraph{The baseline prior against a pessimistic truth.}
+The baseline prior charges a large penalty for bin biases that follow
+the $3\%$ wiggles of a pessimistic truth, which change over
+$\Delta z \approx 0.05$, so they follow only in part and the fit moves
+the cosmology to absorb the rest, differently for every truth.  At
+$\eta = 2$ the real scatter of the best-fit $(w_0, w_a)$ is twice as
+wide per axis as the reported ellipse, and the FoM four times too
+large.  The opposite mismatch gives $\eta$ below $1$: a conservative
+ellipse.
+
+\paragraph{The matched case.}
+Collect all parameters in $\theta$, with every prior centered on the
+fiducial, and let $\Delta\theta$ be the truth's departure from it:
+zero in the cosmology and in every parameter with another Gaussian
+prior, $B_g\,\delta_i$ in the amplitude $\beta_i$.  With
+$\mathbf{n}_d$ the data noise, of covariance $\mathsf{C}_d$, and
+$F = \mathsf{D}\T\mathsf{C}_d^{-1}\mathsf{D} + F_{\rm bias}
++ F_{\rm other}$, where $F_{\rm bias}$ is the bias prior's precision,
+the linear response gives the fit's error
+\begin{equation}
+  \hat{\theta} - \theta_{\rm true}
+  \;=\;
+  F^{-1}\bigl(\mathsf{D}\T\mathsf{C}_d^{-1} \mathbf{n}_d
+  \;-\; F_{\rm bias}\,\Delta\theta\bigr) :
+  \label{eq:fiterror}
+\end{equation}
+the noise, of covariance $F^{-1}F_0F^{-1}$, plus the part of the
+truth's departure that the bias prior held back.  In the matched case
+$\Prec_{\rm mem}$ is built from the truth's kernel $\Sigma$, and every
+projection of that form obeys
+\begin{equation}
+  \Prec_{\rm mem}\,\Sigma\,\Prec_{\rm mem} \;=\; \Prec_{\rm mem} :
+  \label{eq:matched}
+\end{equation}
+with $\mathsf{Q} = \Sigma^{-1}$ and
+$\mathsf{M} = (\mathsf{U}\T\mathsf{Q}\mathsf{U})^{-1}$,
+$\Sigma\,\Prec_{\rm mem} = \mathsf{I} - \mathsf{U}\mathsf{M}\mathsf{U}\T\mathsf{Q}$,
+and $\Prec_{\rm mem}\mathsf{U} = 0$ removes the second term.  The
+scatter part of Eq.~\eqref{eq:fiterror} then has covariance
+$F^{-1}F_{\rm bias}F^{-1}$, the two covariances add up to $F^{-1}$, and
+the scatter and noise terms of Eq.~\eqref{eq:chi2w} sum to exactly $2$:
+the widening the prior adds to the ellipse equals the error the
+scatter inflicts.  The matched value is
+$\eta = (1 + \Delta_{\rm drift}^2/2)^{1/2}$ for $(w_0, w_a)$ and
+$(1 + \Delta_{{\rm drift},p}^2)^{1/2}$ for one parameter; under model A
+it stays within $6\%$ of $1$ for $(w_0, w_a)$, and a single parameter
+reaches $1.11$ ($\Omega_m$ on $\Delta z = 0.05$, where the BGS flux
+limit is absorbed least well).
+
+\paragraph{When a fit is conservative.}
+Write $\Prec_{\rm mem}$ in its null-space form, Eq.~\eqref{eq:memnull},
+with the fit's kernel $\Sigma_{\rm fit}$, and let $\Sigma_{\rm true}$
+be the truth's.  If
+$\mathsf{N}\T\Sigma_{\rm true}\mathsf{N} \preceq
+\mathsf{N}\T\Sigma_{\rm fit}\mathsf{N}$, then
+$\Prec_{\rm mem}\Sigma_{\rm true}\Prec_{\rm mem} \preceq \Prec_{\rm mem}$
+and $\eta \le (1 + \Delta_{\rm drift}^2/2)^{1/2}$: a prior wider than the
+truth wastes information but does not understate the error.  The free
+prior has $F_{\rm bias} = 0$, so only the noise remains in
+Eq.~\eqref{eq:fiterror} and $\eta = 1$ for every truth expressible
+through the bin biases.
+
+\subsection{The same test for $\Omega_m$ and $A_s$}
+\label{sec:inflationomas}
+
+$\Omega_m$ and $A_s$ are scored the same way, each in units of its own
+marginalized error, with $\eta = \langle \chi^2_p \rangle^{1/2}$, the
+case $n_{\rm dof} = 1$ of Eq.~\eqref{eq:gof}.  They can react more
+strongly to a bias error than $(w_0, w_a)$, because a bias error moves
+the clustering amplitude $b_i^2 A_s D^2(\bar{z}_i)$ of bin $i$, which
+$A_s$ scales directly and $\Omega_m$ moves through the growth factor.
 
 \section{Numerical verification}
 \label{app:verify}

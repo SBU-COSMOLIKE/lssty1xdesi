@@ -95,7 +95,7 @@ than $\sigma/3$ on the wide layouts.
 Two scenarios pair the baseline prior with models A and B and the
 pessimistic prior with models A and B + tilts, fitted against $\kmax$
 to truths that carry $\alpha_2$, $\SNt$, the offsets at one prior
-width, or the calibration drift (Figure~\ref{fig:fomkmax}); a truth
+width, or the calibration drift; a truth
 inside the fitted model's own prior is reported, one outside it is
 held to $\sigma/3$ (Section~\ref{sec:modelb}).  The baseline scenario
 fails quickly: from $\kmax = 0.1\hMpc$ on, its largest tested shift is
@@ -378,6 +378,125 @@ bias in Eq.~\eqref{eq:summodel}, with flat priors on the tilts: up to
 $48$ parameters.  $\SNz$ and $\SNt$ never tilt: their Poisson part is
 known bin by bin.  Appendix~\ref{app:impl} gives the implementation.
 
+\section{The accuracy test}
+\label{sec:accuracy}
+
+No mock catalogs and only two derived drift laws are available, so
+this note does not defend one prior.  It tests each prior against
+random truths at $\kmax = 0.075\hMpc$ under model A and quotes the FoM
+only for the priors that pass.
+
+\paragraph{Random truths.}
+Each truth sets every bin's linear bias to its group's known drift
+(the $r < 19.5$ flux limit in BGS, a conserved galaxy population
+elsewhere; Appendix~\ref{sec:driftlaws}) plus a residual drawn from
+the baseline or the pessimistic prior, $2000$ truths per family, with
+$b_2$ and $\bstwo$ following $b_1$ through
+Eq.~\eqref{eq:calibrations}.  Every prior fits every truth under model
+A, with and without tilts, centered on the growth-tied shape, to first
+order in the truth (Appendix~\ref{app:bias}).  Figure~\ref{fig:scatter}
+draws the $(w_0, w_a)$ shifts.  Where a fit's prior equals the truth's scatter,
+the mean shift is not a bias: that fit's ellipse already includes this
+scatter (Appendix~\ref{sec:inflation}).
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics{plots/ladder_bias_scatter/ladder_bias_scatter.pdf}
+  \caption{The $(w_0, w_a)$ shift of each fit in units of its own
+    ellipse, for truths with a residual drawn from the baseline prior
+    (top) or the pessimistic prior (bottom), without data noise.
+    Filled: model A; open: model A + tilts; colors and markers: the
+    layouts.  Points: the mean shift; bars: 16th--84th percentiles.
+    Gray columns: the baseline and pessimistic priors.  Dashed:
+    $\sigma/3$.  Points at $10^{-3}$: exact zeros.  \kmaxclause}
+  \label{fig:scatter}
+\end{figure}
+
+\paragraph{The statistic.}
+Each fit is scored by
+\begin{equation}
+  \chidof ,
+  \qquad
+  \chi^2 = \Delta p\T\, \mathsf{C}_p^{-1}\, \Delta p ,
+  \label{eq:gof}
+\end{equation}
+with $\Delta p$ the recovered minus the true parameters,
+$\mathsf{C}_p$ the fit's marginalized covariance, $n_{\rm dof} = 2$
+for $p = (w_0, w_a)$ and $1$ for $\Omega_m$ or $A_s$, and
+$\langle\cdot\rangle$ the exact average over the data noise and the
+bias history.  It measures how well each fit's quoted error bar covers
+where the fit actually lands.  Its value, written $\eta$, is $1$ for
+error bars that cover the truth as often as they claim; above $1$ they
+are too small by that factor, and below $1$ conservative.  It scores
+the parameters, not the $\chi^2$ of the data, and for one parameter it
+converts into the fraction of universes in which the $1\sigma$ bar
+covers the truth (Appendix~\ref{sec:inflation}).
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics{plots/goodness_of_fit/goodness_of_fit.pdf}
+  \caption{How well each fit's quoted error bar covers where the fit
+    actually lands: $\eta = \chidof$ of $(w_0, w_a)$, $\Omega_m$ and
+    $A_s$ under the pessimistic scatter, model A.  Stars: the
+    growth-tied prior; down-triangles: the baseline prior; dashed:
+    $\eta = 1$.  A one-parameter $1\sigma$ bar covers the truth in a
+    fraction $2\Phi(1/\eta) - 1$ of universes, $\Phi$ the Gaussian
+    cumulative distribution.  Omitted: the free prior (exactly $1$) and
+    the pessimistic prior (at most $1.08$).  \kmaxclause}
+  \label{fig:gof}
+\end{figure}
+
+\paragraph{The result of the test.}
+Figures~\ref{fig:scatter} and \ref{fig:gof} order the priors.
+\begin{itemize}
+  \item \emph{The growth-tied prior fails under every truth and is
+    discarded.}  The conserved-population drift alone moves its
+    $(w_0, w_a)$ by several $\sigma$ (Appendix~\ref{sec:tabdrifts}),
+    and under the pessimistic scatter its $\Omega_m$ bar covers the
+    truth in only $0.4$--$12\%$ of universes.  Under model A + tilts,
+    whose flat-prior tilts follow part of a drift, $\eta$
+    of $(w_0, w_a)$ is still $1.5$--$2.4$.
+  \item \emph{The baseline prior is honest only if the residual is as
+    smooth as it assumes.}  Under its own scatter $\eta$ is
+    $1.00$--$1.11$.  Under the pessimistic scatter it stays below
+    $1.05$ on every layout but $\Delta z = 0.05$, where $\eta$ reaches
+    $1.19$: the $\Omega_m$ bar covers the truth in $67$, $66$ and
+    $60\%$ of universes on $\Delta d_{\rm com} = 62$~Mpc,
+    $\Delta z = 0.02$ and $0.05$, and the $A_s$ bar in $67$, $66$ and
+    $64\%$.  Model A + tilts does not change this.
+  \item \emph{The pessimistic prior is honest under both scatters}:
+    $\eta \le 1.08$ in every score, and $0.99$--$1.04$ in $(w_0, w_a)$
+    under baseline scatter.  The $1.08$ is the BGS flux-limit drift on
+    $\Delta z = 0.05$, which this prior leaves just above $\sigma/3$
+    (Appendix~\ref{sec:tabdrifts}).  The free prior gives exactly $1$.
+\end{itemize}
+
+\paragraph{A drift of the calibrations.}
+The random truths move only the linear bias.  A third truth tests the
+calibrations: it drifts the offsets linearly across each group,
+$\Delta_2$ from about $-0.5$ to $+0.5$ and $\Delta_s$ from about
+$-0.25$ to $+0.25$, with $b_1$ at its fiducial
+(Appendix~\ref{sec:ladderimpl}).  Under model A
+(Figure~\ref{fig:caldrift}) it moves $(w_0, w_a)$ by more than
+$\sigma/3$ under every prior on the wide layouts, $\Delta z = 0.05$ and
+$0.2$, and $A_s$ as well on $\Delta z = 0.05$; on the thin layouts
+only the growth-tied prior exceeds $\sigma/3$.  Model A + tilts
+absorbs the drift exactly, since its tilts have the drift's shape; a
+nonlinear drift of the calibrations within a group is untested.  The
+drift is also one of the tested truths of Section~\ref{sec:modelb}.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics{plots/calibration_drift/calibration_drift.pdf}
+  \caption{The shift of a model A fit under the calibration
+    drift ($\Delta_2$ and $\Delta_s$ changing linearly by $1$ and $0.5$
+    across each group): $(w_0, w_a)$ in units of the fit's ellipse,
+    $\Omega_m$ and $A_s$ in their own $\sigma$.  Markers: the four
+    linear-bias priors; dashed: $\sigma/3$.  Omitted: model A + tilts,
+    which absorbs the drift exactly.  \kmaxclause}
+  \label{fig:caldrift}
+\end{figure}
+
 \section{Model B and the reach of model A}
 \label{sec:modelb}
 
@@ -504,127 +623,9 @@ $2.97$ at $0.2$.  The free prior, and the model A FoMs beyond the
 break, which extending model A would claim, are in
 \texttt{plots/fom\_kmax\_models/data.json}.
 
-\section{The accuracy test}
-\label{sec:accuracy}
-
-No mock catalogs and only two derived drift laws are available, so
-this note does not defend one prior.  It tests each prior against
-random truths at $\kmax = 0.075\hMpc$ under model A and quotes the FoM
-only for the priors that pass.
-
-\paragraph{Random truths.}
-Each truth sets every bin's linear bias to its group's known drift
-(the $r < 19.5$ flux limit in BGS, a conserved galaxy population
-elsewhere; Appendix~\ref{sec:driftlaws}) plus a residual drawn from
-the baseline or the pessimistic prior, $2000$ truths per family, with
-$b_2$ and $\bstwo$ following $b_1$ through
-Eq.~\eqref{eq:calibrations}.  Every prior fits every truth under model
-A, with and without tilts, centered on the growth-tied shape, to first
-order in the truth (Appendix~\ref{app:bias}).  Figure~\ref{fig:scatter}
-draws the $(w_0, w_a)$ shifts.  Where a fit's prior equals the truth's scatter,
-the mean shift is not a bias: that fit's ellipse already includes this
-scatter (Appendix~\ref{sec:inflation}).
-
-\begin{figure}[tbp]
-  \centering
-  \includegraphics{plots/ladder_bias_scatter/ladder_bias_scatter.pdf}
-  \caption{The $(w_0, w_a)$ shift of each fit in units of its own
-    ellipse, for truths with a residual drawn from the baseline prior
-    (top) or the pessimistic prior (bottom), without data noise.
-    Filled: model A; open: model A + tilts; colors and markers: the
-    layouts.  Points: the mean shift; bars: 16th--84th percentiles.
-    Gray columns: the baseline and pessimistic priors.  Dashed:
-    $\sigma/3$.  Points at $10^{-3}$: exact zeros.  \kmaxclause}
-  \label{fig:scatter}
-\end{figure}
-
-\paragraph{The statistic.}
-Each fit is scored by
-\begin{equation}
-  \chidof ,
-  \qquad
-  \chi^2 = \Delta p\T\, \mathsf{C}_p^{-1}\, \Delta p ,
-  \label{eq:gof}
-\end{equation}
-with $\Delta p$ the recovered minus the true parameters,
-$\mathsf{C}_p$ the fit's marginalized covariance, $n_{\rm dof} = 2$
-for $p = (w_0, w_a)$ and $1$ for $\Omega_m$ or $A_s$, and
-$\langle\cdot\rangle$ the exact average over the data noise and the
-bias history.  It measures how well each fit's quoted error bar covers
-where the fit actually lands.  Its value, written $\eta$, is $1$ for
-error bars that cover the truth as often as they claim; above $1$ they
-are too small by that factor, and below $1$ conservative.  It scores
-the parameters, not the $\chi^2$ of the data, and for one parameter it
-converts into the fraction of universes in which the $1\sigma$ bar
-covers the truth (Appendix~\ref{sec:inflation}).
-
-\begin{figure}[tbp]
-  \centering
-  \includegraphics{plots/goodness_of_fit/goodness_of_fit.pdf}
-  \caption{How well each fit's quoted error bar covers where the fit
-    actually lands: $\eta = \chidof$ of $(w_0, w_a)$, $\Omega_m$ and
-    $A_s$ under the pessimistic scatter, model A.  Stars: the
-    growth-tied prior; down-triangles: the baseline prior; dashed:
-    $\eta = 1$.  A one-parameter $1\sigma$ bar covers the truth in a
-    fraction $2\Phi(1/\eta) - 1$ of universes, $\Phi$ the Gaussian
-    cumulative distribution.  Omitted: the free prior (exactly $1$) and
-    the pessimistic prior (at most $1.08$).  \kmaxclause}
-  \label{fig:gof}
-\end{figure}
-
-\paragraph{The result of the test.}
-Figures~\ref{fig:scatter} and \ref{fig:gof} order the priors.
-\begin{itemize}
-  \item \emph{The growth-tied prior fails under every truth and is
-    discarded.}  The conserved-population drift alone moves its
-    $(w_0, w_a)$ by several $\sigma$ (Appendix~\ref{sec:tabdrifts}),
-    and under the pessimistic scatter its $\Omega_m$ bar covers the
-    truth in only $0.4$--$12\%$ of universes.  Under model A + tilts,
-    whose flat-prior tilts follow part of a drift, $\eta$
-    of $(w_0, w_a)$ is still $1.5$--$2.4$.
-  \item \emph{The baseline prior is honest only if the residual is as
-    smooth as it assumes.}  Under its own scatter $\eta$ is
-    $1.00$--$1.11$.  Under the pessimistic scatter it stays below
-    $1.05$ on every layout but $\Delta z = 0.05$, where $\eta$ reaches
-    $1.19$: the $\Omega_m$ bar covers the truth in $67$, $66$ and
-    $60\%$ of universes on $\Delta d_{\rm com} = 62$~Mpc,
-    $\Delta z = 0.02$ and $0.05$, and the $A_s$ bar in $67$, $66$ and
-    $64\%$.  Model A + tilts does not change this.
-  \item \emph{The pessimistic prior is honest under both scatters}:
-    $\eta \le 1.08$ in every score, and $0.99$--$1.04$ in $(w_0, w_a)$
-    under baseline scatter.  The $1.08$ is the BGS flux-limit drift on
-    $\Delta z = 0.05$, which this prior leaves just above $\sigma/3$
-    (Appendix~\ref{sec:tabdrifts}).  The free prior gives exactly $1$.
-\end{itemize}
-
-\paragraph{A drift of the calibrations.}
-The random truths move only the linear bias.  A third truth tests the
-calibrations: it drifts the offsets linearly across each group,
-$\Delta_2$ from about $-0.5$ to $+0.5$ and $\Delta_s$ from about
-$-0.25$ to $+0.25$, with $b_1$ at its fiducial
-(Appendix~\ref{sec:ladderimpl}).  Under model A
-(Figure~\ref{fig:caldrift}) it moves $(w_0, w_a)$ by more than
-$\sigma/3$ under every prior on the wide layouts, $\Delta z = 0.05$ and
-$0.2$, and $A_s$ as well on $\Delta z = 0.05$; on the thin layouts
-only the growth-tied prior exceeds $\sigma/3$.  Model A + tilts
-absorbs the drift exactly, since its tilts have the drift's shape; a
-nonlinear drift of the calibrations within a group is untested.  The
-drift is also one of the tested truths of Section~\ref{sec:modelb}.
-
-\begin{figure}[tbp]
-  \centering
-  \includegraphics{plots/calibration_drift/calibration_drift.pdf}
-  \caption{The shift of a model A fit under the calibration
-    drift ($\Delta_2$ and $\Delta_s$ changing linearly by $1$ and $0.5$
-    across each group): $(w_0, w_a)$ in units of the fit's ellipse,
-    $\Omega_m$ and $A_s$ in their own $\sigma$.  Markers: the four
-    linear-bias priors; dashed: $\sigma/3$.  Omitted: model A + tilts,
-    which absorbs the drift exactly.  \kmaxclause}
-  \label{fig:caldrift}
-\end{figure}
-
 \paragraph{The test at every cut.}
-The test above fixes $\kmax = 0.075\hMpc$ and model A.
+The accuracy test of Section~\ref{sec:accuracy} fixes
+$\kmax = 0.075\hMpc$ and model A.
 Figure~\ref{fig:gtkmax} repeats it at every cut under model B + tilts,
 the adopted model, for the growth-tied prior against the pessimistic
 prior, with the same truths: the known drifts plus a residual drawn

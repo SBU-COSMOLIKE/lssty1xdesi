@@ -491,7 +491,12 @@ These are settled; reopen one only with the PI.
   model B; no v3), linear_bias_kmax, higher_order_bias, and
   bias_model_summary, rewritten after the other three as a presentable
   summary with their key figures (not compact). Every paper figure has
-  a plot folder.
+  a plot folder. In correlated_bias_prior_v2 the accuracy test precedes
+  "Model B and the reach of model A", and the mathematics appendix
+  places the accuracy-test method after "How the prior enters the
+  Fisher matrix"; in bias_model_summary the model and the prior precede
+  the section "Projection, covariance and the Fisher forecast", which
+  precedes the results.
 - **Notes describe what was done**; recommendations and decisions live
   in this skill (the higher-order note's original Recommendation is in
   `references/higher_order_bias_recommendation.md`); open items go to

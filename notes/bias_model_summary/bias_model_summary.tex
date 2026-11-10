@@ -52,30 +52,30 @@
 % Statements of the text that rest on Part 1; check each after a
 % refresh:
 %   - DESI C_ell^gg alone stays below LSST Y1 3x2pt in both FoMs at
-%     every cut (Summary; Section 5);
+%     every cut (Summary; the section "Forecast");
 %   - the thin layouts carry most of the information: their
 %     FoM(w0, wa) is the largest at every cut from k_max = 0.075 on
-%     (Section 5);
+%     (the section "Forecast");
 %   - alpha_2 sets the largest shift on Delta d_com = 62 Mpc and
 %     Delta z = 0.02 at every cut from k_max = 0.075 on, and the overall
-%     maximum (Summary; Section 5); the offsets set it on Delta z = 0.2
-%     (Section 5);
+%     maximum (Summary; the section "Forecast"); the offsets set it on Delta z = 0.2
+%     (the section "Forecast");
 %   - "per bin, group width" lies above the model on every layout at
 %     every cut from k_max = 0.075 on; "per bin, group width x sqrt(N)"
 %     lies above it on Delta z = 0.2; "per bin, x sqrt(N) + group tilt"
 %     stays at or below 1 (largest ratio 0.98); the costs fall from
 %     k_max = 0.075 to 0.2; correlated residuals cost more than
 %     independent per-bin terms on the three thinner layouts and nothing
-%     on Delta z = 0.2 (Section 6);
+%     on Delta z = 0.2 (the section "What the grouping is worth");
 %   - "one constant value per wide sample" claims the largest FoM
 %     ratios of the untied figure on every layout from k_max = 0.075
 %     on; its sqrt(<chi^2>/n_dof) of (w0, wa) is larger at 0.2 than at
 %     0.075 on every layout, and its smallest coverage sits on
-%     Delta d_com = 62 Mpc (Section 6);
+%     Delta d_com = 62 Mpc (the section "What the grouping is worth");
 %   - in the bottom row of the untied figure the four versions that
 %     free b1 per bin sit exactly at 1, correlated residuals stay
 %     within EtaCorrMin-EtaCorrMax, and the model within EtaW
-%     (Section 6).
+%     (the section "What the grouping is worth").
 % ---------------------------------------------------------------------
 % The refresh switch: \numbersfinalfalse prints every \refresh value in
 % red and the note under the title; \numbersfinaltrue prints them plain.
@@ -477,97 +477,6 @@ the three-dimensional information~\cite{Asorey2012}.  Bin $i$ has mean
 redshift $\bar{z}_i$, and $D(z)$ is the linear growth factor,
 $D(0) = 1$.
 
-\paragraph{Non-Limber spectra.}
-The Limber approximation evaluates the power spectrum only at the
-transverse wavenumber $(\ell + 1/2)/\chi$, with $\chi$ the comoving
-distance, and misses the line-of-sight modes that a thin bin with sharp
-edges passes.  The exact projection keeps them: between bins $i$ and
-$j$, with $W_i(\chi) = n_i(z)\,dz/d\chi$ the radial kernel of bin $i$,
-$n_i$ its normalized redshift distribution, $j_\ell$ the spherical
-Bessel function and $P(k;\, z_1, z_2)$ the unequal-time power spectrum
-of the projected field at $z_1 = z(\chi_1)$ and $z_2 = z(\chi_2)$,
-\begin{equation}
-  C_\ell^{ij} \;=\; \frac{2}{\pi} \int d\chi_1\, W_i(\chi_1)
-  \int d\chi_2\, W_j(\chi_2)
-  \int_0^\infty dk\, k^2\, P(k;\, z_1, z_2)\,
-  j_\ell(k\chi_1)\, j_\ell(k\chi_2) .
-  \label{eq:exactcl}
-\end{equation}
-The double Bessel integral is the cost: $j_\ell(k\chi_1)\,
-j_\ell(k\chi_2)$ oscillates and beats, and quadrature over it is slow
-and unstable.
-
-Fang et al.~\cite{FangKEM2020} (FKEM) remove that cost by splitting
-the spectrum into its linear part and a nonlinear remainder.  The
-linear part is separable, $P_{\rm lin}(k;\, z_1, z_2) =
-D(z_1)\,D(z_2)\,P_{\rm lin}(k)$, with $P_{\rm lin}(k)$ the linear
-matter power spectrum today, so in Eq.~\eqref{eq:exactcl} each
-$\chi$ integral closes around its own Bessel function and becomes a
-one-dimensional transform that the FFTLog algorithm computes quickly.
-The remainder $P_{\rm mm} - P_{\rm lin}$, with $P_{\rm mm}$ the
-nonlinear matter power spectrum, matters only at high $k$, which
-projects to multipoles where the Limber approximation is accurate, so
-it is added in Limber:
-\begin{equation}
-  C_\ell \;=\; C_\ell^{\rm exact}[P_{\rm lin}]
-  \;+\; C_\ell^{\rm Limber}[P_{\rm mm}]
-  \;-\; C_\ell^{\rm Limber}[P_{\rm lin}] .
-  \label{eq:fkem}
-\end{equation}
-
-FKEM projects three transfer kernels per galaxy bin: density,
-redshift space and magnification.  The density and redshift-space
-(Kaiser) parts together give, with $b_{1,i}$ the bin's linear galaxy
-bias and $f = d\ln D/d\ln a$ the linear growth rate ($a$ the scale
-factor),
-\begin{equation}
-  \Delta_\ell^i(k) \;=\; \int d\chi\, W_i(\chi)\, D(z)
-  \left[\, b_{1,i}\, j_\ell(k\chi) \;-\; f(z)\, j_\ell''(k\chi)
-  \,\right] :
-  \label{eq:kaiserkernel}
-\end{equation}
-each factor $f\mu^2$ of the flat-sky Kaiser power, with $\mu$ the
-cosine of the angle to the line of sight, becomes a $-j_\ell''$ in the
-exact projection.  In the Limber terms of Eq.~\eqref{eq:fkem} the
-identity $j_\ell''(x) = [\ell(\ell-1)/x^2 - 1]\,j_\ell(x)
-+ (2/x)\,j_{\ell+1}(x)$ writes the second derivative with the orders
-$\ell$ and $\ell+1$, and Limber evaluates each order at its own
-distance, $\chi_\ell = (\ell + 1/2)/k$ and
-$\chi_{\ell+1} = (\ell + 3/2)/k$, so the Limber redshift-space kernel
-combines the bin's radial kernel at two neighbouring distances:
-redshift-space distortions move galaxies between neighbouring shells.
-The third kernel, lensing magnification, is proportional to
-the magnification bias $b_{\rm mag}$, the response of the observed
-number density to the lensing convergence; this forecast sets
-$b_{\rm mag} = 0$ in every DESI bin and every LSST Y1 lens bin, so
-magnification is neglected.
-
-For thin bins the split of Eq.~\eqref{eq:fkem} is not enough.
-Limber's error shrinks with the width of the radial kernel, so for a
-thin bin the Limber remainder stays wrong far past the switch
-multipole: the hand-off fails exactly where accuracy was the goal.
-The density--density part of every DESI spectrum -- the linear-bias
-term, the one-loop terms and the $\alpha_0$ counterterm of
-Eq.~\eqref{eq:pgg} -- is therefore projected by a low-rank
-factorization instead.  Per bin, a singular value decomposition writes
-the square root of the real-space galaxy power spectrum $P_g(k, z)$ as
-a sum of five products of a function of $k$ and a function of $z$,
-each projected with its own FFTLog transform; the unequal-time
-spectrum is the geometric mean
-$\sqrt{P_g(k, z_1)}\,\sqrt{P_g(k, z_2)}$, exact at equal times and
-treating the two fields as fully correlated otherwise.  This carries
-the full one-loop power with no Limber hand-off up to a multipole cap
-at $\ell = 1000$, below which every kept band lies.
-
-The hybrid in one sentence: the density--density part runs through the
-low-rank factorization; the Kaiser terms and the $\alpha_2$
-counterterm keep the FKEM split, projected exactly with
-$P_{\rm lin}$ and corrected in Limber by Eq.~\eqref{eq:fkem}; the
-stochastic terms are projected as exact templates; and magnification
-is neglected.  The one-loop power is not pushed through the velocity
-terms because velocities do not grow like the density field once
-nonlinear.
-
 \paragraph{Parameters and figures of merit.}
 Seven cosmological parameters vary with flat priors: $10^9 A_s$, with
 $A_s$ the amplitude of the primordial curvature power spectrum; the
@@ -599,14 +508,6 @@ and within the shipped mask, which stops every bin at $\kMask\hMpc$.
 The cut is built on linear-bias spectra.  The forecasts scan
 $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$.
 
-\paragraph{The covariance.}
-The band-power covariance is Gaussian, computed at the one-loop
-fiducial (every bin's linear bias on its group's trend, $b_2$ and
-$\bstwo$ on their calibrations, every other bias term zero) for
-\AreaCov{} square degrees, with its inverse rescaled to the forecast's
-\AreaSurvey{}.  The data vectors are the model's own prediction at
-that fiducial.
-
 \section{The cross pairs and their overlaps}
 \label{sec:pairs}
 
@@ -620,10 +521,12 @@ normalized distribution of bin $i$,
   \label{eq:overlap}
 \end{equation}
 $1$ for two identical shapes and $0$ for disjoint ones.  In the Limber
-regime the power spectrum and the distance barely change across two
-thin bins, so $O_{ij}$ is close to the correlation coefficient
-$C_\ell^{ij}/\sqrt{C_\ell^{ii}\,C_\ell^{jj}}$ of the two spectra at
-high $\ell$: it reads directly as how correlated the two maps are.
+regime -- at high $\ell$, where each band power reads the power
+spectrum only at one transverse wavenumber (Section~\ref{sec:method})
+-- the power spectrum and the distance barely change across two thin
+bins, so $O_{ij}$ is close to the correlation coefficient
+$C_\ell^{ij}/\sqrt{C_\ell^{ii}\,C_\ell^{jj}}$ of the two spectra: it
+reads directly as how correlated the two maps are.
 The data vector holds DESI's measured pairs plus every pair with
 $O_{ij} \ge \OvThreshold$ at the fiducial dispersions, which adds the
 \NcrossExtra{} LRG3$\times$ELG1 pairs of
@@ -713,7 +616,7 @@ counterterm in the convention of the DESI 2024 full-shape
 analysis~\cite{Maus2024}, in which $\alpha_2 k^2$ is a fractional
 correction to the velocity part of the Kaiser power.  Equation~\eqref{eq:pgg}
 writes these terms with $P_{\rm lin}$; their projection adds the Limber
-difference between $P_{\rm mm}$ and $P_{\rm lin}$ (Section~\ref{sec:data}),
+difference between $P_{\rm mm}$ and $P_{\rm lin}$ (Section~\ref{sec:method}),
 so where the Limber approximation holds they carry the nonlinear power.
 Both counterterms are in $h^{-2}\,{\rm Mpc}^2$.  $\SNz$ is the white noise
 beyond Poisson, in units of the Poisson power $1/\bar{n}_i$ that the
@@ -800,8 +703,9 @@ and the counterterms and stochastic terms have none.
 
 \paragraph{Why $\SNt$ matters on thin bins.}
 A constant power $N$ projects exactly as
-$N \int d\chi\, W_i W_j/\chi^2$ onto bins $i$ and $j$, with $W_i(\chi)$
-the Fingers-of-God-convolved kernel of bin $i$; bins of two different
+$N \int d\chi\, W_i W_j/\chi^2$ onto bins $i$ and $j$, with $\chi$ the
+comoving distance and $W_i(\chi)$ the Fingers-of-God-convolved kernel
+of bin $i$; bins of two different
 samples share no stochastic term.  A power proportional to
 $k^2\mu^2 = k_\parallel^2$ is that of the line-of-sight derivative of a
 white noise, so $\SNt$ projects with each kernel replaced by its
@@ -909,6 +813,327 @@ a calibration that drifts linearly across a group.  The counterterms
 follow the same pattern, since their scale follows the host halos of
 the selection.  The stochastic amplitudes do not tilt: their Poisson
 part is known bin by bin.
+
+\section{Projection, covariance and the Fisher forecast}
+\label{sec:method}
+
+\paragraph{Non-Limber spectra.}
+The Limber approximation evaluates the power spectrum only at the
+transverse wavenumber $(\ell + 1/2)/\chi$ and misses the
+line-of-sight modes that a thin bin with sharp edges passes.  The
+exact projection keeps them: between bins $i$ and
+$j$, with $W_i(\chi) = n_i(z)\,dz/d\chi$ the radial kernel of bin $i$,
+$n_i$ its normalized redshift distribution, $j_\ell$ the spherical
+Bessel function and $P(k;\, z_1, z_2)$ the unequal-time power spectrum
+of the projected field at $z_1 = z(\chi_1)$ and $z_2 = z(\chi_2)$,
+\begin{equation}
+  C_\ell^{ij} \;=\; \frac{2}{\pi} \int d\chi_1\, W_i(\chi_1)
+  \int d\chi_2\, W_j(\chi_2)
+  \int_0^\infty dk\, k^2\, P(k;\, z_1, z_2)\,
+  j_\ell(k\chi_1)\, j_\ell(k\chi_2) .
+  \label{eq:exactcl}
+\end{equation}
+The double Bessel integral is the cost: $j_\ell(k\chi_1)\,
+j_\ell(k\chi_2)$ oscillates and beats, and quadrature over it is slow
+and unstable.
+
+Fang et al.~\cite{FangKEM2020} (FKEM) remove that cost by splitting
+the spectrum into its linear part and a nonlinear remainder.  The
+linear part is separable, $P_{\rm lin}(k;\, z_1, z_2) =
+D(z_1)\,D(z_2)\,P_{\rm lin}(k)$, with $P_{\rm lin}(k)$ the linear
+matter power spectrum today, so in Eq.~\eqref{eq:exactcl} each
+$\chi$ integral closes around its own Bessel function and becomes a
+one-dimensional transform that the FFTLog algorithm computes quickly.
+The remainder $P_{\rm mm} - P_{\rm lin}$, with $P_{\rm mm}$ the
+nonlinear matter power spectrum, matters only at high $k$, which
+projects to multipoles where the Limber approximation is accurate, so
+it is added in Limber:
+\begin{equation}
+  C_\ell \;=\; C_\ell^{\rm exact}[P_{\rm lin}]
+  \;+\; C_\ell^{\rm Limber}[P_{\rm mm}]
+  \;-\; C_\ell^{\rm Limber}[P_{\rm lin}] .
+  \label{eq:fkem}
+\end{equation}
+
+FKEM projects three transfer kernels per galaxy bin: density,
+redshift space and magnification.  The density and redshift-space
+(Kaiser) parts together give, with $b_{1,i}$ the bin's linear galaxy
+bias and $f = d\ln D/d\ln a$ the linear growth rate ($a$ the scale
+factor),
+\begin{equation}
+  \Delta_\ell^i(k) \;=\; \int d\chi\, W_i(\chi)\, D(z)
+  \left[\, b_{1,i}\, j_\ell(k\chi) \;-\; f(z)\, j_\ell''(k\chi)
+  \,\right] :
+  \label{eq:kaiserkernel}
+\end{equation}
+each factor $f\mu^2$ of the flat-sky Kaiser power, with $\mu$ the
+cosine of the angle to the line of sight, becomes a $-j_\ell''$ in the
+exact projection.  In the Limber terms of Eq.~\eqref{eq:fkem} the
+identity $j_\ell''(x) = [\ell(\ell-1)/x^2 - 1]\,j_\ell(x)
++ (2/x)\,j_{\ell+1}(x)$ writes the second derivative with the orders
+$\ell$ and $\ell+1$, and Limber evaluates each order at its own
+distance, $\chi_\ell = (\ell + 1/2)/k$ and
+$\chi_{\ell+1} = (\ell + 3/2)/k$, so the Limber redshift-space kernel
+combines the bin's radial kernel at two neighbouring distances:
+redshift-space distortions move galaxies between neighbouring shells.
+The third kernel, lensing magnification, is proportional to
+the magnification bias $b_{\rm mag}$, the response of the observed
+number density to the lensing convergence; this forecast sets
+$b_{\rm mag} = 0$ in every DESI bin and every LSST Y1 lens bin, so
+magnification is neglected.
+
+For thin bins the split of Eq.~\eqref{eq:fkem} is not enough.
+Limber's error shrinks with the width of the radial kernel, so for a
+thin bin the Limber remainder stays wrong far past the switch
+multipole: the hand-off fails exactly where accuracy was the goal.
+The density--density part of every DESI spectrum -- the linear-bias
+term, the one-loop terms and the $\alpha_0$ counterterm of
+Eq.~\eqref{eq:pgg} -- is therefore projected by a low-rank
+factorization instead.  Per bin, a singular value decomposition writes
+the square root of the real-space galaxy power spectrum $P_g(k, z)$ as
+a sum of five products of a function of $k$ and a function of $z$,
+each projected with its own FFTLog transform; the unequal-time
+spectrum is the geometric mean
+$\sqrt{P_g(k, z_1)}\,\sqrt{P_g(k, z_2)}$, exact at equal times and
+treating the two fields as fully correlated otherwise.  This carries
+the full one-loop power with no Limber hand-off up to a multipole cap
+at $\ell = 1000$, below which every kept band lies.
+
+The hybrid in one sentence: the density--density part runs through the
+low-rank factorization; the Kaiser terms and the $\alpha_2$
+counterterm keep the FKEM split, projected exactly with
+$P_{\rm lin}$ and corrected in Limber by Eq.~\eqref{eq:fkem}; the
+stochastic terms are projected as exact templates; and magnification
+is neglected.  The one-loop power is not pushed through the velocity
+terms because velocities do not grow like the density field once
+nonlinear.
+
+\paragraph{The covariance.}
+The band-power covariance is Gaussian, computed at the one-loop
+fiducial (every bin's linear bias on its group's trend, $b_2$ and
+$\bstwo$ on their calibrations, every other bias term zero) for
+\AreaCov{} square degrees, with its inverse rescaled to the forecast's
+\AreaSurvey{}.  The data vectors are the model's own prediction at
+that fiducial.
+
+\paragraph{The Fisher matrix.}
+Let $\mathbf{m}(\mathbf{p})$ be the model band powers at the parameters
+$\mathbf{p}$, $\mathbf{p}_0$ the fiducial point, $\mathsf{C}$ the
+band-power covariance, and $\mathsf{D} = \partial\mathbf{m}/\partial
+\mathbf{p}$ at $\mathbf{p}_0$ (sans-serif, unlike the growth factor
+$D$).  At a scale cut that keeps the set $K$ of band powers, the Fisher
+matrix of a fit is
+\begin{equation}
+  F \;=\; \mathsf{D}_K\T\,\mathsf{C}_{KK}^{-1}\,\mathsf{D}_K
+  \;+\; F_{\rm prior} ,
+  \label{eq:fisher}
+\end{equation}
+with $\mathsf{D}_K$ the kept rows of $\mathsf{D}$ and $\mathsf{C}_{KK}$
+the kept block of $\mathsf{C}$.  $F_{\rm prior}$ adds
+$1/\sigma_{\rm pr}^2$ to the diagonal for a Gaussian prior of width
+$\sigma_{\rm pr}$ and nothing for a flat one.  For each group and each
+quantity that carries a residual (Table~\ref{tab:params}) it adds the
+precision $\mathsf{P} = \mathsf{Q} - \mathsf{Q}\mathsf{U}(\mathsf{U}\T
+\mathsf{Q}\mathsf{U})^{-1}\mathsf{U}\T\mathsf{Q}$ on the bins'
+deviations from the group value ($\delta_i$ for $b_1$), with
+$\mathsf{Q}$ the inverse kernel matrix of Eq.~\eqref{eq:kernel} and
+$\mathsf{U}$ the matrix with columns $1$ and $\bar{z}_i - \bar{z}_g$:
+it charges only the residual around the group's best straight line.
+The marginalized error of parameter $j$ is
+$\sigma_j = [(F^{-1})_{jj}]^{1/2}$, and the FoMs of
+Section~\ref{sec:data} are $[\det \mathsf{C}_p]^{-1/2}$, with
+$\mathsf{C}_p$ the $2 \times 2$ block of $F^{-1}$ of the two
+parameters.  Where a cut leaves a combination of nuisance parameters
+without information, for instance the flat tilts of a group most of
+whose bins have lost their bands, $F$ is inverted as a pseudo-inverse:
+scaled to unit diagonal, diagonalized, and restricted to the
+eigen-directions above $\PinvTol$ of the largest eigenvalue.  A dropped
+direction may not touch $(w_0, w_a)$, $\Omega_m$ or $A_s$ by more than
+$\PinvTouch$; otherwise the cut gives no fit.
+
+\paragraph{Derivatives.}
+The columns of $\mathsf{D}$ come from three kinds of derivatives at the
+fiducial point.
+\begin{enumerate}
+  \item The cosmological parameters, the $\sigma_v$ and the per-bin
+    $b_{1,i}$, $b_{2,i}$, $b_{s^2,i}$ and $\alpha_{0,i}$, on which the
+    band powers depend nonlinearly, take the five-point central stencil
+    \begin{equation}
+      \frac{\partial\mathbf{m}}{\partial\theta} \;\simeq\;
+      \frac{\mathbf{m}(\theta_0 - 2\epsilon)
+        - 8\,\mathbf{m}(\theta_0 - \epsilon)
+        + 8\,\mathbf{m}(\theta_0 + \epsilon)
+        - \mathbf{m}(\theta_0 + 2\epsilon)}{12\,\epsilon} ,
+      \label{eq:stencil}
+    \end{equation}
+    with $\theta_0$ the fiducial value and $\epsilon = h\,\theta_0$,
+    $h = \StepH$ (an absolute step where $\theta_0 = 0$); its truncation
+    error is of order $\epsilon^4$.  Every evaluation is a full call of
+    the likelihood, CAMB included.
+  \item $\SNz$, $\SNt$ and $\alpha_2$ enter linearly, so their columns
+    are exact: the projected templates per unit amplitude for the
+    stochastic terms (Eq.~\eqref{eq:sn2} for $\SNt$), and a two-point
+    difference for $\alpha_2$.
+  \item The per-bin columns are computed in batches.  A spectrum
+    $C^{ij}_\ell$ depends on the biases of bins $i$ and $j$ only, so the
+    bins of a set $\mathcal{S}$ in which no two bins share a measured
+    spectrum can be stepped together.  With $\partial_{\mathcal{S}}
+    \mathbf{m}$ the stencil of Eq.~\eqref{eq:stencil} with the bias $x$
+    stepped in every bin of $\mathcal{S}$,
+    \begin{equation}
+      \frac{\partial m_r}{\partial x_i} \;=\;
+      \begin{cases}
+        (\partial_{\mathcal{S}}\mathbf{m})_r & \text{if band power $r$
+          belongs to a spectrum that contains bin } i \in \mathcal{S} ,
+          \\
+        0 & \text{otherwise.}
+      \end{cases}
+      \label{eq:batch}
+    \end{equation}
+    A greedy coloring of the graph of measured pairs gives \Nbatch{}
+    such batches on every layout, so each per-bin family costs
+    \NevalFamily{} evaluations, whatever the number of bins.
+\end{enumerate}
+
+\paragraph{One base, every model.}
+The columns of one layout, for the cosmology, the $\sigma_v$ and the
+seven per-bin families $b_1$, $b_2$, $\bstwo$, $\alpha_0$, $\alpha_2$,
+$\SNz$ and $\SNt$, form a base matrix $\mathsf{B}$, computed once and
+cached.  A model is a fixed linear map from its parameters $p_j$ to the
+base quantities $\kappa_a$,
+\begin{equation}
+  \mathsf{D} \;=\; \mathsf{B}\,\mathsf{M} ,
+  \qquad
+  \mathsf{M}_{aj} \;=\; \frac{\partial\kappa_a}{\partial p_j} :
+  \label{eq:dbm}
+\end{equation}
+a group offset puts ones on its group's bins in its family's block, a
+tilt the weights $\bar{z}_i - \bar{z}_g$, a bin's linear bias the chain
+rule through the calibrations of Eq.~\eqref{eq:calibrations}, and the
+untied versions of Section~\ref{sec:grouping} per-bin identities.  With
+$\mathsf{G}_K = \mathsf{B}_K\T\mathsf{C}_{KK}^{-1}\mathsf{B}_K$ computed
+once per cut, every model and prior at that cut has
+$F = \mathsf{M}\T\mathsf{G}_K\mathsf{M} + F_{\rm prior}$: a change of
+model, prior, cut or truth needs no new evaluation of the data vector.
+
+\paragraph{Shifts and the error-bar test.}
+A truth that departs from the fitted model moves the band powers by
+$\Delta\mathbf{m}$, and the best fit, to first order, by
+\begin{equation}
+  \delta\mathbf{p} \;=\; F^{-1}\,\mathsf{D}_K\T\,\mathsf{C}_{KK}^{-1}\,
+  \Delta\mathbf{m}_K ,
+  \label{eq:shift}
+\end{equation}
+exactly for the terms linear in their amplitude ($\alpha_2$, $\SNz$,
+$\SNt$) and to first order for the biases, on which the band powers
+depend quadratically.  Because $\delta\mathbf{p}$ is linear in the
+truth, the average behind the error-bar test of
+Section~\ref{sec:forecast} is exact in closed form; for
+$(w_0, w_a)$,
+\begin{equation}
+  \langle\chi^2\rangle \;=\; \Delta_{\rm drift}^2
+  \;+\; {\rm tr}\bigl[\mathsf{C}_p^{-1}\bigl(\mathsf{A}\,\Sigma\,
+  \mathsf{A}\T + \mathsf{N}_p\bigr)\bigr] ,
+  \label{eq:chi2}
+\end{equation}
+with $\Delta_{\rm drift}$ the shift of the known drift alone in units
+of the ellipse, $\mathsf{A}$ the response of $(w_0, w_a)$ to the bins'
+deviations $\delta_i$, $\Sigma$ the covariance of the residuals drawn
+from the prior, and $\mathsf{N}_p$ the $(w_0, w_a)$ block of
+$F^{-1}F_0F^{-1}$, the share of the data noise and the other priors,
+$F_0$ being $F$ without the correlated prior.  For $\Omega_m$ or $A_s$
+the same holds with the parameter's own row.
+
+\paragraph{Numerical convergence.}
+Noise in the data vector, from its integration grids and CAMB's
+tolerances, enters a finite difference divided by the step.  A column
+$\mathbf{d}_j + \mathbf{e}_j$ with noise $\mathbf{e}_j$ raises $F_{jj}$
+on average by $\langle\mathbf{e}_j\T\mathsf{C}^{-1}\mathbf{e}_j\rangle
+> 0$: noise reads as information and inflates the FoM.  Settings that
+converge a $\chi^2$ to the standard of MCMC runs,
+$|\Delta\chi^2| < \MCMCdchi$, are therefore not enough.  On
+$\Delta z = 0.05$ they inflate ${\rm FoM}(w_0, w_a)$ by \ConvMCMCLow{}
+at $\kmax = 0.075\hMpc$ and \ConvMCMCHigh{} at $0.2\hMpc$, and a
+coarser, exploration-grade configuration inflates it about
+\ConvOldCom{}fold on
+$\Delta d_{\rm com} = 62$~Mpc at $0.075\hMpc$; the excess comes from
+noise in the $w_0$, $w_a$ and $\Omega_m$ columns.  That spurious
+information also weakens the degeneracy between $\alpha_2$ and the
+cosmology and understates the $\alpha_2$ shifts of the stress test
+(Section~\ref{sec:forecast}), which is why the final settings are
+needed.  The criterion of
+convergence is step independence: the FoMs, the errors and the shifts
+must not move when the stencil step changes or the numerical controls
+are refined further.  A study on $\Delta z = 0.05$
+(Figure~\ref{fig:convergence}) starts from a configuration with every
+control raised: the grid factor $g = \GridStart$, where $g$ counts the
+comoving distances of the non-Limber integrals in units of
+\GridUnit{}; CosmoLike's \texttt{accuracyboost} \StartAccBoost{} and
+\texttt{integration\_accuracy} \StartIntAcc{}; the low-rank engine's
+rank \StartRank{} and multipole cap \StartCap{}; and CAMB's
+\texttt{AccuracyBoost} \StartCambBoost{}, \texttt{k\_per\_logint}
+\StartKlog{} and maximum wavenumber \StartKmax{}~Mpc$^{-1}$.  From
+there it changes one control at a time and compares each configuration
+with the converged value, the five-point stencil at step $h$ on
+$g = \GridConv$.  The final settings are:
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \item the final grid $g = \GridFinal$, \GridRatio{} times the MCMC grid of
+    $\Delta z = 0.05$, with CosmoLike's \texttt{accuracyboost}
+    \FinAccBoost{} and \texttt{integration\_accuracy} \FinIntAcc{};
+  \item CAMB's \texttt{AccuracyBoost} \FinCambBoost{},
+    \texttt{k\_per\_logint} \FinKlog{} and a maximum wavenumber of
+    \FinKmax{}~Mpc$^{-1}$, with halofit's bisection tolerance tightened
+    from $\HalofitStock$ to $\HalofitPatch$ (the halofit tolerance
+    patch);
+  \item five-point stencils for every stencil and per-bin column.
+\end{itemize}
+Against the converged value they give ${\rm FoM}(w_0, w_a)$
+\ConvFoMwLow{} at $\kmax = 0.075\hMpc$ and \ConvFoMwHigh{} at
+$0.2\hMpc$ (${\rm FoM}(\Omega_m, 10^9 A_s)$ \ConvFoMoLow{} and
+\ConvFoMoHigh{}), marginalized errors within \ConvSigma{} and shifts
+within $\ConvShift\sigma$.  From step $h/2$ to $3h$ both FoMs stay
+within \ConvStep{} on $\Delta z = 0.05$ and within \ConvStepCom{} on
+$\Delta d_{\rm com} = 62$~Mpc.  Two cross-checks agree.  DerivKit,
+which fits a polynomial through at least \DkitPoints{} evaluations
+around the fiducial point, matches the stencils within \DkitAgree{}.
+The study's route, which unties the per-bin parameters in the
+likelihood, matches the production route, which steps them through
+CosmoLike's setter: exactly for $b_2$, $\bstwo$ and $\alpha_0$, within
+$\RouteBone$ for $b_1$ and within $\RouteStencil$ for the stencil
+columns.
+
+\paragraph{Cost.}
+A layout's base takes \Neval{} evaluations of the data vector, about
+\TevalMin{} to \TevalMax{}~s each at the final settings, so \HoursMin{}
+to \HoursMax{} hours per thin layout; every model, prior, cut and truth
+then costs a fraction of a second.  \texttt{notes/fisher\_machinery}
+gives the details.
+
+\begin{figure}[htbp]
+  \begin{minipage}[c]{3.78in}
+    \includegraphics{plots/fom_convergence/fom_convergence.pdf}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{\dimexpr\linewidth-3.78in-\sidegap\relax}
+  \captionsetup{justification=raggedright,singlelinecheck=false}
+  \caption{Convergence of the forecast on $\Delta z = 0.05$: the FoMs
+    of the model divided by their converged values (five-point stencils
+    at step $h$ on the grid factor $g = \GridConv$).  From the top,
+    ${\rm FoM}(w_0, w_a)$ and ${\rm FoM}(\Omega_m, 10^9 A_s)$ at
+    $\kmax = 0.075$ and $0.2\hMpc$.  Diamonds on the line: the scan in
+    $g$ at step $h$, which holds every other control at the study's
+    starting configuration ($g = \GridStart$ with the other controls
+    raised; Section~\ref{sec:method}); $g = \GridFinal$ is the final
+    setting.  Filled down-triangles,
+    up-triangles and squares beside a grid: steps $h/2$, $2h$ and $3h$.
+    Plus: five-point stencils at the MCMC settings.  Open and filled
+    stars: DerivKit at the MCMC and at the final settings.  Open blue
+    markers: $\Delta d_{\rm com} = 62$~Mpc at the final settings, steps
+    $h/2$ (down-triangle) and $2h$ (up-triangle) against its own step-$h$
+    value (ring).  Gray band: $1 \pm 1\%$.  \kmaxclause}
+  \label{fig:convergence}
+  \end{minipage}
+\end{figure}
 
 \section{Forecast}
 \label{sec:forecast}
@@ -1166,228 +1391,6 @@ most \EtaW{} (Section~\ref{sec:forecast}).
     $\kmax = 0.075\hMpc$: at $0.05\hMpc$ the model's own
     ${\rm FoM}(w_0, w_a)$ is below \FoMwSmallCut{}.  \kmaxclause}
   \label{fig:untied}
-\end{figure}
-
-\section{Fisher forecast and its numerical convergence}
-\label{sec:method}
-
-\paragraph{The Fisher matrix.}
-Let $\mathbf{m}(\mathbf{p})$ be the model band powers at the parameters
-$\mathbf{p}$, $\mathbf{p}_0$ the fiducial point, $\mathsf{C}$ the
-band-power covariance, and $\mathsf{D} = \partial\mathbf{m}/\partial
-\mathbf{p}$ at $\mathbf{p}_0$ (sans-serif, unlike the growth factor
-$D$).  At a scale cut that keeps the set $K$ of band powers, the Fisher
-matrix of a fit is
-\begin{equation}
-  F \;=\; \mathsf{D}_K\T\,\mathsf{C}_{KK}^{-1}\,\mathsf{D}_K
-  \;+\; F_{\rm prior} ,
-  \label{eq:fisher}
-\end{equation}
-with $\mathsf{D}_K$ the kept rows of $\mathsf{D}$ and $\mathsf{C}_{KK}$
-the kept block of $\mathsf{C}$.  $F_{\rm prior}$ adds
-$1/\sigma_{\rm pr}^2$ to the diagonal for a Gaussian prior of width
-$\sigma_{\rm pr}$ and nothing for a flat one.  For each group and each
-quantity that carries a residual (Table~\ref{tab:params}) it adds the
-precision $\mathsf{P} = \mathsf{Q} - \mathsf{Q}\mathsf{U}(\mathsf{U}\T
-\mathsf{Q}\mathsf{U})^{-1}\mathsf{U}\T\mathsf{Q}$ on the bins'
-deviations from the group value ($\delta_i$ for $b_1$), with
-$\mathsf{Q}$ the inverse kernel matrix of Eq.~\eqref{eq:kernel} and
-$\mathsf{U}$ the matrix with columns $1$ and $\bar{z}_i - \bar{z}_g$:
-it charges only the residual around the group's best straight line.
-The marginalized error of parameter $j$ is
-$\sigma_j = [(F^{-1})_{jj}]^{1/2}$, and the FoMs of
-Section~\ref{sec:data} are $[\det \mathsf{C}_p]^{-1/2}$, with
-$\mathsf{C}_p$ the $2 \times 2$ block of $F^{-1}$ of the two
-parameters.  Where a cut leaves a combination of nuisance parameters
-without information, for instance the flat tilts of a group most of
-whose bins have lost their bands, $F$ is inverted as a pseudo-inverse:
-scaled to unit diagonal, diagonalized, and restricted to the
-eigen-directions above $\PinvTol$ of the largest eigenvalue.  A dropped
-direction may not touch $(w_0, w_a)$, $\Omega_m$ or $A_s$ by more than
-$\PinvTouch$; otherwise the cut gives no fit.
-
-\paragraph{Derivatives.}
-The columns of $\mathsf{D}$ come from three kinds of derivatives at the
-fiducial point.
-\begin{enumerate}
-  \item The cosmological parameters, the $\sigma_v$ and the per-bin
-    $b_{1,i}$, $b_{2,i}$, $b_{s^2,i}$ and $\alpha_{0,i}$, on which the
-    band powers depend nonlinearly, take the five-point central stencil
-    \begin{equation}
-      \frac{\partial\mathbf{m}}{\partial\theta} \;\simeq\;
-      \frac{\mathbf{m}(\theta_0 - 2\epsilon)
-        - 8\,\mathbf{m}(\theta_0 - \epsilon)
-        + 8\,\mathbf{m}(\theta_0 + \epsilon)
-        - \mathbf{m}(\theta_0 + 2\epsilon)}{12\,\epsilon} ,
-      \label{eq:stencil}
-    \end{equation}
-    with $\theta_0$ the fiducial value and $\epsilon = h\,\theta_0$,
-    $h = \StepH$ (an absolute step where $\theta_0 = 0$); its truncation
-    error is of order $\epsilon^4$.  Every evaluation is a full call of
-    the likelihood, CAMB included.
-  \item $\SNz$, $\SNt$ and $\alpha_2$ enter linearly, so their columns
-    are exact: the projected templates per unit amplitude for the
-    stochastic terms (Eq.~\eqref{eq:sn2} for $\SNt$), and a two-point
-    difference for $\alpha_2$.
-  \item The per-bin columns are computed in batches.  A spectrum
-    $C^{ij}_\ell$ depends on the biases of bins $i$ and $j$ only, so the
-    bins of a set $\mathcal{S}$ in which no two bins share a measured
-    spectrum can be stepped together.  With $\partial_{\mathcal{S}}
-    \mathbf{m}$ the stencil of Eq.~\eqref{eq:stencil} with the bias $x$
-    stepped in every bin of $\mathcal{S}$,
-    \begin{equation}
-      \frac{\partial m_r}{\partial x_i} \;=\;
-      \begin{cases}
-        (\partial_{\mathcal{S}}\mathbf{m})_r & \text{if band power $r$
-          belongs to a spectrum that contains bin } i \in \mathcal{S} ,
-          \\
-        0 & \text{otherwise.}
-      \end{cases}
-      \label{eq:batch}
-    \end{equation}
-    A greedy coloring of the graph of measured pairs gives \Nbatch{}
-    such batches on every layout, so each per-bin family costs
-    \NevalFamily{} evaluations, whatever the number of bins.
-\end{enumerate}
-
-\paragraph{One base, every model.}
-The columns of one layout, for the cosmology, the $\sigma_v$ and the
-seven per-bin families $b_1$, $b_2$, $\bstwo$, $\alpha_0$, $\alpha_2$,
-$\SNz$ and $\SNt$, form a base matrix $\mathsf{B}$, computed once and
-cached.  A model is a fixed linear map from its parameters $p_j$ to the
-base quantities $\kappa_a$,
-\begin{equation}
-  \mathsf{D} \;=\; \mathsf{B}\,\mathsf{M} ,
-  \qquad
-  \mathsf{M}_{aj} \;=\; \frac{\partial\kappa_a}{\partial p_j} :
-  \label{eq:dbm}
-\end{equation}
-a group offset puts ones on its group's bins in its family's block, a
-tilt the weights $\bar{z}_i - \bar{z}_g$, a bin's linear bias the chain
-rule through the calibrations of Eq.~\eqref{eq:calibrations}, and the
-untied versions of Section~\ref{sec:grouping} per-bin identities.  With
-$\mathsf{G}_K = \mathsf{B}_K\T\mathsf{C}_{KK}^{-1}\mathsf{B}_K$ computed
-once per cut, every model and prior at that cut has
-$F = \mathsf{M}\T\mathsf{G}_K\mathsf{M} + F_{\rm prior}$: a change of
-model, prior, cut or truth needs no new evaluation of the data vector.
-
-\paragraph{Shifts and the error-bar test.}
-A truth that departs from the fitted model moves the band powers by
-$\Delta\mathbf{m}$, and the best fit, to first order, by
-\begin{equation}
-  \delta\mathbf{p} \;=\; F^{-1}\,\mathsf{D}_K\T\,\mathsf{C}_{KK}^{-1}\,
-  \Delta\mathbf{m}_K ,
-  \label{eq:shift}
-\end{equation}
-exactly for the terms linear in their amplitude ($\alpha_2$, $\SNz$,
-$\SNt$) and to first order for the biases, on which the band powers
-depend quadratically.  Because $\delta\mathbf{p}$ is linear in the
-truth, the average behind the error-bar test of
-Section~\ref{sec:forecast} is exact in closed form; for
-$(w_0, w_a)$,
-\begin{equation}
-  \langle\chi^2\rangle \;=\; \Delta_{\rm drift}^2
-  \;+\; {\rm tr}\bigl[\mathsf{C}_p^{-1}\bigl(\mathsf{A}\,\Sigma\,
-  \mathsf{A}\T + \mathsf{N}_p\bigr)\bigr] ,
-  \label{eq:chi2}
-\end{equation}
-with $\Delta_{\rm drift}$ the shift of the known drift alone in units
-of the ellipse, $\mathsf{A}$ the response of $(w_0, w_a)$ to the bins'
-deviations $\delta_i$, $\Sigma$ the covariance of the residuals drawn
-from the prior, and $\mathsf{N}_p$ the $(w_0, w_a)$ block of
-$F^{-1}F_0F^{-1}$, the share of the data noise and the other priors,
-$F_0$ being $F$ without the correlated prior.  For $\Omega_m$ or $A_s$
-the same holds with the parameter's own row.
-
-\paragraph{Numerical convergence.}
-Noise in the data vector, from its integration grids and CAMB's
-tolerances, enters a finite difference divided by the step.  A column
-$\mathbf{d}_j + \mathbf{e}_j$ with noise $\mathbf{e}_j$ raises $F_{jj}$
-on average by $\langle\mathbf{e}_j\T\mathsf{C}^{-1}\mathbf{e}_j\rangle
-> 0$: noise reads as information and inflates the FoM.  Settings that
-converge a $\chi^2$ to the standard of MCMC runs,
-$|\Delta\chi^2| < \MCMCdchi$, are therefore not enough.  On
-$\Delta z = 0.05$ they inflate ${\rm FoM}(w_0, w_a)$ by \ConvMCMCLow{}
-at $\kmax = 0.075\hMpc$ and \ConvMCMCHigh{} at $0.2\hMpc$, and a
-coarser, exploration-grade configuration inflates it about
-\ConvOldCom{}fold on
-$\Delta d_{\rm com} = 62$~Mpc at $0.075\hMpc$; the excess comes from
-noise in the $w_0$, $w_a$ and $\Omega_m$ columns.  That spurious
-information also weakens the degeneracy between $\alpha_2$ and the
-cosmology and understates the $\alpha_2$ shifts
-of Figure~\ref{fig:shifts}, which is why the final settings are
-needed.  The criterion of
-convergence is step independence: the FoMs, the errors and the shifts
-must not move when the stencil step changes or the numerical controls
-are refined further.  A study on $\Delta z = 0.05$
-(Figure~\ref{fig:convergence}) starts from a configuration with every
-control raised: the grid factor $g = \GridStart$, where $g$ counts the
-comoving distances of the non-Limber integrals in units of
-\GridUnit{}; CosmoLike's \texttt{accuracyboost} \StartAccBoost{} and
-\texttt{integration\_accuracy} \StartIntAcc{}; the low-rank engine's
-rank \StartRank{} and multipole cap \StartCap{}; and CAMB's
-\texttt{AccuracyBoost} \StartCambBoost{}, \texttt{k\_per\_logint}
-\StartKlog{} and maximum wavenumber \StartKmax{}~Mpc$^{-1}$.  From
-there it changes one control at a time and compares each configuration
-with the converged value, the five-point stencil at step $h$ on
-$g = \GridConv$.  The final settings are:
-\begin{itemize}
-  \setlength{\itemsep}{1pt}
-  \item the final grid $g = \GridFinal$, \GridRatio{} times the MCMC grid of
-    $\Delta z = 0.05$, with CosmoLike's \texttt{accuracyboost}
-    \FinAccBoost{} and \texttt{integration\_accuracy} \FinIntAcc{};
-  \item CAMB's \texttt{AccuracyBoost} \FinCambBoost{},
-    \texttt{k\_per\_logint} \FinKlog{} and a maximum wavenumber of
-    \FinKmax{}~Mpc$^{-1}$, with halofit's bisection tolerance tightened
-    from $\HalofitStock$ to $\HalofitPatch$ (the halofit tolerance
-    patch);
-  \item five-point stencils for every stencil and per-bin column.
-\end{itemize}
-Against the converged value they give ${\rm FoM}(w_0, w_a)$
-\ConvFoMwLow{} at $\kmax = 0.075\hMpc$ and \ConvFoMwHigh{} at
-$0.2\hMpc$ (${\rm FoM}(\Omega_m, 10^9 A_s)$ \ConvFoMoLow{} and
-\ConvFoMoHigh{}), marginalized errors within \ConvSigma{} and shifts
-within $\ConvShift\sigma$.  From step $h/2$ to $3h$ both FoMs stay
-within \ConvStep{} on $\Delta z = 0.05$ and within \ConvStepCom{} on
-$\Delta d_{\rm com} = 62$~Mpc.  Two cross-checks agree.  DerivKit,
-which fits a polynomial through at least \DkitPoints{} evaluations
-around the fiducial point, matches the stencils within \DkitAgree{}.
-The study's route, which unties the per-bin parameters in the
-likelihood, matches the production route, which steps them through
-CosmoLike's setter: exactly for $b_2$, $\bstwo$ and $\alpha_0$, within
-$\RouteBone$ for $b_1$ and within $\RouteStencil$ for the stencil
-columns.
-
-\paragraph{Cost.}
-A layout's base takes \Neval{} evaluations of the data vector, about
-\TevalMin{} to \TevalMax{}~s each at the final settings, so \HoursMin{}
-to \HoursMax{} hours per thin layout; every model, prior, cut and truth
-then costs a fraction of a second.  \texttt{notes/fisher\_machinery}
-gives the details.
-
-\begin{figure}[htbp]
-  \begin{minipage}[c]{3.78in}
-    \includegraphics{plots/fom_convergence/fom_convergence.pdf}
-  \end{minipage}\hfill
-  \begin{minipage}[c]{\dimexpr\linewidth-3.78in-\sidegap\relax}
-  \captionsetup{justification=raggedright,singlelinecheck=false}
-  \caption{Convergence of the forecast on $\Delta z = 0.05$: the FoMs
-    of the model divided by their converged values (five-point stencils
-    at step $h$ on the grid factor $g = \GridConv$).  From the top,
-    ${\rm FoM}(w_0, w_a)$ and ${\rm FoM}(\Omega_m, 10^9 A_s)$ at
-    $\kmax = 0.075$ and $0.2\hMpc$.  Diamonds on the line: the scan in
-    $g$ at step $h$, which holds every other control at the study's
-    starting configuration ($g = \GridStart$ with the other controls
-    raised; Section~\ref{sec:method}); $g = \GridFinal$ is the final
-    setting.  Filled down-triangles,
-    up-triangles and squares beside a grid: steps $h/2$, $2h$ and $3h$.
-    Plus: five-point stencils at the MCMC settings.  Open and filled
-    stars: DerivKit at the MCMC and at the final settings.  Open blue
-    markers: $\Delta d_{\rm com} = 62$~Mpc at the final settings, steps
-    $h/2$ (down-triangle) and $2h$ (up-triangle) against its own step-$h$
-    value (ring).  Gray band: $1 \pm 1\%$.  \kmaxclause}
-  \label{fig:convergence}
-  \end{minipage}
 \end{figure}
 
 \section{Where the details are}

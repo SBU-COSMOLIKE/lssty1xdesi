@@ -17,15 +17,16 @@ into new note folders (no v3: forecast results go into
 
 - `notes/correlated_bias_prior_v2/correlated_bias_prior_v2.tex` (with
   `appendix_physics.tex` and `appendix_math.tex`), the forecast note:
-  Summary; The forecast; The linear-bias prior; Model A; Model B and
-  the reach of model A; The accuracy test; The figure of merit at
+  Summary; The forecast; The linear-bias prior; Model A; The accuracy
+  test; Model B and the reach of model A; The figure of merit at
   k_max = 0.075. Appendices: the physics of the linear-bias priors (The
   models; Which L and sigma_g are physical; The memory model; The bias
   continuity equation, step by step; The BGS flux-limit bias model,
-  step by step), the mathematics (The accuracy test; The projected
+  step by step), the mathematics (The projected
   precision for two bins; The projection as a marginalization; Many
   bins: the tridiagonal inverse; The memory projection, step by step;
-  How the prior enters the Fisher matrix; Numerical verification), and
+  How the prior enters the Fisher matrix; The accuracy test; Numerical
+  verification), and
   the model record (Implementation and the Fisher construction; The
   known drifts; Numerical checks; The counterterm requires the low-rank
   engine; Comparison with linear bias and with exact calibrations;
@@ -48,13 +49,15 @@ into new note folders (no v3: forecast results go into
   the order of work" are kept verbatim in
   `higher_order_bias_recommendation.md`; the gap lists and the code
   inventory are gone from the note.
-- `notes/bias_model_summary/bias_model_summary.tex` is rewritten last,
-  from the other three: a presentable summary for collaborators that
-  carries their key figures at a readable size, with white space and
-  short sections, as few pages as possible without looking compact.
-  The current file is the earlier two-page pre-implementation summary
-  (its parameter table predates SN2 in model A, and it still says
-  model B needs code); it is replaced wholesale, not patched.
+- `notes/bias_model_summary/bias_model_summary.tex`, the presentable
+  summary for collaborators, rewritten last from the other three, with
+  their key figures at a readable size, white space and short
+  sections, as few pages as possible without looking compact.  It
+  presents one model and one prior, neither named nor compared.
+  Sections: Summary; Data and scale cut; The cross pairs and their
+  overlaps; The bias model; The prior: the freedom of the wide sample;
+  Projection, covariance and the Fisher forecast; Forecast; What the
+  grouping is worth; Where the details are.
 
 Rules for every note:
 
