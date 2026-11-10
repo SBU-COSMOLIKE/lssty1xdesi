@@ -49,9 +49,12 @@
 
 \emergencystretch=3em
 % let the drawings share a page with text
-\renewcommand{\topfraction}{0.85}
-\renewcommand{\textfraction}{0.1}
-\renewcommand{\floatpagefraction}{0.75}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.85}
+\setcounter{topnumber}{3}
+\setcounter{totalnumber}{4}
 
 \begin{document}
 
@@ -92,7 +95,8 @@ then, can a change of model, prior or scale cut cost only seconds?
     several knobs at once; written as a matrix $\mM$, it turns the
     base $\mB$ into the model's derivatives, $\mD = \mB\mM$, and a new
     model is a new $\mM$ (Section~\ref{sec:base}).
-  \item Each layout's base is computed once and stored on disk
+  \item Each layout's base is computed once -- by the notebook, or by an
+    MPI script on many cores -- and stored on disk
     (Section~\ref{sec:compute}).
   \item A scale cut keeps some rows of the data vector.  Each cut is
     reduced once to a small matrix $\mG$ (Section~\ref{sec:cuts}), and
@@ -117,12 +121,157 @@ ELG1 and ELG2) on four layouts: bins of equal comoving width
 $\Delta d_{\rm com} = 62$~Mpc, and bins of fixed redshift width
 $\Delta z = 0.02$, $0.05$ and $0.2$.  Bin $i$ has mean redshift
 $\bar{z}_i$, and $D(z)$ is the linear growth factor, $D(0) = 1$.  The
-bias model and its priors are those of the correlated-prior note,
-\texttt{notes/correlated\_bias\_prior\_v2}: the paper model, a
-one-loop bias model with per-group offsets and tilts under the
-pessimistic linear-bias prior, which allows correlated wiggles of the
-bin biases around a straight line in redshift
-(Section~\ref{sec:model}).
+model being forecast is the paper model: a one-loop bias model with
+per-group offsets and tilts (defined in the higher-order note,
+\texttt{notes/higher\us order\us bias}) under the pessimistic
+linear-bias prior of the correlated-prior note,
+\texttt{notes/correlated\us bias\us prior\us v2}, which allows
+correlated wiggles of the bin biases around a straight line in
+redshift (Section~\ref{sec:model}).  The machinery lives in one
+notebook, \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL.ipynb} (``the
+notebook'' below), on the Fisher module
+\texttt{interface/cosmolike\us lssty1xdesi\us fisher.py}; the script
+\texttt{scripts/compute\us fisher\us base\us mpi.py} computes the same
+derivative base on MPI ranks (Section~\ref{sec:compute}).
+
+\section{Fiducial model and parameter values}
+\label{sec:fiducial}
+
+This section freezes the point at which every derivative of this note
+was taken, so the note does not depend on files that may drift.
+
+\paragraph{The cosmology.}
+The fiducial point is the \texttt{override} block of the paper yamls
+\texttt{EXAMPLE\us EVALUATE1}--\texttt{4.yaml}, the same in all four
+(Table~\ref{tab:fidcosmo}).  The Fisher matrices vary the first seven
+parameters; the neutrino mass stays at $0.06$~eV and $\tau$ is fixed.
+At this point $\sigma_8 = 0.8278$.
+
+\begin{table}[tbp]
+  \centering
+  \begin{tabular}{llll}
+    \hline
+    parameter & meaning & fiducial & prior \\
+    \hline
+    $10^9 A_s$ & primordial curvature amplitude & $2.1$ & flat \\
+    $n_s$ & scalar spectral index & $0.96605$ & flat \\
+    $H_0$ & Hubble constant [km/s/Mpc] & $67.32$ & flat \\
+    $\Omega_b$ & baryon density today & $0.04$ & flat \\
+    $\Omega_m$ & matter density today & $0.3$ & flat \\
+    $w_0$ & dark-energy equation of state today & $-1$ & flat \\
+    $w_a$ & its slope, $w(a) = w_0 + w_a(1 - a)$ & $0$ & flat, as $w_0 + w_a$ \\
+    $\sum m_\nu$ & neutrino mass sum [eV] & $0.06$ & fixed in the Fisher \\
+    $\tau$ & optical depth to reionization & $0.0697186$ & fixed \\
+    \hline
+  \end{tabular}
+  \caption{The fiducial cosmology: the evaluate \texttt{override} of the
+    paper yamls.  The yamls' \texttt{ref} entries (chain starting points)
+    differ from it and are not used.}
+  \label{tab:fidcosmo}
+\end{table}
+
+\paragraph{The layouts.}
+The four paper yamls $n = 1$ to $4$ carry the layouts
+$\Delta d_{\rm com} = 62$~Mpc and $\Delta z = 0.02$, $0.05$, $0.2$
+(the datasets \texttt{lssty1xdesi\us desi\us dr3} and
+\texttt{...\us dr1\us dz0p02}, \texttt{dz0p05}, \texttt{dz0p20}): $76$,
+$90$, $36$ and $10$ thin bins in the six groups BGS, LRG1, LRG2, LRG3,
+ELG1 and ELG2, each spectrum in $53$ band powers of width
+$\Delta\ell = 10$ from $\ell = 15$ to $544$.
+Table~\ref{tab:sizes} gives the sizes.
+
+\paragraph{The bias fiducial.}
+Bin $i$ of group $g$ has $b_{1,i} = B_g/D(\bar{z}_i)$, with $D$ read
+off the linear power spectrum ratio at $k = 0.005/{\rm Mpc}$ and the
+group amplitudes
+\begin{center}
+  \begin{tabular}{lcccccc}
+    \hline
+    & BGS & LRG1 & LRG2 & LRG3 & ELG1 & ELG2 \\
+    $B_g$ & $1.34$ & $1.7$ & $1.7$ & $1.7$ & $0.84$ & $0.84$ \\
+    \hline
+  \end{tabular}
+\end{center}
+$b_{2,i}$ sits on the Lazeyras calibration~\cite{Lazeyras2016},
+$b_2^{\rm L}(b_1) = 0.412 - 2.143\,b_1 + 0.929\,b_1^2 + 0.008\,b_1^3$,
+and $b_{s^2,i}$ on co-evolution, $-\tfrac{4}{7}(b_{1,i} - 1)$; at the
+fiducial every offset, tilt, bias residual, counterterm
+($\alpha_{0,i}$, $\alpha_{2,i}$, both in $h^{-2}\,{\rm Mpc}^2$) and
+stochastic amplitude ($\SNzi$ in units of the bin's Poisson power
+$1/\bar{n}_i$; $\SNti$ in units of
+$f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}_i$, with
+$f_{\rm sat}\sigma_{\rm sat}^2 = 6.084$ for BGS and LRG and $0.841$ for
+ELG, in $({\rm Mpc}/h)^2$) is zero.  The linear-bias prior is the
+pessimistic one: residual width $\sigma_g = 0.03$ in every group,
+correlation length $L = 0.05$ in redshift, charging only the wiggles
+around each group's free line (Section~\ref{sec:cuts}).
+
+\paragraph{The velocity dispersions.}
+Seven $\sigma_v$ groups (BGS split at $\bar{z} = 0.255$), each with a
+Gaussian prior centered on its fiducial; the paper widths are six
+times the exploration widths that model B and model B + tilts use:
+\begin{center}
+  \begin{tabular}{lccccccc}
+    \hline
+    & BGS0 & BGS1 & LRG1 & LRG2 & LRG3 & ELG1 & ELG2 \\
+    fiducial [km/s] & $371$ & $358$ & $357$ & $348$ & $343$ & $304$ & $289$ \\
+    paper width [km/s] & $870$ & $630$ & $420$ & $300$ & $300$ & $240$ & $180$ \\
+    exploration width [km/s] & $145$ & $105$ & $70$ & $50$ & $50$ & $40$ & $30$ \\
+    \hline
+  \end{tabular}
+\end{center}
+The yaml priors are truncated at $\sigma_v = 0$; at the paper width
+the BGS0 truncation is severe (the truncated prior's mean is about
+$850$~km/s, not the fiducial $371$).  The Fisher matrices treat every
+$\sigma_v$ prior as an untruncated Gaussian of the quoted width,
+centered on the fiducial; these widths are what the derivative caches
+store.
+
+\paragraph{The model variants on this point.}
+The paper model is model B + tilts without $\alpha_2$, on the paper
+$\sigma_v$ widths.  Model B and model B + tilts (the variants of the
+$\kmax$ scan) use the exploration $\sigma_v$ widths, free
+$\alpha_{2,g}$ per group, and the Gaussian widths $2$ ($\Delta_{2,g}$),
+$1$ ($\Delta_{s,g}$), $2$ (${\rm SN}_{0,g}$) and $5$
+(${\rm SN}_{2,g}$); the counterterm widths are $0.5/\kmax^2$ at each
+cut, and every tilt is flat.  All variants run under the baseline
+($\sigma_g = 0.03$ for BGS, $0.01$ otherwise; $L = 0.2$), pessimistic
+or free linear-bias prior.
+
+\paragraph{The scale cuts.}
+The non-Limber ultraviolet-fraction criterion of
+Saraivanov et al.~\cite{Saraivanov2026} at $\alpha = 0.05$, bin $i$
+cut at $\kmax/D(\bar{z}_i)$ with $\kmax$ quoted at $z = 0$,
+intersected with the shipped mask ($k = 0.1185/{\rm Mpc} =
+0.176\hMpc$ in every bin).  The cuts are computed on the paper
+fiducial above, at the reference settings of the derivative
+convergence study (every accuracy control above its MCMC value), for
+$\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$, and cached in
+\texttt{chains/EXAMPLE\us EVALUATE\us FISHER\us MODEL\us SCALE\us
+CUTS.pkl}; figures and FoMs use $\kmax \le 0.2\hMpc$.
+
+\paragraph{The covariance.}
+Gaussian, computed at the one-loop fiducial above (with massless
+neutrinos, its one difference from the likelihood fiducial) for
+$14{,}000$ square degrees; every Fisher matrix rescales its inverse by
+$f_A = 12{,}300/14{,}000 \approx 0.879$ to the survey area.
+
+\paragraph{The derivative tier.}
+Every number of this note is at the final tier, on every layout:
+CosmoLike \texttt{accuracyboost} $3$,
+\texttt{nonlimber\us accuracyboost} $64$ (combined chi-grid factor
+$3 \times 64 = 192$, which the code rounds up to the power of two
+$256$), \texttt{integration\us accuracy} $1$,
+\texttt{kmax\us boltzmann} $20/{\rm Mpc}$ (so the CAMB transfer
+reaches $60/{\rm Mpc}$), the low-rank engine's rank $5$ and multipole
+cap $1000$, CAMB \texttt{AccuracyBoost} $2$ and
+\texttt{k\us per\us logint} $30$, with the halofit tolerance patch.
+Five-point stencils everywhere, never central differences: relative
+step $h = 0.02$ for the sampled parameters, per-bin operator steps
+$0.01$ ($b_{1,i}$, relative), $0.02$ ($b_{2,i}$ and $b_{s^2,i}$,
+absolute) and $5\aunit$ ($\alpha_{0,i}$); the linear $\alpha_{2,i}$,
+$\SNzi$ and $\SNti$ columns are exact (Section~\ref{sec:templates}).
+Section~\ref{sec:accuracy} is the evidence.
 
 \section{Why derivatives at one point are enough}
 \label{sec:linear}
@@ -266,8 +415,9 @@ model above with, per group, the offsets $\Delta_{2,g}$ and
 $\Delta_{s,g}$, the counterterm amplitude $\alpha_{0,g}$, the
 stochastic amplitudes ${\rm SN}_{0,g}$ and ${\rm SN}_{2,g}$ and the
 three tilts, under the pessimistic linear-bias prior.  Every group
-parameter carries the Gaussian prior width of the correlated-prior
-note, except that all seven $\sigma_v$ widths are multiplied by six.
+parameter carries the Gaussian prior width of
+Section~\ref{sec:fiducial}, with all seven $\sigma_v$ widths six times
+the exploration fits'.
 The widened dispersions stand in for the redshift-space counterterm
 $\alpha_2$ of the DESI DR1 convention~\cite{Maus2024}, a $k^2\mu^2$
 term the model sets to zero in every bin: $\alpha_2$ is about $99\%$
@@ -297,10 +447,15 @@ each single bin.  That is the base of the next section.
 The base is the list of elementary knobs the code turns by hand: each
 cosmological parameter, each velocity dispersion, and, separately in
 every thin bin, each of the six bias quantities of
-Section~\ref{sec:model}.  For each knob, the code computes how every band power changes when that
+Section~\ref{sec:model} plus the redshift-space counterterm
+$\alpha_{2,i}$ -- seven per-bin families in all.  The paper model
+fixes $\alpha_{2,i} = 0$, but model B frees it and the shift tests of
+Section~\ref{sec:downstream} assume truths with it, so the base
+carries its columns too.  For each knob, the code computes how every
+band power changes when that
 knob alone moves: one derivative column, a vector of $n$ numbers.  These
-are the base columns, and they are what the notebooks precompute and
-store (Section~\ref{sec:precomputed}).
+are the base columns, and they are what the notebook precomputes and
+stores (Section~\ref{sec:precomputed}).
 
 The base matrix $\mB$ puts the base columns side by side.  A model
 parameter, such as a group offset, a tilt or a per-bin amplitude, is a
@@ -326,21 +481,21 @@ one out.
 \paragraph{There is no single $b_1$.}
 Every bias knob belongs to one bin.  ``The $b_1$ columns'' are therefore
 $N$ columns, $\partial m/\partial b_{1,1}, \ldots,
-\partial m/\partial b_{1,N}$, and the same holds for each of the six
+\partial m/\partial b_{1,N}$, and the same holds for each of the seven
 bias families $\{b_{1,i}\}$, $\{b_{2,i}\}$, $\{b_{s^2,i}\}$,
-$\{\alpha_{0,i}\}$, $\{\SNzi\}$ and $\{\SNti\}$,
+$\{\alpha_{0,i}\}$, $\{\SNzi\}$, $\{\SNti\}$ and $\{\alpha_{2,i}\}$,
 $i = 1, \ldots, N$.  In order, $\mB$ has
 \begin{equation}
   \nbase \;=\; \underbrace{7}_{\rm cosmology}
   + \underbrace{7}_{\sigma_v}
-  + \underbrace{6N}_{6\ \text{families} \times N\ \text{bins}}
+  + \underbrace{7N}_{7\ \text{families} \times N\ \text{bins}}
   + \underbrace{1}_{\rm check}
-  \;=\; 6N + 15
+  \;=\; 7N + 15
   \label{eq:nbase}
 \end{equation}
 columns; the check column is explained in Section~\ref{sec:limits}.  On
 $\Delta d_{\rm com} = 62$~Mpc there are $N = 76$ bins, so $\mB$ has
-$7 + 7 + 456 + 1 = 471$ columns of $n = 10{,}494$ numbers each.
+$7 + 7 + 532 + 1 = 547$ columns of $n = 10{,}494$ numbers each.
 Table~\ref{tab:sizes} gives every layout.
 
 \begin{table}[tbp]
@@ -350,15 +505,15 @@ Table~\ref{tab:sizes} gives every layout.
     layout & bins $N$ & cross spectra & entries $n$ & $\nbase$
       & kept, shipped mask \\
     \hline
-    $\Delta d_{\rm com} = 62$~Mpc & $76$ & $107$ & $10{,}494$ & $471$ & $5{,}674$ \\
-    $\Delta z = 0.02$             & $90$ & $133$ & $12{,}614$ & $555$ & $7{,}621$ \\
-    $\Delta z = 0.05$             & $36$ & $52$  & $5{,}459$  & $231$ & $2{,}982$ \\
-    $\Delta z = 0.2$              & $10$ & $13$  & $2{,}014$  & $75$  & $744$ \\
+    $\Delta d_{\rm com} = 62$~Mpc & $76$ & $107$ & $10{,}494$ & $547$ & $5{,}674$ \\
+    $\Delta z = 0.02$             & $90$ & $133$ & $12{,}614$ & $645$ & $7{,}621$ \\
+    $\Delta z = 0.05$             & $36$ & $52$  & $5{,}459$  & $267$ & $2{,}982$ \\
+    $\Delta z = 0.2$              & $10$ & $13$  & $2{,}014$  & $85$  & $744$ \\
     \hline
   \end{tabular}
   \caption{The sizes of one layout's Fisher problem.  Cross spectra: the
     pairs of bins whose cross spectrum is in the data vector.  $n$:
-    entries of the data vector.  $\nbase = 6N + 15$: columns of the
+    entries of the data vector.  $\nbase = 7N + 15$: columns of the
     base.  Last column: the band powers the shipped mask keeps (the
     mask of the data files, before any scale cut), the largest set of
     rows any cut uses.}
@@ -518,7 +673,7 @@ The toy's recipes carry over to the paper model, with six bias
 families instead of two and six groups (BGS, LRG1, LRG2, LRG3, ELG1,
 ELG2) instead of one.  The model is one matrix $\mM$ of
 Eq.~\eqref{eq:dbm} on $\mB$, written down without any evaluation
-(\texttt{variant\us columns} in the model B notebook).
+(\texttt{variant\us columns} in the notebook).
 Figure~\ref{fig:schematic} draws it.  Its columns, in the figure's
 order:
 \begin{itemize}
@@ -658,7 +813,7 @@ families, and one amplitude per bin.
     \node[font=\scriptsize, align=center] at (9.8,-5.8)
       {$\mD = \mB\mM$ are the model's\\derivatives; the scan never\\forms them};
   \end{tikzpicture}
-  \caption{How the notebooks assemble a Fisher matrix.  Top left: the
+  \caption{How the notebook assembles a Fisher matrix.  Top left: the
     base $\mB$ of one layout.  Each cosmological parameter $\theta_k$ and
     each velocity dispersion $\sigma_{v,k}$ has one column; every bias
     family is a block of $N$ columns, one per thin bin (thin gray
@@ -676,19 +831,19 @@ families, and one amplitude per bin.
     is reduced once to $\mG_m$, and every model and prior at that cut is
     $\mM\T\mG_m\mM$ plus priors; $f_A = 12{,}300/14{,}000$ rescales
     the inverse covariance to the survey area
-    (Section~\ref{sec:linear}).  The check column of $\mB$ is not
-    drawn.}
+    (Section~\ref{sec:linear}).  The $\alpha_{2,i}$ block and the
+    check column of $\mB$ are not drawn.}
   \label{fig:schematic}
 \end{figure}
 
 \section{Computing the base}
 \label{sec:compute}
 
-The base columns are computed once per layout and cached on disk.
-This section is the machinery: the finite-difference stencil, the
-batched per-bin columns, the wrapped setter through which the steps
-reach CosmoLike, the exact templates of the linear terms, and what
-it all costs.
+The base columns are computed once per layout and cached on disk, by
+the notebook's section~4 or by the MPI script.  This section is the
+machinery: the finite-difference stencil, the batched per-bin columns,
+the likelihood subclasses through which the steps reach CosmoLike, the
+exact columns of the linear terms, and what it all costs.
 
 \subsection{How a derivative column is computed}
 \label{sec:stencil}
@@ -722,8 +877,10 @@ These are stencils of the sampled parameters of the likelihood,
 taken by \texttt{model.derivatives} of the Fisher module
 (\texttt{interface/cosmolike\us lssty1xdesi\us fisher.py}).  The step is
 relative, $\epsilon = h\,\theta_0$ with $h = 0.02$; a parameter whose
-fiducial value is zero ($w_a$) takes an absolute step, scaled by its
-prior width when its prior is Gaussian.  Each evaluation is a full call
+fiducial value is zero and whose prior is flat ($w_a$, the one such
+case here) takes the absolute step $h$.  No step depends on a prior
+width, which is why changing a prior never invalidates a cached
+column.  Each evaluation is a full call
 of the likelihood, CAMB included, with the cache of previous results
 of cobaya (the framework that runs the likelihood) disabled, so that
 cobaya never hands back a vector saved at an earlier call in place of
@@ -943,9 +1100,9 @@ layout and its batches; the steps below walk through it.
     batch 1 (circle) and batch 2 (square).  Then look at the overlap,
     where LRG3 and ELG1 cover the same redshifts: the lines between the
     rows are their cross spectra, and only there do batches 3 (diamond)
-    and 4 (triangle) appear.  The gray band marks the region panel (b)
-    zooms into.
-    (b) A zoom on that region.  No arc or line joins two markers of the
+    and 4 (triangle) appear.
+    (b) A zoom on the gray band of (a).  No arc or line joins two markers
+    of the
     same batch.  Follow the greedy rule at bin $51$: its earlier
     partners $39$, $40$, $41$ and $50$ already hold batches 1, 2, 1
     and 3, so it takes batch 4.
@@ -1115,15 +1272,18 @@ differentiate the model exactly as it is computed.
 
 \paragraph{How the steps reach CosmoLike.}
 At every evaluation the likelihood computes all per-bin biases from
-the sampled parameters and hands them to CosmoLike through one
-compiled setter.  The notebook wraps that setter: the wrapper
-changes the entries of the batch's bins by the step and passes
-every other value through unchanged, so CosmoLike receives a
-complete, consistent set of values and rebuilds only what depends
-on the ones that changed.  Cobaya's cache of previous results is
-bypassed (\texttt{cached=False}), since every stencil evaluation
-is at the same sampled point.  The code and the details, including
-what tests this, are in Appendix~\ref{sec:intercept}.
+the sampled parameters and hands them to CosmoLike through compiled
+setters.  No sampled parameter moves one bin alone, so the base is
+evaluated on a subclass of each paper likelihood
+(\texttt{scripts/compute\us fisher\us base\us mpi\us classes.py})
+that can add one per-bin step: it first sends the point's own arrays,
+exactly as its parent does, and then calls the stepped operator's
+setter once more with the step added to the batch's bins.  CosmoLike
+thus receives a complete, consistent set of values and rebuilds only
+what depends on the ones that changed.  Cobaya's cache of previous
+results is bypassed (\texttt{cached=False}), since every stencil
+evaluation is at the same sampled point.  The code and the details,
+including what tests this, are in Appendix~\ref{sec:intercept}.
 
 
 \subsection{Exact templates}
@@ -1141,7 +1301,9 @@ there is no truncation error at all, not even the $\epsilon^4$ error
 of the five-point stencil, Eq.~\eqref{eq:stencil}.  $T$, the term per
 unit amplitude, is called the \emph{template} of $A$: one evaluation
 of the term, or the term computed directly from the fiducial kernels,
-gives the exact column.  Two families enter $m$ this way:
+gives the exact column.  Three families enter $m$ this way: the
+redshift-space counterterm $\{\alpha_{2,i}\}$ (below, under ``Term
+2''), and two whose templates the likelihood computes directly,
 \begin{itemize}
   \item the white noise beyond Poisson $\SNzi$, in units of the bin's
     Poisson power $1/\bar{n}_i$ ($\bar{n}_i$ its tracer density);
@@ -1151,11 +1313,11 @@ gives the exact column.  Two families enter $m$ this way:
     satellite fraction, $\sigma_{\rm sat}$ the satellites' velocity
     dispersion in distance units).
 \end{itemize}
-That these two are \emph{exactly} linear is not obvious: the
+That these are \emph{exactly} linear is not obvious: the
 density--density part of every DESI spectrum goes through a singular
 value decomposition and a square root (``Why not exact derivatives by
 hand?''), and a square root is linear in nothing.  The resolution is
-that neither family ever enters that route.  To see it,
+that none of the three families ever enters that route.  To see it,
 write the whole spectrum once, term by term.
 
 \paragraph{The whole $C_\ell$, term by term.}
@@ -1190,6 +1352,9 @@ below take them one at a time.
       no: stencils \\
     redshift-space rows & FKEM split & $b_{1,i}$; $f$, $D$ &
       no amplitude of its own \\
+    $\alpha_{2,i}$ counterterm & the same rows &
+      $\alpha_{2,i}$; $b_{1,i}$, $f$ &
+      yes: a $\pm$ pair is exact \\
     $\SNzi$, $\SNti$ & likelihood templates & $\SNzi$, $\SNti$; $W_i$ &
       yes: computed directly \\
     \hline
@@ -1230,8 +1395,8 @@ is
 \end{equation}
 (each factor $f\mu^2$ of the flat-sky power becomes a $-j_\ell''$ in
 the exact projection; the summary note,
-\texttt{notes/bias\us model\us summary}, paragraph ``Non-Limber
-spectra'').  Writing $\Delta^{i,{\rm D}}_\ell$ for the density part
+\texttt{notes/bias\us model\us summary}, on the non-Limber
+spectra).  Writing $\Delta^{i,{\rm D}}_\ell$ for the density part
 alone, the $b_{1,i}\,j_\ell$ term of $\Delta^i_\ell$, the term is
 \begin{equation}
   C_\ell^{{\rm RSD},\,ij} \;=\; \frac{2}{\pi}\int dk\, k^2\,
@@ -1246,6 +1411,20 @@ separable linear spectrum by FFTLog and corrected in Limber with the
 full one (the FKEM split).  The term depends on $b_{1,i}$, already
 covered by its stencil, and on cosmology through $f$ and $D$.  It has
 no amplitude of its own.
+
+One amplitude does ride these rows: the redshift-space counterterm
+$\alpha_{2,i}$, which in the DESI DR1 convention~\cite{Maus2024} adds
+$(b_1 + f\mu^2)\,f\,\alpha_{2,i}\,\mu^2 k^2 P_{\rm lin}$ to the bin's
+redshift-space power -- a fixed term times $\alpha_{2,i}$, so the band
+powers are exactly linear in it and a single central difference,
+$[m(+\epsilon) - m(-\epsilon)]/(2\epsilon)$ at
+$\epsilon = 5\aunit$ through the full likelihood, is the exact column.
+The columns are taken in the batches of
+Section~\ref{sec:operators}, two evaluations per batch, and the
+forward and backward differences check the linearity: they agree to at
+most $1.6\times10^{-10}$ of the column over the four layouts.  The
+paper model fixes $\alpha_{2,i} = 0$; the columns serve model B and
+the shift tests of Section~\ref{sec:downstream}.
 
 \paragraph{Terms 3 and 4: the stochastic templates, added outside
 CosmoLike.}
@@ -1272,7 +1451,8 @@ $k^2\mu^2 = k_\parallel^2$ is the Fourier image of a second derivative
 along the line of sight, two integrations by parts move one derivative
 onto each kernel, and the template is
 $\int d\chi\, W_i'\,W_j'/\chi^2$ with $W' = dW/d\chi$ (the
-correlated-prior note, section ``Model A'').  The likelihood computes
+higher-order note, \texttt{notes/higher\us order\us bias}, on the
+stochastic terms in projection).  The likelihood computes
 both templates directly from the fiducial kernels
 (\texttt{stochastic\us templates} of
 \texttt{likelihood/desi\us cl.py}, orders $0$ and $2$) and adds
@@ -1285,14 +1465,16 @@ Collecting the terms, the DESI part of the data vector is
 \begin{equation}
   m \;=\; m_{\rm DD+RSD}\bigl(\{b_{1,i}\},\{b_{2,i}\},\{b_{s^2,i}\},
     \{\alpha_{0,i}\};\,\theta\bigr)
+  + \sum_i \alpha_{2,i}\,T^{(a_2)}_i
   + \sum_i \SNzi\,T^{(0)}_i
   + \sum_i \SNti\,T^{(2)}_i ,
   \label{eq:split}
 \end{equation}
 with $\theta$ the cosmological parameters and the $\sigma_v$.  The
-last two groups have the form of Eq.~\eqref{eq:lineardef}, so their
-columns are the templates themselves; only the first group needs
-stencils.
+last three groups have the form of Eq.~\eqref{eq:lineardef}, so their
+columns are exact -- the stochastic templates computed directly, the
+$\alpha_2$ columns by one central difference each; only the first
+group needs stencils.
 
 \paragraph{Why $\alpha_{0,i}$ is not a template.}
 It looks like one: a counterterm amplitude multiplying
@@ -1314,15 +1496,16 @@ against backward differences.
 \subsection{How many data-vector evaluations, and how long}
 \label{sec:evals}
 
-Counted in the builders and the Fisher module, the base of one layout
+Counted in the notebook and the Fisher module, the base of one layout
 takes
 \begin{equation}
-  N_{\rm eval} \;=\; 1 + 4\,N_{\rm stencil}
-  + 4\,N_{\rm batch}\,N_{\rm fam} + 1
+  N_{\rm eval} \;=\; 1
+  + 4\,N_{\rm batch}\,N_{\rm fam} + 4\,N_{\rm stencil}
+  + 2\,N_{\rm batch} + 1
   \label{eq:neval}
 \end{equation}
 evaluations of the data vector, term by term in Table~\ref{tab:count}.
-It is $146$ on every layout, because no term grows with the number of
+It is $154$ on every layout, because no term grows with the number of
 bins.
 
 \begin{table}[tbp]
@@ -1331,18 +1514,21 @@ bins.
     \hline
     term & what it is & evaluations \\
     \hline
-    $1$ & the fiducial vector & $1$ \\
+    $1$ & the fiducial vector, templates and biases & $1$ \\
+    $4\,N_{\rm batch}\,N_{\rm fam}$ & $4$ batches, $4$ stenciled families
+      $\{b_{1,i}\}$, $\{b_{2,i}\}$, $\{b_{s^2,i}\}$, $\{\alpha_{0,i}\}$ & $64$ \\
     $4\,N_{\rm stencil}$ & $20$ stencil parameters: 7 cosmology, 7 $\sigma_v$, 6 $B_g$
       & $80$ \\
-    $4\,N_{\rm batch}\,N_{\rm fam}$ & $4$ batches, $4$ families
-      $\{b_{1,i}\}$, $\{b_{2,i}\}$, $\{b_{s^2,i}\}$, $\{\alpha_{0,i}\}$ & $64$ \\
-    $1$ & the fiducial run of the $\{\SNti\}$ templates & $1$ \\
+    $2\,N_{\rm batch}$ & the exact $\{\alpha_{2,i}\}$ columns: $4$ batches,
+      $+$ and $-$ & $8$ \\
+    $1$ & the fiducial point again, after every step (the reset check) & $1$ \\
     \hline
-    & total & $146$ \\
+    & total & $154$ \\
     \hline
   \end{tabular}
-  \caption{The evaluations behind one layout's base.  The $\{\SNzi\}$
-    and $\{\SNti\}$ templates cost no evaluation beyond a fiducial one.}
+  \caption{The evaluations behind one layout's base, in the order they
+    run.  The $\{\SNzi\}$ and $\{\SNti\}$ templates cost no evaluation
+    beyond the fiducial one, whose kernels they are read from.}
   \label{tab:count}
 \end{table}
 
@@ -1389,17 +1575,32 @@ with the Apple M2 Pro chip ($8$ OpenMP threads, one BLAS thread, on AC
 power with no other heavy job).  At the final settings:
 \begin{itemize}
   \item $\Delta z = 0.05$, from the measured $t_{\rm eval}$:
-    $146 \times 19.5$~s $\approx 47$ minutes.
+    $154 \times 19.5$~s $\approx 50$ minutes.
   \item The other layouts, a rough estimate that scales $t_{\rm eval}$
     with the number of bins: $\Delta d_{\rm com} = 62$~Mpc
-    ($76$ bins) $146 \times 41$~s $\approx 1.7$ hours;
-    $\Delta z = 0.02$ ($90$ bins) $146 \times 49$~s $\approx 2.0$ hours;
-    $\Delta z = 0.2$ ($10$ bins) $146 \times 5.4$~s $\approx 13$ minutes.
+    ($76$ bins) $154 \times 41$~s $\approx 1.8$ hours;
+    $\Delta z = 0.02$ ($90$ bins) $154 \times 49$~s $\approx 2.1$ hours;
+    $\Delta z = 0.2$ ($10$ bins) $154 \times 5.4$~s $\approx 14$ minutes.
 \end{itemize}
-The four layouts then take about four and a half hours.  On other hardware -- an
+The four layouts then take about five hours.  On other hardware -- an
 Intel workstation, an x86 cluster node -- the time per evaluation
 differs, so these numbers are a guide to the order of magnitude, not a
 benchmark.
+
+\paragraph{The same base on MPI ranks.}
+\texttt{scripts/compute\us fisher\us base\us mpi.py} splits the $154$
+evaluations of one layout over $N$ MPI ranks, each running CosmoLike's
+and CAMB's OpenMP loops on its own threads, and writes the same two
+caches.  The evaluations are independent, so rank $0$ assembles the
+gathered vectors with the serial arithmetic; on one rank the script
+evaluates in the notebook's own order, and on
+$\Delta z = 0.2$ the $1 \times 8$ and $2 \times 4$ (ranks $\times$
+threads) runs reproduce the serial caches bit for bit.  Each rank
+holds a complete model, covariance included, and peaks at about $10$
+to $15$~GB of memory on $\Delta d_{\rm com} = 62$~Mpc, which sets how
+many ranks a node fits.  The project README, section ``Computing the
+derivative base with MPI'', gives the launch commands; the script's
+docstring holds the cache rules and the parallel layout.
 
 \section{A scale cut is a set of rows}
 \label{sec:cuts}
@@ -1430,7 +1631,7 @@ that wavenumber.  The Fisher matrix at a cut follows in four steps.
     $\mG_m$ is what the data of cut $m$ say about every pair of knobs:
     its entry $(a, b)$ is the information shared by knobs $a$ and $b$.
   \item $\mG_m$ contains neither $\mM$ nor a prior.  It depends only on
-    the base, the cut and the covariance, so the notebooks compute it
+    the base, the cut and the covariance, so the notebook computes it
     once per cut, and every model and prior at that cut reuses it.
   \item The priors add their precision:
     $F = \mM\T\mG_m\mM + F_{\rm prior}$.
@@ -1450,23 +1651,23 @@ ultraviolet criterion.  Then:
 After this cut, $v_3$ survives only on $C^{33}$.
 
 \paragraph{The real sizes.}
-On $\Delta d_{\rm com} = 62$~Mpc, $\mB$ is $10{,}494 \times 471$.  The
-shipped mask keeps $5{,}674$ rows, so $\mB_K$ is $5{,}674 \times 471$,
-$\Cov_{KK}$ is $5{,}674 \times 5{,}674$ and $\mG_m$ is $471 \times 471$.
+On $\Delta d_{\rm com} = 62$~Mpc, $\mB$ is $10{,}494 \times 547$.  The
+shipped mask keeps $5{,}674$ rows, so $\mB_K$ is $5{,}674 \times 547$,
+$\Cov_{KK}$ is $5{,}674 \times 5{,}674$ and $\mG_m$ is $547 \times 547$.
 $F$ is $138 \times 138$ for the paper model.  The large block is
 handled once per cut, and every Fisher system at that cut (one Fisher
 matrix with its inverse and results, for each model and prior the
-notebooks evaluate) reuses $\mG_m$.
+notebook evaluates) reuses $\mG_m$.
 
 \paragraph{How $\mG_m$ is computed.}
-The notebooks compute $\mG_m$ in \texttt{layout\us grams}, without ever
+The notebook computes $\mG_m$ in \texttt{layout\us grams}, without ever
 inverting the covariance:
 \begin{enumerate}
-  \item they write $\Cov_{KK} = L L\T$ with $L$ lower triangular, the
+  \item it writes $\Cov_{KK} = L L\T$ with $L$ lower triangular, the
     Cholesky factorization, a matrix analogue of the square root;
-  \item they solve $L\,W = \mB_K$ for $W$ row by row, which a
+  \item it solves $L\,W = \mB_K$ for $W$ row by row, which a
     triangular $L$ allows (forward substitution);
-  \item they form $\mG_m = f_A\, W\T W$, with $f_A$ the area
+  \item it forms $\mG_m = f_A\, W\T W$, with $f_A$ the area
     rescaling of the inverse covariance.
 \end{enumerate}
 This saves work, avoids amplifying round-off when the covariance is
@@ -1475,15 +1676,15 @@ $\mG_m$ symmetric with no negative information, by construction.
 
 Each layout gets eight such matrices: the seven cuts
 $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$, and the shipped mask alone,
-the comparison point of the information test below.  The base notebook,
-which works at one cut, forms $\mD = \mB\mM$ explicitly and multiplies
-it by the inverse of the kept covariance block; the two routes agree
-(Section~\ref{sec:limits}).
+the comparison point of the information test below.
 
 \paragraph{The priors.}
 $F_{\rm prior}$ adds precision and needs no data.  The diagonal Gaussian
-priors, all centered on zero, sit on $\sigma_v$ (from the example yaml)
-and on the model's group parameters.  The counterterm widths,
+priors, all centered on zero, sit on $\sigma_v$ and on the model's
+group parameters (Section~\ref{sec:fiducial}): the $\sigma_v$ widths
+are the exploration fits' for model B and model B + tilts, and six
+times them for the paper model, the paper yaml's own widths.  The
+counterterm widths,
 $0.5/\kmax^2$, change with the cut, so the diagonal is rebuilt for each
 cut (\texttt{prior\us diagonal}).
 
@@ -1491,8 +1692,9 @@ The linear-bias prior acts on the block of the $\beta_i$.  The baseline
 and pessimistic priors add, group by group, the penalty of their memory
 model on bin-to-bin wiggles of the linear biases
 (\texttt{group\us bias\us precision}; the correlated-prior note,
-sections ``What the prior charges'' and ``How the prior enters the
-Fisher matrix'').  The free prior adds nothing, and the growth-tied
+\texttt{notes/correlated\us bias\us prior\us v2}, on what the prior
+charges and how it enters the Fisher matrix).  The free prior adds
+nothing, and the growth-tied
 prior is a change of $\mM$.
 
 \paragraph{Parameters without data.}
@@ -1534,20 +1736,20 @@ that skips the directions with no information:
 A dropped direction must leave $(w_0, w_a)$, $\Omega_m$ and $A_s$ alone:
 the scan gives no fit when one touches them by more than $10^{-6}$.
 The case above, the flat BGS tilts on $\Delta d_{\rm com} = 62$~Mpc at
-$\kmax = 0.075\hMpc$, is the mechanism.  Across the model B notebook's
-scan, $20$ of its $336$ Fisher systems drop a direction, each touching
-the scored parameters by at most $7.2\times10^{-10}$; the systems of
-the convergence study drop none.  The untied comparison of the summary note
+$\kmax = 0.075\hMpc$, is the mechanism.  Across the notebook's
+$\kmax$ scan, $11$ of its $168$ Fisher systems drop a direction, each
+touching
+the scored parameters by at most $3.3\times10^{-10}$.  The untied
+comparison of the summary note
 drops more.  Its version with correlated residuals loses the residual
-trends that duplicate the flat group tilts: $24$ directions at most cuts
-on the three thinner layouts, each touching the scored parameters by
-less than $10^{-8}$.  On $\Delta d_{\rm com} = 62$~Mpc at
-$\kmax = 0.075\hMpc$ that version gives no fit.
+trends that duplicate the flat group tilts: $18$ directions at most cuts
+on the three thinner layouts, and up to $33$ at the smallest cuts, each
+touching the scored parameters by at most $1.1\times10^{-7}$.
 
 \section{Everything downstream reuses $\mG$}
 \label{sec:downstream}
 
-Once $\mG_m$ is built, nothing in the notebooks touches an $n \times n$
+Once $\mG_m$ is built, nothing in the notebook touches an $n \times n$
 matrix or the data vector again.  $F$ is Eq.~\eqref{eq:fdata} plus the
 priors, inverted by Eq.~\eqref{eq:pinv}, and $\sigma_j$ and the FoMs
 follow as in Section~\ref{sec:linear}.
@@ -1557,12 +1759,12 @@ A truth is an assumed true universe that departs from the fitted model,
 for example one with the redshift-space counterterm
 $\alpha_{2,i} \neq 0$ when the fit sets $\alpha_{2,i} = 0$
 (Section~\ref{sec:model}).  It moves the data by $\delta m$.  When
-$\delta m$ lies in the span of the base columns and the exact
-templates, $\delta m = \mB c$, with $c$ a vector of coefficients:
+$\delta m$ lies in the span of the base columns,
+$\delta m = \mB c$, with $c$ a vector of coefficients:
 \begin{itemize}
   \item $\alpha_{2,i} = 12.5\aunit$ in every bin $i$ multiplies the
-    exact per-bin $\alpha_2$ templates, kept beside the base for
-    exactly this truth, by $12.5$;
+    exact per-bin $\alpha_2$ columns of the base
+    (Section~\ref{sec:templates}) by $12.5$;
   \item an offset truth puts its values on the $b_{2,i}$ and
     $b_{s^2,i}$ blocks;
   \item a fractional drift $\delta_i$ of the linear biases is
@@ -1575,7 +1777,7 @@ To first order the best fit then moves by
   \;=\; F^{-1} \mM\T\, \mG_m\, c
   \label{eq:shift}
 \end{equation}
-(the correlated-prior note, ``The shift formula'').  $\delta m = \mB c$
+(the correlated-prior note, on the shift formula).  $\delta m = \mB c$
 is exact for the $\alpha_{2,i}$, $\SNzi$ and $\SNti$ truths, whose terms
 are linear, and first order for truths in $b_{1,i}$, $b_{2,i}$ and
 $b_{s^2,i}$, since the band powers are quadratic in them.  A truth costs
@@ -1594,7 +1796,7 @@ $\chi^2_w = (\hat{w} - w_{\rm true})\T \Cov_w^{-1}
 (\hat{w} - w_{\rm true})$, with $\hat{w}$ the fitted $(w_0, w_a)$,
 over the truths and the data noise.  Every source is Gaussian and
 enters linearly, so the average is exact in closed form (the
-correlated-prior note, ``The test statistic''):
+correlated-prior note, on the test statistic):
 \begin{equation}
   \langle \chi^2_w \rangle \;=\; \Delta_{\rm drift}^2
   \;+\; {\rm tr}\!\left[\Cov_w^{-1}\left(A\,\Sigma\,A\T
@@ -1614,7 +1816,7 @@ correlated-prior note, ``The test statistic''):
     the data noise and the Gaussian priors, with $F_0$ the Fisher matrix
     without the linear-bias prior.
 \end{itemize}
-The notebooks report $\chidof$, with $n_{\rm dof} = 2$ for $(w_0, w_a)$,
+The notebook reports $\chidof$, with $n_{\rm dof} = 2$ for $(w_0, w_a)$,
 and $n_{\rm dof} = 1$ for $\Omega_m$ or $A_s$ with that parameter's own
 row; $1$ means honest error bars.  The random draws only make the
 percentile bars of the correlated-prior note's figures.
@@ -1629,10 +1831,11 @@ $2\,\nbase^2 \npar \approx 1.4\times10^{8}$ operations, plus the
 diagonalization of an $\npar \times \npar$ matrix: a fraction of a
 second.
 
-The $\kmax$ scan of the model B notebook has $336$ systems (four
-layouts, seven cuts, four variants, and the baseline, pessimistic and
+The $\kmax$ scan of the notebook has $168$ systems (four
+layouts, seven cuts, model B and model B + tilts, and the baseline,
+pessimistic and
 free priors; the growth-tied prior fails the accuracy test and is left
-out), $324$ with a fit and $12$ without any band.  In operations, all of
+out), $162$ with a fit and $6$ without any band.  In operations, all of
 them together cost less than the Cholesky factorizations of one layout.
 Without the base, each variant would need its own derivatives, at the
 cost of Section~\ref{sec:evals} per layout, and each truth its own data
@@ -1651,7 +1854,7 @@ The work splits into three levels.
     $\mG_m = f_A\,\mB_K\T\Cov_{KK}^{-1}\mB_K$, with
     $f_A = 12{,}300/14{,}000$ the factor that rescales the inverse
     covariance to the survey area (Section~\ref{sec:linear}),
-    $471 \times 471$ on
+    $547 \times 547$ on
     $\Delta d_{\rm com} = 62$~Mpc (Section~\ref{sec:cuts}).  The
     covariance is read fresh from its file at every run.
   \item \textbf{For every model and prior (a fraction of a second):}
@@ -1668,11 +1871,11 @@ The work splits into three levels.
     \hline
     array & shape & what it is \\
     \hline
-    \multicolumn{3}{l}{\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us A\us DERIVATIVES\us 1.pkl}
-      (about 34~MB)} \\
+    \multicolumn{3}{l}{\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us DERIVATIVES\us 1.pkl}
+      ($33.7$~MB)} \\
     \texttt{m0} & $10{,}494$ & the fiducial band powers $m(p_0)$ \\
-    \texttt{D} & $10{,}494 \times 20$ & stencil columns: 7 cosmology, 7 $\sigma_v$,
-      6 $B_g$ (check only) \\
+    \texttt{D} & $10{,}494 \times 20$ & stencil columns: 7 cosmology,
+      6 $B_g$ (check only), 7 $\sigma_v$ \\
     \texttt{ops['b1']} & $10{,}494 \times 76$ & column $i$: $\partial m/\partial b_{1,i}$,
       the linear bias of bin $i$ alone \\
     \texttt{ops['b2']} & $10{,}494 \times 76$ & column $i$: $\partial m/\partial b_{2,i}$ \\
@@ -1682,26 +1885,36 @@ The work splits into three levels.
     \texttt{T} & $10{,}494 \times 76$ & column $i$: $\partial m/\partial \SNzi$ \\
     \texttt{b1}, \texttt{b2}, \texttt{bs2} & $76$ each & the fiducial
       $b_{1,i}$, $b_{2,i}$, $b_{s^2,i}$ of every bin \\
-    \multicolumn{3}{l}{\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us A\us SN2\us 1.pkl}
-      (about 13~MB)} \\
+    \texttt{names}, \texttt{fiducial} & $20$ each & the stencil parameters
+      and their fiducial values \\
+    \texttt{priors}, \texttt{leaders} & & the $\sigma_v$ prior widths;
+      each bin's group amplitude \\
+    \multicolumn{3}{l}{\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us TEMPLATES\us 1.pkl}
+      ($19.2$~MB)} \\
+    \texttt{m0} & $10{,}494$ & the fiducial vector again (the
+      cross-cache check) \\
+    \texttt{a2} & $10{,}494 \times 76$ & column $i$: $\partial m/\partial \alpha_{2,i}$,
+      per $h^{-2}\,{\rm Mpc}^2$, exact \\
+    \texttt{T0} & $10{,}494 \times 76$ & the $\SNzi$ templates again
+      (equal to \texttt{T}) \\
     \texttt{T2} & $10{,}494 \times 76$ & column $i$: $\partial m/\partial \SNti$ \\
+    \texttt{nonlinearity}, \texttt{reset} & & the $\alpha_2$
+      forward-backward check; $\max|m_{\rm after} - m_0|/\max|m_0|$ \\
     \hline
   \end{tabular}
   \caption{The precomputed arrays of $\Delta d_{\rm com} = 62$~Mpc, in
     Python's pickle files: $n = 10{,}494$ band powers and $N = 76$ bins.
     Each $10{,}494 \times 76$ block is $6.4$~MB in double precision.  The
-    files also hold the settings they were made with, and check copies
-    for Section~\ref{sec:limits}.  In the toy's notation,
+    files also hold the settings, tier and fingerprint they were made
+    with (Section~\ref{sec:accuracy}).  The other layouts' files are
+    $47.5/27.3$, $8.8/4.8$ and $1.1/0.5$~MB
+    ($\Delta z = 0.02$, $0.05$, $0.2$;
+    derivatives/templates), and the scale-cut cache is $6.2$~MB.  In the
+    toy's notation,
     \texttt{ops['b1']} is $[u_1, \ldots, u_N]$ and \texttt{ops['b2']} is
     $[v_1, \ldots, v_N]$.}
   \label{tab:arrays}
 \end{table}
-
-\medskip
-\noindent
-{\color{red}\textbf{TODO.}  Where the exact $\alpha_2$ truth templates
-of the shift tests are cached after the recompute (file and contents),
-and the refreshed file sizes of Table~\ref{tab:arrays}.}
 
 \paragraph{What forces the saved derivatives to be recomputed.}
 Only what changes the knobs' responses: the fiducial point, the
@@ -1713,14 +1926,6 @@ and the covariance file never force a recompute.
 
 \section{Derivative accuracy}
 \label{sec:accuracy}
-
-\medskip
-\noindent
-{\color{red}\textbf{TODO.}  The measured numbers of this section (the
-FoM offsets, the noise table and the DerivKit comparison) were taken
-with the redshift-space counterterm still in the model and the
-original $\sigma_v$ prior widths; the recompute at the current model
-will refresh them.}
 
 \paragraph{Why a derivative needs more than a $\chi^2$.}
 Every evaluation of $m$ carries numerical noise: the integration grids,
@@ -1738,13 +1943,24 @@ noise looks like information, and the FoM comes out too high.
 \paragraph{The study: a starting configuration, and one control at a
 time.}
 The convergence study, \texttt{tests/studies/run\us fisher\us
-derivatives.py}, measures the effect on $\Delta z = 0.05$ for the paper
-model of Section~\ref{sec:model}.  It scores the marginalized errors
+derivatives.py}, measures the effect on $\Delta z = 0.05$.  It scores
+the marginalized errors
 of $w_0$, $w_a$, $\Omega_m$
-and $A_s$, both FoMs, and the shifts of the break-test truths (truths
-that carry a term the fit lacks or holds with a prior; the
-correlated-prior note, ``Model B and the reach of model A''), at
-$\kmax = 0.075$ and $0.2\hMpc$.
+and $A_s$, both FoMs, and the shifts under truths that carry a term the fit lacks or holds
+with a prior (the models are
+defined in the higher-order note,
+\texttt{notes/higher\us order\us bias}), at
+$\kmax = 0.075$ and $0.2\hMpc$.  The FoM offsets of the grid scan, the
+step test, the final settings and DerivKit are the paper model's,
+scored from the study's derivatives on the paper-fiducial cuts (the
+\texttt{data.json} behind Figure~\ref{fig:convergence}).  The error
+and shift stabilities, and the offsets of the other controls (CAMB's
+boost among them), are
+scored on the study's own system, model B + tilts with $\alpha_2$ free
+and the exploration $\sigma_v$ widths; the text marks each such number.
+The derivative columns do not
+depend on the model, so both scorings test the same columns
+(Appendix~\ref{sec:open}).
 
 The scan starts from one configuration, the starting configuration: a
 grid factor $g = 128$ with every other control raised, CosmoLike's
@@ -2062,8 +2278,8 @@ grid.
 distance grid.}
 The exact projection integrates each bin's radial kernel against
 spherical Bessel functions (Section~\ref{sec:templates}; the formulas
-are in the summary note, \texttt{notes/bias\us model\us summary},
-paragraph ``Non-Limber spectra'').  The code
+are in the summary note, \texttt{notes/bias\us model\us summary}, on
+the non-Limber spectra).  The code
 (\texttt{cosmo2D.c}, \texttt{C\us cl\us tomo} and the low-rank core)
 computes it in three steps:
 \begin{enumerate}
@@ -2143,11 +2359,12 @@ $0.075\hMpc$ the FoMs fall by $30$ to $40\%$ until $g = 128$ and then
 stay put.  The coarse grids add noise that the FoM reads as
 information.  The MCMC settings as a whole (the plus of the figure)
 raise ${\rm FoM}(w_0, w_a)$ by
-$58\%$ at $0.075\hMpc$ and by $11\%$ at $0.2\hMpc$, although their
+$56\%$ at $0.075\hMpc$ and by $13\%$ at $0.2\hMpc$, although their
 fiducial vector differs from the starting configuration's by only
 $\Delta\chi^2 = 0.015$.  The grid alone accounts for most of it.
 
-Which columns carry the offset?  Swapping single columns between
+Which columns carry the offset?  Swapping single columns (on the
+study's system) between
 configurations shows it: the $w_a$ column, then $w_0$ and $\Omega_m$.
 The per-bin and $\sigma_v$ columns move the FoM by less than $0.1\%$.
 
@@ -2157,9 +2374,9 @@ The per-bin and $\sigma_v$ columns move the FoM by less than $0.1\%$.
     \hline
     grid factor $g$ & $\kmax = 0.075\hMpc$ & $\kmax = 0.2\hMpc$ \\
     \hline
-    $32$ (MCMC)       & $+38\%$  & $+6.7\%$ \\
-    $64$               & $+31\%$  & $+5.1\%$ \\
-    $128$ (starting configuration) & $+0.9\%$ & $+0.3\%$ \\
+    $32$ (MCMC)       & $+40\%$  & $+12\%$ \\
+    $64$               & $+29\%$  & $+5.9\%$ \\
+    $128$ (starting configuration) & $+0.6\%$ & $+0.4\%$ \\
     $256$ (final)     & $0.0\%$  & $0.0\%$ \\
     \hline
   \end{tabular}
@@ -2198,25 +2415,27 @@ together, and as the stencil changes from three points to five.
 
 The step markers of Figure~\ref{fig:convergence}, beside each grid,
 show the test.  At $g = 128$ the five-point stencil at $h/2$ raises the
-FoM by $19\%$:
+FoM by $17\%$:
 the noise divided by a smaller step.  At $g = 256$, from $h/2$ to $3h$,
-both FoMs stay within $1.6\%$, the shifts move by at most $0.027\sigma$,
-and the three-point stencil agrees with the five-point one.  The
+both FoMs stay within $1.7\%$, the shifts move by at most $0.027\sigma$
+(the study's system), and the three-point stencil agrees with the
+five-point one.  The
 tolerance on the FoMs is about $1$ to $2\%$; $g = 128$ agrees with
-$g = 256$ to $0.9\%$ only at $h = 0.02$, so it stays a documented
+$g = 256$ to $0.6\%$ only at $h = 0.02$, so it stays a documented
 cross-check, and the final tier uses $g = 256$.
 
 The same check on $\Delta d_{\rm com} = 62$~Mpc, at the final settings
 (the open blue markers of Figure~\ref{fig:convergence}, against the
 ring, that layout's own step-$h$ value):
-the five-point stencil at $h/2$ and $2h$ stays within $0.3\%$ of step
+the five-point stencil at $h/2$ and $2h$ stays within $0.6\%$ of step
 $h$ on both FoMs at both cuts, so $g = 256$ is
 step independent there too.
 
 \paragraph{CAMB's accuracy.}
 CAMB's \texttt{AccuracyBoost} scales its internal precision.  The
 offsets of ${\rm FoM}(w_0, w_a)$ from the converged value, with
-${\rm FoM}(\Omega_m, 10^9 A_s)$ in parentheses: at $1.05$, the MCMC
+${\rm FoM}(\Omega_m, 10^9 A_s)$ in parentheses, on the study's system:
+at $1.05$, the MCMC
 value, the FoM is $14.9\%$ ($16.6\%$) high; at $1.5$, $2.0\%$
 ($2.7\%$).  Raising the boost from the starting configuration's $2$ to
 $3$ moves the FoM by $0.2\%$ ($0.5\%$).  Every other control moves the
@@ -2245,12 +2464,12 @@ layout:
 
 Against the converged value ($g = 512$) on $\Delta z = 0.05$, these
 settings give
-${\rm FoM}(w_0, w_a)$ $+1.8\%$ at $0.075\hMpc$ and $-0.5\%$ at
-$0.2\hMpc$, and ${\rm FoM}(\Omega_m, 10^9 A_s)$ $+1.6\%$ and $-0.5\%$.
+${\rm FoM}(w_0, w_a)$ $+2.1\%$ at $0.075\hMpc$ and $-0.5\%$ at
+$0.2\hMpc$, and ${\rm FoM}(\Omega_m, 10^9 A_s)$ $+1.8\%$ and $-0.4\%$.
 The errors $\sigma$ move by at most $1.6\%$, and the largest shift by at
-most $0.007\sigma$.
+most $0.007\sigma$ (the study's system).
 
-The remaining $1.8\%$ sits in the $w_0$, $w_a$ and $\Omega_m$ columns
+The remaining $2\%$ sits in the $w_0$, $w_a$ and $\Omega_m$ columns
 together.  At $0.075\hMpc$ these three parameters are nearly degenerate,
 and swapping any one of their columns alone moves the FoM by up to
 $3.5\%$, in opposite directions that largely cancel.
@@ -2341,12 +2560,13 @@ and to the $\{b_{1,i}\}$ and $\{b_{2,i}\}$ families, batch by batch
   \label{fig:derivkit}
 \end{figure}
 \begin{itemize}
-  \item At the MCMC settings DerivKit's FoM is $27.5\%$ high, against
-    $58\%$ for the five-point stencil: it reduces the noise but cannot
+  \item At the MCMC settings DerivKit's FoM is $25\%$ high, against
+    $56\%$ for the five-point stencil: it reduces the noise but cannot
     remove the error of a coarse grid.
   \item At the final settings it agrees with the five-point stencil
-    within $2.1\%$ ($\sigma$ within $2.2\%$, shifts within $0.006\sigma$)
-    and sits $0.3$ to $0.9\%$ from the converged value ($g = 512$).
+    within $2.0\%$ ($\sigma$ within $2.2\%$ and shifts within
+    $0.006\sigma$ on the study's system)
+    and sits within $1\%$ of the converged value ($g = 512$).
   \item It costs $11$ evaluations per column against $4$, about $210$~s
     against $78$~s per column.
 \end{itemize}
@@ -2397,7 +2617,7 @@ file only moves.
 \paragraph{The two routes agree.}
 The study computes its derivatives by a second route: it unties the
 per-bin parameters and steps them through the full likelihood, with no
-wrapped setter (Appendix~\ref{sec:intercept}).  The agreement study
+step class (Appendix~\ref{sec:intercept}).  The agreement study
 (\texttt{tests/studies/results/fisher\us derivatives\us agreement\us
 dz0p05.json}) compares that route with the production cache of
 $\Delta z = 0.05$ at the final tier, column by column.  The per-bin
@@ -2422,7 +2642,7 @@ columns to $4.6\times10^{-14}$.
     at $p_0$.  A new fiducial cosmology, new fiducial biases, or a
     calibration law that moves the fiducial $b_{2,i}$ needs new base
     columns, and a new covariance, which sits at the one-loop fiducial.
-    A new covariance alone needs no evaluation: the notebooks rebuild
+    A new covariance alone needs no evaluation: the notebook rebuilds
     every $\mG_m$ from the current covariance file at every run.
   \item \textbf{Dependence beyond first order.}  The forecast is the
     curvature at $p_0$, and Eq.~\eqref{eq:shift} is first order in
@@ -2436,37 +2656,42 @@ columns to $4.6\times10^{-14}$.
 \paragraph{The checks that guard the machinery.}
 \begin{itemize}
   \item \textbf{The chain rule.}  The per-bin columns, obtained through
-    the wrapped setter and summed over a group,
+    the step classes and summed over a group,
     $\sum_{i \in g} \partial m/\partial \beta_i$ with
     Eq.~\eqref{eq:chain}, must equal the stencil derivative
     $\partial m/\partial B_g$, obtained through the full likelihood.
-    The two routes share no evaluation; the in-notebook check finds
-    they agree to
-    $1.2\times10^{-7}$ of the stencil column's largest entry (the
-    correlated-prior note, ``Numerical checks''), and the final-tier
+    The two routes share no evaluation; the notebook's own check finds
+    they agree to at most
+    $1.5\times10^{-9}$ of the stencil column's largest entry on every
+    layout (the truncation error of the two stencils), and the
+    final-tier
     agreement study of Section~\ref{sec:accuracy} tightens that to
     $5.2\times10^{-11}$ on $\Delta z = 0.05$.
-  \item \textbf{Bit-for-bit template checks.}  The $\partial
-    m/\partial\SNzi$ templates of a template run must equal the cached
-    ones exactly, and the run's fiducial vector the cached one.  $\mB$
+  \item \textbf{Cross-cache checks.}  The order-0 templates of the
+    template cache equal the derivative cache's $\SNzi$ templates, and
+    the two caches' fiducial vectors are equal.  $\mB$
     carries the difference of the two vectors as its check column, so
     their $\Delta\chi^2$ is a diagonal entry of $\mG$ on the shipped
-    mask; it is zero.
-  \item \textbf{The matched-prior check.}  When the truth's linear-bias
+    mask; it is zero on every layout.  The vector after the last step
+    equals the fiducial one bit for bit (the \texttt{reset} entry): no
+    step survives its evaluation.
+  \item \textbf{The matched-prior identity.}  When the truth's
+    linear-bias
     scatter equals the fit's prior and every other parameter is drawn
     from the fit's own priors, the scatter and noise terms of
     Eq.~\eqref{eq:chi2} must add up to exactly $n_{\rm dof}$: the
     widening the prior gives the ellipse equals the error the scatter
-    causes (the correlated-prior note, ``The test statistic'').  The
-    notebooks verify this on every system to round-off, which tests
-    $\mG$, $\mM$, the priors and the pseudo-inverse together.  The
-    FoMs that the model B notebook's scan and the base notebook both
-    compute also agree to $6.5\times10^{-10}$: two routes to the same
-    Fisher systems, one through $\mG_m$ and one through the explicit
-    $\mD$ of Section~\ref{sec:cuts}.  A $+$ and a $-$
-    truth give shifts of equal size.
+    causes (the correlated-prior note, on the test statistic).
+  \item \textbf{One answer from independent constructions.}  A $+$ and
+    a $-$ truth give shifts of equal size (measured $0$).  Section~9 of
+    the notebook builds the paper model's $\mM$ by its own route, and
+    at $\sigma_v$ width factor $1$ it reproduces the
+    $\alpha_2$-fixed fit of section~11 exactly; the pair-threshold scan
+    with every pair kept reproduces the FoMs of sections~6 and~9
+    exactly.  Each agreement tests $\mG$, $\mM$, the priors and the
+    pseudo-inverse together.
   \item \textbf{The cache check.}  Each cache stores its settings, tier
-    and fingerprint, and a notebook refuses a cache whose entries
+    and fingerprint, and the notebook refuses a cache whose entries
     differ from its own (Section~\ref{sec:usage}).
 \end{itemize}
 
@@ -2480,43 +2705,51 @@ them (hours), and every later run reads them.  Their names start with
 $4$ numbers the layouts in the order $\Delta d_{\rm com} = 62$~Mpc,
 $\Delta z = 0.02$, $0.05$, $0.2$.
 \begin{itemize}
-  \item \texttt{\us SCALE\us CUTS.pkl}, written by the linear notebook,
-    \texttt{EXAMPLE\us EVALUATE\us FISHER.ipynb}: the bands each
-    ultraviolet-fraction cut keeps, at
-    $\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$; the scans use the seven
-    cuts up to $0.2$.
-  \item \texttt{\us MODEL\us A\us DERIVATIVES\us<n>.pkl} and
-    \texttt{\us MODEL\us A\us SN2\us<n>.pkl}: the base caches, written
-    by the base notebook,
-    \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us A.ipynb}, with
-    the flags \texttt{RECOMPUTE} and \texttt{RECOMPUTE\us SN2}.
-  \item {\color{red}\textbf{TODO:} the cache of the exact $\alpha_2$
-    truth templates (name, contents and writing notebook) after the
-    recompute.}
+  \item \texttt{\us MODEL\us SCALE\us CUTS.pkl}, written by the
+    notebook's section~3: the bands each
+    ultraviolet-fraction cut keeps, computed on the paper fiducial, at
+    $\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$, with its settings and
+    fingerprints; the scans use the seven
+    cuts up to $0.2$.  (The linear notebook,
+    \texttt{EXAMPLE\us EVALUATE\us FISHER.ipynb}, keeps its own cut
+    cache on the linear-bias fiducial for the linear-bias experiments.)
+  \item \texttt{\us MODEL\us DERIVATIVES\us<n>.pkl} and
+    \texttt{\us MODEL\us TEMPLATES\us<n>.pkl}: the base caches of
+    Table~\ref{tab:arrays} -- the stencil and per-bin operator columns,
+    the $\SNzi$ templates, the fiducial vector and biases in the first;
+    the exact $\alpha_2$ columns and the $\SNzi$ and $\SNti$ templates
+    in the second -- written by the notebook's section~4 or by
+    \texttt{scripts/compute\us fisher\us base\us mpi.py}, which writes
+    the same files bit for bit.
 \end{itemize}
-The base and model B notebooks cache no Fisher matrix, $\mG_m$ or FoM:
-these depend on the covariance and are rebuilt at every run.
+Neither the notebook nor the script caches a Fisher matrix, $\mG_m$ or
+FoM: these depend on the covariance and are rebuilt at every run.
 
-\paragraph{The flags.}
-With a flag at \texttt{False}, the default, a notebook reads an
-existing cache after the cache check and computes a missing one;
-\texttt{True} recomputes it and overwrites the file.  The layouts are
-computed cheapest first, and each cache is written as soon as its
-layout is done, so an interrupted run keeps the finished layouts.  The
-model B notebook reads the base caches and never writes them; it
-stops when one is missing or was made with other settings.  For a
-fresh clone, run the linear notebook (for the cuts), then the base
-notebook, then the model B notebook.
+\paragraph{Explicit compute, save and load cells.}
+Caches are computed, saved and loaded only in their own cells.  The
+compute cells run only with their switch set by hand
+(\texttt{COMPUTE\us SCALE\us CUTS} for section~3,
+\texttt{COMPUTE\us BASE} for section~4, both \texttt{False} by
+default); the layouts are computed cheapest first.  The save cells
+refuse to replace an existing file unless called with
+\texttt{overwrite=True}, and write both caches of a layout or neither.
+The load cells raise when a cache is missing (naming the switch and
+the MPI script) or when its stored settings or fingerprint differ from
+the notebook's own: a mismatched cache is never read past the check.
+The MPI script follows the same rules with \texttt{--overwrite}, and
+stops without writing when its ranks see different files or a file
+changes during the run.
 
 \paragraph{What makes a cache out of date, so it must be recomputed.}
 \begin{itemize}
   \item \textbf{Detected automatically}: any change of the model input
     that the fingerprint covers (a likelihood option, a CAMB argument, a
     prior, a tie between parameters, the fiducial point), of the tier,
-    of the stencil rule or of the steps.  The notebook stops and asks
-    for the flag.  A file that moves or is renamed with the same content
+    of the stencil rule or of the steps.  The load cell stops and
+    names the mismatch.  A file that moves or is renamed with the same
+    content
     keeps its cache.
-  \item \textbf{Not detected, so set the flag by hand}: a change of the
+  \item \textbf{Not detected, so recompute by hand}: a change of the
     code itself (the likelihood's Python, CosmoLike, CAMB beyond the
     halofit check), since the fingerprint covers the input, not the
     code.  No check compares a cache with the current code unless a
@@ -2524,108 +2757,112 @@ notebook, then the model B notebook.
     that moves the fiducial vector.
   \item \textbf{Needs no recomputation}: a new covariance, a new prior
     or prior width, a new model built from the cached knobs, and any cut
-    already in the cut cache.  A $\kmax$ outside it needs the linear
-    notebook to compute that cut (CosmoLike's split of each band into the
+    already in the cut cache.  A $\kmax$ outside it needs the cut
+    compute cell for that cut (CosmoLike's split of each band into the
     power below and above the cut), but no new derivative.
 \end{itemize}
 
 \appendix
 
-\section{The wrapped setter}
+\section{The per-bin step classes}
 \label{sec:intercept}
 
-\paragraph{Why the setter.}
+\paragraph{Why a step needs the likelihood's arrays.}
 The sampled parameters offer no per-bin handle: the parameter files
 tie each bin's linear bias to its group amplitude, and the likelihood
 computes $b_{2,i}$ and $b_{s^2,i}$ from $b_{1,i}$ through the
 calibrations, recomputing and resending every per-bin value at every
 evaluation.  The completed per-bin values appear in one place: the
-argument list of the setter, the function through which the likelihood
-hands them to CosmoLike's compiled code.  The batch steps of
+argument lists of the compiled setters through which the likelihood
+hands them to CosmoLike (\texttt{set\us nuisance\us bias\us tidal} for
+$b_{1,i}$, $b_{2,i}$, $b_{s^2,i}$ and the slot that carries
+$\alpha_{0,i}$; \texttt{set\us nuisance\us bias\us alpha2} for
+$\alpha_{2,i}$).  The batch steps of
 Section~\ref{sec:operators} are applied there.  Resending the
-unchanged values does no harm; the wrapper only has to change the
-entries of the batch's bins and pass everything else through as it is.
+unchanged values does no harm; a step only has to change the
+entries of the batch's bins and leave everything else as it is.
 
-\paragraph{Rebinding the name.}
-The Fisher module exposes CosmoLike's compiled interface as the Python
-module \texttt{fm.ci}.  Its attribute
-\texttt{set\us nuisance\us bias\us tidal} is a name, not the function
-itself: \texttt{interface/interface.cpp} binds that name to the
-compiled C++ function
-\texttt{cosmolike\us interface::set\us nuisance\us bias\us
-fastpt\us tidal}, and Python looks the name up anew at every call.
-Rebinding it to a Python function,
-\texttt{fm.ci.set\us nuisance\us bias\us tidal = tidal}, redirects
-every caller to \texttt{tidal}, the likelihood included.  The wrapper
-keeps a reference to the original compiled function, edits the arrays
-it receives, and passes them on; nothing in the likelihood or in the C
-code changes.
-
-\paragraph{The wrapper.}
-\texttt{model\us a\us derivatives} of the base notebook,
-\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us A.ipynb} (the file
-name is historical; it is the notebook that computes and caches the
-base), defines the wrapper next to a saved reference to the original:
+\paragraph{A subclass of the likelihood.}
+The notebook and the MPI script evaluate each layout on a subclass of
+its paper likelihood, defined in
+\texttt{scripts/compute\us fisher\us base\us mpi\us classes.py}: the
+mixin \texttt{PerBinStepMixin} listed before the likelihood class in
+the subclass's bases (for $\Delta d_{\rm com} = 62$~Mpc,
+\texttt{desi\us cl\us model\us b\us steps}).  A mixin is a class never
+used alone: its methods run first and reach the likelihood's own
+through \texttt{super()}.  It adds no option and no parameter -- only
+three methods a caller uses:
 
 \begin{lstlisting}
-original = fm.ci.set_nuisance_bias_tidal
-seen = {}
-shift = {'op': None}
-
-def tidal(**kw):
-    kw = {k: np.array(v, dtype=float) for k, v in kw.items()}
-    if shift['op'] is None:
-        seen.update({k: v.copy() for k, v in kw.items()})
-    else:
-        op, members, step = shift['op'], shift['members'], shift['step']
-        if op == 'b1':
-            kw['B1'][members] *= 1.0 + step
-        elif op == 'b2':
-            kw['B2'][members] += step
-        elif op == 'bs2':
-            kw['BS2'][members] += step
-        elif op == 'a0':
-            # alpha_0 k^2 P = 2 b1 bK k^2 P with k in H0/c units
-            kw['BK'][members] += step/(2.0*kw['B1'][members]*C_OVER_H0**2)
-    return original(**kw)
+like.set_per_bin_step(operator='b2', bins=members, step=0.02)
+vector = model.dv()        # the point with the step added
+like.clear_per_bin_step()  # the next point is the likelihood's own
 \end{lstlisting}
 
-\noindent The keyword arguments are the per-bin arrays the likelihood
-computed for this evaluation: \texttt{B1}, \texttt{B2} and
-\texttt{BS2} hold $b_{1,i}$, $b_{2,i}$ and $b_{s^2,i}$, and
-\texttt{BK} the nonlocal bias $b_{K,i}$, one entry per bin.
-\texttt{shift} is the channel between the loop and the wrapper: with
-no shift active the wrapper records the fiducial arrays in
-\texttt{seen} and changes nothing; in a batch evaluation
-\texttt{members} holds the bins of the batch and \texttt{step} the
-signed step $o\,\epsilon$.  The $b_{1,i}$ step is relative, the
+\noindent \texttt{operator} is one of \texttt{b1}, \texttt{b2},
+\texttt{bs2}, \texttt{a0} and \texttt{a2}, \texttt{bins} the 0-based
+bins of the batch, and \texttt{step} the signed step.  The set and the
+clear are wrapped in \texttt{try}/\texttt{finally}
+(\texttt{evaluate\us with\us step} in the notebook), so no error
+leaves a step installed.  Without a step the subclass evaluates
+exactly what its parent does.
+
+\paragraph{The stepped evaluation.}
+The likelihood's \texttt{set\us lens\us related} computes a point's
+per-bin arrays and sends them to CosmoLike.  The mixin overrides it:
+the parent runs in full -- every array, the Fingers-of-God $n(z)$,
+every setter -- and then, with a step set, the stepped operator's
+setter is called once more with the step added (trimmed):
+
+\begin{lstlisting}
+def set_lens_related(self, **params):
+    super().set_lens_related(**params)   # the point's own arrays
+    if self._step is None:
+        return
+    # fresh copies of the arrays the parent just sent
+    B1, B2, BS2, BK = ...
+    if operator == 'b1':
+        B1[members] *= 1.0 + step
+    elif operator == 'b2':
+        B2[members] += step
+    elif operator == 'bs2':
+        BS2[members] += step
+    elif operator == 'a0':
+        # alpha_0 k^2 P = 2 b1 bK k^2 P with k in H0/c units
+        BK[members] += step/(2.0*B1[members]*C_OVER_H0**2)
+    ci.set_nuisance_bias_tidal(B1=B1, B2=B2, BS2=BS2, ..., BK=BK)
+\end{lstlisting}
+
+\noindent \texttt{B1}, \texttt{B2} and \texttt{BS2} hold $b_{1,i}$,
+$b_{2,i}$ and $b_{s^2,i}$, and \texttt{BK} the nonlocal bias
+$b_{K,i}$, one entry per bin.  The $b_{1,i}$ step is relative, the
 $b_{2,i}$ and $b_{s^2,i}$ steps absolute, and an $\alpha_{0,i}$ step
 enters \texttt{BK}, because CosmoLike writes the counterterm of
 Eq.~\eqref{eq:pgg} as $2\,b_{1,i} b_{K,i}\,k^2 P_{\rm mm}$ with $k$ in
-units of $H_0/c$: $b_{K,i} \to b_{K,i} +
-o\,\epsilon/[2\,b_{1,i}(c/H_0)^2]$ (\texttt{C\us OVER\us H0}
-$= c/H_0$ in Mpc$/h$).  The last line calls the saved compiled setter
-with the edited arrays.
+units of $H_0/c$ (\texttt{C\us OVER\us H0} $= c/H_0$ in Mpc$/h$).  An
+\texttt{a2} step instead calls
+\texttt{set\us nuisance\us bias\us alpha2} with the step added to the
+point's $\alpha_{2,i}$ on the batch's bins.  Each compiled setter
+stores a value only when it differs from the stored one by more than a
+relative $10^{-13}$, then renews the cache key of the bias tables and
+computes nothing else, so the second call leaves CosmoLike in the
+state that one call with the shifted arrays leaves it in.
 
-\paragraph{Install and restore.}
-The rebinding is wrapped in \texttt{try}/\texttt{finally}:
-
-\begin{lstlisting}
-fm.ci.set_nuisance_bias_tidal = tidal
-try:
-    m0 = model.dv()
-    # ... the batch loop below, then D = model.derivatives(h=H_MAIN) ...
-finally:
-    fm.ci.set_nuisance_bias_tidal = original
-\end{lstlisting}
-
-\noindent A \texttt{finally} clause runs whether its block ends
-normally or by an exception, so no error leaves the wrapper installed:
-afterwards the name points at the compiled function again.
+\paragraph{The model stays the paper yaml's.}
+Cobaya finds the subclass through the \texttt{class} and
+\texttt{python\us path} keys of a likelihood block.
+\texttt{step\us yaml} writes them into a temporary copy of the paper
+yaml; a cobaya class without a yaml file of its own inherits its
+parent's defaults (options, parameter files, dataset), so every model
+detail still comes from the parent.  \texttt{check\us step\us yaml}
+stops unless the copy resolves to the same cobaya input as the paper
+yaml -- the likelihood options, theory, parameters, priors and
+fiducial point, compared blockwise.
 
 \paragraph{The batch loop.}
-Inside the \texttt{try} block, the loop walks the four families and
-the four batches (trimmed; \texttt{OPERATOR\us STEPS} holds the steps
+The loop of the notebook's \texttt{fisher\us base} walks the four
+stenciled families and the four batches
+(trimmed; \texttt{OPERATOR\us STEPS} holds the steps
 $\epsilon$ of Section~\ref{sec:operators}: $0.01$ for $b_{1,i}$,
 $0.02$ for $b_{2,i}$ and $b_{s^2,i}$, $5\aunit$ for $\alpha_{0,i}$):
 
@@ -2636,9 +2873,8 @@ for op, step in OPERATOR_STEPS.items():
         members = np.array([i for i in range(nbins) if color[i] == c])
         vectors = []
         for offset in fm.FIVE_POINT_OFFSETS:
-            shift.update(op=op, members=members, step=offset*step)
-            vectors.append(model.dv())
-        shift['op'] = None
+            vectors.append(
+                evaluate_with_step(model, like, op, members, offset*step))
         d = fm.five_point(vectors, step)
         for i in members:
             # the b1 step is relative: (b1 dm/db1)/b1 = dm/db1
@@ -2657,16 +2893,21 @@ contains bin $i$; column $i$ receives the derivative on those rows and
 stays exactly zero elsewhere, so the zeros of Table~\ref{tab:passes}
 are never computed.  The $b_{1,i}$ column is divided by $b_{1,i}$,
 because its relative step makes the stencil return
-$b_{1,i}\,\partial m/\partial b_{1,i}$.
+$b_{1,i}\,\partial m/\partial b_{1,i}$.  The $\alpha_2$ loop is the
+same with two evaluations per batch (Section~\ref{sec:templates}).
+The MPI script evaluates the same points with the same classes and
+combines them with the same arithmetic; one rank runs them in this
+order.
 
 \paragraph{The caches.}
-Every stencil evaluation is at the same sampled point; the shift rides
-inside the setter.  Cobaya (the framework that runs the likelihood)
+Every stencil evaluation is at the same sampled point; the step rides
+inside the likelihood.  Cobaya (the framework that runs the
+likelihood)
 stores the previous point's result and would return it without calling
 the likelihood, so \texttt{ModelFisher.dv}
 (\texttt{interface/cosmolike\us lssty1xdesi\us fisher.py}) calls
 \texttt{self.model.loglike(point, ..., cached=False)}, and the
-likelihood, with the wrapped setter, runs at every evaluation.
+likelihood, with its step, runs at every evaluation.
 
 CosmoLike keeps caches of its own, one key per sector of inputs
 (\texttt{cosmolike\us core}'s \texttt{README.md}, section ``The
@@ -2683,9 +2924,9 @@ FAST-PT tables.  On $\Delta d_{\rm com} = 62$~Mpc at the final
 settings, an evaluation whose only change is the biases takes about
 $36$~s, against about $2.5$ minutes at a new cosmology (the laptop of
 Section~\ref{sec:evals}).  The return to the fiducial values is one
-more change, caught by the same comparison, and the wrapper needs no
-cleanup beyond restoring the name: the likelihood resends every
-per-bin value anyway.
+more change, caught by the same comparison, and clearing the step
+needs no cleanup: the likelihood resends every
+per-bin value at the next point anyway.
 
 \paragraph{What tests this.}
 The sector-key machinery is tested by the sector-ladder cache check,
@@ -2696,32 +2937,48 @@ Fingers-of-God updates on all four layouts, a scramble of every sector
 at once, and bitwise assertions, with a second model walking the
 mirrored ladder.  That test runs the frozen linear-bias configuration,
 so it exercises the linear setter \texttt{set\us nuisance\us bias},
-not the one-loop \texttt{set\us nuisance\us bias\us tidal}.  The
-wrapped route itself is validated against derivatives that never pass
-through a wrapper: in the linear notebook, the per-bin $b_{1,i}$
-columns summed over each group reproduce the group-amplitude stencils
-to at most $6.0\times10^{-13}$ of the group column's largest entry
-over the four layouts, and the base notebook repeats the check through
-the chain rule of Eq.~\eqref{eq:chain}, to $1.5\times10^{-9}$; the
+not the one-loop \texttt{set\us nuisance\us bias\us tidal}
+(Appendix~\ref{sec:open}).  The
+stepped route itself is validated against derivatives that never pass
+through a step class: the notebook's chain-rule check reproduces the
+group-amplitude stencils from the per-bin columns through
+Eq.~\eqref{eq:chain}, to at most $1.5\times10^{-9}$ of the group
+column's largest entry over the four layouts, and the
 route-agreement study of Section~\ref{sec:accuracy} unties every
-per-bin parameter and steps it through the full likelihood, and its
+per-bin parameter and steps it through the full likelihood: its
 $b_{2,i}$, $b_{s^2,i}$ and $\alpha_{0,i}$ columns agree exactly with
-the wrapped ones, the $b_{1,i}$ columns through the chain rule to
-$5.2\times10^{-11}$.
+the stepped ones, the $b_{1,i}$ columns through the chain rule to
+$5.2\times10^{-11}$.  The reset check of Section~\ref{sec:limits}
+confirms, bit for bit, that no step survives its evaluation.
 
-\medskip
-\noindent
-{\color{red}\textbf{TODO.}  The sector-ladder test has no one-loop
-rung: a ladder whose bias updates run through
-\texttt{set\us nuisance\us bias\us tidal} (offset, $\alpha_{0,i}$ and
-$\SNzi$ steps) is still to be added.}
+\section{Open issues}
+\label{sec:open}
+
+\begin{itemize}
+  \item \textbf{The sector-ladder test has no one-loop rung.}  The
+    cache-consistency ladder exercises the linear setter
+    \texttt{set\us nuisance\us bias} only; a ladder whose bias updates
+    run through \texttt{set\us nuisance\us bias\us tidal} (offset,
+    $\alpha_{0,i}$ and $\SNzi$ steps) is still to be added.
+  \item \textbf{Some accuracy offsets are scored on the study's
+    system.}  The error and shift stabilities of
+    Section~\ref{sec:accuracy} (the $0.027\sigma$ step stability, the
+    $1.6\%$ of the errors and $0.007\sigma$ at the final settings,
+    DerivKit's $2.2\%$ and $0.006\sigma$), the CAMB-boost and
+    other-control offsets and the column-swap attribution are scored
+    on model B + tilts with $\alpha_2$ free and the exploration
+    $\sigma_v$ widths, the convergence study's own system; only the
+    FoMs were rescored for the paper model on the paper-fiducial cuts.
+    The derivative columns are shared, so a rescoring would change the
+    quoted stabilities, not the chosen settings.
+\end{itemize}
 
 \begin{thebibliography}{99}
 
 \bibitem{Lazeyras2016}
 T. Lazeyras, C. Wagner, T. Baldauf and F. Schmidt,
 ``Precision measurement of the local bias of dark matter halos'',
-2016, arXiv:1511.01096.
+JCAP 02 (2016) 018, arXiv:1511.01096.
 
 \bibitem{Maus2024}
 M. Maus et al.,

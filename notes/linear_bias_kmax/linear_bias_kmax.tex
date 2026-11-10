@@ -17,6 +17,17 @@
 \newcommand{\kmaxclause}{$\kmax$ quoted at $z = 0$; each bin is cut at
   $\kmax/D(\bar{z}_i)$.}
 
+\emergencystretch=3em
+
+% Floats sit near their first reference instead of drifting to
+% figure-only pages.
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.85}
+\setcounter{topnumber}{3}
+\setcounter{totalnumber}{4}
+
 \title{Up to which $k_{\rm max}$ is linear galaxy bias enough?}
 \date{November 2026}
 \author{}
@@ -60,10 +71,10 @@ primordial curvature power spectrum, sampled as $10^9 A_s$.
   \item Linear bias is safe only at the smallest scanned cut,
     $\kmax = 0.05\hMpc$, and for every prior and every truth only on
     the layout of equal comoving width, where it keeps about $1\%$ of
-    the dark-energy figure of merit.  At $0.075\hMpc$, the cut of the
-    correlated-prior note, a linear fit is biased on every layout
-    under every prior, a free bias per bin included, so that note fits
-    the one-loop model A there.
+    the dark-energy figure of merit.  At $0.075\hMpc$ a linear fit is
+    biased on every layout under every prior, a free bias per bin
+    included, so from there on the forecast needs the one-loop models
+    of \texttt{notes/higher\_order\_bias}.
   \item Yes.  The test excludes the growth-tied prior, finds the
     baseline prior honest only under its own scatter, and the
     pessimistic prior honest under both.
@@ -112,10 +123,11 @@ The scan runs over $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$, each the
 $z = 0$ value.
 
 \paragraph{The truths.}
-The truth is the model A of the correlated-prior note, computed with
-CosmoLike's one-loop engine; that note also holds model B and the
-largest cut at which model A itself holds, $0.075\hMpc$ on the thin
-layouts.  Its real-space galaxy power spectrum is
+The truth is a data vector of model A, the one-loop bias model defined
+in \texttt{notes/higher\_order\_bias}, computed with CosmoLike's
+one-loop engine at the linear fiducial's cosmology and growth-tied
+amplitudes (Section~\ref{sec:fiducial} lists the ingredients).  Its
+real-space galaxy power spectrum is
 \begin{equation}
   P_{gg}(k) \;=\; b_1^2\,P_{\rm mm}(k)
   \;+\; P_{\rm loop}(k;\, b_1, b_2, b_{s^2})
@@ -295,6 +307,94 @@ precise.
   \label{fig:fomkmax}
 \end{figure}
 
+\section{Fiducial model and parameter values}
+\label{sec:fiducial}
+
+This note's experiments run at the \emph{linear} fiducial: the
+growth-tied linear-bias model of the exploration yamls
+(\texttt{exploration/EXAMPLE\_EVALUATE\_LINEAR1}--\texttt{4.yaml}),
+with model A data vectors as truths.  This section freezes those
+values, so the record does not depend on configuration files that can
+change.
+
+\paragraph{Cosmology.}
+The fiducial is the evaluate override of the yamls, never their
+\texttt{ref} blocks: $10^9 A_s = 2.1$, $n_s = 0.96605$,
+$H_0 = 67.32$\,km/s/Mpc, $\Omega_b = 0.04$, $\Omega_m = 0.3$,
+$w_0 = -1$, $w_a = 0$ (sampled as $w_0 + w_a$),
+$\sum m_\nu = 0.06$\,eV and $\tau = 0.0697186$ fixed; the derived
+$\sigma_8 = 0.8278$.  The fits vary the seven parameters $10^9 A_s$,
+$n_s$, $H_0$, $\Omega_b$, $\Omega_m$, $w_0$ and $w_a$ with flat
+priors; $m_\nu$ and $\tau$ stay fixed.
+
+\paragraph{The linear bias and the velocity dispersions.}
+One sampled amplitude per group on its leader bin, every other bin of
+the group tied by $b_{1,i} = B_g/D(\bar{z}_i)$, with $B_g = 1.34$
+(BGS), $1.70$ (LRG1--LRG3) and $0.84$ (ELG1, ELG2), a flat prior
+$[0.8, 4]$ per leader, and $D$ read off the linear power spectrum at
+$k = 0.005\,{\rm Mpc}^{-1}$.  The sampled Fingers-of-God dispersions
+sit at $371$, $358$, $357$, $348$, $343$, $304$ and $289$\,km/s for
+the seven groups (BGS split at $\bar{z} = 0.255$), under Gaussian
+priors of width $145$, $105$, $70$, $50$, $50$, $40$ and $30$\,km/s:
+the exploration widths, not the sixfold widths of the paper model.
+
+\paragraph{The model A truths.}
+The truths come from the model A exploration yamls,
+\texttt{EXAMPLE\_EVALUATE\_MODEL\_A1}--\texttt{4.yaml} under
+\texttt{exploration/},
+at the same cosmology, growth-tied amplitudes and velocity
+dispersions: $b_2$ and $b_{s^2}$ on the calibrations of
+Appendix~\ref{sec:truths}, $b_3 = 0$, $\alpha_2 = 0$, and, in the
+calibrated truth, every offset, counterterm and stochastic amplitude
+zero.  The brackets add $\pm1$ to every group's $\Delta_2$ or set
+every group's $\alpha_0$ to $\pm12.5\,h^{-2}\,{\rm Mpc}^2$.  Model A's
+own prior widths, which size the brackets, are $1$ ($\Delta_2$),
+$0.5$ ($\Delta_s$), $88.9\,h^{-2}\,{\rm Mpc}^2$ ($\alpha_0$,
+$0.5/\kmax^2$ at its cut $0.075\hMpc$), $2$ (${\rm SN}_0$) and $5$
+(${\rm SN}_2$), per group (\texttt{notes/higher\_order\_bias}).
+
+\paragraph{Datasets, pairs and the covariance.}
+The exploration yamls name the 97-pair \texttt{*\_linear} data sets,
+but the Fisher module's derivative settings replace the data file with
+each layout's paper data set, so every Fisher matrix and truth here
+uses the paper pair lists ($107$ cross pairs on
+$\Delta d_{\rm com} = 62$\,Mpc; $133$, $52$ and $13$ on
+$\Delta z = 0.02$, $0.05$, $0.2$) and the paper covariances.  The
+covariance is Gaussian, built on the one-loop fiducial ($b_2$ and
+$b_{s^2}$ on their calibrations, every other higher-order term zero)
+with massless neutrinos, over $14{,}000$\,deg$^2$, its inverse
+rescaled by $12{,}300/14{,}000$.
+
+\paragraph{The scale-cut cache.}
+The cuts are \texttt{EXAMPLE\_EVALUATE\_FISHER\_SCALE\_CUTS.pkl},
+the linear-bias cache in \texttt{chains/}: the
+UV-fraction criterion of Eq.~\eqref{eq:uvfraction} with
+$\alpha = 0.05$, computed on the linear fiducial at the final
+derivative tier and intersected with the shipped mask.  The paper
+notebook computes its own cut on the paper model's fiducial; the
+linear experiments keep the linear-fiducial cut, and
+\texttt{notes/scale\_cut\_fiducial\_dependence} measures the
+difference between the two.
+
+\paragraph{The derivative tier.}
+Every derivative is a five-point stencil at relative step $h = 0.02$,
+at the final tier of the derivative convergence study:
+\texttt{nonlimber\_accuracyboost} 64, CosmoLike accuracy boost 3 with
+integration accuracy 1, $k_{\rm max} = 20\,{\rm Mpc}^{-1}$ from CAMB
+(transfer up to $60\,{\rm Mpc}^{-1}$) with AccuracyBoost 2 and
+\texttt{k\_per\_logint} 30, and CAMB's halofit bisection tolerance
+patched to $10^{-7}$.
+
+\paragraph{The LSST Y1 3x2pt reference.}
+The gray reference line of Figure~\ref{fig:fomkmax},
+${\rm FoM}(w_0, w_a) = 17.26$, is the \texttt{lsst\_y1} project's
+real-space SRD Fisher forecast,
+\texttt{EXAMPLE\_EVALUATE2\_FISHER\_3x2pt.pkl} in that project's
+\texttt{chains/} (1560 entries), not a band-power case of this
+project.  Its fiducial
+differs from the one above: $w_0 = -0.9$, and nonzero photo-z and
+shear-calibration centers.
+
 \clearpage
 
 \appendix
@@ -403,8 +503,8 @@ gives no fit, and the search for the safe $\kmax$ skips it.
     $1.9\%$ of the linear band powers on $\Delta d_{\rm com} = 62$~Mpc,
     $\Delta z = 0.02$, $0.05$ and $0.2$.
   \item \textbf{The truths of the accuracy test.}  They use the linear
-    notebook's seed and order, so they are the truths the
-    correlated-prior note fits under model A.  When the fit's prior
+    notebook's seed and order, so they are the truths of the
+    correlated-prior note's accuracy test.  When the fit's prior
     equals the truth's scatter, the scatter and noise terms of
     $\langle\chi^2_w\rangle$ sum to exactly $2$ (here to
     $9.4\times10^{-11}$), and $\eta$ of $(w_0, w_a)$ is within $0.05$ of
@@ -444,13 +544,13 @@ gives no fit, and the search for the safe $\kmax$ skips it.
   \item \textbf{The covariance's one-loop terms enter through Limber.}
     Its low-$\ell$ non-Limber recompute is linear, an error of at most
     $1.3\%$ of $C_\ell$ in the lowest bands of thin bins.
-  \item \textbf{The cut was built on the linear model.}  The
-    counterterm, with its $k^2$ weight, draws more of its signal from
-    beyond the cut: on $\Delta z = 0.05$ at $0.075\hMpc$ the
-    ultraviolet fraction of the $\alpha_0$ template is a median
+  \item \textbf{The cut does not weigh the counterterm.}  This note's
+    cut is computed on the linear fiducial, where $\alpha_0$ vanishes,
+    and the counterterm, with its $k^2$ weight, draws more of its
+    signal from beyond the cut: on $\Delta z = 0.05$ at $0.075\hMpc$
+    the ultraviolet fraction of the $\alpha_0$ template is a median
     $0.076$ on the kept bands, above $\alpha$, against a median
-    $0.017$ and at most $0.052$ for the full model A vector (the
-    correlated-prior note, ``Open issues'').
+    $0.017$ and at most $0.052$ for the full model A vector.
   \item \textbf{No stochastic term in the truths.}  The cross spectra
     of adjacent thin bins are sensitive to small-scale radial physics
     at their shared edge, which model A's term ${\rm SN}_2\,k^2\mu^2$

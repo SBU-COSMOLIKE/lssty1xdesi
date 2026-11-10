@@ -12,6 +12,15 @@
 % An underscore after which a long code name may break.
 \newcommand{\us}{\_\allowbreak}
 
+% Floats sit near their first reference instead of drifting to
+% figure-only pages.
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.85}
+\setcounter{topnumber}{3}
+\setcounter{totalnumber}{4}
+
 \title{Cross spectra between thin redshift bins}
 \date{November 2026}
 \author{}
@@ -71,6 +80,73 @@ first two are the thin layouts.  This note answers three questions:
     single cut in redshift can express: a bin of fixed comoving depth
     is $0.015$ wide in redshift at $z = 0.1$ and $0.035$ at $z = 1.5$.
 \end{enumerate}
+
+\section{Fiducial model and parameter values}
+\label{sec:fiducial}
+
+Three of this note's figures (Figures~\ref{fig:fog},
+\ref{fig:layouts} and~\ref{fig:zoom}) depend only on the shipped
+redshift distributions, the pair lists and the default velocity
+dispersions: no scale cut and no bias value enters them.  Only the
+pair-threshold test of Section~\ref{sec:threshold} runs a Fisher fit.
+This section freezes the values behind both, so the record does not
+depend on configuration files that can change.
+
+\paragraph{Geometry of the pair rule and the masks.}
+The comoving distances of the \dcom{} slicing, of the pair rule and of
+the shipped masks use $\chi(z)$ of a flat $\Lambda$CDM with
+$H_0 = 67.32$~km/s/Mpc and $\Omega_m = 0.3$; the masks stop every bin
+at $\ell + 1/2 \le k\,\chi(\bar{z}_i)$ with
+$k = 0.1185\,{\rm Mpc}^{-1}$ (about $0.176\,h$/Mpc), with no growth
+scaling.
+
+\paragraph{Layouts and pairs.}
+The four layouts hold $76$, $90$, $36$ and $10$ lens bins and measure
+$107$, $133$, $52$ and $13$ cross pairs (\dcom{},
+$\Delta z = 0.02$, $0.05$, $0.2$; Tables~\ref{tab:groups}
+and~\ref{tab:counts}).  The paper data sets carry these pair lists;
+the exploration examples keep the older $97$-pair \texttt{*\us linear}
+files on \dcom{} (Section~\ref{sec:rule}).
+
+\paragraph{Velocity dispersions.}
+The fiducial dispersions are $371$, $358$, $357$, $348$, $343$, $304$
+and $289$~km/s for the seven groups (BGS split at $\bar{z} = 0.255$),
+with exploration prior widths $145$, $105$, $70$, $50$, $50$, $40$ and
+$30$~km/s and paper widths six times these (Table~\ref{tab:sigv} and
+Section~\ref{sec:fog}).  Every blur in this note runs at the
+fiducials; only the fit below uses the widths, the exploration ones.
+
+\paragraph{The pair-threshold fit.}
+Its cosmology is the evaluate override of the example yamls:
+$10^9 A_s = 2.1$ ($A_s$ the amplitude of the primordial curvature
+power spectrum), $n_s = 0.96605$, $H_0 = 67.32$~km/s/Mpc,
+$\Omega_b = 0.04$, $\Omega_m = 0.3$, $w_0 = -1$, $w_a = 0$,
+$\sum m_\nu = 0.06$~eV and $\tau = 0.0697186$ fixed; the derived
+$\sigma_8 = 0.8278$.  The linear bias is $b_{1,i} = B_g/D(\bar{z}_i)$
+with $B_g = 1.34$ (BGS), $1.70$ (LRG1--LRG3) and $0.84$ (ELG1, ELG2),
+under the pessimistic prior ($3\%$ correlated residuals, $L = 0.05$,
+a free amplitude and tilt per group;
+\texttt{notes/correlated\us bias\us prior\us v2}).  The higher-order
+terms are model B + tilts (\texttt{notes/higher\us order\us bias}):
+offsets $\Delta_2$ and $\Delta_s$ of widths $2$ and $1$, counterterms
+$\alpha_0$ and $\alpha_2$ of width $0.5/k_{\rm max}^2$ at each cut,
+stochastic amplitudes ${\rm SN}_0$ and ${\rm SN}_2$ of widths $2$ and
+$5$, and flat tilts, with $\alpha_2$ free and the exploration $\sv$
+widths: the reference model of
+\texttt{notes/fog\us parameter\us degeneracy\us study}, not the paper
+model, which fixes $\alpha_2 = 0$ in every bin and widens every $\sv$
+prior sixfold.
+
+\paragraph{Scale cut and covariance of the fit.}
+The fit keeps the bands of the UV-fraction cut computed on the paper
+model's fiducial
+(\texttt{chains/EXAMPLE\us EVALUATE\us FISHER\us MODEL\us
+SCALE\us CUTS.pkl}; a band is kept while less than $5\%$ of it comes
+from the power spectrum above $k_{\rm max}/D(\bar{z}_i)$),
+intersected with the shipped mask.  The covariance is the Gaussian
+covariance of the $107$-pair data set, built on the one-loop fiducial
+($b_2$ and $b_{s^2}$ on their calibrations) with massless neutrinos
+over $14{,}000$~deg$^2$, its inverse rescaled by $12{,}300/14{,}000$.
 
 \section{Why cross spectra between thin bins matter}
 \label{sec:why}
@@ -295,37 +371,49 @@ split at $z = 0.255$: seven dispersion groups for six bias groups.
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{lcccc}
+  \begin{tabular}{lccccc}
     \hline
-    group & $\sv$ [km/s] & prior width [km/s] & $\sigma_{z,i}$ [$10^{-3}$]
-      & $\delta\chi$ [Mpc] \\
+    group & $\sv$ [km/s] & exploration width & paper width
+      & $\sigma_{z,i}$ [$10^{-3}$] & $\delta\chi$ [Mpc] \\
     \hline
-    BGS, $\bar{z}_i < 0.255$ & $371$ & $145$ & $1.37$--$1.54$ & $5.8$--$6.1$ \\
-    BGS, $\bar{z}_i \ge 0.255$ & $358$ & $105$ & $1.51$--$1.65$ & $5.9$--$6.0$ \\
-    LRG1 & $357$ & $70$ & $1.68$--$1.90$ & $6.0$--$6.1$ \\
-    LRG2 & $348$ & $50$ & $1.88$--$2.08$ & $6.0$ \\
-    LRG3 & $343$ & $50$ & $2.07$--$2.36$ & $5.8$--$5.9$ \\
-    ELG1 & $304$ & $40$ & $1.84$--$2.12$ & $5.1$--$5.2$ \\
-    ELG2 & $289$ & $30$ & $2.04$--$2.46$ & $4.6$--$4.8$ \\
+    BGS, $\bar{z}_i < 0.255$ & $371$ & $145$ & $870$ & $1.37$--$1.54$ & $5.8$--$6.1$ \\
+    BGS, $\bar{z}_i \ge 0.255$ & $358$ & $105$ & $630$ & $1.51$--$1.65$ & $5.9$--$6.0$ \\
+    LRG1 & $357$ & $70$ & $420$ & $1.68$--$1.90$ & $6.0$--$6.1$ \\
+    LRG2 & $348$ & $50$ & $300$ & $1.88$--$2.08$ & $6.0$ \\
+    LRG3 & $343$ & $50$ & $300$ & $2.07$--$2.36$ & $5.8$--$5.9$ \\
+    ELG1 & $304$ & $40$ & $240$ & $1.84$--$2.12$ & $5.1$--$5.2$ \\
+    ELG2 & $289$ & $30$ & $180$ & $2.04$--$2.46$ & $4.6$--$4.8$ \\
     \hline
   \end{tabular}
-  \caption{The default velocity dispersion of each group, the width of
-    its Gaussian prior, and the resulting redshift width
-    $\sigma_{z,i}$ and comoving width $\delta\chi = (1 + \bar{z}_i)\,
-    \sv/H(\bar{z}_i)$ over the bins of \dcom{}.}
+  \caption{The default velocity dispersion of each group, the widths of
+    its Gaussian prior in the exploration files and in the paper model
+    (six times the exploration width; both in km/s), and the resulting
+    redshift width $\sigma_{z,i}$ and comoving width
+    $\delta\chi = (1 + \bar{z}_i)\,\sv/H(\bar{z}_i)$ over the bins of
+    \dcom{}.}
   \label{tab:sigv}
 \end{table}
 
-Each prior is a Gaussian centred on the default, five times as wide as
-the per-bin error bar of the measurement, and truncated at zero.  The
-defaults live in \texttt{likelihood/params\us desi*.yaml} (the
+Each prior is a Gaussian centred on the default and truncated at zero.
+The exploration width is five times the per-bin error bar of the
+measurement; the paper model multiplies every width by six, so that
+the sampled dispersions can absorb the radial counterterm it drops
+(\texttt{notes/fog\us parameter\us degeneracy\us study}).  At the
+sixfold width the truncation matters for the first BGS group: it
+removes $33\%$ of the Gaussian, and the truncated mean is about
+$850$~km/s, while the Fisher forecasts treat every $\sv$ prior as an
+untruncated Gaussian about the default.  The exploration defaults and
+widths live in \texttt{likelihood/params\us desi*.yaml} (the
 \texttt{DESI\us SIGV} parameters; the first bin of each group carries
-the prior and the others are tied to it), and the same seven values in
-\texttt{CHUNK\us SIGMA\us V} of
+the prior and the others are tied to it), the paper widths in
+\texttt{likelihood/params\us desi*\us bias\us pessimistic.yaml}, and
+the same seven defaults in \texttt{CHUNK\us SIGMA\us V} of
 \texttt{covariance/lssty1xdesi\us covariance.py}, which convolves the
-covariance's kernels at fixed $\sv$.  The ELG dispersions are the
-lowest, as expected for star-forming galaxies, which tend to live in
-lighter halos with slower orbits.
+covariance's kernels at fixed $\sv$.  Every figure of this note blurs
+at the defaults; the fit of Section~\ref{sec:threshold} uses the
+exploration widths (Section~\ref{sec:fiducial}).  The ELG dispersions
+are the lowest, as expected for star-forming galaxies, which tend to
+live in lighter halos with slower orbits.
 
 \subsection{How large the blur is}
 
@@ -528,7 +616,7 @@ LRG3 bin touches three ELG1 bins: the one at its redshift and the two
 beside it.  Figure~\ref{fig:zoom} magnifies the corner where LRG2 ends
 and LRG3 and ELG1 begin.
 
-\begin{figure}[p]
+\begin{figure}[tbp]
   \centering
   \includegraphics[width=\linewidth]{plots/nz_overlap_layouts/nz_overlap_layouts.pdf}
   \caption{Every thin bin of the four layouts and the cross spectra the
@@ -693,15 +781,18 @@ default dispersions reaches a floor, $O_{ij} \ge O_{\min}$
 (Eq.~\eqref{eq:overlap}), applied to \emph{every} measured pair, the
 DESI-imported ones included; the auto spectra are always kept, a kept
 pair keeps its bands, and the covariance is rebuilt on the kept rows.
-The fit is the forecast's model (model B + tilts on the pessimistic
-linear-bias prior; \texttt{notes/correlated\us bias\us prior\us v2}),
-scored by the dark-energy figure of merit
+The fit is model B + tilts on the pessimistic linear-bias prior, with
+$\alpha_2$ free and the exploration $\sv$ widths
+(Section~\ref{sec:fiducial}): the reference model of
+\texttt{notes/fog\us parameter\us degeneracy\us study}.  It is scored
+by the dark-energy figure of merit
 ${\rm FoM}(w_0, w_a) = [\det{\rm Cov}(w_0, w_a)]^{-1/2}$, the inverse
 area of the marginalized ellipse of $w_0$ and $w_a$ (the dark-energy
 equation of state $w(a) = w_0 + w_a(1 - a)$, $a$ the scale factor),
 and by ${\rm FoM}(\Omega_m, 10^9 A_s)$, defined the same way for the
 matter density $\Omega_m$ and the primordial amplitude $A_s$.  The fit
-carries the forecast's scale cut: bin $i$ keeps wavenumbers below
+carries the forecast's scale cut, computed on the paper model's
+fiducial (Section~\ref{sec:fiducial}): bin $i$ keeps wavenumbers below
 $k_{\rm max}/D(\bar{z}_i)$, with $D$ the linear growth factor
 ($D(0) = 1$) and $k_{\rm max}$ always quoted at $z = 0$;
 Figure~\ref{fig:threshold} shows $k_{\rm max} = 0.075$ and
@@ -723,8 +814,8 @@ Dropping the boundary pair changes ${\rm FoM}(w_0, w_a)$ by a factor
 $0.999$ at $k_{\rm max} = 0.2\,h$/Mpc and nothing at the smaller cuts,
 and every other layout is unchanged at every floor up to $10^{-3}$
 (Figure~\ref{fig:threshold}).  At $10^{-2}$ the $\Delta z = 0.2$
-figures of merit fall to $0.73$--$0.92$ of the full vector's for
-$(w_0, w_a)$ and $0.59$--$0.77$ for $(\Omega_m, 10^9 A_s)$.
+figures of merit fall to $0.82$ of the full vector's for
+$(w_0, w_a)$ and to $0.65$--$0.72$ for $(\Omega_m, 10^9 A_s)$.
 
 \paragraph{The reading.}
 The only listed pair with overlap below $10^{-3}$ is the boundary
@@ -735,13 +826,14 @@ next-smallest overlap is $0.015$--$0.043$ -- so this test cannot say
 where between those overlaps a pair begins to matter.  And a small
 overlap does not mean little information: the $13$ pairs of
 $\Delta z = 0.2$ overlap by only $0.3$--$0.9\%$, yet removing ten of
-them costs up to $41\%$ of ${\rm FoM}(\Omega_m, 10^9 A_s)$.
+them costs up to $35\%$ of ${\rm FoM}(\Omega_m, 10^9 A_s)$.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=3.5in]{plots/pair_threshold/pair_threshold.pdf}
-  \caption{The forecast model's figures of merit with only the cross
-    pairs whose blurred overlap at the default dispersions reaches
+  \caption{The figures of merit of the fit of
+    Section~\ref{sec:threshold} with only the cross pairs whose
+    blurred overlap at the default dispersions reaches
     $O_{\min}$, over the full data vector's, against $O_{\min}$;
     ``all'', every measured pair, sits left of the separator.  Upper
     panel: ${\rm FoM}(w_0, w_a)$; lower: ${\rm FoM}(\Omega_m,
@@ -770,11 +862,10 @@ them costs up to $41\%$ of ${\rm FoM}(\Omega_m, 10^9 A_s)$.
   \item \textbf{The pair list at the $\sv$ prior edge.}  Just beyond
     those two prior widths the thin layouts' bins two apart begin to
     overlap by more than $10^{-6}$
-    (\texttt{notes/fog\us parameter\us degeneracy\us study}, section
-    ``The pair list at the edges of the $\sv$ prior'').  Building the
+    (\texttt{notes/fog\us parameter\us degeneracy\us study}, on the
+    pair rule at the edges of the $\sv$ prior).  Building the
     list at the prior edge, which adds those pairs and needs new
-    spectra, covariances and derivative caches, is queued as an
-    overnight study.
+    spectra, covariances and derivative caches, is open.
 \end{itemize}
 
 \paragraph{Reproducing the figures.}
@@ -783,9 +874,9 @@ project's \texttt{data/} and \texttt{likelihood/} files and writes the
 \texttt{data.json} of the first three figure folders, with every
 number quoted for them here;
 \texttt{plots/pair\us threshold/data.json} is written by the Fisher
-notebook \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us B.ipynb}
-(section 11).  Each folder's \texttt{plot\us <name>.py} redraws its
-figure from that file alone.
+notebook \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL.ipynb}
+(section 11, item 7).  Each folder's \texttt{plot\us <name>.py}
+redraws its figure from that file alone.
 
 \begin{thebibliography}{99}
 

@@ -413,7 +413,7 @@ invertible as long as the group's data fix its level and tilt.
 \label{app:bias}
 
 This appendix gives the method of Section~\ref{sec:accuracy} and of
-the break test of Section~\ref{sec:modelb}.
+the shift estimates of Section~\ref{sec:modelb}.
 
 \subsection{The shift formula}
 \label{sec:biasformula}
@@ -448,7 +448,8 @@ small.
 
 A drift of the bin biases enters as
 $\delta m = \sum_i (\partial m / \partial \beta_i)\, B_g\, \delta_i$,
-with $\beta_i$ the amplitudes of Eq.~\eqref{eq:beta}; under model A
+with $\beta_i$ the amplitudes of Eq.~\eqref{eq:beta}; under the
+one-loop model
 the column is that of Eq.~\eqref{eq:chain} divided by $D(\bar{z}_i)$,
 so a drift of $b_1$ drags $b_2$ and $\bstwo$ along.  The growth-tied
 prior is evaluated in its own parameter basis.  For the free prior the
@@ -481,10 +482,10 @@ at the fiducial cosmology, with $\delta_i^{\rm drift}$ the known drift
 (the flux limit in BGS, the conserved population elsewhere) and
 $\varepsilon_i$ one draw from $\mathcal{N}(0, \Sigma)$, whose covariance
 $\Sigma_{ij} = \sigma_g^2 e^{-|\bar{z}_i - \bar{z}_j|/L}$ inside a group,
-zero across groups, is the kernel of one of the two stated priors.
-Two families of $2000$ truths are drawn, baseline and pessimistic
-scatter, and every truth is fitted under every prior, each centered on
-the growth-tied shape.  No fit is told which truth it faces.
+zero across groups, is the kernel of the pessimistic prior.  Every
+truth is fitted under the growth-tied and the pessimistic prior,
+each centered on the growth-tied shape.  No fit is told which truth it
+faces.
 
 Equation~\eqref{eq:fisherbias} is linear in $\delta m$, and $\delta m$
 in the bias deviations, so the $(w_0, w_a)$ rows of the response
@@ -496,7 +497,8 @@ prior, layout and variant,
   \delta_i \;=\; \delta_i^{\rm drift} + \varepsilon_i ,
   \label{eq:linearmap}
 \end{equation}
-and the $2000$ truths cost one matrix product.  The band powers are
+and the average over the whole family of truths is exact
+(Appendix~\ref{sec:inflation}).  The band powers are
 quadratic in the bin biases, so the dropped second-order term is a few
 percent of the shift for $1$--$3\%$ residuals and perhaps $10$--$20\%$
 for the $22\%$ BGS drift.  Where the fit's prior equals the truth's
@@ -530,8 +532,7 @@ not follow; and the noise.  $\mathsf{C}_w^{\rm noise}$ is the share of
 $\mathsf{C}_w$ from the data noise and the Gaussian priors other than
 the bias prior; the cross terms average to zero.  Eq.~\eqref{eq:chi2w}
 is evaluated in closed form, the exact average over infinitely many
-universes; the $2000$ draws only make the percentile bars of
-Figure~\ref{fig:scatter}, and carry no noise.  The quoted value is
+universes; no finite set of draws enters.  The quoted value is
 $\eta = \sqrt{\langle \chi^2_w \rangle/2}$.  An honest ellipse gives
 $\langle \chi^2_w \rangle = \mathrm{tr}(\mathsf{C}_w^{-1}\mathsf{C}_w)
 = 2$, one unit per parameter, and growing both axes by $\eta$ restores
@@ -574,27 +575,27 @@ prior absorbs the known drift ($\mu \approx 0$),
 \end{equation}
 $68\%$ at $\eta = 1$, $50\%$ at $1.5$, $38\%$ at $2$.  For
 $\eta \geq 1$ a nonzero $\mu$ only lowers the coverage, so
-Eq.~\eqref{eq:quickcoverage} is then an upper bound.  For the baseline,
-pessimistic and free priors it
-agrees with Eq.~\eqref{eq:coverage} within $0.12$ percentage points;
+Eq.~\eqref{eq:quickcoverage} is then an upper bound.  For the
+pessimistic and free priors it agrees with Eq.~\eqref{eq:coverage}
+within about $0.1$ percentage points;
 for the growth-tied prior only Eq.~\eqref{eq:coverage} is right.
 
-Under the pessimistic scatter and model A, on
-$\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$, $0.05$ and $0.2$, the
-bar covers the truth in $67$, $66$, $60$ and $68\%$ of universes for
-$\Omega_m$ and $67$, $66$, $64$ and $68\%$ for $A_s$ under the baseline
-prior; $64$--$68\%$ under the pessimistic prior; $68.3\%$ under the
-free prior; and $12$, $1.9$, $0.4$ and $7.4\%$ for $\Omega_m$ under the
-growth-tied prior, where Eq.~\eqref{eq:quickcoverage} would give $22$,
-$16$, $15$ and $23\%$.  For $(w_0, w_a)$ the coverage depends on how the
-excess of $\langle \chi^2_w \rangle$ splits between the two directions,
-so only $\eta$ is quoted.
+Under the known drifts plus the pessimistic scatter and model B +
+tilts, at $\kmax = 0.2\hMpc$ on $\Delta d_{\rm com} = 62$~Mpc,
+$\Delta z = 0.02$, $0.05$ and $0.2$, the growth-tied prior's
+$\Omega_m$ bar covers the truth in $6.3$, $2.5$, $10$ and $35\%$ of
+universes, where Eq.~\eqref{eq:quickcoverage} would give $23$, $19$,
+$25$ and $42\%$; the pessimistic prior covers in $67$--$68\%$, and the
+free prior in $68.3\%$ exactly.  For $(w_0, w_a)$ the coverage depends
+on how the excess of $\langle \chi^2_w \rangle$ splits between the two
+directions, so only $\eta$ is quoted.
 
-\paragraph{The baseline prior against a pessimistic truth.}
-The baseline prior charges a large penalty for bin biases that follow
-the $3\%$ wiggles of a pessimistic truth, which change over
-$\Delta z \approx 0.05$, so they follow only in part and the fit moves
-the cosmology to absorb the rest, differently for every truth.  At
+\paragraph{A prior narrower than the truth.}
+A prior narrower than the truth's scatter charges a large penalty for
+bin biases that follow the truth's wiggles, so the fit follows them
+only in part and moves the cosmology to absorb the rest, differently
+for every truth; the growth-tied prior, with no residual freedom at
+all, is the extreme case.  At
 $\eta = 2$ the real scatter of the best-fit $(w_0, w_a)$ is twice as
 wide per axis as the reported ellipse, and the FoM four times too
 large.  The opposite mismatch gives $\eta$ below $1$: a conservative
@@ -634,10 +635,10 @@ the scatter and noise terms of Eq.~\eqref{eq:chi2w} sum to exactly $2$:
 the widening the prior adds to the ellipse equals the error the
 scatter inflicts.  The matched value is
 $\eta = (1 + \Delta_{\rm drift}^2/2)^{1/2}$ for $(w_0, w_a)$ and
-$(1 + \Delta_{{\rm drift},p}^2)^{1/2}$ for one parameter; under model A
-it stays within $6\%$ of $1$ for $(w_0, w_a)$, and a single parameter
-reaches $1.11$ ($\Omega_m$ on $\Delta z = 0.05$, where the BGS flux
-limit is absorbed least well).
+$(1 + \Delta_{{\rm drift},p}^2)^{1/2}$ for one parameter; for model B
++ tilts on the pessimistic prior, whose tilts absorb the drifts' lines,
+the measured value stays below $1.03$ in every score, at every cut and
+on every layout (Section~\ref{sec:accuracy}).
 
 \paragraph{When a fit is conservative.}
 Write $\Prec_{\rm mem}$ in its null-space form, Eq.~\eqref{eq:memnull},
