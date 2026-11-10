@@ -15,8 +15,9 @@ i. The notebooks therefore step b_2 in a whole set of bins at once, a
 spectrum then holds at most one stepped bin, and one five-point stencil
 (four data-vector evaluations, at +-h and +-2h) gives the column of every
 bin of the batch. The batches are the "colors" of pair_coloring in the
-model A and model B notebook builders; this script copies that function
-and spectrum_rows unchanged, so the figure shows what the notebooks run.
+builder of EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (and of
+scripts/compute_fisher_base_mpi.py); this script copies that function and
+spectrum_rows unchanged, so the figure shows what the notebook runs.
 
 The script reads the bin table and the pair list of each layout the way
 layout_covariance of the notebooks does (data/<dataset>_bins.txt and
@@ -46,10 +47,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # batching/, four folders below the project, whose data/ holds the files
 DEFAULT_DATA = os.path.join(HERE, '..', '..', '..', '..', 'data')
 
-# The four layouts of the notebooks (the LAYOUTS dictionary of the model A
-# and model B builders): the name the notebooks use, the label the figures
-# print, and the dataset stem that names its data files. The order is the
-# order of the notebooks.
+# The four layouts of the notebooks (the LAYOUTS dictionary of the builder
+# of EXAMPLE_EVALUATE_FISHER_MODEL.ipynb): the name the notebooks use, the
+# label the figures print, and the dataset stem that names its data files.
+# The order is the order of the notebooks.
 LAYOUTS = [
     {'name': 'Delta d_com = 62 Mpc',
      'label': r'$\Delta d_\mathrm{com} = 62$ Mpc',
@@ -470,9 +471,9 @@ def main():
             focus = focus_entry(tables)
     out = {'about': ('Written by make_batching_data.py (this folder) from the bin '
                      'tables and pair lists of data/ (lssty1xdesi_desi_*_bins.txt, '
-                     '*_pairs.txt), batched with pair_coloring of the model A and model '
-                     'B notebook builders. Batches are numbered from 1 (color 0 of the '
-                     'code is batch 1). Bin indices in this file (bin, partners, '
+                     '*_pairs.txt), batched with pair_coloring of the builder of '
+                     'EXAMPLE_EVALUATE_FISHER_MODEL.ipynb. Batches are numbered from 1 '
+                     '(color 0 of the code is batch 1). Bin indices in this file (bin, partners, '
                      'pairs, groups, batches, row_map, stretch) are 0-based, as in the '
                      'data files and the code; the figure and the note number bins '
                      'from 1, so index i is drawn as bin i + 1. largest_clique and '

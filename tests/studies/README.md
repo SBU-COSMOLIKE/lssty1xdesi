@@ -102,7 +102,7 @@ and the break-test shifts of the forecasts.
 ## What the study scores
 
 The study scores two Fisher systems, each assembled the way
-`EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb` assembles it, from the model A
+`EXAMPLE_EVALUATE_FISHER_MODEL.ipynb` assembles it, from the model A
 likelihood at its fiducial point, where models A and B coincide:
 
 - the paper model: model B with tilts, on the pessimistic linear-bias
@@ -145,7 +145,7 @@ $`C`$ of a parameter pair, so it grows as the error ellipse shrinks:
 \mathrm{FoM}(w_0, w_a) = \frac{1}{\sqrt{\det C_{w_0 w_a}}}
 ```
 
-The break test of the model B notebook adds to the vector a term the
+The break test of the Fisher notebook adds to the vector a term the
 fitted model lacks, a truth: the radial counterterm $`\alpha_2`$, the
 stochastic amplitude SN2 = 5, offsets of the quadratic and tidal biases
 $`b_2`$ and $`b_{s2}`$ at one prior width, or a calibration drift of
@@ -205,10 +205,11 @@ shipped-mask covariance, the estimate is in units of $`\sqrt{\chi^2}`$.
 ## Two routes to the per-bin columns
 
 The shipped parameter files tie each per-bin bias parameter to its
-group. The model A notebook (`EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb`)
-takes its per-bin columns by intercepting the compiled bias setter: it
-steps $`b_1`$, $`b_2`$, $`b_{s2}`$ and $`\alpha_0`$ of a bin inside the
-interface. The study unties every per-bin parameter instead, samples it
+group. The model A derivative caches of `chains/`
+(`EXAMPLE_EVALUATE_FISHER_MODEL_A_DERIVATIVES_<n>.pkl`) hold per-bin
+columns taken by stepping the per-bin arrays the likelihood passes to the
+compiled bias setter: $`b_1`$, $`b_2`$, $`b_{s2}`$ and $`\alpha_0`$ of a bin,
+inside the interface. The study unties every per-bin parameter instead, samples it
 at its fiducial value and steps it through the likelihood, as a chain
 would.
 
@@ -523,10 +524,14 @@ The `derive` and `dkit` stages measure the final tier, so they stop
 unless CAMB carries the halofit tolerance patch (`fm.check_halofit_patch`;
 see [The halofit requirement of the final tier](#halofit_patch)).
 
-The 62 Mpc spot check reads the caches that
-`EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb` and
-`EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb` write to `chains/` for that
-layout, so run both notebooks on it first.
+The 62 Mpc spot check reads the model A derivative and template caches
+of `chains/` for that layout
+(`EXAMPLE_EVALUATE_FISHER_MODEL_A_DERIVATIVES_1.pkl` and
+`EXAMPLE_EVALUATE_FISHER_MODEL_B_TEMPLATES_1.pkl`), so they must exist.
+`EXAMPLE_EVALUATE_FISHER_MODEL.ipynb` writes the same arrays under
+`EXAMPLE_EVALUATE_FISHER_MODEL_DERIVATIVES_<n>.pkl` and
+`..._TEMPLATES_<n>.pkl`, with each group amplitude named after its group
+(`DESI_B1_<g>`) instead of its leader bin.
 
 ### Every stage through pytest
 
@@ -618,9 +623,9 @@ python projects/lssty1xdesi/tests/studies/run_fisher_derivatives.py compare --la
   --base candidate_ladder --perbin-from projects/lssty1xdesi/chains
 ```
 
-**Step :seven:**: compare the per-bin routes, after
-`EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb` has recomputed its
-$`\Delta z = 0.05`$ cache at the final tier.
+**Step :seven:**: compare the per-bin routes against the model A
+derivative cache of $`\Delta z = 0.05`$ at the final tier
+(`chains/EXAMPLE_EVALUATE_FISHER_MODEL_A_DERIVATIVES_3.pkl`).
 
 ```bash
 python projects/lssty1xdesi/tests/studies/run_fisher_derivatives.py agree --layout dz0p05

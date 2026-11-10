@@ -1,5 +1,5 @@
 {
- "about": "Written by make_batching_data.py (this folder) from the bin tables and pair lists of data/ (lssty1xdesi_desi_*_bins.txt, *_pairs.txt), batched with pair_coloring of the model A and model B notebook builders. Batches are numbered from 1 (color 0 of the code is batch 1). Bin indices in this file (bin, partners, pairs, groups, batches, row_map, stretch) are 0-based, as in the data files and the code; the figure and the note number bins from 1, so index i is drawn as bin i + 1. largest_clique and fewest_batches are diagnostics of the pair graph, not drawn.",
+ "about": "Written by make_batching_data.py (this folder) from the bin tables and pair lists of data/ (lssty1xdesi_desi_*_bins.txt, *_pairs.txt), batched with pair_coloring of the builder of EXAMPLE_EVALUATE_FISHER_MODEL.ipynb. Batches are numbered from 1 (color 0 of the code is batch 1). Bin indices in this file (bin, partners, pairs, groups, batches, row_map, stretch) are 0-based, as in the data files and the code; the figure and the note number bins from 1, so index i is drawn as bin i + 1. largest_clique and fewest_batches are diagnostics of the pair graph, not drawn.",
  "focus_layout": "Delta d_com = 62 Mpc",
  "families": [
   "b1",

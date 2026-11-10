@@ -2,7 +2,10 @@
 the paper model converge with the chi grid of the non-Limber integrals,
 and whether they then depend on the stencil step of the derivatives.
 
-The paper model is model B + tilts on the pessimistic linear-bias prior.
+The paper model is model B + tilts without alpha_2, every sigma_v prior
+width 6 times the exploration ones, on the pessimistic linear-bias prior;
+the Fisher systems are scored on the UV-fraction cuts of the paper
+fiducial.
 Each FoM is divided by its converged value, the five-point rule at step h
 (h = 0.02, relative) on the finest grid of its layout. The x axis is the
 combined chi-grid factor accuracyboost x nonlimber_accuracyboost (the
@@ -17,8 +20,10 @@ settings: the five-point rule with every control at its MCMC value (grid
 32) and DerivKit at the MCMC settings (grid 32) and at the final settings
 (grid 256). The spot check of Delta d_com = 62 Mpc, at the final
 settings, is drawn the same way in its own color. A gray band marks 1
-+- 1%. data.json is written by
-tests/studies/generate_fisher_derivatives_figures.py.
++- 1%. data.json holds the study's results (tests/studies/run_fisher_derivatives.py)
+rescored for the paper model on the paper-fiducial cuts with the arithmetic
+of tests/studies/generate_fisher_derivatives_figures.py
+(rescore_convergence.py of the notebook-builder backup folder).
 Run from any folder: python plot_fom_convergence.py
 """
 import json

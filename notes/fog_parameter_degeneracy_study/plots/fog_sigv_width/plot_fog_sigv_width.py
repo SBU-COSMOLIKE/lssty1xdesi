@@ -1,7 +1,8 @@
 """Redraw fog_sigv_width.pdf from data.json: how wide the Gaussian prior of
 the velocity dispersions sigma_v must be for them to absorb a DESI-size
-alpha_2 = +12.5 h^-2 Mpc^2 in a fit without alpha_2 (model A + tilts on the
-pessimistic linear-bias prior), and what that fit's FoM is then.
+alpha_2 = +12.5 h^-2 Mpc^2 in a fit without alpha_2 (model B + tilts on the
+pessimistic linear-bias prior with alpha_2 and its tilts fixed at 0; at s = 6
+it is the paper model), and what that fit's FoM is then.
 
 One column of a two-column paper, two stacked panels against s, the factor
 on all seven sigma_v prior widths, on a log axis; the flat sigma_v (s = inf)
@@ -9,8 +10,9 @@ are drawn as separate points at the right edge, past a gap:
 
 1. delta_max: the largest shift of the fit, over the (w0, wa) shift in its
    ellipse and the Omega_m and A_s shifts in their own sigma; dotted: sigma/3;
-2. FoM_{alpha_0 only}/FoM: FoM(w0, wa) of that fit over the paper model's
-   (model B + tilts, alpha_2 free, sigma_v at s = 1); gray: 1.
+2. FoM_{alpha_0 only}/FoM: FoM(w0, wa) of that fit (alpha_0 the only
+   counterterm) over the reference model's (model B + tilts, alpha_2 free,
+   sigma_v at s = 1); gray: 1.
 
 The four layouts at k_max = 0.075 (solid, filled markers) and 0.2 (dashed,
 open markers); each layout has a color, a line width and a marker. k_max is

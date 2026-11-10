@@ -43,10 +43,10 @@ def test_fisher_derivative_study(tmp_path):
     Returns:
       None. The study writes its arrays below tmp_path/work and its JSON
       summaries below tmp_path/results; nothing in the repository changes.
-      The spot check reads the model A and model B caches of chains/
-      (the per-bin columns and the alpha_2 and SN2 templates), so the
-      notebooks EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb and
-      EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb must have run first.
+      The spot check reads the model A derivative and template caches of
+      chains/ (EXAMPLE_EVALUATE_FISHER_MODEL_A_DERIVATIVES_<n>.pkl and
+      EXAMPLE_EVALUATE_FISHER_MODEL_B_TEMPLATES_<n>.pkl: the per-bin
+      columns and the alpha_2 and SN2 templates), so they must exist.
 
     Each stage runs in its own Python process, because the compiled
     interface holds one model at a time and its accuracy baselines are

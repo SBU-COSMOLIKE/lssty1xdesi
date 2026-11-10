@@ -1,5 +1,6 @@
 """Redraw summary_pair_threshold.pdf from data.json: what the paper model (model B +
-tilts on the pessimistic linear-bias prior) keeps of its figures of merit
+tilts without alpha_2, every sigma_v prior width 6 times the exploration
+ones, on the pessimistic linear-bias prior) keeps of its figures of merit
 when the data vector holds only the cross pairs whose Fingers-of-God-blurred
 kernels overlap by at least O_min at the fiducial sigma_v.
 

@@ -15,8 +15,9 @@ no FoM above k_max = 0.2.
 | result | notebook (section) | data |
 |---|---|---|
 | linear bias against k_max | EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb (4, 5) | `notes/linear_bias_kmax/plots/{fob_kmax,fom_kmax,ladder_bias_params}/data.json` |
-| model A at k_max = 0.075 | EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb (6, 7) | `notes/correlated_bias_prior_v2/plots/{baseline_ladder,ladder_bias_scatter,goodness_of_fit,drift_shifts,calibration_drift}/data.json` |
-| models A and B against k_max; where each model breaks | EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb (6, 7) | `notes/correlated_bias_prior_v2/plots/fom_kmax_models/data.json` |
+| model A at k_max = 0.075 (a record) | the removed EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb (6, 7), commit 567751f | the removed v2 folders baseline_ladder, ladder_bias_scatter, goodness_of_fit, drift_shifts, calibration_drift (same commit) |
+| model B against k_max; where model B breaks | EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (6, 7) | `notes/correlated_bias_prior_v2/plots/fom_kmax_models/data.json` |
+| the paper model | EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (9) | `notes/bias_model_summary/plots/{summary_fom_kmax,summary_fom_untied}/data.json` |
 | linear-bias FoMs, engine Fisher biases, amplitude-cut contours | EXAMPLE_EVALUATE_FISHER.ipynb (4-8) | printed tables; `fisher_and_scale_cuts.md` |
 | LSST Y1 3x2pt references | lsst_y1 EXAMPLE_EVALUATE2.ipynb | `lsst_y1_3x2pt_fom*` keys of the v2 data.json files |
 
@@ -50,6 +51,12 @@ fit is linear bias under each of the four priors.
   E[chi2_w] - drift^2 = 2 to 5.6e-11.
 
 ## 2. Model A at k_max = 0.075 h/Mpc
+
+A record: the model A notebook, EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb,
+and its five figure folders were removed on 2026-11-10 (their last
+version is commit 567751f). The values below predate its final-tier
+rerun of that commit and are not refreshed; SKILL.md, "Results", quotes
+the final-tier values.
 
 **FoM(w0, wa)** (`baseline_ladder/data.json`, key `fom`):
 
@@ -127,92 +134,91 @@ growth-tied. Model A + tilts absorbs it exactly (1e-12), since its
 tilts have the drift's shape; a nonlinear drift within a group is
 untested.
 
-## 3. Models A and B against k_max; where each model breaks
+## 3. Model B against k_max; where model B breaks
 
-The scan: seven cuts 0.05, 0.075, ..., 0.2 (`KMAX_MAX`), four variants
-(model A, model A + tilts, model B, model B + tilts), three priors
-(growth-tied omitted): 336 systems, 324 with a fit, 12 without any band
-(Delta z = 0.02 at 0.05); 20 drop a null direction (largest component
-on the scored parameters 7.0e-10); the model A FoMs at 0.075 equal the
-model A notebook's to 7.9e-10. Counterterm widths follow 0.5/k_max^2 at
-every cut. The baseline scenario is the baseline prior with model A and
-model B; the pessimistic scenario is the pessimistic prior with model A
-+ tilts and model B + tilts. Source: the model B notebook (sections 6,
-7) and `fom_kmax_models/data.json` (`fom`, `fom_om_as`, `shift`,
-`worst`, `break`, for every variant and prior, the free prior included).
+Source: EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (sections 6, 7) and
+`fom_kmax_models/data.json` (`fom`, `fom_om_as`, `shift`, `worst`,
+`worst_in_prior`, `break`, for both variants and the three priors, the
+free prior included). The cuts are the UV-fraction cuts of the paper
+fiducial (`chains/EXAMPLE_EVALUATE_FISHER_MODEL_SCALE_CUTS.pkl`). The
+scan: seven cuts 0.05, 0.075, ..., 0.2 (`KMAX_MAX`), two variants
+(model B, model B + tilts), three priors (growth-tied omitted): 168
+systems, 162 with a fit, 6 without any band (Delta z = 0.02 at 0.05);
+11 drop a null direction (largest component on the scored parameters
+3.3e-10). Counterterm widths follow 0.5/k_max^2 at every cut. The
+baseline scenario is the baseline prior with model B; the pessimistic
+scenario is the pessimistic prior with model B + tilts.
 
-**FoM(w0, wa)** of model B in the two scenarios:
+**FoM(w0, wa)** in the two scenarios:
 
 | k_max | pessimistic scenario (model B + tilts) | baseline scenario (model B) |
 |---|---|---|
-| 0.075 | 1.29 / 1.34 / 0.227 / 0.0495 | 2.92 / 2.64 / 0.489 / 0.0841 |
-| 0.1 | 2.71 / 4.62 / 0.623 / 0.101 | 6.17 / 9.00 / 1.17 / 0.162 |
-| 0.15 | 7.17 / 9.57 / 1.81 / 0.229 | 12.9 / 18.7 / 2.51 / 0.347 |
-| 0.2 | 10.9 / 13.9 / 2.64 / 0.289 | 17.5 / 24.6 / 3.33 / 0.458 |
+| 0.075 | 0.407 / 0.237 / 0.155 / 0.0423 | 0.595 / 0.489 / 0.253 / 0.0676 |
+| 0.1 | 1.29 / 1.48 / 0.503 / 0.101 | 1.78 / 2.01 / 0.708 / 0.162 |
+| 0.15 | 4.80 / 5.14 / 1.68 / 0.229 | 5.66 / 6.43 / 1.99 / 0.347 |
+| 0.2 | 7.53 / 8.42 / 2.45 / 0.300 | 8.46 / 9.91 / 2.77 / 0.478 |
 
-Model A at 0.2, beyond its break on the thin layouts (what extending
-model A would claim, not a result): model A + tilts on the pessimistic
-prior 13.3 / 17.0 / 2.82 / 0.303; model A on the baseline prior 19.0 /
-26.8 / 3.48 / 0.471.
+- Model B + tilts lies below model B at every cut, and every FoM(w0, wa)
+  stays below LSST Y1 3x2pt (17.26). FoM(Omega_m, 10^9 A_s) of model B
+  stays below 214.9 at every cut (at most 67.5 at 0.2).
 
-- Every model B variant lies below the same model A variant at every
-  cut (wider priors, more parameters), and the baseline scenario gives
-  the larger FoMs at every cut.
-- FoM(w0, wa) above LSST Y1 3x2pt (17.26) occurs only in the baseline
-  scenario on the thin layouts at the largest cuts (model B: 17.5 and
-  24.6 at 0.2, Delta z = 0.02 from 0.15), beyond that scenario's break
-  point. FoM(Omega_m, 10^9 A_s) of model B stays below 214.9 at every
-  cut (at most 116 at 0.2).
+**Where model B breaks.** The fixed truths, each at one prior width and
+the same in every bin or a drift across each group: (a) alpha_2 at
++-1 sigma of model B's prior, 0.5/k_max^2; (b) SN2 = +-5 units; (c) the
+offsets at +-(2, 1); (d) the calibration drift, Delta_2 and Delta_s
+linear in redshift across each group with zero mean, changing by 1 and
+0.5 from its first bin to its last (the tilts of model B + tilts absorb
+it exactly; its alpha_0 and alpha_2 tilts are not exercised). (a)-(c)
+lie inside the prior and are reported; (d) is tested. The shift is
+exact for (a) and (b) and first order for (c) and (d); +- truths score
+identically. A model holds at a cut while every score of every tested
+truth stays below sigma/3, there and at every smaller fitted cut:
 
-**Where each model breaks.** The fixed truths, each at one prior width
-and the same in every bin or a drift across each group: (a) alpha_2 =
-+-12.5 h^-2 Mpc^2 (model A only: model B fits alpha_2); (b) SN2 = +-5
-units; (c) the offsets at +-1 sigma of the variant's own widths,
-+-(1, 0.5) for model A and +-(2, 1) for model B; (d) the calibration
-drift, Delta_2 and Delta_s linear in redshift across each group with
-zero mean, changing by 1 and 0.5 from its first bin to its last (the
-tilts of the + tilts variants absorb it exactly; model B + tilts'
-alpha_0 and alpha_2 tilts are not exercised). The shift is exact for
-(a) and (b) and first order for (c) and (d); +- truths score
-identically. A model holds at a cut while every score of every truth
-stays below sigma/3, there and at every smaller fitted cut:
-
-| layout | baseline scenario: model A / model B | pessimistic scenario: model A + tilts / model B + tilts |
+| layout | baseline scenario: model B | pessimistic scenario: model B + tilts |
 |---|---|---|
-| Delta d_com = 62 Mpc | 0.075 / 0.075; at 0.1 the drift moves (w0, wa) by 0.92 / 0.68 sigma | 0.075 / 0.075; at 0.1 alpha_2 moves A_s by 0.40 / the offsets move Omega_m by 0.35 |
-| Delta z = 0.02 | 0.075 / 0.075; at 0.1 alpha_2 moves (w0, wa) by 1.03 / the drift by 0.88 | 0.075 / 0.075; at 0.1 alpha_2 moves (w0, wa) by 1.10 / the offsets move Omega_m by 0.43 |
-| Delta z = 0.05 | 0.05 / 0.05; at 0.075 the drift moves (w0, wa) by 0.40 / 0.38 | 0.15 / 0.075; alpha_2 moves A_s by 0.53 at 0.175 / the offsets move Omega_m by 0.43 at 0.1 |
-| Delta z = 0.2 | 0.05 / 0.05; at 0.075 the drift moves (w0, wa) by 0.40 / 0.36 | every cut to 0.2 |
+| Delta d_com = 62 Mpc | 0.075; at 0.1 the drift moves (w0, wa) by 0.82 sigma | every cut to 0.2 |
+| Delta z = 0.02 | 0.075; at 0.1 the drift moves (w0, wa) by 0.86 | every cut to 0.2 |
+| Delta z = 0.05 | 0.05; at 0.075 the drift moves (w0, wa) by 0.35 | every cut to 0.2 |
+| Delta z = 0.2 | 0.05; at 0.075 the drift moves (w0, wa) by 0.36 | every cut to 0.2 |
 
-- In the baseline scenario the calibration drift sets the largest shift
-  in every fit from 0.125 on, up to 2.75 sigma; in the pessimistic
-  scenario the largest shift reaches 1.26 sigma (model A + tilts) and
-  0.43 sigma (model B + tilts), and beyond 0.1 model B + tilts stays at
-  0.25-0.34 sigma, near the threshold.
+- In the baseline scenario the largest tested shift from 0.1 on is
+  0.53-2.79 sigma. The pessimistic scenario's pass carries no
+  information on its own: its in-prior shifts reach 0.98 sigma at 0.075
+  on 62 Mpc and 1.10 sigma at 0.1 on Delta z = 0.02 (both alpha_2),
+  0.33-0.73 sigma from 0.125 on on the three thinner layouts, and at
+  most 0.25 sigma on Delta z = 0.2.
 - SN2 at +-5 sets no break point: it moves no score by more than
-  0.30 sigma at any cut, in either scenario.
+  0.26 sigma at any cut, in either scenario.
 - The break points under the free prior are in data.json.
 
-Diagnostics outside the break point:
+The model A scans of this section (model A and model A + tilts against
+k_max, model A's alpha_2 truth, the prior-mismatch and random alpha_2
+diagnostics) left the notebook with the rest of its model A content on
+2026-11-10; their last values, on the linear-bias cuts, are in
+EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb of commit 567751f and in the git
+history of this file.
 
-- **Prior mismatch.** If the calibrations scatter as widely as model B
-  allows, +-(2, 1), model A's tighter offset priors shift its largest
-  score by 0.23-0.44 sigma at 0.075 and 0.31-0.75 sigma from 0.1 up.
-- **Random alpha_2 truths.** With alpha_2 drawn per group from model B's
-  prior (seven times 12.5 h^-2 Mpc^2 at 0.075) and the rest from model
-  A's own prior, model A's error bars are honest at 0.05 (eta <= 1.09)
-  and on Delta z = 0.2 at every cut (<= 1.004); Delta z = 0.05 stays
-  within 1.12 (coverage at least 61%). On the thin layouts they are too
-  small at 0.075 and recover as the prior narrows: 62 Mpc 2.1-2.9
-  (coverage 25-36%) at 0.075 and 1.02-1.22 at 0.2; Delta z = 0.02
-  2.4-3.7 (coverage 15-33%) at 0.075, up to 3.5 for A_s at 0.1, and
-  1.02-1.34 at 0.2. Check: with alpha_2 removed, eta = 1 to 4.1e-9.
+## 4. The paper model
 
-**The earlier three-truth test** (committed notes, model A alone, truths
-(a)-(c)): model A held to 0.075 on the thin layouts, to 0.1 on
-Delta z = 0.05 and at every cut on Delta z = 0.2, and model A + tilts as
-above; the calibration drift was scored separately in the accuracy test
-(Sec. 2). Without SN2 in model A, SN2 = +-5 in the truth moved Omega_m
-by 1.25-1.68 sigma at 0.075 on the thin layouts, and model A broke at
-0.05 on 62 Mpc and at no fitted cut on Delta z = 0.02
-(`fom_and_bias_review.md`, Sec. 6).
+Model B + tilts without alpha_2 (its group values and tilts fixed at 0)
+and every sigma_v prior width x6, on the pessimistic prior: the example
+yamls EXAMPLE_EVALUATE1-4 and the variant 'B tilts noA2 sv x6'. Source:
+EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, section 9;
+`notes/bias_model_summary/plots/summary_fom_kmax/data.json` and
+`summary_fom_untied/data.json`.
+
+- FoM(w0, wa): 0.564 / 0.352 / 0.173 / 0.0445 at 0.075 and 6.70 / 7.95 /
+  2.34 / 0.307 at 0.2; FoM(Omega_m, 10^9 A_s) 50.3 / 53.2 / 19.9 / 3.20
+  at 0.2.
+- Against the linear-bias cuts the paper-fiducial cuts change these
+  FoMs by a factor 0.85-1.04 (0.97-1.00 on 62 Mpc and Delta z = 0.02;
+  Delta z = 0.2 at 0.075: 0.85).
+- eta <= 1.030 (Omega_m on 62 Mpc at 0.175) under the known drifts plus
+  the pessimistic scatter; coverage of the 1 sigma region at least 66.8%.
+- alpha_2 = +-12.5 h^-2 Mpc^2 moves no score by more than 0.327 sigma;
+  alpha_2 at one model B width breaks the model at 0.05 on 62 Mpc and
+  Delta z = 0.05 and below the smallest fitted cut on Delta z = 0.02
+  (A_s 1.64 sigma at 0.075 on 62 Mpc, (w0, wa) 1.31 at 0.1 on
+  Delta z = 0.02).
+- The in-prior truths (SN2 and the offsets) move a score by at most
+  0.69 sigma, and by at most 0.42 sigma from 0.125 on.

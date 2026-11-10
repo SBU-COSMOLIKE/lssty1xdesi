@@ -1,5 +1,5 @@
 {
- "about": "The pessimistic-prior row of notes/correlated_bias_prior_v2/plots/prior_draws/data.json, copied by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb. Its about: per DESI group at Delta z = 0.02 bin centers: the known drift laws (fractional deviation from B_g/D with zero mean), the best straight line through the reference law, and random histories of the baseline and pessimistic memory priors: that line plus a residual drawn from the exponential kernel at the group width sigma_b and L, with its own best line removed; neighbor_rms_prior = the prior rms change between adjacent bins",
+ "about": "The pessimistic-prior row of notes/correlated_bias_prior_v2/plots/prior_draws/data.json, copied by EXAMPLE_EVALUATE_FISHER_MODEL.ipynb. Its about: per DESI group at Delta z = 0.02 bin centers: the known drift laws (fractional deviation from B_g/D with zero mean), the best straight line through the reference law, and random histories of the baseline and pessimistic memory priors: that line plus a residual drawn from the exponential kernel at the group width sigma_b and L, with its own best line removed; neighbor_rms_prior = the prior rms change between adjacent bins",
  "prior": {
   "L": 0.05,
   "sigma_b": {

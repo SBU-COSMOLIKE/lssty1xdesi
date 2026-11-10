@@ -1,11 +1,13 @@
 """Redraw summary_fom_untied.pdf from data.json: the figures of merit of
 DESI C_ell^gg alone when the bias parameters are untied per bin, relative
-to the summary model (model B + tilts on the pessimistic linear-bias prior),
-against the scale cut k_max. Built from a copy of
+to the summary model (the paper model: model B + tilts without alpha_2, the
+sigma_v prior widths 6x those of the exploration fits, on the pessimistic
+linear-bias prior), against the scale cut k_max. Built from a copy of
 ../summary_fom_free_bins/plot_summary_fom_free_bins.py.
 
-The first four versions free b1 per bin (flat prior) and give Delta_2,
-Delta_s, alpha_0, alpha_2, SN0 and SN2 one value per bin. The group width is the
+Every version keeps the model's sigma_v widths and no alpha_2. The first four
+versions free b1 per bin (flat prior) and give Delta_2, Delta_s, alpha_0, SN0
+and SN2 one value per bin. The group width is the
 width the model gives a group parameter, and N is the number of bins of the
 group (the figure writes no symbol for the width: "w" would read as the
 dark-energy w0, wa):
@@ -20,7 +22,7 @@ dark-energy w0, wa):
                                the model's group offsets and tilts;
   correlated residuals on top
     of the model             - the model plus a per-bin residual of Delta_2,
-                               Delta_s, alpha_0 and alpha_2 (not SN0, SN2),
+                               Delta_s and alpha_0 (not SN0, SN2),
                                Gaussian and correlated in redshift over
                                L = 0.05 with the group width, charging only
                                the deviation from the group's line (the
@@ -53,7 +55,7 @@ holds k_max = 0.05, where the model's own FoM(w0, wa) is below 0.1 and the
 ratios would dominate the eye; it is not drawn. A cut that leaves no data
 has no point.
 
-data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, also holds the
+data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, also holds the
 FoMs of the model and of every version, and per version (the model as
 'model') the statistic of every score, the coverage of the 68.3% region and
 the largest shift over the fixed truths.

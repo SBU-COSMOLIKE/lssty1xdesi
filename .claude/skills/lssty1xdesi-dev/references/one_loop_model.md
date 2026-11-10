@@ -327,6 +327,7 @@ fixes the sign.
 - **Exact calibrations** (no offsets, counterterms or stochastic terms)
   give FoMs above linear bias, because the loops grow as D^4 against
   b1^2 D^2 and carry amplitude information that is only as good as the
-  calibrations. No FoM rests on exact calibrations; they appear only as
-  diagnostics in the model A notebook and in
-  `baseline_ladder/data.json`.
+  calibrations. No FoM rests on exact calibrations; they appeared only
+  as diagnostics of the model A notebook and its
+  `baseline_ladder/data.json`, both removed on 2026-11-10 (commit
+  567751f holds them).

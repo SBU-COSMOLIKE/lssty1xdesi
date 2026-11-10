@@ -15,7 +15,8 @@ axis, each with its own y axis:
    tilts fixed at 0, over FoM with alpha_2 free: sigma_v on its Gaussian
    prior (solid) or flat (dashed);
 4. delta_{sigma_v free}/delta_{sigma_v fixed}, with delta the (w0, wa) shift
-   of model A + tilts on the pessimistic prior (no alpha_2) fitted to the
+   of model B + tilts on the pessimistic prior with alpha_2 and its tilts
+   fixed at 0 (the fit without alpha_2) fitted to the
    truth alpha_2 = 12.5 h^-2 Mpc^2 in every group: sigma_v free on its
    Gaussian prior (solid) or flat (dashed), over sigma_v fixed at the
    fiducial.

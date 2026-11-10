@@ -14,7 +14,7 @@ a draw can be followed in black and white and never reads as a bin layout
 (the layouts own the Okabe-Ito colors and the markers o, s, D, ^ in the
 other figures of the note). data.json is the pessimistic row of
 notes/correlated_bias_prior_v2/plots/prior_draws/data.json, copied by
-EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb.
+EXAMPLE_EVALUATE_FISHER_MODEL.ipynb.
 Run from any folder: python plot_summary_prior_draws.py
 """
 import json

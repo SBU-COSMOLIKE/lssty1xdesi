@@ -1,36 +1,33 @@
 """Redraw fom_kmax_models.pdf from data.json: two scenarios of the DESI
-C_ell^gg forecast with the one-loop bias models A and B of
-notes/higher_order_bias, against the scale cut k_max.
+C_ell^gg forecast with the one-loop bias model B of notes/higher_order_bias,
+against the scale cut k_max.
 
 One full-width figure, two rows by three columns:
-  rows    - the two scenarios: the baseline linear-bias prior with model A
-            and model B, and the pessimistic prior with model A + tilts and
-            model B + tilts (the free prior is not drawn; data.json keeps
-            it); each row is named on the right of column (c);
+  rows    - the two scenarios: the baseline linear-bias prior with model B,
+            and the pessimistic prior with model B + tilts (the free prior
+            is not drawn; data.json keeps it); each row is named on the
+            right of column (c);
   columns - (a) FoM(w0, wa), (b) FoM(Omega_m, 10^9 A_s), (c) the largest
-            shift of a fit over the truths outside its model's prior (the
-            calibration drift, and alpha_2 = +-12.5 for model A, which
-            fixes alpha_2 = 0) and over (w0, wa) (in its ellipse), Omega_m
+            shift of a fit over the truths outside the model's prior (the
+            calibration drift) and over (w0, wa) (in its ellipse), Omega_m
             and A_s (in their own sigma), with sigma/3. The truths inside
             the prior move a fit without making its error bars dishonest:
             data.json reports them (worst_in_prior), and they are not drawn.
             A variant that absorbs every tested truth exactly (model B +
-            tilts, whose tilts absorb the linear drift) is not drawn in (c).
+            tilts, whose tilts absorb the linear drift) has no line in (c);
+            a short text in its panel says so.
 Each bin layout has a color, a line width and a marker (at every cut), so
-the figure reads in black and white; model A is solid with filled markers,
-model B dashed with open markers. In
-(a) and (b) model A is drawn up to its break point in that row (the largest
-cut below sigma/3 in (c)) and model B at every cut; in (c) both are drawn at
-every cut, so each crossing is visible. Each column has one logarithmic y
-axis for both rows. Cuts run to k_max = 0.2 h/Mpc (KMAX_MAX). The LSST Y1
-3x2pt reference, named in the caption, is a gray long-dashed line in a panel
-of (a) or (b) whose highest point it exceeds by at most a factor 1.5, and a
-text inside the first such panel of the column otherwise. k_max is the z = 0
-value of a per-bin cut at k_max/D(zbar_i).
+the figure reads in black and white; every line is model B (solid, filled
+markers), and the row names say which variant. Each column has one
+logarithmic y axis for both rows. Cuts run to k_max = 0.2 h/Mpc (KMAX_MAX).
+The LSST Y1 3x2pt reference, named in the caption, is a gray long-dashed
+line in a panel of (a) or (b) whose highest point it exceeds by at most a
+factor 1.5, and a text inside the first such panel of the column otherwise.
+k_max is the z = 0 value of a per-bin cut at k_max/D(zbar_i).
 
-data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, also holds the
+data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, also holds the
 shift of every truth and score, the truth that sets each break point, and
-both models' FoMs on every prior.
+the FoMs of both variants on every prior.
 Run from any folder: python plot_fom_kmax_models.py
 """
 import json
@@ -40,7 +37,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.legend_handler import HandlerTuple
 from matplotlib.lines import Line2D
 from matplotlib.ticker import FuncFormatter, LogLocator, NullFormatter
 
@@ -80,15 +76,9 @@ LAYOUT_STYLE = {
 }
 # the marker size [pt]
 MARKER_SIZE = 3.5
-# The two models, labelled "model A" and "model B"; the row names say which
-# variant each row draws (no tilts, or + tilts): solid with filled markers, dashed with open
-# markers. The dash and gap lengths are in points: matplotlib scales a dash
-# pattern by the line width, so dividing by it keeps the dashes visible on
-# the thinnest line.
-DASH = (4.5, 2.5)
-MODEL_STYLE = {'A': {'dashed': False, 'open': False, 'label': 'model A'},
-               'B': {'dashed': True, 'open': True, 'label': 'model B'}}
-# the LSST Y1 reference: gray long dashes, apart from model B's short dashes
+# Every line is model B, solid with filled markers; the row names say which
+# variant each row draws (no tilts, or + tilts).
+# the LSST Y1 reference: gray long dashes, apart from the solid model lines
 LSST_STYLE = {'color': '0.5', 'ls': (0, (7, 3)), 'lw': 1.2}
 # the sigma/3 threshold: black and dotted, apart from every model line
 THRESHOLD_STYLE = {'color': '0.1', 'ls': ':', 'lw': 1.3}
@@ -101,9 +91,12 @@ KMAX_MAX = 0.2
 KMAX_TOLERANCE = 1.0e-9
 # a shift that is exactly zero is drawn on this floor of the log axis
 SHIFT_FLOOR = 1.0e-3
-# the gap between the two legends above the figure, in figure units: the
-# legends stack with almost no space between them
+# the gap between the legend above the figure and the column titles, in
+# figure units
 LEGEND_GAP = 0.002
+# the text of a column (c) panel whose variant absorbs every tested truth
+ABSORBED_TEXT = 'the tilts absorb the\ncalibration drift exactly'
+
 # The anchors a text may take inside a panel, in axes units (x, y,
 # horizontal and vertical alignment), and the headroom factors of a log
 # axis tried in turn until every text finds a corner free of lines.
@@ -119,7 +112,7 @@ COLUMNS = [('fom', r'(a) FoM$(w_0, w_a)$'),
            ('fom_om_as', r'(b) FoM$(\Omega_\mathrm{m}, 10^9 A_\mathrm{s})$'),
            (None, r'(c) largest shift [$\sigma$]')]
 # the row names, rotated on the right of column (c): the linear-bias prior,
-# and "+ tilts" on the row that draws model A + tilts and model B + tilts
+# and "+ tilts" on the row that draws model B + tilts
 ROW_LABELS = {'baseline': 'baseline prior', 'pessimistic': 'pessimistic prior\n+ tilts'}
 
 with open(os.path.join(HERE, 'data.json')) as f:
@@ -145,24 +138,10 @@ def as_array(values, floor=None):
     return out[DRAWN_CUTS]
 
 
-def model_a_fom(lay, field, spec):
-    '''Model A's FoM in one scenario up to its break point (NaN beyond).'''
-    y = as_array(lay[field][spec['A']][spec['prior']])
-    cut = lay['break'][spec['A']][spec['prior']]['kmax']
-    if cut is None:
-        # the smallest fitted cut already fails: no model A line
-        y[:] = np.nan
-    else:
-        y[kmax > cut + KMAX_TOLERANCE] = np.nan
-    return y
-
-
-def line_style(lw, marker, model, color):
-    '''The plot keywords of a line of width lw and marker for one model.'''
-    st = MODEL_STYLE[model]
-    ls = (0, (DASH[0]/lw, DASH[1]/lw)) if st['dashed'] else '-'
-    return {'color': color, 'ls': ls, 'lw': lw, 'marker': marker, 'ms': MARKER_SIZE,
-            'mfc': 'white' if st['open'] else color, 'mec': color}
+def line_style(lw, marker, color):
+    '''The plot keywords of a solid line of width lw with filled markers.'''
+    return {'color': color, 'ls': '-', 'lw': lw, 'marker': marker, 'ms': MARKER_SIZE,
+            'mfc': color, 'mec': color}
 
 
 def plain_number(value, position):
@@ -247,33 +226,35 @@ flat = list(axes.ravel())
 # the y values drawn in each column, and in each FoM panel (for the reference)
 column_values = {c: [] for c in range(len(COLUMNS))}
 panel_high = {}
+# the column (c) panels without a line: their variant absorbs every tested truth
+absorbed_panels = []
 for r, scenario in enumerate(rows):
     spec = scenarios[scenario]
     for c, (field, title) in enumerate(COLUMNS):
         ax = axes[r, c]
         values = []
+        drawn = 0
         for lay in layouts:
             if field is None:
-                curves = []
-                for model in ('A', 'B'):
-                    worst = lay['worst'][spec[model]][spec['prior']]
-                    raw = as_array(worst)
-                    # a variant that absorbs every tested truth exactly (model
-                    # B + tilts and the linear drift: round-off) has nothing
-                    # to show on a log axis; the caption says so
-                    if np.all(raw[np.isfinite(raw)] < SHIFT_FLOOR):
-                        curves.append((model, None))
-                    else:
-                        curves.append((model, as_array(worst, floor=SHIFT_FLOOR)))
+                worst = lay['worst'][spec['B']][spec['prior']]
+                raw = as_array(worst)
+                # a variant that absorbs every tested truth exactly (model B +
+                # tilts and the linear drift: round-off) has nothing to show on
+                # a log axis; a text in the panel says so
+                if np.all(raw[np.isfinite(raw)] < SHIFT_FLOOR):
+                    y = None
+                else:
+                    y = as_array(worst, floor=SHIFT_FLOOR)
             else:
-                curves = [('A', model_a_fom(lay, field, spec)),
-                          ('B', as_array(lay[field][spec['B']][spec['prior']]))]
+                y = as_array(lay[field][spec['B']][spec['prior']])
+            if y is None:
+                continue
             st = LAYOUT_STYLE[lay['name']]
-            for model, y in curves:
-                if y is None:
-                    continue
-                ax.plot(kmax, y, **line_style(st['lw'], st['marker'], model, lay['color']))
-                values += [float(v) for v in y[np.isfinite(y)]]
+            ax.plot(kmax, y, **line_style(st['lw'], st['marker'], lay['color']))
+            values += [float(v) for v in y[np.isfinite(y)]]
+            drawn += 1
+        if field is None and drawn == 0:
+            absorbed_panels.append(ax)
         if field is None:
             ax.axhline(threshold, **THRESHOLD_STYLE)
             values.append(threshold)
@@ -340,10 +321,21 @@ for c, ax, text in texts_needed:
         raise RuntimeError('fom_kmax_models: the LSST text finds no corner free of lines')
     texts.append(placed)
 
-# the two legends above the figure: the layouts (color, line width and
-# marker), and above them the two models, each shown by its four drawn lines
-# side by side (solid with filled markers, dashed with open ones). The
-# reference lines (LSST Y1 3x2pt, sigma/3) carry no legend entry: the
+# the text of each column (c) panel without a line, in the first corner free
+# of the sigma/3 line
+for ax in absorbed_panels:
+    placed = None
+    for corner in ('lower left', 'upper left', 'lower right', 'upper right'):
+        placed = place_text(fig, flat, ax, ABSORBED_TEXT, corner, texts)
+        if placed is not None:
+            break
+    if placed is None:
+        raise RuntimeError('fom_kmax_models: the text of an absorbed panel finds no corner '
+                           'free of lines')
+    texts.append(placed)
+
+# the legend above the figure: the layouts (color, line width and marker).
+# The reference lines (LSST Y1 3x2pt, sigma/3) carry no legend entry: the
 # caption names them.
 fig.canvas.draw()
 renderer = fig.canvas.get_renderer()
@@ -352,25 +344,12 @@ title_top = fig.transFigure.inverted().transform((0.0, title_top))[1]
 layout_legend = fig.legend(
     handles=[Line2D([], [], label=lay['label'],
                     **line_style(LAYOUT_STYLE[lay['name']]['lw'],
-                                 LAYOUT_STYLE[lay['name']]['marker'], 'A', lay['color']))
+                                 LAYOUT_STYLE[lay['name']]['marker'], lay['color']))
              for lay in layouts],
     loc='lower center', bbox_to_anchor=(0.5, title_top + LEGEND_GAP), ncol=len(layouts),
     frameon=False, fontsize=8.5, handlelength=2.4, columnspacing=1.6, handletextpad=0.5,
     borderaxespad=0.0, borderpad=0.1)
-fig.canvas.draw()
-legend_top = fig.transFigure.inverted().transform(
-    (0.0, layout_legend.get_window_extent(renderer).y1))[1]
-model_handles = [tuple(Line2D([], [], **line_style(LAYOUT_STYLE[lay['name']]['lw'],
-                                                   LAYOUT_STYLE[lay['name']]['marker'], m,
-                                                   lay['color']))
-                       for lay in layouts) for m in ('A', 'B')]
-style_legend = fig.legend(
-    handles=model_handles, labels=[MODEL_STYLE[m]['label'] for m in ('A', 'B')],
-    handler_map={tuple: HandlerTuple(ndivide=None, pad=0.0)},
-    loc='lower center', bbox_to_anchor=(0.5, legend_top + LEGEND_GAP), ncol=2,
-    frameon=False, fontsize=8.5, handlelength=8.0, columnspacing=2.0, handletextpad=0.5,
-    borderaxespad=0.0, borderpad=0.1)
-check_clear(fig, flat, [layout_legend, style_legend, supxlabel, *texts,
+check_clear(fig, flat, [layout_legend, supxlabel, *texts,
                         *[label for ax in axes[-1] for label in ax.get_xticklabels()],
                         *[ax.title for ax in axes[0]],
                         *[axes[r, -1].yaxis.label for r in range(len(rows))]])

@@ -14,7 +14,7 @@ random truths and the data noise; 1 means honest error bars. Three stacked
 panels, one per scored parameter, on one shared logarithmic y axis; the
 bin layouts in color, line width and marker, growth-tied solid, the
 correlated prior thin dashed. data.json is written by
-EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb (section 9).
+EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (section 9).
 Run from any folder: python plot_growth_tied_kmax.py
 """
 import json

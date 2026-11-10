@@ -233,10 +233,15 @@ The interface exposes `gg_scale_cuts_tomo(kmax, alpha)` - a dict with
 `lmax`, `mask`, `uv_fraction`, `full` and `ir`, rows the autos then the
 cross pairs in data-vector order - and `C_gg_kwindow_tomo(kmax,
 keep_ir)` for the IR or UV spectra directly. The window is off by
-default and reset in initial_setup. The linear notebook caches the cuts
-in `chains/EXAMPLE_EVALUATE_FISHER_SCALE_CUTS.pkl` (every other
-notebook reads them) and the FoM scan in
-`chains/EXAMPLE_EVALUATE_FISHER_FOM_SCALE_CUTS.pkl`.
+default and reset in initial_setup. The linear notebook caches its cuts,
+on the linear-bias spectra, in `chains/EXAMPLE_EVALUATE_FISHER_SCALE_CUTS.pkl`
+(the k_max notebook reads them) and the FoM scan in
+`chains/EXAMPLE_EVALUATE_FISHER_FOM_SCALE_CUTS.pkl`. The Fisher notebook of
+the paper model, EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, computes its own
+cuts on the paper fiducial (EXAMPLE_EVALUATE<n>.yaml at the reference
+settings of the derivative convergence study) and caches them in
+`chains/EXAMPLE_EVALUATE_FISHER_MODEL_SCALE_CUTS.pkl`, with the same
+structure and k_max list plus settings and fingerprints.
 
 Validation (measured):
 
@@ -299,9 +304,9 @@ merit against the scale cut"; rerun on the current covariance,
 | shipped mask | 43.4 | 51.8 | 13.2 | 2.43 |
 
 The linear-bias ladder at k_max = 0.075 (section 8, "How much bias
-freedom costs"; the same values on the current covariance are the
-`v1_linear` key of `baseline_ladder/data.json`, read from the k_max
-study; FoM(w0, wa); on Delta z = 0.2 every group has one or two bins,
+freedom costs"; the same values on the current covariance were the
+`v1_linear` key of the removed `baseline_ladder/data.json`, read from the
+k_max study; FoM(w0, wa); on Delta z = 0.2 every group has one or two bins,
 so the lower three priors coincide):
 
 | layout | growth-tied | baseline | pessimistic | free |

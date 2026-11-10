@@ -17,9 +17,10 @@ The paper model is model B + tilts on the pessimistic linear-bias prior
 z = 0 with the non-Limber UV-fraction scale cut (arXiv:2603.13031)
 intersected with the shipped mask. Model A on the baseline prior at
 0.075 is scored next to it. Both Fisher matrices are assembled exactly
-as the model B notebook does (EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb,
-section 5), from three kinds of columns of the model A likelihood at its
-fiducial point, where models A and B coincide:
+as the Fisher notebook of the paper model does
+(EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, section 5), from three kinds of
+columns of the model A likelihood at its fiducial point, where models A
+and B coincide:
 
   - five-point stencil columns of the seven cosmological parameters and
     the seven velocity-dispersion groups (sigma_v);
@@ -80,7 +81,10 @@ only the candidate's stencil block at the step ladder
 (candidate_ladder), to show that its FoM does not depend on the step;
 if it did, the same at twice the chi grid (candidate_chi_double_ladder)
 would decide the thin layouts' grid. Its per-bin columns are read from
-the model A notebook's cache (compare --perbin-from chains/).
+the model A derivative and template caches of chains/
+(EXAMPLE_EVALUATE_FISHER_MODEL_A_DERIVATIVES_<n>.pkl and
+EXAMPLE_EVALUATE_FISHER_MODEL_B_TEMPLATES_<n>.pkl; compare --perbin-from
+chains/).
 
 Stages (run from cocoa/Cocoa/ with the cocoa environment active, one
 heavy stage at a time):
@@ -205,7 +209,7 @@ REFERENCE_CHI_GRID_FACTOR = 4.0
 
 # The steps at multiplier 1: the relative stencil step h of the cosmology
 # and the velocity dispersions (cnu.get_ddv's), and the per-bin operator
-# steps of the model A notebook (DESI_B1 relative, the b2 and bs2 offsets
+# steps of the Fisher notebook (DESI_B1 relative, the b2 and bs2 offsets
 # absolute, alpha_0 in h^-2 Mpc^2). alpha_2 is linear, so its central
 # step is exact at any size.
 H_MAIN = 0.02
@@ -303,7 +307,7 @@ CANDIDATE_SETTINGS = {
     "k_per_logint": 30,
 }
 
-# The paper model and its scores (the model B notebook's settings):
+# The paper model and its scores (the Fisher notebook's settings):
 # per-group families and their Gaussian widths (alpha_0 and alpha_2 at
 # COUNTERTERM_FRACTION/k_max^2), the tilted families, the linear-bias
 # priors, the truths and the inversion thresholds.
@@ -1086,7 +1090,7 @@ def group_bias_precision(zbar, groups, fiducial_amplitude, L, sigma_by_group):
     Per group, the projected precision P = Q - Q U (U^T Q U)^-1 U^T Q, Q
     the inverse of the kernel width^2 exp(-|z_i - z_j|/L), U = [1, z -
     zbar_g]: it charges only the residual around the group's line (the
-    model B notebook's group_bias_precision with a free tilt).
+    Fisher notebook's group_bias_precision with a free tilt).
     """
     P = np.zeros((len(zbar), len(zbar)))
     for name, leader, idx in groups:
@@ -1120,7 +1124,7 @@ def stable_inverse(F):
 def system_design(columns, system, groups, zbar, stencil_names, prior_sigma):
     """The derivatives D, names and prior tags of one system.
 
-    The order and the columns are the model B notebook's variant_columns:
+    The order and the columns are the Fisher notebook's variant_columns:
     the cosmology and the sigma_v leaders, the per-group families (and
     their tilts with the tilted variant), then one amplitude per bin.
 
@@ -1290,13 +1294,19 @@ RULE_STEPS = (("three", 0.5), ("three", 1.0), ("three", 2.0), ("three", 3.0),
 
 
 def production_perbin(chains, layout, leaders):
-    """The per-bin columns of the notebooks' caches, in this study's blocks.
+    """The per-bin columns of the model A caches, in this study's blocks.
 
-    The model A notebook's derivative cache holds the partial columns of
-    b1, b2, bs2 and alpha_0 and the SN0 templates; the model B notebook's
-    template cache the alpha_2 columns and the SN2 templates. The bin
-    amplitude column is the model A chain rule, (b1/B)[dm/db1 + b2L'(b1)
-    dm/db2 - 4/7 dm/dbs2], b2L' the slope of the Lazeyras fit.
+    The model A derivative cache (EXAMPLE_EVALUATE_FISHER_MODEL_A_DERIVATIVES_<n>.pkl)
+    holds the partial columns of b1, b2, bs2 and alpha_0 and the SN0
+    templates; the template cache (EXAMPLE_EVALUATE_FISHER_MODEL_B_TEMPLATES_<n>.pkl)
+    the alpha_2 columns and the SN2 templates. The Fisher notebook's caches
+    (EXAMPLE_EVALUATE_FISHER_MODEL_DERIVATIVES_<n>.pkl and
+    ..._TEMPLATES_<n>.pkl) hold the same arrays but name each group
+    amplitude DESI_B1_<g> after its group, not after its leader bin, so
+    this function reads the model A caches, whose names match
+    bias_leaders. The bin amplitude column is the model A chain rule,
+    (b1/B)[dm/db1 + b2L'(b1) dm/db2 - 4/7 dm/dbs2], b2L' the slope of the
+    Lazeyras fit.
 
     Returns:
       dict: 'b1', 'b2', 'bs2', 'a0', 'a2', 'T0', 'T2' (each (n, nbins)).
@@ -1565,16 +1575,17 @@ def print_table(summary):
 def run_agree(layout, work, results):
     """Check the study's per-bin route against the production caches.
 
-    The model A notebook takes its per-bin columns by intercepting the
-    compiled bias setter (the partial derivatives of b1, b2, bs2 and
-    alpha_0); this study steps untied per-bin parameters through the
-    likelihood. At the same settings the two routes compute the same
-    numbers: the study's DESI_B1_<n> column is the model A chain rule of
-    the notebook's columns, (b1/B)[dm/db1 + b2L'(b1) dm/db2 - 4/7
-    dm/dbs2], and its DB2, DBS and A0 columns are the notebook's b2, bs2
-    and a0 columns. The stencil columns of the cosmology and sigma_v are
-    compared too. Each difference is the largest over the entries, in
-    units of the largest entry of the column block.
+    The model A derivative cache (EXAMPLE_EVALUATE_FISHER_MODEL_A_DERIVATIVES_<n>.pkl
+    in chains/) holds per-bin columns taken by stepping the per-bin arrays
+    the likelihood passes to the compiled bias setter (the partial
+    derivatives of b1, b2, bs2 and alpha_0); this study steps untied
+    per-bin parameters through the likelihood. At the same settings the
+    two routes compute the same numbers: the study's DESI_B1_<n> column is
+    the model A chain rule of the cached columns, (b1/B)[dm/db1 + b2L'(b1)
+    dm/db2 - 4/7 dm/dbs2], and its DB2, DBS and A0 columns are the cached
+    b2, bs2 and a0 columns. The stencil columns of the cosmology and
+    sigma_v are compared too. Each difference is the largest over the
+    entries, in units of the largest entry of the column block.
     """
     import pickle
     candidate = np.load(work_file(work, layout, "candidate"))
@@ -1583,8 +1594,8 @@ def run_agree(layout, work, results):
     cache = os.path.join(PROJECT_DIR, "chains",
                          f"EXAMPLE_EVALUATE_FISHER_MODEL_A_DERIVATIVES_{number}.pkl")
     if not os.path.exists(cache):
-        raise FileNotFoundError(f"{cache} is missing: run "
-                                "EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb first")
+        raise FileNotFoundError(f"{cache} is missing: this check reads the model A "
+                                "derivative cache of chains/")
     with open(cache, "rb") as handle:
         stored = pickle.load(handle)
     production = stored["derivs"]

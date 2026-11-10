@@ -1,6 +1,8 @@
 """Redraw summary_fom_kmax.pdf from data.json: the figures of merit of the
-summary model, model B + tilts on the pessimistic linear-bias prior
-(notes/higher_order_bias, notes/correlated_bias_prior_v2), DESI C_ell^gg
+summary model, the paper model (model B + tilts without alpha_2, the sigma_v
+prior widths 6x those of the exploration fits) on the pessimistic
+linear-bias prior (notes/higher_order_bias, notes/correlated_bias_prior_v2),
+DESI C_ell^gg
 alone, against the scale cut k_max. Built from a copy of
 notes/correlated_bias_prior_v2/plots/fom_kmax_models/plot_fom_kmax_models.py.
 
@@ -14,7 +16,7 @@ has no legend entry (the caption names it). k_max is the z = 0 value of a
 per-bin cut at k_max/D(zbar_i); cuts up to KMAX_MAX are drawn. A cut that
 leaves no data (Delta z = 0.02 at 0.05) has no point.
 
-data.json is written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb.
+data.json is written by EXAMPLE_EVALUATE_FISHER_MODEL.ipynb.
 Run from any folder: python plot_summary_fom_kmax.py
 """
 import json

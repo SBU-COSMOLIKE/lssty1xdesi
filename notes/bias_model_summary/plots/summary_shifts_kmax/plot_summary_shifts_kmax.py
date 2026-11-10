@@ -1,22 +1,26 @@
 """Redraw summary_shifts_kmax.pdf from data.json: the largest shift of the
-summary model, model B + tilts on the pessimistic linear-bias prior, over
-fixed truths it models with a prior, each at one prior width (alpha_2 =
-+-0.5/k_max^2 h^-2 Mpc^2, SN2 = +-5 units, the b2 and bs2 offsets at +-1
-sigma of model B's widths), or absorbs (the calibration drift), against the
-scale cut k_max. Built from a copy of
+summary model, the paper model (model B + tilts without alpha_2, the sigma_v
+prior widths 6x those of the exploration fits, on the pessimistic
+linear-bias prior), over two sets of fixed truths, against the scale cut
+k_max. Built from a copy of
 notes/correlated_bias_prior_v2/plots/fom_kmax_models/plot_fom_kmax_models.py
 (its column (c)).
+
+The truths inside the model's prior, each at one prior width (SN2 = +-5
+units, the b2 and bs2 offsets at +-1 sigma of model B's widths), may move
+the fit by about 1 sigma without making its error bars dishonest: they are
+reported, solid with filled markers, without a threshold. The tested truths
+(alpha_2 = +-12.5 h^-2 Mpc^2 and alpha_2 at one model B prior width, which
+the model lacks, and the calibration drift, which its tilts absorb) are
+dashed with open markers and held to sigma/3, the black dotted line.
 
 One column of a two-column paper, three stacked panels on one shared
 linear y axis, from 0 to the round value just above the largest shift: the
 (w0, wa) shift in units of the fit's ellipse, and the Omega_m and A_s shifts
-in their own marginalized sigma, each the largest over the truths. Each bin
-layout has a color, a line width and a marker at every cut. Every truth lies
-inside the model's prior (the tilts absorb the drift), and a truth drawn from
-the prior may move the fit by about 1 sigma without making its error bars
-dishonest, so the shifts are reported and no threshold is drawn. k_max is
-the z = 0 value of a per-bin cut at k_max/D(zbar_i); cuts up to KMAX_MAX are
-drawn.
+in their own marginalized sigma, each the largest over the truths of its
+set. Each bin layout has a color, a line width and a marker at every cut.
+k_max is the z = 0 value of a per-bin cut at k_max/D(zbar_i); cuts up to
+KMAX_MAX are drawn.
 
 data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, also holds every
 truth's shift.
@@ -29,6 +33,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.legend_handler import HandlerTuple
 from matplotlib.lines import Line2D
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 
@@ -64,6 +69,19 @@ LAYOUT_STYLE = {
 }
 # the marker size [pt]
 MARKER_SIZE = 3.5
+# The two sets of truths: inside the prior solid with filled markers, tested
+# dashed with open markers. The dash and gap lengths are in points:
+# matplotlib scales a dash pattern by the line width, so dividing by it keeps
+# the dashes visible on the thinnest line.
+DASH = (4.5, 2.5)
+TRUTH_SETS = [('largest_in_prior', {'dashed': False, 'open': False,
+                                    'label': 'truths in the prior'}),
+              ('largest_tested', {'dashed': True, 'open': True,
+                                  'label': 'tested truths'})]
+# the sigma/3 threshold of the tested truths: black and dotted
+THRESHOLD_STYLE = {'color': '0.1', 'ls': ':', 'lw': 1.3}
+# the vertical gap between the two legends above the top panel [figure units]
+LEGEND_GAP = 0.004
 # the LSST Y1 reference: gray long dashes
 LSST_STYLE = {'color': '0.5', 'ls': (0, (7, 3)), 'lw': 1.2}
 # the reference is drawn in a panel only when it sits at most this factor
@@ -109,6 +127,14 @@ def as_array(values, floor=None):
         if value is not None:
             out[i] = float(value) if floor is None else max(float(value), floor)
     return out[DRAWN_CUTS]
+
+
+def line_style(lw, marker, truth_set, color):
+    '''The plot keywords of a line of width lw and marker for one truth set.'''
+    st = dict(TRUTH_SETS)[truth_set]
+    ls = (0, (DASH[0]/lw, DASH[1]/lw)) if st['dashed'] else '-'
+    return {'color': color, 'ls': ls, 'lw': lw, 'marker': marker, 'ms': MARKER_SIZE,
+            'mfc': 'white' if st['open'] else color, 'mec': color}
 
 
 def plain_number(value, position):
@@ -204,15 +230,18 @@ def check_clear(fig, axes, artists):
 fig, axes = plt.subplots(len(PANELS), 1, figsize=(3.5, PANEL_HEIGHT*len(PANELS)),
                          sharex=True, sharey=True, gridspec_kw={'hspace': 0.06})
 flat = list(axes)
-values = []
+threshold = float(data['shift_threshold'])
+values = [threshold]
 for ax, (score, name) in zip(axes, PANELS):
-    for lay in layouts:
-        st = LAYOUT_STYLE[lay['name']]
-        y = as_array(lay['largest'][score])
-        # unclipped, so a marker near a shift of 0 shows whole on the axis
-        ax.plot(kmax, y, color=lay['color'], lw=st['lw'], marker=st['marker'],
-                ms=MARKER_SIZE, clip_on=False)
-        values += [float(v) for v in y[np.isfinite(y)]]
+    ax.axhline(threshold, **THRESHOLD_STYLE)
+    for truth_set, _ in TRUTH_SETS:
+        for lay in layouts:
+            st = LAYOUT_STYLE[lay['name']]
+            y = as_array(lay[truth_set][score])
+            # unclipped, so a marker near a shift of 0 shows whole on the axis
+            ax.plot(kmax, y, clip_on=False,
+                    **line_style(st['lw'], st['marker'], truth_set, lay['color']))
+            values += [float(v) for v in y[np.isfinite(y)]]
     ax.grid(False, axis='x')
     # the score's name on the right side, rotated like a y label, so it can
     # never sit on the data
@@ -242,15 +271,32 @@ tick_left = min(label.get_window_extent(fig.canvas.get_renderer()).x0
 tick_left = fig.transFigure.inverted().transform((tick_left, 0.0))[0]
 supylabel = fig.supylabel(r'largest shift [$\sigma$]', x=tick_left - 0.01, ha='right', fontsize=10)
 
-# the layouts above the top panel (color, line width and marker)
+# the two legends above the top panel: the layouts (color, line width and
+# marker, drawn as the solid lines), and above them the two truth sets, each
+# shown by its four drawn lines side by side. The sigma/3 line carries no
+# legend entry: the caption names it.
 layout_legend = axes[0].legend(
-    handles=[Line2D([], [], color=lay['color'], lw=LAYOUT_STYLE[lay['name']]['lw'],
-                    marker=LAYOUT_STYLE[lay['name']]['marker'], ms=MARKER_SIZE,
-                    label=lay['label']) for lay in layouts],
+    handles=[Line2D([], [], label=lay['label'],
+                    **line_style(LAYOUT_STYLE[lay['name']]['lw'],
+                                 LAYOUT_STYLE[lay['name']]['marker'], 'largest_in_prior',
+                                 lay['color'])) for lay in layouts],
     loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=2, frameon=False, fontsize=8,
     handlelength=2.2, columnspacing=1.2, handletextpad=0.5, labelspacing=0.25,
     borderaxespad=0.2, borderpad=0.1)
-check_clear(fig, flat, [layout_legend, supylabel, axes[-1].xaxis.label,
+fig.canvas.draw()
+legend_top = fig.transFigure.inverted().transform(
+    (0.0, layout_legend.get_window_extent(fig.canvas.get_renderer()).y1))[1]
+set_handles = [tuple(Line2D([], [], **line_style(LAYOUT_STYLE[lay['name']]['lw'],
+                                                 LAYOUT_STYLE[lay['name']]['marker'],
+                                                 truth_set, lay['color']))
+                     for lay in layouts) for truth_set, _ in TRUTH_SETS]
+set_legend = fig.legend(
+    handles=set_handles, labels=[st['label'] for _, st in TRUTH_SETS],
+    handler_map={tuple: HandlerTuple(ndivide=None, pad=0.0)},
+    loc='lower center', bbox_to_anchor=(0.5, legend_top + LEGEND_GAP), ncol=1,
+    frameon=False, fontsize=8, handlelength=7.0, handletextpad=0.6, labelspacing=0.25,
+    borderaxespad=0.0, borderpad=0.1)
+check_clear(fig, flat, [layout_legend, set_legend, supylabel, axes[-1].xaxis.label,
                         *[ax.yaxis.label for ax in axes]])
 check_labels_off_ticks(fig, flat, [supylabel, axes[-1].xaxis.label,
                                    *[ax.yaxis.label for ax in axes]],
