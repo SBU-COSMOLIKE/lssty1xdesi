@@ -40,19 +40,27 @@ of equal comoving depth, and three of fixed redshift width,
 $\Delta z = 0.02$, $0.05$ and $0.2$, with $90$, $36$ and $10$ bins.  The
 first two are the thin layouts.  This note answers three questions:
 \begin{enumerate}
+  \item How does the Fingers-of-God (FoG) blur, at its default
+    strength, change how much neighbouring bins overlap?
   \item Which pairs of bins have their cross spectrum in the data
     vector, and why those?
   \item What does that rule mean in redshift, on each of the four bin
     layouts?
-  \item How does the Fingers-of-God (FoG) blur, at its default
-    strength, change how much neighbouring bins overlap?
 \end{enumerate}
 
 \paragraph{The answers.}
 \begin{enumerate}
+  \item The blur has a width of $5$--$6$~Mpc along the line of sight,
+    about a tenth of a thin bin.  It raises the overlap of two
+    neighbouring thin bins from about $0.003$, the one grid step where
+    their tabulated edges meet, to about $0.06$.  Bins one apart stay
+    disjoint.  On \dcom{} the blur makes ten LRG3--ELG1 pairs overlap
+    by $0.03$, half as much as a neighbour pair, although their raw
+    ranges just miss; the data vector measures them too
+    (Figure~\ref{fig:fog}).
   \item A pair is measured when the two bins' redshift distributions
     $n(z)$ overlap or touch, either as measured or once blurred by the
-    FoG effect of item~3.  That gives the neighbours along each galaxy
+    FoG effect of item~1.  That gives the neighbours along each galaxy
     sample's chain of bins, plus the pairs of an LRG bin and an ELG bin
     at about the same redshift: at $0.8 < z < 1.1$ the LRG3 and ELG1
     groups are two galaxy samples observing one volume
@@ -62,14 +70,6 @@ first two are the thin layouts.  This note answers three questions:
     On \dcom{} the rule is adjacency in comoving distance, which no
     single cut in redshift can express: a bin of fixed comoving depth
     is $0.015$ wide in redshift at $z = 0.1$ and $0.035$ at $z = 1.5$.
-  \item The blur has a width of $5$--$6$~Mpc along the line of sight,
-    about a tenth of a thin bin.  It raises the overlap of two
-    neighbouring thin bins from about $0.003$, the one grid step where
-    their tabulated edges meet, to about $0.06$.  Bins one apart stay
-    disjoint.  On \dcom{} the blur makes ten LRG3--ELG1 pairs overlap
-    by $0.03$, half as much as a neighbour pair, although their raw
-    ranges just miss; the data vector measures them too
-    (Figure~\ref{fig:fog}).
 \end{enumerate}
 
 \section{Why cross spectra between thin bins matter}
@@ -215,226 +215,6 @@ radial derivatives for ${\rm SN}_2$ (\texttt{stochastic\us templates} in
 \texttt{likelihood/desi\us cl.py}).  An LRG--ELG pair gets none: two
 different populations do not share a stochastic term, and the model has
 no separate cross-stochasticity parameter.
-
-\section{Which pairs are measured}
-\label{sec:rule}
-
-\paragraph{The first step: raw ranges.}
-Each bin's raw $n(z)$ is the histogram of the measured redshifts of its
-galaxies, tabulated on the DESI redshift grid of step
-$h = 3.5 \times 10^{-4}$.  Let $z_i^{\rm lo}$ and $z_i^{\rm hi}$ be the
-first and last grid redshifts where $n_i(z)$ is nonzero.  Bins $i$ and
-$j$ pair when their ranges overlap or touch:
-\begin{equation}
-  z_j^{\rm lo} \le z_i^{\rm hi} + 1.5\,h
-  \quad\text{and}\quad
-  z_i^{\rm lo} \le z_j^{\rm hi} + 1.5\,h .
-  \label{eq:rule}
-\end{equation}
-The slack of $1.5$ grid steps is there because two neighbouring bins of
-one sample either share their edge node or sit one node apart; $1.5$
-steps catches both and nothing farther.
-
-For example, on $\Delta z = 0.02$ bin $1$ ends at $z = 0.1198$ and bin
-$2$ starts one grid step later, at $0.1202$: they pair.  Bin $3$ starts
-at $0.1401$, $0.020$ after the end of bin $1$: bins $1$ and $3$ do not
-pair.
-
-\paragraph{The second step: blurred kernels.}
-The model never uses the raw $n(z)$ directly.  It first blurs each one
-by the Fingers-of-God effect of Section~\ref{sec:fog}, which spreads
-every bin a few Mpc beyond its edges.  Two bins whose raw ranges just
-miss can therefore still overlap once blurred.  The second step adds
-every such pair: bins $i$ and $j$ also pair when their blurred $n(z)$
-overlap at all, $O_{ij} \ge 10^{-6}$ at the default velocity
-dispersions, with $O_{ij}$ the normalized overlap integral of
-Eq.~\eqref{eq:overlap} (\texttt{scripts/make\us desi\us pairs.py}).
-
-The threshold is not a tuning.  Before this step the blurred overlaps
-of unmeasured pairs fall into two sets far apart: ten pairs at
-$0.028$--$0.035$, and every other pair below $2 \times 10^{-14}$, the
-reach of the truncated Gaussian tails.  Any threshold between $10^{-6}$
-and $0.0277$ gives the same lists: those ten pairs on \dcom{}, none on
-the fixed-$\Delta z$ layouts.
-
-\paragraph{Where the pair lists come from.}
-For the three fixed-$\Delta z$ layouts the first step writes the pair
-list (\texttt{cross\us pairs} in \texttt{scripts/make\us desi\us
-dz\us case.py}), and the second adds nothing.  On \dcom{} the first
-list comes from the DESI forecast's data file (a \texttt{sacc} file),
-which pairs bins by redshift proximity; \texttt{scripts/make\us
-desi\us dataset.py} imports it.  The first step reproduces $96$ of its
-$97$ pairs.  The exception is the boundary pair of BGS bin $18$ and
-LRG1 bin $19$: BGS ends at $z = 0.390$ and LRG starts at $z = 0.400$,
-so their ranges are $0.010$ apart, and the forecast includes them
-anyway; the list keeps it.  The second step adds ten LRG3--ELG1 pairs
-(Section~\ref{sec:redshift}), for $107$ pairs in all.
-
-\paragraph{The \dcom{} data vector.}
-With the added pairs the \dcom{} data vector holds $198$ spectra:
-$15$ cosmic-shear spectra, $76$ autos and $107$ cross spectra, in $53$
-bands each, $10{,}494$ entries of which the mask keeps $5{,}674$.  Each
-added pair keeps the bands where both of its autos are kept, the rule
-every other pair follows.  The Gaussian covariance rebuilt on this
-layout is positive definite and bitwise equal to the $97$-pair
-covariance on the shared spectra.  The exploration examples keep the $97$-pair files
-(the \texttt{*\us linear} dataset, mask, pair list and covariance), so
-their $\chi^2$ values stay as committed.
-
-\paragraph{The counts.}
-Table~\ref{tab:counts} sorts every layout's pairs by kind.  Most join a
-bin to the next one of its sample.  The rest join an LRG and an ELG bin:
-the LRG3--ELG1 pairs of the shared volume (on \dcom{}, $22$ from the
-first step and $10$ from the second), one LRG2--ELG1 pair at $z = 0.8$
-where LRG2 ends and ELG1 begins, and, on $\Delta z = 0.02$ and $0.05$,
-one LRG3--ELG2 pair at $z = 1.1$.  Each bin has $1$ to $5$ cross
-partners, $1$ to $4$ on $\Delta z = 0.2$; the first and last bins have
-one.
-
-\begin{table}[ht]
-  \centering
-  \small
-  \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{lccccccc}
-    \hline
-    layout & bins & next bin & BGS--LRG1 & LRG3--ELG1 & LRG--ELG, other
-      & added & total \\
-    \hline
-    \dcom{} & $76$ & $73$ & $1$ & $22$ & $1$ & $10$ & $107$ \\
-    $\Delta z = 0.02$ & $90$ & $87$ & $1$ & $43$ & $2$ & $0$ & $133$ \\
-    $\Delta z = 0.05$ & $36$ & $33$ & $1$ & $16$ & $2$ & $0$ & $52$ \\
-    $\Delta z = 0.2$ & $10$ & $7$ & $1$ & $4$ & $1$ & $0$ & $13$ \\
-    \hline
-  \end{tabular}
-  \caption{The measured cross spectra of each layout, by kind.
-    ``Next bin'': two consecutive bins of one sample; BGS--LRG1: the
-    pair across the BGS--LRG boundary at $z = 0.4$; ``LRG--ELG,
-    other'': the LRG2--ELG1 pair at $z = 0.8$ and the LRG3--ELG2 pair at
-    $z = 1.1$; ``added'': the LRG3--ELG1 pairs of the second step, whose
-    raw ranges miss and whose blurred $n(z)$ overlap.}
-  \label{tab:counts}
-\end{table}
-
-\paragraph{How to read Figure~\ref{fig:layouts}.}
-Each block is one layout.  Its upper panel draws every bin's raw
-$n(z)$ at unit peak, BGS and LRG in the upper lane, ELG in the lower
-one; two bins that touch share an edge.  Its lower panel is the pair
-graph: a dot per bin at $\bar{z}_i$ and a segment per measured pair.
-The segments inside a row are the chain of neighbours; the segments
-between the rows are the LRG--ELG pairs, all inside the gray band
-where LRG3 and ELG1 share a volume, or at its edges.  The
-dash-dotted vermillion segments of \dcom{} are the ten pairs of the
-second step.  On $\Delta z = 0.02$ the LRG and ELG bins have the same
-edges, so each
-LRG3 bin touches three ELG1 bins: the one at its redshift and the two
-beside it.  Figure~\ref{fig:zoom} magnifies the corner where LRG2 ends
-and LRG3 and ELG1 begin.
-
-\begin{figure}[p]
-  \centering
-  \includegraphics[width=\linewidth]{plots/nz_overlap_layouts/nz_overlap_layouts.pdf}
-  \caption{Every thin bin of the four layouts and the cross spectra the
-    data vector measures.  Upper panel of each block: each bin's raw
-    $n(z)$ at unit peak, BGS and LRG in the upper lane, ELG in the
-    lower; fill shade and outline style mark the six groups (header).
-    Lower panel: a dot per bin at its mean redshift and a segment per
-    measured pair; solid: raw ranges overlap or touch; dashed: the
-    BGS--LRG1 pair of \dcom{}, whose ranges do not touch; dash-dotted
-    vermillion: the ten LRG3--ELG1 pairs added because their blurred
-    $n(z)$ overlap.  Gray band: the redshifts where LRG3 and ELG1 both
-    have bins.}
-  \label{fig:layouts}
-\end{figure}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=3.5in]{plots/nz_overlap_zoom/nz_overlap_zoom.pdf}
-  \caption{The corner of Figure~\ref{fig:layouts} where LRG2 ends and
-    LRG3 and ELG1 begin, on the two thin layouts, with every bin
-    numbered in data-vector order.  Solid: measured pairs whose raw
-    ranges overlap or touch.  Dash-dotted vermillion: the LRG3--ELG1
-    pairs of \dcom{} whose raw ranges miss by $3$ to $5$ grid steps and
-    which the second step adds because their blurred $n(z)$ overlap
-    (Section~\ref{sec:fog}).  A segment leaving the panel joins a bin
-    outside it.}
-  \label{fig:zoom}
-\end{figure}
-
-\section{What the rule means in redshift}
-\label{sec:redshift}
-
-\paragraph{Centre separations.}
-A rule in terms of ranges can be compared with a rule in terms of
-centres: is there a separation $|\bar{z}_i - \bar{z}_j|$ below which
-every pair is measured and above which none is?
-Table~\ref{tab:separations} gives, per layout, the largest separation
-of a measured pair and the smallest of an unmeasured one.
-
-\begin{table}[ht]
-  \centering
-  \small
-  \begin{tabular}{lccc}
-    \hline
-    layout & bin width in $z$ & largest measured & smallest unmeasured \\
-    \hline
-    $\Delta z = 0.2$ & $0.1$--$0.2$ & $0.211$ (LRG3 $5$, ELG1 $8$)
-      & $0.257$ (LRG3 $6$, ELG2 $9$) \\
-    $\Delta z = 0.05$ & $0.05$ & $0.053$ (BGS $6$, LRG1 $7$)
-      & $0.097$ (LRG3 $18$, ELG1 $22$) \\
-    $\Delta z = 0.02$ & $0.02$ & $0.020$ (LRG3 $48$, ELG1 $64$)
-      & $0.040$ (LRG3 $45$, ELG1 $58$) \\
-    \dcom{} & $0.015$--$0.035$ & $0.035$ (ELG2 $75$, $76$)
-      & $0.030$ (BGS $1$, $3$) \\
-    \hline
-  \end{tabular}
-  \caption{The separation $|\bar{z}_i - \bar{z}_j|$ of the mean
-    redshifts of the farthest measured pair and of the closest
-    unmeasured pair, with their groups and bin numbers.  On
-    $\Delta z = 0.2$ the bins at the ends of some samples are $0.1$
-    wide.}
-  \label{tab:separations}
-\end{table}
-
-\paragraph{Fixed redshift width: only adjacent bins.}
-On the three fixed-$\Delta z$ layouts the two columns are separated by
-about a factor of two: neighbours are one width apart, the next bin
-over is two widths apart.  Any cut between the two columns, for
-example at $0.03$ on $\Delta z = 0.02$, reproduces the rule.  So on
-these layouts the rule means: only adjacent bins pair,
-where an LRG bin and an ELG bin with the same range count as adjacent
-(separation near zero).  The edge bins of $\Delta z = 0.2$, $0.1$
-wide, shift the numbers but not the conclusion.
-
-\paragraph{Fixed comoving width: no redshift cut works.}
-On \dcom{} the columns cross: a measured pair is $0.035$ apart and an
-unmeasured one $0.030$.  The reason is how a shell of fixed depth
-looks in redshift.  The comoving distance is $\chi(z) = \int_0^z c\,
-dz'/H(z')$, with $H(z)$ the expansion rate, so a shell of depth
-$\Delta d_{\rm com}$ spans $\Delta z \approx \Delta d_{\rm com}\,
-H(z)/c$ in redshift.  $H$ grows with $z$, so the same $62$~Mpc covers
-$0.015$ in redshift at $\bar{z} = 0.11$ and $0.035$ at
-$\bar{z} = 1.55$.
-
-Two examples make this concrete.  BGS bins $1$ and $3$, one bin apart
-at $z \approx 0.12$, are only $0.030$ apart in mean redshift and not
-paired; ELG2 bins $75$ and $76$, neighbours at $z \approx 1.53$, are
-$0.035$ apart and paired.  The rule is adjacency in comoving distance,
-and in redshift that adjacency stretches with $z$.
-
-\paragraph{Misaligned LRG and ELG edges.}
-The LRG3--ELG1 pairs of \dcom{} show a second effect.  Each sample has
-its own bin edges: the LRG
-bins begin at $z = 0.400$ and the ELG bins at $z = 0.800$.  In the
-shared volume the LRG edges sit $0.001$--$0.002$ above the ELG edges
-(Figure~\ref{fig:zoom}, bottom).  An LRG3 bin therefore
-overlaps the ELG1 bin at its redshift and the one above it, and starts
-just above the end of the one below it.  Bin $40$ begins $0.0014$ above
-the end of bin $50$: $4$ grid steps, more than the first step's $1.5$,
-so the raw ranges miss, although the centres are only $0.024$ apart.
-The blur closes that gap, and the second step adds the pair
-(Section~\ref{sec:overlap}).  Each of the LRG3 bins $40$ to $49$ thus
-has three ELG1 partners, as on $\Delta z = 0.02$: two from the first
-step and one from the second, $32$ LRG3--ELG1 pairs in all.
 
 \section{The Fingers-of-God blur}
 \label{sec:fog}
@@ -616,23 +396,6 @@ overlap only at $\sigma_z \approx 0.4\,w$, four times the default on the
 thin layouts.  Within two prior widths of every default $\sigma_z/w$
 stays below $0.2$, where that overlap is below $2 \times 10^{-5}$.
 
-\paragraph{The ten added LRG3--ELG1 pairs.}
-The blur does change one set of pairs.  On \dcom{} the pairs of an
-LRG3 bin and the ELG1 bin ending just below it (bins $40$ to $49$ with
-$50$ to $59$; Section~\ref{sec:redshift}) have raw ranges $3$ to $5$
-grid steps apart, less than $\sigma_z$, and zero raw overlap.  Blurred,
-they overlap by $0.028$--$0.035$, half as much as a neighbour pair
-(crosses in Figure~\ref{fig:fog}; dash-dotted segments in
-Figures~\ref{fig:layouts} and~\ref{fig:zoom}).  At high $\ell$ they
-therefore correlate about half as strongly as neighbours do, and the
-second step of the rule adds them to the data vector.  With them added,
-no unmeasured pair of any layout overlaps by more than $10^{-6}$ after
-the blur; on the fixed-$\Delta z$ layouts none did to begin with.  The
-measured BGS--LRG1 boundary pair of \dcom{} overlaps by
-$3 \times 10^{-7}$: its ranges are $0.010$ apart, six times
-$\sigma_z$.  It stays in the list because the DESI forecast measures
-it.
-
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{plots/fog_smearing/fog_smearing.pdf}
@@ -644,13 +407,244 @@ it.
     and the overlap $O_{ij}$ of Eq.~\eqref{eq:overlap} for
     consecutive bins of one sample, raw (dashed, open markers) and
     blurred (solid, filled), against the mean redshift.  Crosses: the
-    ten LRG3--ELG1 pairs of \dcom{} that the second step of the rule
-    adds, whose raw overlap is zero.  Bins one apart overlap by at most $2 \times 10^{-14}$, raw
+    ten LRG3--ELG1 pairs of \dcom{} that the second step of the pair
+    rule (Section~\ref{sec:rule}) adds, whose raw overlap is zero.  Bins one apart overlap by at most $2 \times 10^{-14}$, raw
     or blurred.}
   \label{fig:fog}
 \end{figure}
 
-\subsection{Which $n(z)$ each piece reads}
+\section{Which pairs are measured}
+\label{sec:rule}
+
+\paragraph{The first step: raw ranges.}
+Each bin's raw $n(z)$ is the histogram of the measured redshifts of its
+galaxies, tabulated on the DESI redshift grid of step
+$h = 3.5 \times 10^{-4}$.  Let $z_i^{\rm lo}$ and $z_i^{\rm hi}$ be the
+first and last grid redshifts where $n_i(z)$ is nonzero.  Bins $i$ and
+$j$ pair when their ranges overlap or touch:
+\begin{equation}
+  z_j^{\rm lo} \le z_i^{\rm hi} + 1.5\,h
+  \quad\text{and}\quad
+  z_i^{\rm lo} \le z_j^{\rm hi} + 1.5\,h .
+  \label{eq:rule}
+\end{equation}
+The slack of $1.5$ grid steps is there because two neighbouring bins of
+one sample either share their edge node or sit one node apart; $1.5$
+steps catches both and nothing farther.
+
+For example, on $\Delta z = 0.02$ bin $1$ ends at $z = 0.1198$ and bin
+$2$ starts one grid step later, at $0.1202$: they pair.  Bin $3$ starts
+at $0.1401$, $0.020$ after the end of bin $1$: bins $1$ and $3$ do not
+pair.
+
+\paragraph{The second step: blurred kernels.}
+The model never uses the raw $n(z)$ directly.  It first blurs each one
+by the Fingers-of-God effect of Section~\ref{sec:fog}, which spreads
+every bin a few Mpc beyond its edges.  Two bins whose raw ranges just
+miss can therefore still overlap once blurred.  The second step adds
+every such pair: bins $i$ and $j$ also pair when their blurred $n(z)$
+overlap at all, $O_{ij} \ge 10^{-6}$ at the default velocity
+dispersions, with $O_{ij}$ the normalized overlap integral of
+Eq.~\eqref{eq:overlap} (\texttt{scripts/make\us desi\us pairs.py}).
+
+The threshold is not a tuning.  Before this step the blurred overlaps
+of unmeasured pairs fall into two sets far apart: ten pairs at
+$0.028$--$0.035$, and every other pair below $2 \times 10^{-14}$, the
+reach of the truncated Gaussian tails.  Any threshold between $10^{-6}$
+and $0.0277$ gives the same lists: those ten pairs on \dcom{}, none on
+the fixed-$\Delta z$ layouts.
+
+\paragraph{Where the pair lists come from.}
+For the three fixed-$\Delta z$ layouts the first step writes the pair
+list (\texttt{cross\us pairs} in \texttt{scripts/make\us desi\us
+dz\us case.py}), and the second adds nothing.  On \dcom{} the first
+list comes from the DESI forecast's data file (a \texttt{sacc} file),
+which pairs bins by redshift proximity; \texttt{scripts/make\us
+desi\us dataset.py} imports it.  The first step reproduces $96$ of its
+$97$ pairs.  The exception is the boundary pair of BGS bin $18$ and
+LRG1 bin $19$: BGS ends at $z = 0.390$ and LRG starts at $z = 0.400$,
+so their ranges are $0.010$ apart, and the forecast includes them
+anyway; the list keeps it.  Blurred, their kernels overlap by only
+$3 \times 10^{-7}$: the ranges are six times $\sigma_z$ apart.  The second step adds ten LRG3--ELG1 pairs
+(Section~\ref{sec:redshift}), for $107$ pairs in all.
+
+\paragraph{The \dcom{} data vector.}
+With the added pairs the \dcom{} data vector holds $198$ spectra:
+$15$ cosmic-shear spectra, $76$ autos and $107$ cross spectra, in $53$
+bands each, $10{,}494$ entries of which the mask keeps $5{,}674$.  Each
+added pair keeps the bands where both of its autos are kept, the rule
+every other pair follows.  The Gaussian covariance rebuilt on this
+layout is positive definite and bitwise equal to the $97$-pair
+covariance on the shared spectra.  The exploration examples keep the $97$-pair files
+(the \texttt{*\us linear} dataset, mask, pair list and covariance), so
+their $\chi^2$ values stay as committed.
+
+\paragraph{The counts.}
+Table~\ref{tab:counts} sorts every layout's pairs by kind.  Most join a
+bin to the next one of its sample.  The rest join an LRG and an ELG bin:
+the LRG3--ELG1 pairs of the shared volume (on \dcom{}, $22$ from the
+first step and $10$ from the second), one LRG2--ELG1 pair at $z = 0.8$
+where LRG2 ends and ELG1 begins, and, on $\Delta z = 0.02$ and $0.05$,
+one LRG3--ELG2 pair at $z = 1.1$.  Each bin has $1$ to $5$ cross
+partners, $1$ to $4$ on $\Delta z = 0.2$; the first and last bins have
+one.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{lccccccc}
+    \hline
+    layout & bins & next bin & BGS--LRG1 & LRG3--ELG1 & LRG--ELG, other
+      & added & total \\
+    \hline
+    \dcom{} & $76$ & $73$ & $1$ & $22$ & $1$ & $10$ & $107$ \\
+    $\Delta z = 0.02$ & $90$ & $87$ & $1$ & $43$ & $2$ & $0$ & $133$ \\
+    $\Delta z = 0.05$ & $36$ & $33$ & $1$ & $16$ & $2$ & $0$ & $52$ \\
+    $\Delta z = 0.2$ & $10$ & $7$ & $1$ & $4$ & $1$ & $0$ & $13$ \\
+    \hline
+  \end{tabular}
+  \caption{The measured cross spectra of each layout, by kind.
+    ``Next bin'': two consecutive bins of one sample; BGS--LRG1: the
+    pair across the BGS--LRG boundary at $z = 0.4$; ``LRG--ELG,
+    other'': the LRG2--ELG1 pair at $z = 0.8$ and the LRG3--ELG2 pair at
+    $z = 1.1$; ``added'': the LRG3--ELG1 pairs of the second step, whose
+    raw ranges miss and whose blurred $n(z)$ overlap.}
+  \label{tab:counts}
+\end{table}
+
+\paragraph{How to read Figure~\ref{fig:layouts}.}
+Each block is one layout.  Its upper panel draws every bin's raw
+$n(z)$ at unit peak, BGS and LRG in the upper lane, ELG in the lower
+one; two bins that touch share an edge.  Its lower panel is the pair
+graph: a dot per bin at $\bar{z}_i$ and a segment per measured pair.
+The segments inside a row are the chain of neighbours; the segments
+between the rows are the LRG--ELG pairs, all inside the gray band
+where LRG3 and ELG1 share a volume, or at its edges.  The
+dash-dotted vermillion segments of \dcom{} are the ten pairs of the
+second step.  On $\Delta z = 0.02$ the LRG and ELG bins have the same
+edges, so each
+LRG3 bin touches three ELG1 bins: the one at its redshift and the two
+beside it.  Figure~\ref{fig:zoom} magnifies the corner where LRG2 ends
+and LRG3 and ELG1 begin.
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=\linewidth]{plots/nz_overlap_layouts/nz_overlap_layouts.pdf}
+  \caption{Every thin bin of the four layouts and the cross spectra the
+    data vector measures.  Upper panel of each block: each bin's raw
+    $n(z)$ at unit peak, BGS and LRG in the upper lane, ELG in the
+    lower; fill shade and outline style mark the six groups (header).
+    Lower panel: a dot per bin at its mean redshift and a segment per
+    measured pair; solid: raw ranges overlap or touch; dashed: the
+    BGS--LRG1 pair of \dcom{}, whose ranges do not touch; dash-dotted
+    vermillion: the ten LRG3--ELG1 pairs added because their blurred
+    $n(z)$ overlap.  Gray band: the redshifts where LRG3 and ELG1 both
+    have bins.}
+  \label{fig:layouts}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=3.5in]{plots/nz_overlap_zoom/nz_overlap_zoom.pdf}
+  \caption{The corner of Figure~\ref{fig:layouts} where LRG2 ends and
+    LRG3 and ELG1 begin, on the two thin layouts, with every bin
+    numbered in data-vector order.  Solid: measured pairs whose raw
+    ranges overlap or touch.  Dash-dotted vermillion: the LRG3--ELG1
+    pairs of \dcom{} whose raw ranges miss by $3$ to $5$ grid steps and
+    which the second step adds because their blurred $n(z)$ overlap
+    (Section~\ref{sec:fog}).  A segment leaving the panel joins a bin
+    outside it.}
+  \label{fig:zoom}
+\end{figure}
+
+\section{What the rule means in redshift}
+\label{sec:redshift}
+
+\paragraph{Centre separations.}
+A rule in terms of ranges can be compared with a rule in terms of
+centres: is there a separation $|\bar{z}_i - \bar{z}_j|$ below which
+every pair is measured and above which none is?
+Table~\ref{tab:separations} gives, per layout, the largest separation
+of a measured pair and the smallest of an unmeasured one.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{lccc}
+    \hline
+    layout & bin width in $z$ & largest measured & smallest unmeasured \\
+    \hline
+    $\Delta z = 0.2$ & $0.1$--$0.2$ & $0.211$ (LRG3 $5$, ELG1 $8$)
+      & $0.257$ (LRG3 $6$, ELG2 $9$) \\
+    $\Delta z = 0.05$ & $0.05$ & $0.053$ (BGS $6$, LRG1 $7$)
+      & $0.097$ (LRG3 $18$, ELG1 $22$) \\
+    $\Delta z = 0.02$ & $0.02$ & $0.020$ (LRG3 $48$, ELG1 $64$)
+      & $0.040$ (LRG3 $45$, ELG1 $58$) \\
+    \dcom{} & $0.015$--$0.035$ & $0.035$ (ELG2 $75$, $76$)
+      & $0.030$ (BGS $1$, $3$) \\
+    \hline
+  \end{tabular}
+  \caption{The separation $|\bar{z}_i - \bar{z}_j|$ of the mean
+    redshifts of the farthest measured pair and of the closest
+    unmeasured pair, with their groups and bin numbers.  On
+    $\Delta z = 0.2$ the bins at the ends of some samples are $0.1$
+    wide.}
+  \label{tab:separations}
+\end{table}
+
+\paragraph{Fixed redshift width: only adjacent bins.}
+On the three fixed-$\Delta z$ layouts the two columns are separated by
+about a factor of two: neighbours are one width apart, the next bin
+over is two widths apart.  Any cut between the two columns, for
+example at $0.03$ on $\Delta z = 0.02$, reproduces the rule.  So on
+these layouts the rule means: only adjacent bins pair,
+where an LRG bin and an ELG bin with the same range count as adjacent
+(separation near zero).  The edge bins of $\Delta z = 0.2$, $0.1$
+wide, shift the numbers but not the conclusion.
+
+\paragraph{Fixed comoving width: no redshift cut works.}
+On \dcom{} the columns cross: a measured pair is $0.035$ apart and an
+unmeasured one $0.030$.  The reason is how a shell of fixed depth
+looks in redshift.  The comoving distance is $\chi(z) = \int_0^z c\,
+dz'/H(z')$, with $H(z)$ the expansion rate, so a shell of depth
+$\Delta d_{\rm com}$ spans $\Delta z \approx \Delta d_{\rm com}\,
+H(z)/c$ in redshift.  $H$ grows with $z$, so the same $62$~Mpc covers
+$0.015$ in redshift at $\bar{z} = 0.11$ and $0.035$ at
+$\bar{z} = 1.55$.
+
+Two examples make this concrete.  BGS bins $1$ and $3$, one bin apart
+at $z \approx 0.12$, are only $0.030$ apart in mean redshift and not
+paired; ELG2 bins $75$ and $76$, neighbours at $z \approx 1.53$, are
+$0.035$ apart and paired.  The rule is adjacency in comoving distance,
+and in redshift that adjacency stretches with $z$.
+
+\paragraph{Misaligned LRG and ELG edges.}
+The LRG3--ELG1 pairs of \dcom{} show a second effect.  Each sample has
+its own bin edges: the LRG
+bins begin at $z = 0.400$ and the ELG bins at $z = 0.800$.  In the
+shared volume the LRG edges sit $0.001$--$0.002$ above the ELG edges
+(Figure~\ref{fig:zoom}, bottom).  An LRG3 bin therefore
+overlaps the ELG1 bin at its redshift and the one above it, and starts
+just above the end of the one below it.  Bin $40$ begins $0.0014$ above
+the end of bin $50$: $4$ grid steps, more than the first step's $1.5$,
+so the raw ranges miss, although the centres are only $0.024$ apart.
+The blur closes that gap: the ten pairs of an LRG3 bin and the ELG1
+bin ending just below it (bins $40$ to $49$ with $50$ to $59$) have
+raw ranges $3$ to $5$ grid steps apart, less than $\sigma_z$, and zero
+raw overlap, but blurred they overlap by $0.028$--$0.035$, half as
+much as a neighbour pair (crosses in Figure~\ref{fig:fog};
+dash-dotted segments in Figures~\ref{fig:layouts}
+and~\ref{fig:zoom}).  At high $\ell$ they therefore correlate about
+half as strongly as neighbours do, and the second step of the rule
+adds them to the data vector.  Each of the LRG3 bins $40$ to $49$ thus
+has three ELG1 partners, as on $\Delta z = 0.02$: two from the first
+step and one from the second, $32$ LRG3--ELG1 pairs in all.  With the
+ten added, no unmeasured pair of any layout overlaps by more than
+$10^{-6}$ after the blur; on the fixed-$\Delta z$ layouts none did to
+begin with.
+
+\section{Which $n(z)$ each piece reads}
 
 The pair list reads the raw $n(z)$ in its first step,
 Eq.~\eqref{eq:rule}, and the blurred $n(z)$ at the default $\sv$ in

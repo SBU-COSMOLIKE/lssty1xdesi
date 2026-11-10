@@ -146,34 +146,6 @@ section of \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us B.ipynb};
 the per-cut values are in the two figure folders'
 \texttt{data.json}.
 
-\begin{figure}[p]
-  \centering
-  \includegraphics[width=3.5in]{plots/fog_degeneracy_kmax/fog_degeneracy_kmax.pdf}
-  \caption{How far the counterterm $\alpha_2$ and the Fingers-of-God
-    dispersions $\sv$ describe the same band powers, against the scale
-    cut, per layout (color, line width and marker; legend).  Top
-    panel: $100\,(1 - f)$, the share of an $\alpha_2$ group template's
-    information in the $\Cov^{-1}$ metric that no combination of the
-    seven $\sv$ templates reproduces, for the group where that share
-    is largest; this panel is built from the templates and the
-    covariance alone and does not depend on any prior.  Second panel:
-    the largest $|\rho|$ between an $\alpha_2$ parameter and a $\sv$
-    in the posterior of the paper model, model B + tilts on the
-    pessimistic linear-bias prior.  Third panel:
-    ${\rm FoM}_{\alpha_2 = 0}/{\rm FoM}$, the ${\rm FoM}(w_0, w_a)$
-    with $\alpha_2$ and its tilts fixed at zero over the paper
-    model's, with $\sv$ on its Gaussian priors (solid, filled markers)
-    or flat (dashed, open markers).  Bottom panel:
-    $\delta_{\sv\,{\rm free}}/\delta_{\sv\,{\rm fixed}}$, with
-    $\delta$ the $(w_0, w_a)$ shift of model A + tilts, which has no
-    $\alpha_2$, fitted to a truth with $\alpha_2 = 12.5\aunit$ in
-    every group: the shift with $\sv$ free over the shift with $\sv$
-    fixed at its fiducial, with the same two line styles.
-    Gray: one.  $\Delta z = 0.02$ keeps no band at $0.05\hMpc$.
-    \kmaxclause}
-  \label{fig:kmax}
-\end{figure}
-
 \section{Why the question is natural}
 \label{sec:why}
 
@@ -452,6 +424,35 @@ At the template level, then, the $\alpha_2$ group values duplicate
 information the $\sv$ already carry; the tilts are the genuinely new
 freedom.
 
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=3.5in]{plots/fog_degeneracy_kmax/fog_degeneracy_kmax.pdf}
+  \caption{How far the counterterm $\alpha_2$ and the Fingers-of-God
+    dispersions $\sv$ describe the same band powers, against the scale
+    cut, per layout (color, line width and marker; legend).  Top
+    panel: $100\,(1 - f)$, the share of an $\alpha_2$ group template's
+    information in the $\Cov^{-1}$ metric that no combination of the
+    seven $\sv$ templates reproduces, for the group where that share
+    is largest; this panel is built from the templates and the
+    covariance alone and does not depend on any prior.  Second panel:
+    the largest $|\rho|$ between an $\alpha_2$ parameter and a $\sv$
+    in the posterior of the paper model, model B + tilts on the
+    pessimistic linear-bias prior.  Third panel:
+    ${\rm FoM}_{\alpha_2 = 0}/{\rm FoM}$, the ${\rm FoM}(w_0, w_a)$
+    with $\alpha_2$ and its tilts fixed at zero over the paper
+    model's, with $\sv$ on its Gaussian priors (solid, filled markers)
+    or flat (dashed, open markers).  Bottom panel:
+    $\delta_{\sv\,{\rm free}}/\delta_{\sv\,{\rm fixed}}$, with
+    $\delta$ the $(w_0, w_a)$ shift of model A + tilts, which has no
+    $\alpha_2$, fitted to a truth with $\alpha_2 = 12.5\aunit$ in
+    every group: the shift with $\sv$ free over the shift with $\sv$
+    fixed at its fiducial, with the same two line styles.
+    Gray: one.  $\Delta z = 0.02$ keeps no band at $0.05\hMpc$.
+    \kmaxclause}
+  \label{fig:kmax}
+\end{figure}
+
+
 \paragraph{The posterior of the paper model.}
 The second panel of Figure~\ref{fig:kmax} shows the largest
 $|\rho(\alpha_2, \sv)|$ in the paper model's posterior.  On the thin
@@ -579,7 +580,7 @@ $2.24$) and on $\Delta z = 0.05$ at $0.175$--$0.2$, but fails on the
 thin layouts at $0.1$ and above.  Absorbing $\alpha_2$ needs all the
 dispersions widened together.
 
-\begin{figure}[t]
+\begin{figure}[tbp]
   \centering
   \includegraphics[width=3.5in]{plots/fog_sigv_width/fog_sigv_width.pdf}
   \caption{The $\sv$ prior-width scan: the $\alpha_0$-only fit (model
@@ -685,7 +686,7 @@ none of this note's conclusions rests on a low-overlap pair.  The
 study and its limits are in \texttt{notes/cross\us correlations},
 section ``How much do the low-overlap pairs carry?''.
 
-\begin{figure}[t]
+\begin{figure}[tbp]
   \centering
   \includegraphics[width=3.5in]{plots/fog_pair_overlap/fog_pair_overlap.pdf}
   \caption{How far the pair rule holds away from the fiducial
