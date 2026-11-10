@@ -1941,25 +1941,78 @@ convergence criterion $|\Delta\chi^2| < 0.2$, and harmless for a
 likelihood evaluation.  The next paragraph is why it still matters.
 
 \paragraph{Why the jitter matters for a derivative.}
-The five-point stencil, Eq.~\eqref{eq:stencil}, carries the noise
-combination $[\,n(-2) - 8\,n(-1) + 8\,n(1) - n(2)\,]/(12\epsilon)$,
-whose standard deviation is
+First the objects.  The Fisher matrix, Eq.~\eqref{eq:fisher}, is built
+from the derivative matrix $\mD$, one column per sampled parameter
+$p_j$.  The column the code wants is $d_j = \partial m/\partial p_j$
+at the fiducial point: the exact derivative of the smooth model.  The
+column it gets applies the stencil, Eq.~\eqref{eq:stencil}, to the
+computed vectors of Eq.~\eqref{eq:noisedef}, $m_{\rm c} = m + n$.  The
+smooth parts combine to $d_j$ (up to the $\epsilon^4$ truncation of
+the stencil), the noise parts to an error, so the computed column is
+$d_j + e_j$ with
 \begin{equation}
-  \frac{\sqrt{1 + 64 + 64 + 1}}{12}\,\frac{\sigma}{\epsilon}
-  \;=\; \frac{\sqrt{130}}{12}\,\frac{\sigma}{\epsilon}
-  \;\approx\; 0.95\,\frac{\sigma}{\epsilon} :
+  e_j \;=\; \frac{n(-2) - 8\,n(-1) + 8\,n(1) - n(2)}{12\,\epsilon_j},
+  \label{eq:ejdef}
+\end{equation}
+writing $n(k)$ for the evaluation noise $k$ steps from the fiducial
+along $p_j$, and $\epsilon_j$ for that parameter's step.  Like $d_j$,
+the error $e_j$ is a vector with one entry per band power.  And each
+column has its own: the four evaluations behind the column of another
+parameter $p_k$ move only $p_k$ (the center point carries weight zero
+and is never evaluated), so $e_k$ is built from its own evaluations,
+independent of those behind $e_j$.
+
+What the noise does to $F$.  Put the computed column into
+Eq.~\eqref{eq:fisher}:
+\begin{equation}
+  F_{jj} \;=\; (d_j + e_j)\T\Cov^{-1}(d_j + e_j)
+  \;=\; d_j\T\Cov^{-1}d_j \;+\; 2\,d_j\T\Cov^{-1}e_j
+  \;+\; e_j\T\Cov^{-1}e_j .
+  \label{eq:fjjnoise}
+\end{equation}
+The first term is the true entry.  The middle term is linear in the
+noise, and the noise scatters with no preferred sign (the independent
+draws of ``Independent noise adds in quadrature: the 70''), so it
+averages to zero.  The last term is a sum of squares, like a $\chi^2$:
+positive for every noise realization, so on average the noise only
+\emph{adds} to $F_{jj}$ -- the one-way bias of ``Why a derivative
+needs more than a $\chi^2$'': noise looks like information.  An
+off-diagonal entry $F_{jk}$ gains $e_j\T\Cov^{-1}e_k$ and two linear
+cross terms; $e_j$ and $e_k$ come from separate evaluations, so all
+three average to zero.  The systematic push sits on the diagonal.
+
+How large the push is.  The four errors in the numerator of
+Eq.~\eqref{eq:ejdef} are independent, so their whitened lengths add in
+quadrature through the squared weights, $1 + 64 + 64 + 1 = 130$, and
+the whitened length of $e_j$ is about
+\begin{equation}
+  \frac{\sqrt{1 + 64 + 64 + 1}}{12}\,\frac{\sigma}{\epsilon_j}
+  \;=\; \frac{\sqrt{130}}{12}\,\frac{\sigma}{\epsilon_j}
+  \;\approx\; 0.95\,\frac{\sigma}{\epsilon_j} ,
   \label{eq:derivnoise}
 \end{equation}
-a derivative divides the jitter by its step.  With $\sigma$ in
-$\sqrt{\chi^2}$ units and $\epsilon$ in the parameter's units, the
-whitened noise of the column has squared length about
-$0.9\,(\sigma/\epsilon)^2$ on average, and that is the spurious
-addition $\langle e_j\T\Cov^{-1}e_j\rangle$ to $F_{jj}$ (in one over
-the parameter's units squared) of ``Why a derivative needs more than a
-$\chi^2$''.  The spurious information grows as the noise
-\emph{squared}: the fortyfold fall of the $w_a$ noise in
-Table~\ref{tab:noise}, from the MCMC settings to the final grid, is a
-$1600$-fold fall of its spurious contribution to $F$.
+with $\sigma$ the whitened ($\sqrt{\chi^2}$-unit) noise of one
+evaluation along that column's stencil, Table~\ref{tab:noise}: a
+derivative divides the jitter by its step.  Squaring gives the average
+of the spurious term of Eq.~\eqref{eq:fjjnoise},
+$\langle e_j\T\Cov^{-1}e_j\rangle \approx 0.9\,(\sigma/\epsilon_j)^2$;
+with $\sigma$ in $\sqrt{\chi^2}$ units and $\epsilon_j$ in the
+parameter's units, the addition is in one over the parameter's units
+squared, the units of $F_{jj}$.
+
+In numbers, along $w_a$.  Its fiducial value is zero and its prior
+flat, so its step is absolute and unscaled,
+$\epsilon_{w_a} = h = 0.02$ (``The cosmological and $\sigma_v$
+columns'').  At the MCMC settings the $w_a$ noise is
+$\sigma = 1.4\times10^{-2}$, Table~\ref{tab:noise}, so the column adds
+a spurious $0.9\,(0.014/0.02)^2 \approx 0.44$ to $F_{w_a w_a}$ ($w_a$
+is dimensionless, so the entry is a plain number).  At the final grid,
+$\sigma = 3.5\times10^{-4}$, the addition is
+$0.9\,(3.5\times10^{-4}/0.02)^2 \approx 2.8\times10^{-4}$.  The
+spurious information grows as the noise \emph{squared}: the fortyfold
+fall of the $w_a$ noise in Table~\ref{tab:noise}, from the MCMC
+settings to the final grid, is a $1600$-fold fall of its spurious
+contribution to $F$.
 
 \paragraph{What the estimator does and does not see.}
 The estimate treats the five errors as independent.  An error that
