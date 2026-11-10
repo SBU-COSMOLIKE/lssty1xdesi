@@ -308,7 +308,7 @@
 \newcommand{\NevalFamily}{16}
 % The MCMC chi^2 criterion; what MCMC-grade settings do to
 % FoM(w0, wa) on Delta z = 0.05 at k_max = 0.075 and 0.2; the inflation
-% of the earlier (exploration) derivatives on Delta d_com = 62 Mpc at
+% of an exploration-grade configuration on Delta d_com = 62 Mpc at
 % k_max = 0.075 (1.29 against 0.39)
 \newcommand{\MCMCdchi}{0.2}
 \newcommand{\ConvMCMCLow}{58\%}
@@ -1308,13 +1308,15 @@ on average by $\langle\mathbf{e}_j\T\mathsf{C}^{-1}\mathbf{e}_j\rangle
 converge a $\chi^2$ to the standard of MCMC runs,
 $|\Delta\chi^2| < \MCMCdchi$, are therefore not enough.  On
 $\Delta z = 0.05$ they inflate ${\rm FoM}(w_0, w_a)$ by \ConvMCMCLow{}
-at $\kmax = 0.075\hMpc$ and \ConvMCMCHigh{} at $0.2\hMpc$, and the
-earlier derivatives inflated it about \ConvOldCom{}fold on
+at $\kmax = 0.075\hMpc$ and \ConvMCMCHigh{} at $0.2\hMpc$, and a
+coarser, exploration-grade configuration inflates it about
+\ConvOldCom{}fold on
 $\Delta d_{\rm com} = 62$~Mpc at $0.075\hMpc$; the excess comes from
 noise in the $w_0$, $w_a$ and $\Omega_m$ columns.  That spurious
-information also weakened the degeneracy between $\alpha_2$ and the
-cosmology, so the earlier derivatives understated the $\alpha_2$ shifts
-of Figure~\ref{fig:shifts}.  The criterion of
+information also weakens the degeneracy between $\alpha_2$ and the
+cosmology and understates the $\alpha_2$ shifts
+of Figure~\ref{fig:shifts}, which is why the final settings are
+needed.  The criterion of
 convergence is step independence: the FoMs, the errors and the shifts
 must not move when the stencil step changes or the numerical controls
 are refined further.  A study on $\Delta z = 0.05$
