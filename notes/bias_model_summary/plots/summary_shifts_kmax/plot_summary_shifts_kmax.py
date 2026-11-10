@@ -11,10 +11,11 @@ One column of a two-column paper, three stacked panels on one shared
 linear y axis, from 0 to the round value just above the largest shift: the
 (w0, wa) shift in units of the fit's ellipse, and the Omega_m and A_s shifts
 in their own marginalized sigma, each the largest over the truths. Each bin
-layout has a color, a line width and a marker at every cut. The dotted line
-is sigma/3; it has no legend entry but a small "sigma/3" text near its right
-end, in the first panel where the text clears every line. k_max is the
-z = 0 value of a per-bin cut at k_max/D(zbar_i); cuts up to KMAX_MAX are
+layout has a color, a line width and a marker at every cut. Every truth lies
+inside the model's prior (the tilts absorb the drift), and a truth drawn from
+the prior may move the fit by about 1 sigma without making its error bars
+dishonest, so the shifts are reported and no threshold is drawn. k_max is
+the z = 0 value of a per-bin cut at k_max/D(zbar_i); cuts up to KMAX_MAX are
 drawn.
 
 data.json, written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb, also holds every
@@ -65,8 +66,6 @@ LAYOUT_STYLE = {
 MARKER_SIZE = 3.5
 # the LSST Y1 reference: gray long dashes
 LSST_STYLE = {'color': '0.5', 'ls': (0, (7, 3)), 'lw': 1.2}
-# the sigma/3 threshold: black and dotted, apart from every layout line
-THRESHOLD_STYLE = {'color': '0.1', 'ls': ':', 'lw': 1.3}
 # the reference is drawn in a panel only when it sits at most this factor
 # above the panel's highest point; farther up it would stretch the axis
 REFERENCE_SPAN = 1.5
@@ -86,16 +85,6 @@ Y_MAJOR = 0.2
 Y_MAJOR_WIDE = 0.5
 Y_WIDE_TOP = 0.8
 Y_MINOR = 0.1
-# The "sigma/3" text of the threshold line: its font size [pt], its
-# horizontal anchor (axes units, right-aligned near the line's right end)
-# and its vertical gap from the line [pt]. It sits just above the line,
-# else just below, in the first panel (top to bottom) where it clears every
-# line, a marker radius included.
-THRESHOLD_TEXT_SIZE = 7.5
-THRESHOLD_TEXT_X = 0.985
-# the positions tried along the threshold line, right end first [axes fraction]
-THRESHOLD_TEXT_XS = (THRESHOLD_TEXT_X, 0.8, 0.6, 0.4, 0.2)
-THRESHOLD_TEXT_GAP = 1.5
 # the height of one panel [in]
 PANEL_HEIGHT = 1.15
 # the panels, top to bottom: data.json score and its name, on the right side
@@ -109,7 +98,6 @@ kmax_all = np.array(data['kmax_h_per_Mpc'], dtype=float)
 DRAWN_CUTS = kmax_all <= KMAX_MAX + KMAX_TOLERANCE
 kmax = kmax_all[DRAWN_CUTS]
 layouts = data['layouts']
-threshold = data['shift_threshold']
 
 
 def as_array(values, floor=None):
@@ -168,38 +156,6 @@ def touches_lines(box, axes, skip=()):
     return False
 
 
-def place_threshold_text(fig, axes, threshold_lines):
-    '''Write "sigma/3" next to the threshold line: just above the line, else
-    just below, near its right end first and then further left along it
-    (THRESHOLD_TEXT_XS), in the first panel (top to bottom) where the text
-    stays inside the panel and clears every line, the threshold lines
-    included; against the data lines its box is also grown by a marker
-    radius. Raise when no position has room.'''
-    renderer = fig.canvas.get_renderer()
-    # a marker radius in display units: line_points samples the line centers
-    radius = 0.5*MARKER_SIZE*fig.dpi/72.0
-    for text_x in THRESHOLD_TEXT_XS:
-        for ax in axes:
-            for sign, va in ((1.0, 'bottom'), (-1.0, 'top')):
-                candidate = ax.annotate(
-                    r'$\sigma/3$', xy=(text_x, threshold),
-                    xycoords=('axes fraction', 'data'),
-                    xytext=(0.0, sign*THRESHOLD_TEXT_GAP), textcoords='offset points',
-                    ha='right', va=va, fontsize=THRESHOLD_TEXT_SIZE)
-                fig.canvas.draw()
-                box = candidate.get_window_extent(renderer)
-                span = ax.get_window_extent(renderer)
-                inside = (box.x0 >= span.x0 and box.x1 <= span.x1
-                          and box.y0 >= span.y0 and box.y1 <= span.y1)
-                clear = (not touches_lines(box, axes)
-                         and not touches_lines(box.padded(radius), axes,
-                                               skip=threshold_lines))
-                if inside and clear:
-                    return candidate
-                candidate.remove()
-    raise RuntimeError('summary_shifts_kmax: the sigma/3 text touches a line in every panel')
-
-
 def check_labels_off_ticks(fig, axes, labels, name):
     '''Raise when an axis label (a panel's own or a shared one) overlaps a
     visible tick label of any panel.'''
@@ -248,8 +204,7 @@ def check_clear(fig, axes, artists):
 fig, axes = plt.subplots(len(PANELS), 1, figsize=(3.5, PANEL_HEIGHT*len(PANELS)),
                          sharex=True, sharey=True, gridspec_kw={'hspace': 0.06})
 flat = list(axes)
-values = [threshold]
-threshold_lines = []
+values = []
 for ax, (score, name) in zip(axes, PANELS):
     for lay in layouts:
         st = LAYOUT_STYLE[lay['name']]
@@ -258,14 +213,13 @@ for ax, (score, name) in zip(axes, PANELS):
         ax.plot(kmax, y, color=lay['color'], lw=st['lw'], marker=st['marker'],
                 ms=MARKER_SIZE, clip_on=False)
         values += [float(v) for v in y[np.isfinite(y)]]
-    threshold_lines.append(ax.axhline(threshold, **THRESHOLD_STYLE))
     ax.grid(False, axis='x')
     # the score's name on the right side, rotated like a y label, so it can
     # never sit on the data
     ax.yaxis.set_label_position('right')
     ax.set_ylabel(name, rotation=90, fontsize=10, labelpad=5)
-# a linear axis from 0, so the shifts and the threshold read directly; the
-# tick labels as plain numbers (0, 0.2, 0.4, ...)
+# a linear axis from 0, so the shifts read directly; the tick labels as
+# plain numbers (0, 0.2, 0.4, ...)
 y_top = next(top for top in ROUND_TOPS if top >= Y_MARGIN*max(values))
 axes[0].set_ylim(0.0, y_top)
 y_major = Y_MAJOR_WIDE if y_top > Y_WIDE_TOP else Y_MAJOR
@@ -288,8 +242,7 @@ tick_left = min(label.get_window_extent(fig.canvas.get_renderer()).x0
 tick_left = fig.transFigure.inverted().transform((tick_left, 0.0))[0]
 supylabel = fig.supylabel(r'largest shift [$\sigma$]', x=tick_left - 0.01, ha='right', fontsize=10)
 
-# the layouts above the top panel (color, line width and marker); the
-# threshold has no legend entry (the caption names it)
+# the layouts above the top panel (color, line width and marker)
 layout_legend = axes[0].legend(
     handles=[Line2D([], [], color=lay['color'], lw=LAYOUT_STYLE[lay['name']]['lw'],
                     marker=LAYOUT_STYLE[lay['name']]['marker'], ms=MARKER_SIZE,
@@ -297,11 +250,10 @@ layout_legend = axes[0].legend(
     loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=2, frameon=False, fontsize=8,
     handlelength=2.2, columnspacing=1.2, handletextpad=0.5, labelspacing=0.25,
     borderaxespad=0.2, borderpad=0.1)
-threshold_text = place_threshold_text(fig, flat, threshold_lines)
 check_clear(fig, flat, [layout_legend, supylabel, axes[-1].xaxis.label,
-                        *[ax.yaxis.label for ax in axes], threshold_text])
+                        *[ax.yaxis.label for ax in axes]])
 check_labels_off_ticks(fig, flat, [supylabel, axes[-1].xaxis.label,
-                                   *[ax.yaxis.label for ax in axes], threshold_text],
+                                   *[ax.yaxis.label for ax in axes]],
                        'summary_shifts_kmax')
 fig.savefig(os.path.join(HERE, 'summary_shifts_kmax.pdf'))
 fig.savefig(os.path.join(HERE, 'summary_shifts_kmax.png'), dpi=300)

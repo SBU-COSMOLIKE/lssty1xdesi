@@ -8,8 +8,14 @@ One full-width figure, two rows by three columns:
             model B + tilts (the free prior is not drawn; data.json keeps
             it); each row is named on the right of column (c);
   columns - (a) FoM(w0, wa), (b) FoM(Omega_m, 10^9 A_s), (c) the largest
-            shift of a fit over its truths and over (w0, wa) (in its
-            ellipse), Omega_m and A_s (in their own sigma), with sigma/3.
+            shift of a fit over the truths outside its model's prior (the
+            calibration drift, and alpha_2 = +-12.5 for model A, which
+            fixes alpha_2 = 0) and over (w0, wa) (in its ellipse), Omega_m
+            and A_s (in their own sigma), with sigma/3. The truths inside
+            the prior move a fit without making its error bars dishonest:
+            data.json reports them (worst_in_prior), and they are not drawn.
+            A variant that absorbs every tested truth exactly (model B +
+            tilts, whose tilts absorb the linear drift) is not drawn in (c).
 Each bin layout has a color, a line width and a marker (at every cut), so
 the figure reads in black and white; model A is solid with filled markers,
 model B dashed with open markers. In
@@ -248,15 +254,25 @@ for r, scenario in enumerate(rows):
         values = []
         for lay in layouts:
             if field is None:
-                y_a = as_array(lay['worst'][spec['A']][spec['prior']], floor=SHIFT_FLOOR)
-                y_b = as_array(lay['worst'][spec['B']][spec['prior']], floor=SHIFT_FLOOR)
+                curves = []
+                for model in ('A', 'B'):
+                    worst = lay['worst'][spec[model]][spec['prior']]
+                    raw = as_array(worst)
+                    # a variant that absorbs every tested truth exactly (model
+                    # B + tilts and the linear drift: round-off) has nothing
+                    # to show on a log axis; the caption says so
+                    if np.all(raw[np.isfinite(raw)] < SHIFT_FLOOR):
+                        curves.append((model, None))
+                    else:
+                        curves.append((model, as_array(worst, floor=SHIFT_FLOOR)))
             else:
-                y_a = model_a_fom(lay, field, spec)
-                y_b = as_array(lay[field][spec['B']][spec['prior']])
+                curves = [('A', model_a_fom(lay, field, spec)),
+                          ('B', as_array(lay[field][spec['B']][spec['prior']]))]
             st = LAYOUT_STYLE[lay['name']]
-            ax.plot(kmax, y_a, **line_style(st['lw'], st['marker'], 'A', lay['color']))
-            ax.plot(kmax, y_b, **line_style(st['lw'], st['marker'], 'B', lay['color']))
-            for y in (y_a, y_b):
+            for model, y in curves:
+                if y is None:
+                    continue
+                ax.plot(kmax, y, **line_style(st['lw'], st['marker'], model, lay['color']))
                 values += [float(v) for v in y[np.isfinite(y)]]
         if field is None:
             ax.axhline(threshold, **THRESHOLD_STYLE)
@@ -358,6 +374,18 @@ check_clear(fig, flat, [layout_legend, style_legend, supxlabel, *texts,
                         *[label for ax in axes[-1] for label in ax.get_xticklabels()],
                         *[ax.title for ax in axes[0]],
                         *[axes[r, -1].yaxis.label for r in range(len(rows))]])
+# a panel's y tick labels sit in the gap left of it and must not reach the
+# panel to their left (a wide label such as 0.001 can)
+renderer = fig.canvas.get_renderer()
+for r in range(len(rows)):
+    for c in range(1, len(COLUMNS)):
+        left_panel = axes[r, c - 1].get_window_extent(renderer)
+        for label in axes[r, c].get_yticklabels():
+            if label.get_text() and label.get_visible():
+                box = label.get_window_extent(renderer)
+                if box.x0 <= left_panel.x1 and box.y1 >= left_panel.y0 and box.y0 <= left_panel.y1:
+                    raise RuntimeError(f'fom_kmax_models: the tick label "{label.get_text()}" '
+                                       f'of panel ({r}, {c}) touches the panel left of it')
 fig.savefig(os.path.join(HERE, 'fom_kmax_models.pdf'))
 fig.savefig(os.path.join(HERE, 'fom_kmax_models.png'), dpi=300)
 plt.close(fig)

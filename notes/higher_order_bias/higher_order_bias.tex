@@ -1184,16 +1184,19 @@ Eq.~\eqref{eq:perbin-evolution}, reproduce the stencil derivative of
 each group amplitude (the correlated-prior note, ``Numerical checks'').
 \item \textbf{The forecast.}  The correlated-prior note fits random
 bias histories under every linear-bias prior (its accuracy test), and
-fits both models to truths that carry $\alpha_2 = \pm12.5\aunit$
-(model A only), $\SNt = \pm5$, the offsets at their one-sigma widths,
-or a linear drift of the calibrations across each group.  Without
+fits both models to truths that carry $\alpha_2$ ($\pm12.5\aunit$ for
+model A, which fixes it to zero; one prior width for model B),
+$\SNt = \pm5$, the offsets at their one-sigma widths,
+or a linear drift of the calibrations across each group.  A truth
+inside the fitted model's prior is reported; one outside it is held
+to $\sigma/3$.  Without
 tilts that drift limits both models to $0.075$ on the two thin layouts
 and $0.05$ on $\Delta z = 0.05$ and $0.2$.  The tilts absorb it
-exactly: model A + tilts keeps every shift below $\sigma/3$ up to its
-own cut, $\kmax = 0.075\hMpc$, on the two thin layouts (at $0.1$ it
-fails through $\alpha_2$), to $0.15$ on $\Delta z = 0.05$, and at
-every cut on $\Delta z = 0.2$; the largest shift of model B + tilts
-is at most $0.43\sigma$ at any cut and $0.34\sigma$ beyond $0.1$.
+exactly, so model A + tilts is tested only by $\alpha_2$: it holds to
+$0.05$ on $\Delta d_{\rm com} = 62$~Mpc, $0.075$ on $\Delta z = 0.02$,
+$0.15$ on $\Delta z = 0.05$, and at every cut on $\Delta z = 0.2$;
+model B + tilts holds at every cut, and its reported in-prior shifts
+reach $1.09\sigma$.
 That note adopts model B + tilts on the pessimistic prior; its figure
 \texttt{fom\_kmax\_models} draws the figures of merit of both models
 and the largest shift against $\kmax$.

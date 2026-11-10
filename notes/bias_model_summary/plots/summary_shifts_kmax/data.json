@@ -1,5 +1,5 @@
 {
- "about": "The shifts of model B + tilts (notes/higher_order_bias: offsets and counterterms per group with a straight line in redshift, flat priors on the tilts, SN0 and SN2 per group) on the pessimistic linear-bias prior, DESI C_gg alone, against the scale cut k_max [h/Mpc; the z = 0 value of a per-bin cut at k_max/D(zbar_i), D the growth factor, by the UV-fraction criterion, alpha = 0.05, within the shipped mask]; null where a cut leaves no fit. Written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb. Truths, each the same in every bin (the drift: linear across each group): alpha_2 at +-1 sigma of its prior (0.5/k_max^2), SN2 = +-5 units of f_sat sigma_sat^2/nbar, the b2 and bs2 offsets at +-1 sigma of model B's widths (+-(2, 1), to first order), and the calibration drift (the offsets linear in redshift across each group with zero mean, changing by calibration_drift; absorbed by the tilts). shift: per cut and truth, (w0, wa) in units of the fit's ellipse, Omega_m and A_s in their own sigma, by Fisher linear response; largest: the largest over the truths, per score.",
+ "about": "The shifts of model B + tilts (notes/higher_order_bias: offsets and counterterms per group with a straight line in redshift, flat priors on the tilts, SN0 and SN2 per group) on the pessimistic linear-bias prior, DESI C_gg alone, against the scale cut k_max [h/Mpc; the z = 0 value of a per-bin cut at k_max/D(zbar_i), D the growth factor, by the UV-fraction criterion, alpha = 0.05, within the shipped mask]; null where a cut leaves no fit. Written by EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb. Truths, each the same in every bin (the drift: linear across each group): alpha_2 at +-1 sigma of its prior (0.5/k_max^2), SN2 = +-5 units of f_sat sigma_sat^2/nbar, the b2 and bs2 offsets at +-1 sigma of model B's widths (+-(2, 1), to first order), and the calibration drift (the offsets linear in redshift across each group with zero mean, changing by calibration_drift; absorbed by the tilts). shift: per cut and truth, (w0, wa) in units of the fit's ellipse, Omega_m and A_s in their own sigma, by Fisher linear response; largest: the largest over the truths, per score. Every truth but the drift lies inside the model's prior, and the tilts absorb the drift, so the shifts are reported without a threshold.",
  "kmax_h_per_Mpc": [
   0.05,
   0.075,
@@ -18,7 +18,6 @@
   "SN2": 5.0,
   "counterterms": "0.5/k_max^2"
  },
- "shift_threshold": 0.3333333333333333,
  "params": [
   "w0wa",
   "omegam",
