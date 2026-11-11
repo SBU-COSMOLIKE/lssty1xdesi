@@ -244,10 +244,10 @@ Saraivanov et al.~\cite{Saraivanov2026} at $\alpha = 0.05$, bin $i$
 cut at $\kmax/D(\bar{z}_i)$ with $\kmax$ quoted at $z = 0$,
 intersected with the shipped mask ($k = 0.1185/{\rm Mpc} =
 0.176\hMpc$ in every bin).  The cuts are computed on the paper
-fiducial above, at the reference settings of the derivative
-convergence study (every accuracy control above its MCMC value), for
+fiducial above, at the final derivative settings (those of the
+derivative base), for
 $\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$, and cached in
-\texttt{chains/model\us scale\us cuts\us reference.npz}
+\texttt{chains/model\us scale\us cuts\us final.npz}
 (Section~\ref{sec:usage}); figures and FoMs use $\kmax \le 0.2\hMpc$.
 
 \paragraph{The covariance.}
@@ -1890,14 +1890,21 @@ $2.1$ today.
   \label{tab:morecost}
 \end{table}
 
-\paragraph{The open choice.}
-Switching \texttt{pair\us coloring} to DSATUR -- in the notebook and
-in \texttt{scripts/compute\us fisher\us base\us mpi.py} together,
-since the two copies must stay identical for the MPI caches to
-reproduce the notebook's -- would keep every case of this subsection
-at four batches.  Nothing forces the change while today's lists are in
-use, where the greedy rule already reaches the minimum; the choice is
-open (Appendix~\ref{sec:open}).
+\paragraph{The adopted coloring.}
+The code keeps the greedy coloring in bin order: it is simple to
+explain and to check, and on today's lists it already reaches the
+minimum.  On the extended lists with every within-sample $C^{i,i+2}$
+measured -- the case studied next if the $\sigma_v = 600$~km/s runs
+show that the extra pairs carry information -- it overshoots the
+four-batch minimum with six batches, $190$ evaluations per base
+against $154$, an accepted cost of $18$ evaluations per extra batch.
+On the $\sigma_v = 600$~km/s list of $\Delta z = 0.02$, the greedy
+rule, DSATUR and the clique bound all give six batches, so nothing is
+lost there.  A switch to DSATUR would have to change the notebook and
+\texttt{scripts/compute\us fisher\us base\us mpi.py} together, since
+the two copies must stay identical for the MPI caches to reproduce
+the notebook's; DSATUR stays an open item for a future study
+(Appendix~\ref{sec:open}).
 
 \section{A scale cut is a set of rows}
 \label{sec:cuts}
@@ -3949,18 +3956,17 @@ holds, the layout and the tier, with the layouts \texttt{dcom62}
 ($\Delta d_{\rm com} = 62$~Mpc), \texttt{dz0p02}, \texttt{dz0p05} and
 \texttt{dz0p20} ($\Delta z = 0.02$, $0.05$, $0.2$).
 \begin{itemize}
-  \item \texttt{model\us scale\us cuts\us reference}, written by the
+  \item \texttt{model\us scale\us cuts\us final}, written by the
     notebook's section~3: the bands each
     ultraviolet-fraction cut keeps, computed on the paper fiducial at
-    the reference settings of the derivative convergence study, at
+    the final derivative settings (those of the derivative base), at
     $\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$, with its settings and
     fingerprints; the scans use the seven
     cuts up to $0.2$.  (The linear notebook,
     \texttt{EXAMPLE\us EVALUATE\us FISHER.ipynb}, keeps its own cut
     cache on the linear-bias fiducial,
     \texttt{linear\us scale\us cuts\us final}, for the linear-bias
-    experiments.)  This is the one cache without an archived copy: its
-    working copy is computed by the notebook's own cells.
+    experiments.)
   \item \texttt{model\us derivatives\us<layout>\us final} and
     \texttt{model\us templates\us<layout>\us final}: the base caches of
     Table~\ref{tab:arrays} -- the stencil and per-bin operator columns,
@@ -4255,16 +4261,17 @@ confirms, bit for bit, that no step survives its evaluation.
     FoMs were rescored for the paper model on the paper-fiducial cuts.
     The derivative columns are shared, so a rescoring would change the
     quoted stabilities, not the chosen settings.
-  \item \textbf{The greedy coloring is not minimal on longer pair
-    lists.}  On today's lists \texttt{pair\us coloring} reaches the
-    minimum, four batches.  If the lists grow -- every within-sample
-    $C^{i,i+2}$ measured, or the $\Delta z = 0.02$ list rebuilt at the
-    dispersions an $\alpha_2$ truth at the prior edge drives -- it
-    uses six or five batches where four still suffice, at $18$ extra
-    evaluations per batch (Section~\ref{sec:morepairs}).  Switching
-    the rule to DSATUR, in the notebook and in
-    \texttt{scripts/compute\us fisher\us base\us mpi.py} together,
-    keeps the minimum in every case; whether to switch is undecided.
+  \item \textbf{The extra cross pairs, and DSATUR.}  If the
+    $\sigma_v = 600$~km/s runs show that the pairs of bins two apart
+    carry information, the next study measures every within-sample
+    $C^{i,i+2}$: new pair lists, masks, covariances, scale cuts and
+    bases on all four layouts, cached next to today's caches so the
+    figures of merit can be compared (Section~\ref{sec:morepairs}).
+    The code keeps the greedy coloring in bin order because it is
+    simple to explain and to check; on those extended lists it uses
+    six batches where four suffice, $18$ extra evaluations per batch,
+    an accepted cost.  DSATUR, which reaches the minimum in every
+    case, stays an open item for a future study.
 \end{itemize}
 
 \begin{thebibliography}{99}

@@ -39,6 +39,7 @@ The last column abbreviates the notebooks:
 | `model_templates_dz0p02_final.npz` | the same, $`\Delta z = 0.02`$ | 0.29 MB | MODEL |
 | `model_templates_dz0p05_final.npz` | the same, $`\Delta z = 0.05`$ | 0.11 MB | MODEL |
 | `model_templates_dz0p20_final.npz` | the same, $`\Delta z = 0.2`$ | 0.03 MB | MODEL |
+| `model_scale_cuts_final.npz` | the UV-fraction scale cuts on the paper fiducial, final tier | 3.57 MB | MODEL |
 | `linear_fisher_dcom62_final.npz` | the linear-bias derivatives of DESI $`C_\ell^{gg}`$, $`\Delta d_\mathrm{com} = 62`$ Mpc | 0.54 MB | FISHER, KMAX |
 | `linear_fisher_dz0p02_final.npz` | the same, $`\Delta z = 0.02`$ | 0.71 MB | FISHER, KMAX |
 | `linear_fisher_dz0p05_final.npz` | the same, $`\Delta z = 0.05`$ | 0.29 MB | FISHER, KMAX |
@@ -48,10 +49,6 @@ The last column abbreviates the notebooks:
 | `linear_fom_scale_cuts_final.npz` | the linear-bias FoM scan over the cuts, with each layout's covariance sha256 | 0.03 MB | FISHER |
 | `linear_alternatives_final.npz` | the FKEM and Limber alternative vectors of every layout | 0.31 MB | FISHER |
 | `linear_kmax_truths_final.npz` | the model A truth vectors against $`k_\mathrm{max}`$ | 0.89 MB | KMAX |
-
-The paper notebook's scale cuts on the paper fiducial are not archived
-yet: that notebook computes them with its own cells (about an hour for
-the four layouts).
 
 ## The file format <a name="format"></a>
 

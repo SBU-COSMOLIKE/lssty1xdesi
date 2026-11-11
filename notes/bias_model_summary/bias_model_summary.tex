@@ -88,7 +88,7 @@
 \newcommand{\FoMwLowCom}{\refresh{0.564}}
 \newcommand{\FoMwLowTwo}{\refresh{0.352}}
 \newcommand{\FoMwLowFive}{\refresh{0.173}}
-\newcommand{\FoMwLowTwenty}{\refresh{0.0445}}
+\newcommand{\FoMwLowTwenty}{\refresh{0.0447}}
 \newcommand{\FoMwHighCom}{\refresh{6.70}}
 \newcommand{\FoMwHighTwo}{\refresh{7.95}}
 \newcommand{\FoMwHighFive}{\refresh{2.34}}
@@ -521,10 +521,10 @@ Gaussian of the stated width.
 \paragraph{Scale cuts.}
 The UV-fraction cuts of every figure (Section~\ref{sec:data}) are
 computed on this fiducial, from the paper configurations, at the
-reference accuracy settings of the derivative convergence study --
-above the final tier of Section~\ref{sec:method} -- and cached in
+final derivative tier of Section~\ref{sec:method} -- the settings of
+the derivative base -- and cached in
 \begin{center}
-  \texttt{chains/EXAMPLE\_EVALUATE\_FISHER\_MODEL\_SCALE\_CUTS.pkl}.
+  \texttt{chains/model\_scale\_cuts\_final.npz}.
 \end{center}
 
 \paragraph{Covariance.}
@@ -542,10 +542,10 @@ factor $g = \GridFinal$, CosmoLike \texttt{accuracyboost}
 \FinKlog{}, maximum wavenumber \FinKmax{}~Mpc$^{-1}$ and the halofit
 tolerance patch.  The base is cached in
 \begin{center}
-  \texttt{chains/EXAMPLE\_EVALUATE\_FISHER\_MODEL\_DERIVATIVES\_<n>.pkl}
-  \\ and \texttt{\ldots\_TEMPLATES\_<n>.pkl},
+  \texttt{chains/model\_derivatives\_<layout>\_final.npz}
+  \\ and \texttt{chains/model\_templates\_<layout>\_final.npz},
 \end{center}
-$n = 1$ to $4$ in the layout order above.
+one pair per layout above.
 
 \paragraph{The LSST Y1 3x2pt reference.}
 The reference values \LSSTw{} and \LSSTo{} are the lsst\_y1 project's
@@ -612,8 +612,8 @@ above it, and a band is kept while
 \end{equation}
 and within the shipped mask, which stops every bin at $\kMask\hMpc$.
 The cut is computed on the model's own fiducial
-(Section~\ref{sec:fiducial}), at the reference accuracy settings of the
-derivative convergence study.  Computing it on linear-bias spectra
+(Section~\ref{sec:fiducial}), at the final derivative tier, the
+settings of the derivative base.  Computing it on linear-bias spectra
 instead moves the figures of merit by at most a few percent
 (\texttt{notes/scale\_cut\_fiducial\_dependence}).  The forecasts scan
 $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$.

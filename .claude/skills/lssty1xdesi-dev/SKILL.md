@@ -93,7 +93,7 @@ setting without measuring it on this vector.
   before adding them. The run, validation and copy-back recipe is
   `references/bias_notes_workflow.md`, Sec. 4.
 - **Notebooks are committed executed**, with outputs and figures, so
-  the plots render on GitHub; stale outputs from older code are wrong.
+  the plots render on GitHub; out-of-date outputs from older code are wrong.
 - **Figures.** Every figure follows `.claude/skills/paper-figures/SKILL.md`
   (the plot-folder contract `notes/<note>/plots/<name>/` with data.json,
   a standalone plot script, PDF and PNG; the house rcParams block; one
@@ -336,8 +336,8 @@ bin i is cut at k_max/D(zbar_i), a band kept while
 (k = 0.1185/Mpc = 0.176 h/Mpc in every bin, no growth scaling). k_max is
 always the z = 0 value. EXAMPLE_EVALUATE_FISHER_MODEL.ipynb builds the
 cut on the paper fiducial (EXAMPLE_EVALUATE<n>.yaml at its evaluate
-point, b2 and bs2 on their calibrations; run at the reference settings
-of the derivative convergence study); the linear notebook's cut, on the
+point, b2 and bs2 on their calibrations; run at the final derivative
+tier, the settings of the derivative base); the linear notebook's cut, on the
 linear-bias spectra, serves the linear-bias experiments. The two differ
 by at most 3% in FoM(w0, wa) on the main layouts
 (`notes/scale_cut_fiducial_dependence`).
@@ -346,7 +346,7 @@ by at most 3% in FoM(w0, wa) on the main layouts
 |---|---|---|---|
 | EXAMPLE_EVALUATE_FISHER.ipynb | linear-bias Fisher, engine Fisher biases, amplitude cut against the contours, the UV-fraction cuts, the linear-bias ladder and accuracy test | `linear_fisher_<layout>_final.npz`, `linear_probes_dz0p20_lsst_ab3_final.npz`, `linear_bin_bias_final.npz`, `linear_scale_cuts_final.npz`, `linear_fom_scale_cuts_final.npz`, `linear_alternatives_final.npz` | no figure folder |
 | EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb (builder) | linear-bias fits to model A truths against k_max; the accuracy test for Omega_m and A_s | `linear_kmax_truths_final.npz` | `notes/linear_bias_kmax/plots/` |
-| EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (builder) | the scale cuts on the paper fiducial and the derivative base on the paper yamls (explicit copy, read, compute, write and archive cells), model B and model B + tilts against k_max to 0.2 and where model B breaks, the paper model (model B + tilts without alpha_2, sigma_v widths x6) with its error-bar test, untied, growth-tied and pair-threshold comparisons, and the alpha_2 / sigma_v study | `model_scale_cuts_reference.npz` (no archived copy), `model_derivatives_<layout>_final.npz`, `model_templates_<layout>_final.npz` | v2: fom_kmax_models, growth_tied_kmax; summary: summary_fom_kmax, summary_fom_untied, summary_prior_draws, summary_pair_threshold; fog_parameter_degeneracy_study: fog_templates, fog_degeneracy_kmax, fog_sigv_width, fog_pair_overlap; cross_correlations: pair_threshold |
+| EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (builder) | the scale cuts on the paper fiducial and the derivative base on the paper yamls (explicit copy, read, compute, write and archive cells), model B and model B + tilts against k_max to 0.2 and where model B breaks, the paper model (model B + tilts without alpha_2, sigma_v widths x6) with its error-bar test, untied, growth-tied and pair-threshold comparisons, and the alpha_2 / sigma_v study | `model_scale_cuts_final.npz`, `model_derivatives_<layout>_final.npz`, `model_templates_<layout>_final.npz` | v2: fom_kmax_models, growth_tied_kmax; summary: summary_fom_kmax, summary_fom_untied, summary_prior_draws, summary_pair_threshold; fog_parameter_degeneracy_study: fog_templates, fog_degeneracy_kmax, fog_sigv_width, fog_pair_overlap; cross_correlations: pair_threshold |
 
 A cache name says what it holds, the layout (`<layout>` = `dcom62`,
 `dz0p02`, `dz0p05`, `dz0p20`) and the tier. Caches are `.npz` files of
@@ -362,9 +362,7 @@ and raises on a mismatch, never recomputing; `write_fisher_cache`
 writes a freshly computed working copy; `save_fisher_to_cache`
 archives a final-tier working copy, the only call that changes the
 archive. Nothing checks for a file to decide what runs, and nothing
-replaces a file without `overwrite=True`. The paper-fiducial scale
-cuts (`model_scale_cuts_reference`) have no archived copy: the paper
-notebook computes them with its own cells (about an hour).
+replaces a file without `overwrite=True`.
 `scripts/compute_fisher_base_mpi.py` (with
 `compute_fisher_base_mpi_classes.py`) writes the same derivative caches
 on MPI ranks; one rank and the notebook evaluate in one order, and 1 x 8,
@@ -429,14 +427,14 @@ Y1 3x2pt alone, FoM(w0, wa) = 17.26 and FoM(Omega_m, 10^9 A_s) = 214.9
   `fom_kmax_models/data.json` (`shift`, `worst`, `worst_in_prior`,
   `break`).
 - **Model B to k_max = 0.2**, FoM(w0, wa): model B + tilts on the
-  pessimistic prior 0.407 / 0.237 / 0.155 / 0.0423 at 0.075 and 7.53 /
+  pessimistic prior 0.407 / 0.237 / 0.155 / 0.0426 at 0.075 and 7.53 /
   8.42 / 2.45 / 0.300 at 0.2; model B on the baseline prior 8.46 / 9.91
   / 2.77 / 0.478 at 0.2, below LSST Y1. FoM(Omega_m, 10^9 A_s) of model
   B stays below 214.9 (at most 67.5). Source: EXAMPLE_EVALUATE_FISHER_MODEL.ipynb,
   section 6; `fom_kmax_models/data.json`.
 - **The paper model** (model B + tilts without alpha_2, every sigma_v
   prior width x6, pessimistic prior; the yamls EXAMPLE_EVALUATE1-4),
-  FoM(w0, wa): 0.564 / 0.352 / 0.173 / 0.0445 at 0.075 and 6.70 / 7.95 /
+  FoM(w0, wa): 0.564 / 0.352 / 0.173 / 0.0447 at 0.075 and 6.70 / 7.95 /
   2.34 / 0.307 at 0.2; FoM(Omega_m, 10^9 A_s) 50.3 / 53.2 / 19.9 / 3.20
   at 0.2. eta <= 1.030 at every cut; alpha_2 = +-12.5 moves no score by
   more than 0.327 sigma. On the paper-fiducial cuts these FoMs are
@@ -629,7 +627,7 @@ comments, captions):
   DESI one inherited 13 pairs and died in `gbmag`. Any new static setter
   needs the same reset. The interface holds one dataset, so build each
   probe's derivatives right after its model.
-- **`logposterior` and caching in Fisher steps** return a stale vector
+- **`logposterior` and caching in Fisher steps** return an out-of-date vector
   outside a flat prior or at a cached point; use `Model.loglike` and
   `cached=False`.
 - **The dual-space interface.** `compute_data_vector_masked` keeps the

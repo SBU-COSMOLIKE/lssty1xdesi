@@ -249,10 +249,10 @@ on the linear-bias spectra, in `chains/linear_scale_cuts_final.npz`
 `chains/linear_fom_scale_cuts_final.npz`; both are archived. The Fisher
 notebook of the paper model, EXAMPLE_EVALUATE_FISHER_MODEL.ipynb,
 computes its own cuts on the paper fiducial (EXAMPLE_EVALUATE<n>.yaml
-at the reference settings of the derivative convergence study) and
-caches them in `chains/model_scale_cuts_reference.npz`, with the same
+at the final derivative settings, those of the derivative base) and
+caches them in `chains/model_scale_cuts_final.npz`, with the same
 structure and k_max list plus settings and fingerprints; this cache
-has no archived copy.
+is archived.
 
 Validation (measured):
 

@@ -253,10 +253,9 @@ kept while $|C_{\rm UV}|/(|C_{\rm UV}| + |C_{\rm IR}|) < 0.05$, with
 the split at $\kmax/D(\bar{z}_i)$ per bin, intersected with the
 shipped mask.  The cuts are computed on the paper model's fiducial
 ($b_2$ and $b_{s^2}$ on their calibrations, every other higher-order
-term zero), at the reference settings of the derivative convergence
-study, and cached in
-\texttt{chains/EXAMPLE\us EVALUATE\us FISHER\us MODEL\us SCALE\us
-CUTS.pkl}.
+term zero), at the final derivative tier (the settings of the
+derivatives below), and cached in
+\texttt{chains/model\us scale\us cuts\us final.npz}.
 
 \paragraph{Covariance.}
 The Gaussian band-power covariance, built at $14000$~deg$^2$ on the
@@ -272,8 +271,9 @@ nonlimber\_accuracyboost 64, integration\_accuracy 1,
 kmax\_boltzmann 20/Mpc, and CAMB at AccuracyBoost 2,
 k\_per\_logint 30 with the halofit tolerance patch.  The base, built
 on the paper yamls \texttt{EXAMPLE\us EVALUATE1-4.yaml}, is cached in
-\texttt{chains/\allowbreak EXAMPLE\us EVALUATE\us FISHER\us MODEL\us
-DERIVATIVES\us<n>.pkl} and \texttt{\ldots\us TEMPLATES\us<n>.pkl}.
+\texttt{chains/\allowbreak model\us derivatives\us<layout>\us final.npz}
+and \texttt{chains/\allowbreak model\us templates\us<layout>\us
+final.npz}.
 
 \section{Why the question is natural}
 \label{sec:why}

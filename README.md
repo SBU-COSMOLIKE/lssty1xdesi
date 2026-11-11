@@ -640,7 +640,7 @@ caches:
 |---|---|
 | `model_derivatives_<layout>_final.npz` | the stencil columns of the 20 sampled parameters, the per-bin columns of $`b_1`$, $`b_2`$, $`b_{s^2}`$ and $`\alpha_0`$, the $`\mathrm{SN}_0`$ templates and the fiducial vector |
 | `model_templates_<layout>_final.npz` | the $`\alpha_2`$ columns and the $`\mathrm{SN}_0`$ and $`\mathrm{SN}_2`$ templates |
-| `model_scale_cuts_reference.npz` | the UV-fraction scale cuts on the paper fiducial |
+| `model_scale_cuts_final.npz` | the UV-fraction scale cuts on the paper fiducial |
 
 Copying from the archive, reading, computing, writing and archiving
 are each an explicit call in its own cell. A cache whose settings or
@@ -649,9 +649,7 @@ notebook's is refused, and no file is replaced without
 `overwrite=True`. Fisher matrices are never cached: every run rebuilds
 them from the base and the current covariance files. The two
 derivative caches can also be computed on many cores
-([MPI](#fisher_mpi)). The scale cuts are not archived yet: the
-notebook computes them with its own cells (about an hour for the four
-layouts).
+([MPI](#fisher_mpi)).
 
 The DESI covariance is built on the one-loop model at its fiducial, so
 the data vector and its covariance share one model

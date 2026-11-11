@@ -140,7 +140,8 @@ Source: EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (sections 6, 7) and
 `fom_kmax_models/data.json` (`fom`, `fom_om_as`, `shift`, `worst`,
 `worst_in_prior`, `break`, for both variants and the three priors, the
 free prior included). The cuts are the UV-fraction cuts of the paper
-fiducial (`chains/EXAMPLE_EVALUATE_FISHER_MODEL_SCALE_CUTS.pkl`). The
+fiducial at the final derivative tier
+(`chains/model_scale_cuts_final.npz`). The
 scan: seven cuts 0.05, 0.075, ..., 0.2 (`KMAX_MAX`), two variants
 (model B, model B + tilts), three priors (growth-tied omitted): 168
 systems, 162 with a fit, 6 without any band (Delta z = 0.02 at 0.05);
@@ -153,8 +154,8 @@ scenario is the pessimistic prior with model B + tilts.
 
 | k_max | pessimistic scenario (model B + tilts) | baseline scenario (model B) |
 |---|---|---|
-| 0.075 | 0.407 / 0.237 / 0.155 / 0.0423 | 0.595 / 0.489 / 0.253 / 0.0676 |
-| 0.1 | 1.29 / 1.48 / 0.503 / 0.101 | 1.78 / 2.01 / 0.708 / 0.162 |
+| 0.075 | 0.407 / 0.237 / 0.155 / 0.0426 | 0.595 / 0.488 / 0.252 / 0.0676 |
+| 0.1 | 1.29 / 1.48 / 0.503 / 0.101 | 1.78 / 2.01 / 0.707 / 0.162 |
 | 0.15 | 4.80 / 5.14 / 1.68 / 0.229 | 5.66 / 6.43 / 1.99 / 0.347 |
 | 0.2 | 7.53 / 8.42 / 2.45 / 0.300 | 8.46 / 9.91 / 2.77 / 0.478 |
 
@@ -207,7 +208,7 @@ EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, section 9;
 `notes/bias_model_summary/plots/summary_fom_kmax/data.json` and
 `summary_fom_untied/data.json`.
 
-- FoM(w0, wa): 0.564 / 0.352 / 0.173 / 0.0445 at 0.075 and 6.70 / 7.95 /
+- FoM(w0, wa): 0.564 / 0.352 / 0.173 / 0.0447 at 0.075 and 6.70 / 7.95 /
   2.34 / 0.307 at 0.2; FoM(Omega_m, 10^9 A_s) 50.3 / 53.2 / 19.9 / 3.20
   at 0.2.
 - Against the linear-bias cuts the paper-fiducial cuts change these

@@ -108,11 +108,11 @@ fiducials.
     between the two fiducials (Section~\ref{sec:robust}).
 \end{enumerate}
 The consistent choice is adopted.  The paper notebook computes its
-cut on the paper model's fiducial and caches it
-(\texttt{chains/EXAMPLE\us EVALUATE\us FISHER\us MODEL\us
-SCALE\us CUTS.pkl}), and every Fisher result of the paper model uses
-that cache; the linear-bias notebooks keep the cut computed on the
-linear fiducial for the linear experiments.  The numbers above are
+cut on the paper model's fiducial at the final derivative tier and
+caches it (\texttt{chains/model\us scale\us cuts\us final.npz}), and
+every Fisher result of the paper model uses that cache; the
+linear-bias notebooks keep the cut computed on the linear fiducial
+for the linear experiments.  The numbers above are
 the price: a few percent of either figure of merit on the main
 layouts, $15\%$ on the coarse control at its smallest useful cut, and
 no pass/fail change.  What the strong $b_2$ dependence within the
@@ -175,15 +175,16 @@ Both caches hold the UV-fraction cut with $\auv = 0.05$ at
 $\kmax = 0.05$ to $0.25\hMpc$ (results use $\kmax \le 0.2$),
 intersected with the shipped mask:
 \begin{itemize}
-  \item \textbf{the paper cache},
-    \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us
-    SCALE\us CUTS.pkl} in \texttt{chains/}, computed on the paper
+  \item \textbf{the paper-fiducial cache}, computed on the paper
     fiducial at this study's reference settings (CosmoLike accuracy
     boost 4 with integration accuracy 2, the non-Limber $\chi$ grid at
     four times the sampling examples' factors, low-rank rank 8 with
     multipole cap 2000, CAMB AccuracyBoost 2 with
     \texttt{k\_per\_logint} 30 and transfer $k$ up to
-    $80\,{\rm Mpc}^{-1}$);
+    $80\,{\rm Mpc}^{-1}$).  The paper notebook's own cache,
+    \texttt{chains/model\us scale\us cuts\us final.npz}, holds the
+    same cut at the final derivative tier; the two differ by one kept
+    band, on $\Delta z = 0.2$ at $\kmax = 0.075\hMpc$;
   \item \textbf{the linear cache},
     \texttt{EXAMPLE\us EVALUATE\us FISHER\us SCALE\us CUTS.pkl},
     computed on the linear fiducial at the final derivative tier
@@ -605,7 +606,10 @@ A different cut selects rows of the cached derivative matrices;
 nothing is recomputed, and every row a new mask keeps is checked to
 carry a nonzero fiducial entry and derivative row.  On the
 paper-fiducial masks the scoring reproduces the paper notebook's
-figures of merit (\texttt{notes/bias\us model\us summary}) exactly.
+figures of merit (\texttt{notes/bias\us model\us summary}) on every
+layout and cut except $\Delta z = 0.2$ at $\kmax = 0.075\hMpc$, where
+the notebook's final-tier cut keeps one band that this study's
+reference-settings masks cut.
 $\eta$, the coverage and the break rule are the builder's own
 (known drifts plus the pessimistic prior scatter; a cut passes
 while every tested truth shifts the fit by less than $\sigma/3$).
