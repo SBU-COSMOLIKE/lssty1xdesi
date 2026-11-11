@@ -2259,10 +2259,58 @@ $\Cov_w$ of the FoM, is the inverse of
 \end{equation}
 $F_w$ is the $2 \times 2$ information left on the pair when every
 other parameter is free -- the subtraction is what marginalization
-costs -- and ${\rm FoM}(w_0, w_a) = (\det F_w)^{1/2}$.  Now let only
+costs -- and ${\rm FoM}(w_0, w_a) = (\det F_w)^{1/2}$.
+
+Eq.~\eqref{eq:schurpair} is a standard linear-algebra result worth
+recalling, the inverse of a partitioned matrix: split a matrix into
+four blocks,
+\begin{equation*}
+  M \;=\;
+  \begin{pmatrix} M_{11} & M_{12} \\ M_{21} & M_{22} \end{pmatrix}
+  \quad\Longrightarrow\quad
+  (M^{-1})_{11} \;=\;
+  \bigl(M_{11} - M_{12}\,M_{22}^{-1}\,M_{21}\bigr)^{-1} ,
+\end{equation*}
+whenever $M$ and $M_{22}$ are invertible.  The combination
+$M_{11} - M_{12}\,M_{22}^{-1}\,M_{21}$ is called the Schur complement
+of $M_{22}$ in $M$; block matrices and their inverses are collected in
+the Matrix Cookbook~\cite{Petersen2012}.
+
+The proof is three lines of block elimination, written here directly
+on $F$.  The first block column of $F^{-1}$ holds $\Cov_w$ on top and,
+below it, the cross block $(F^{-1})_{ow}$, the forecast covariance of
+the other parameters with the pair.  Reading $F\,F^{-1} = I$ block row
+by block row on that column gives two equations ($I$ the identity):
+\begin{equation*}
+  F_{ww}\,\Cov_w + F_{wo}\,(F^{-1})_{ow} \;=\; I ,
+  \qquad
+  F_{ow}\,\Cov_w + F_{oo}\,(F^{-1})_{ow} \;=\; 0 .
+\end{equation*}
+The second equation gives
+$(F^{-1})_{ow} = -F_{oo}^{-1}\,F_{ow}\,\Cov_w$; substituted into the
+first, $\bigl(F_{ww} - F_{wo}\,F_{oo}^{-1}\,F_{ow}\bigr)\,\Cov_w = I$,
+which is Eq.~\eqref{eq:schurpair}.  The blocks are $M_{11} = F_{ww}$,
+$M_{12} = F_{wo}$, $M_{21} = F_{ow} = F_{wo}\T$ ($F$ is symmetric) and
+$M_{22} = F_{oo}$, and $\Cov_w^{-1} = F_w$ is the Schur complement of
+$F_{oo}$.
+
+The statistics behind the algebra: $F_{ww}$ alone is the information
+on $(w_0, w_a)$ with every other parameter held fixed, and the
+subtracted $F_{wo}\,F_{oo}^{-1}\,F_{ow}$ is the information the other
+parameters absorb when they are left free, that is, marginalized.
+Marginalizing a Gaussian keeps a block of its covariance $F^{-1}$
+(Section~\ref{sec:linear}); written in terms of $F$, that block is
+this Schur complement.  The smallest check: one $w$ parameter and one
+other parameter, every block a number.  Then
+$F_w = F_{ww} - F_{wo}^2/F_{oo}$, and the $2 \times 2$ inverse gives
+$(F^{-1})_{ww} = F_{oo}/(F_{ww}F_{oo} - F_{wo}^2) = 1/F_w$: the same
+number.
+
+Now let only
 the $w_0$ and $w_a$ columns be noisy.  Their average additions
 $a_{w_0}$ and $a_{w_a}$ land on the diagonal of $F_{ww}$, the one
-block that enters Eq.~\eqref{eq:schurpair} linearly and whole, so they
+block that enters Eq.~\eqref{eq:schurpair} linearly and whole (the
+subtracted term is built from $F_{wo}$ and $F_{oo}$ alone), so they
 pass to the diagonal of $F_w$ unchanged -- exactly, not only to first
 order.  The $2 \times 2$ determinant can be expanded by hand,
 \begin{equation*}
@@ -3142,6 +3190,11 @@ with Velocileptors for DESI 2024 and beyond'',
 E. Saraivanov, H. Rubira, V. Miranda and T. Eifler,
 ``Towards the Two-Loop EFTofLSS in Galaxy Lensing Surveys'',
 2026, arXiv:2603.13031.
+
+\bibitem{Petersen2012}
+K. B. Petersen and M. S. Pedersen,
+``The Matrix Cookbook'',
+Technical University of Denmark, 2012.
 
 \end{thebibliography}
 
