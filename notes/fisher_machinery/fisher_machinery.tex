@@ -247,8 +247,8 @@ intersected with the shipped mask ($k = 0.1185/{\rm Mpc} =
 fiducial above, at the reference settings of the derivative
 convergence study (every accuracy control above its MCMC value), for
 $\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$, and cached in
-\texttt{chains/EXAMPLE\us EVALUATE\us FISHER\us MODEL\us SCALE\us
-CUTS.pkl}; figures and FoMs use $\kmax \le 0.2\hMpc$.
+\texttt{chains/model\us scale\us cuts\us reference.npz}
+(Section~\ref{sec:usage}); figures and FoMs use $\kmax \le 0.2\hMpc$.
 
 \paragraph{The covariance.}
 Gaussian, computed at the one-loop fiducial above (with massless
@@ -1506,7 +1506,8 @@ takes
 \end{equation}
 evaluations of the data vector, term by term in Table~\ref{tab:count}.
 It is $154$ on every layout, because no term grows with the number of
-bins.
+bins.  Section~\ref{sec:morepairs} counts the evaluations when the
+pair list grows and more batches are needed.
 
 \begin{table}[tbp]
   \centering
@@ -1601,6 +1602,302 @@ to $15$~GB of memory on $\Delta d_{\rm com} = 62$~Mpc, which sets how
 many ranks a node fits.  The project README, section ``Computing the
 derivative base with MPI'', gives the launch commands; the script's
 docstring holds the cache rules and the parallel layout.
+
+\subsection{More cross spectra: how many batches, and at what cost}
+\label{sec:morepairs}
+
+Every count above assumes today's pair lists.  Two prospective changes
+would lengthen them: measuring the spectra of bins two apart within a
+sample, $C^{i,i+2}$, and rebuilding the lists at the larger dispersions
+$\sigma_v$ that the paper priors allow (both below).  The price of a
+longer list is set by Eq.~\eqref{eq:neval}: with $N_{\rm fam} = 4$ and
+$N_{\rm stencil} = 20$ fixed,
+\begin{equation*}
+  N_{\rm eval} \;=\; 1 + 16\,N_{\rm batch} + 80 + 2\,N_{\rm batch} + 1
+  \;=\; 82 + 18\,N_{\rm batch} ,
+\end{equation*}
+so each extra batch costs $18$ evaluations: $154$, $172$ and $190$ for
+$4$, $5$ and $6$ batches.  This subsection counts the batches a longer
+list needs, shows that the code's greedy rule can use more than the
+minimum there, and names the fix.
+
+\paragraph{The rule, replayed on a toy.}
+Two bins may share a batch only if no measured spectrum contains both
+(Section~\ref{sec:operators}).  Take six bins in a row.  When only
+neighbors are measured, $C^{i,i+1}$ for $i = 1, \ldots, 5$, odd and
+even bins alternate and two batches suffice.  Now also measure
+$C^{i,i+2}$ for $i = 1, \ldots, 4$.  Bins $1$ and $3$ can no longer
+share a batch, because the measured $C^{13}$ contains both; neither can
+bins $2$ and $4$: the odd/even split fails.  Three batches work, by
+giving bin $i$ the number $1 + \bigl((i - 1) \bmod 3\bigr)$: two bins
+with the same number are then $3$ or $6$ places apart, every measured
+spectrum joins bins at most $2$ apart, so no spectrum contains two bins
+of one batch.
+\begin{center}
+  \begin{tabular}{lcccccc}
+    \hline
+    bin & 1 & 2 & 3 & 4 & 5 & 6 \\
+    \hline
+    batch, $C^{i,i+1}$ measured & 1 & 2 & 1 & 2 & 1 & 2 \\
+    batch, $C^{i,i+1}$ and $C^{i,i+2}$ measured & 1 & 2 & 3 & 1 & 2 & 3 \\
+    \hline
+  \end{tabular}
+\end{center}
+Three is also the fewest: bins $1$, $2$ and $3$ are measured pairwise
+($C^{12}$, $C^{13}$, $C^{23}$), so each of the three pairs must be
+split and three different numbers are forced.  In general, when every
+measured pair lies at most $b$ places apart -- the list has
+\emph{bandwidth} $b$ -- the pattern $i \bmod (b + 1)$ colors it with
+$b + 1$ batches; this is the rule of thumb of
+Section~\ref{sec:operators} again.
+
+\paragraph{The floor: cliques.}
+On the cross-pair graph (bins are dots, measured pairs are lines, a
+batch is a color; Section~\ref{sec:operators}) the toy's second
+argument generalizes.  A \emph{clique} is a set of bins every two of
+which share a measured spectrum -- a set of dots with a line between
+every two.  Any two bins of a clique must sit in different batches, so
+a clique of $q$ bins forces at least $q$ batches, whatever the rest of
+the layout looks like: the largest clique is a floor on
+$N_{\rm batch}$.  The floor is not always reachable -- some graphs need
+more colors than their largest clique -- so every list below is also
+checked by an exact search.
+
+\paragraph{Today's lists sit on the floor.}
+On every layout the largest clique has four bins: two adjacent LRG3
+bins and the two ELG1 bins they overlap, the quadruplets of
+Section~\ref{sec:operators} (bins $40$, $41$, $51$ and $52$ on
+$\Delta d_{\rm com} = 62$~Mpc).  The four layouts hold $10$, $14$, $5$
+and $1$ such four-cliques, every one of the form
+LRG3--LRG3--ELG1--ELG1, and no clique of five bins exists.  The greedy
+rule colors every layout with four batches, so on today's lists the
+code is optimal: four is both what it uses and the fewest possible,
+and $N_{\rm eval} = 154$.
+
+\paragraph{Measuring every $C^{i,i+2}$: the floor stays at four.}
+Suppose every spectrum of bins two apart \emph{within a sample} is
+measured -- bandwidth $2$ inside BGS, LRG and ELG, where a sample is
+the galaxy population, so a pair two apart may straddle a group
+boundary -- while the cross-sample pairs stay today's.  That adds
+$70$, $84$, $30$ and $4$ pairs on the four layouts
+(Table~\ref{tab:morepairs}).  The largest clique does not grow: a new
+pair joins two bins of one sample, and within one sample the largest
+clique is three consecutive bins (bins $i$ and $i + 3$ are not
+measured), so the LRG3--ELG1 quadruplets remain the largest; the exact
+search confirms that four batches still color every layout.  Within
+one sample alone, with no cross-sample pairs, the toy's pattern
+$i \bmod 3$ would even do with three.
+
+\begin{table}[tbp]
+  \centering
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lcccccc}
+    \hline
+    layout & pairs today & pairs & clique & greedy & DSATUR $=$ min
+      & $N_{\rm eval}$ greedy / min \\
+    \hline
+    $\Delta d_{\rm com} = 62$~Mpc & $107$ & $177$ & $4$ & $6$ & $4$
+      & $190$ / $154$ \\
+    $\Delta z = 0.02$ & $133$ & $217$ & $4$ & $6$ & $4$
+      & $190$ / $154$ \\
+    $\Delta z = 0.05$ & $52$ & $82$ & $4$ & $6$ & $4$
+      & $190$ / $154$ \\
+    $\Delta z = 0.2$ & $13$ & $17$ & $4$ & $4$ & $4$
+      & $154$ / $154$ \\
+    \hline
+  \end{tabular}
+  \caption{The pair lists with every within-sample $C^{i,i+2}$ added
+    to today's lists, per layout: the number of cross pairs, the
+    largest clique, the batches of the greedy rule in bin order, the
+    batches of DSATUR (equal to the exact minimum on every layout),
+    and $N_{\rm eval} = 82 + 18\,N_{\rm batch}$ for both colorings.}
+  \label{tab:morepairs}
+\end{table}
+
+\paragraph{The greedy rule overshoots the floor.}
+\texttt{pair\us coloring} walks the bins in data-vector order, so it
+colors every LRG bin before any ELG1 bin.  Along a bandwidth-2 chain
+each bin must avoid its two predecessors, so the LRG bins cycle
+through batches $1$, $2$, $3$.  Each ELG1 bin then arrives with up to
+five already-colored partners -- its two ELG1 predecessors and up to
+three LRG3 bins at its redshift -- and the LRG3 partners, cycling
+through $1$, $2$ and $3$, can hold all three low numbers at once, so
+the ELG1 bins open batches $4$, $5$ and $6$.  The result is six
+batches on $\Delta d_{\rm com} = 62$~Mpc, $\Delta z = 0.02$ and
+$\Delta z = 0.05$ ($N_{\rm eval} = 190$, $36$ evaluations above the
+floor) and four on $\Delta z = 0.2$, whose two ELG1 bins see fewer
+partners.
+
+A four-batch coloring exists on every layout, and the exact search
+produces one: inside each sample it cycles with period $3$, the toy's
+pattern, and in the LRG3--ELG1 shared volume both groups cycle with
+period $4$, out of phase, so that an LRG3 bin and the up-to-three ELG1
+bins at its redshift carry four different numbers.  On
+$\Delta d_{\rm com} = 62$~Mpc, bin by bin and split by group:
+\begin{center}
+  \begin{tabular}{lll}
+    \hline
+    group & greedy (six batches) & exact (four batches) \\
+    \hline
+    BGS  & $123123123123123123$ & $231231231231231231$ \\
+    LRG1 & $12312312312$ & $23123123123$ \\
+    LRG2 & $312312312$   & $123123123$ \\
+    LRG3 & $31231231231$ & $41234123412$ \\
+    ELG1 & $456456456423$ & $234123412341$ \\
+    ELG2 & $123123123123123$ & $231231231231231$ \\
+    \hline
+  \end{tabular}
+\end{center}
+One digit per bin, in bin order.  In the greedy coloring the batches
+$4$--$6$ live entirely in ELG1; in the exact coloring every group
+cycles with period $3$ except LRG3 and ELG1, which cycle with
+period $4$.
+
+\paragraph{DSATUR, the standard fix.}
+The overshoot is an artifact of the coloring order, not of the
+batching idea, and the standard cure is to choose the order on the
+fly.  DSATUR (``degree of saturation'') is the same greedy rule with
+one change: at each step it colors next the bin whose already-colored
+partners show the most \emph{distinct} batch numbers, breaking ties by
+the number of partners.  The bins under the most pressure are colored
+early, while the low numbers around them are still free.  On every
+list of this subsection DSATUR finds a four-batch coloring in
+milliseconds, matching the exact search (Table~\ref{tab:morepairs}).
+Coloring in mean-redshift order instead of bin order also gives four
+batches on every bandwidth-2 list, but five on the $\Delta z = 0.02$
+list of case (a) below, so it is the weaker fix.
+
+\paragraph{When would these pairs be measured?}
+The pair rule of Section~\ref{sec:operators} keeps a cross spectrum
+when the two bins' Fingers-of-God-blurred kernels overlap,
+$O_{ij} \ge 10^{-6}$, evaluated at the fiducial dispersions.  A larger
+$\sigma_v$ blurs every kernel further, and the pairs of bins two apart
+-- kernels separated by one full bin -- are the first unlisted pairs
+to approach the threshold.  The paper's widened $\sigma_v$ priors
+leave room for that: the Fingers-of-God note,
+\texttt{notes/fog\us parameter\us degeneracy\us study}, section on the
+pair list at the edges of the $\sigma_v$ prior, finds the crossing at
+$0.34$ and $0.52$ of the widened widths on
+$\Delta d_{\rm com} = 62$~Mpc and $\Delta z = 0.02$, inside one sigma
+of the adopted prior.
+
+How far does the fit itself go?  The paper model carries no
+$\alpha_{2,i}$, so when the truth does, the fit absorbs it, mostly
+into the dispersions, and a negative $\alpha_2$ raises them.  The
+linear response of Section~\ref{sec:downstream}, Eq.~\eqref{eq:shift},
+gives the dispersion each group reaches under a truth
+$\alpha_{2,i} = -A$ in every bin, for three sizes: (a)
+$A = 0.5/\kmax^2\aunit$, the model-B prior width at the cut; (b)
+$A = 12.5\aunit$, the DESI-size truth of the shift tests; (c)
+$A = 25\aunit$, twice that.  Table~\ref{tab:sigvmax} shows
+$\sigma_v^{\max}$, each group's largest dispersion over the cuts
+$\kmax = 0.05$--$0.2\hMpc$ (quoted at $z = 0$, as always).
+
+\begin{table}[tbp]
+  \centering
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{llccccccc}
+    \hline
+    layout & truth & BGS0 & BGS1 & LRG1 & LRG2 & LRG3 & ELG1 & ELG2 \\
+    \hline
+    & fiducial $\sigma_v$ & $371$ & $358$ & $357$ & $348$ & $343$ & $304$ & $289$ \\
+    & paper prior width & $870$ & $630$ & $420$ & $300$ & $300$ & $240$ & $180$ \\
+    \hline
+    $\Delta d_{\rm com} = 62$~Mpc & (a) & $469$ & $456$ & $449$ & $443$ & $439$ & $485$ & $439$ \\
+    & (b) & $420$ & $407$ & $393$ & $386$ & $381$ & $379$ & $364$ \\
+    & (c) & $468$ & $455$ & $430$ & $424$ & $418$ & $454$ & $438$ \\
+    $\Delta z = 0.02$ & (a) & $427$ & $413$ & $425$ & $439$ & $459$ & $513$ & $509$ \\
+    & (b) & $423$ & $409$ & $392$ & $388$ & $383$ & $381$ & $369$ \\
+    & (c) & $475$ & $459$ & $427$ & $427$ & $422$ & $458$ & $449$ \\
+    $\Delta z = 0.05$ & (a) & $401$ & $399$ & $391$ & $383$ & $391$ & $383$ & $358$ \\
+    & (b) & $401$ & $399$ & $387$ & $377$ & $375$ & $369$ & $346$ \\
+    & (c) & $430$ & $439$ & $417$ & $405$ & $406$ & $434$ & $403$ \\
+    $\Delta z = 0.2$ & (a) & $374$ & $362$ & $361$ & $357$ & $360$ & $318$ & $302$ \\
+    & (b) & $374$ & $362$ & $361$ & $355$ & $360$ & $318$ & $301$ \\
+    & (c) & $377$ & $366$ & $365$ & $362$ & $377$ & $332$ & $313$ \\
+    \hline
+  \end{tabular}
+  \caption{$\sigma_v^{\max}$ in km/s: the dispersion each group
+    reaches, by the linear response of Eq.~\eqref{eq:shift}, when the
+    paper fit absorbs a truth $\alpha_{2,i} = -A$ in every bin, with
+    (a) $A = 0.5/\kmax^2\aunit$, (b) $12.5\aunit$ and (c) $25\aunit$,
+    maximized over the cuts $\kmax = 0.05$--$0.2\hMpc$ at $z = 0$.
+    The first two rows give the fiducial dispersions and the widened
+    (paper) prior widths of Section~\ref{sec:fiducial}.}
+  \label{tab:sigvmax}
+\end{table}
+
+The dispersions stay modest, $301$--$513$~km/s, the largest being ELG1
+and ELG2 under (a), where the response and the prior width
+$0.5/\kmax^2$ peak together at $\kmax = 0.1$--$0.125\hMpc$.  They sit
+far below the roughly $900$~km/s scale of BGS0's widened prior --
+width $870$~km/s, truncated mean about $850$~km/s
+(Section~\ref{sec:fiducial}) -- that the prior-edge crossing above
+involves.  Rebuilt at these dispersions, the pair lists barely move:
+only $\Delta z = 0.02$ gains pairs -- $28$ under (a), all pairs of ELG
+bins two apart with overlaps $1.1\times10^{-6}$ to
+$6.3\times10^{-5}$, which is $50$ to $3000$ times weaker than any pair
+on today's list of that layout, and $14$ under (c) -- while (b) adds
+nothing anywhere and the other three layouts gain nothing under any
+truth.  On the $28$-pair list the largest clique and the minimum stay
+at four batches; the greedy rule needs five ($N_{\rm eval} = 172$),
+and DSATUR finds the four.  These are linear-response estimates
+extrapolated over $100$--$200$~km/s -- the blur is not linear in
+$\sigma_v$ -- and the wider question, a chain exploring the full
+widened priors, is the rebuild at the prior edge queued in the
+Fingers-of-God note (its appendix ``Open issues'').
+
+\paragraph{The cost.}
+A longer pair list is a new data vector, so a layout needs its pair
+list, mask, covariance and scale cuts rebuilt, and then a new base.
+Table~\ref{tab:morecost} prices the bases, scaling each layout's
+$t_{\rm eval}$ of Section~\ref{sec:evals} with the number of $gg$
+spectra -- an upper estimate, since the bin-count scaling used there
+would leave $t_{\rm eval}$ unchanged.  Measuring every within-sample
+$C^{i,i+2}$ costs about $6.7$~hours of bases with four batches, or
+$8.2$~hours with the greedy coloring's six, against about $4.9$~hours
+today.  Truth (a) forces one rebuild, $\Delta z = 0.02$: about
+$2.4$~hours with four batches, $2.6$ with the greedy five, against
+$2.1$ today.
+
+\begin{table}[tbp]
+  \centering
+  \begin{tabular}{lccccc}
+    \hline
+    & & & \multicolumn{3}{c}{base [h]} \\
+    layout & $gg$ spectra & $t_{\rm eval}$ [s] & today
+      & $4$ batches & greedy \\
+    \hline
+    $\Delta d_{\rm com} = 62$~Mpc & $183 \to 253$ & $56.7$ & $1.75$
+      & $2.42$ & $2.99$ \\
+    $\Delta z = 0.02$ & $223 \to 307$ & $67.5$ & $2.10$
+      & $2.89$ & $3.56$ \\
+    $\Delta z = 0.05$ & $88 \to 118$ & $26.1$ & $0.83$
+      & $1.12$ & $1.38$ \\
+    $\Delta z = 0.2$ & $23 \to 27$ & $6.3$ & $0.23$
+      & $0.27$ & $0.27$ \\
+    \hline
+    all four & & & $4.9$ & $6.7$ & $8.2$ \\
+    \hline
+  \end{tabular}
+  \caption{The base of each layout with every within-sample
+    $C^{i,i+2}$ measured: the number of $gg$ spectra (today $\to$
+    extended), the estimated time per evaluation ($t_{\rm eval}$ of
+    Section~\ref{sec:evals} scaled with the number of spectra, on the
+    same Apple M2 Pro yardstick), and the base in hours -- today's,
+    with the four-batch coloring, and with the greedy coloring's
+    batches (six, except four on $\Delta z = 0.2$).}
+  \label{tab:morecost}
+\end{table}
+
+\paragraph{The open choice.}
+Switching \texttt{pair\us coloring} to DSATUR -- in the notebook and
+in \texttt{scripts/compute\us fisher\us base\us mpi.py} together,
+since the two copies must stay identical for the MPI caches to
+reproduce the notebook's -- would keep every case of this subsection
+at four batches.  Nothing forces the change while today's lists are in
+use, where the greedy rule already reaches the minimum; the choice is
+open (Appendix~\ref{sec:open}).
 
 \section{A scale cut is a set of rows}
 \label{sec:cuts}
@@ -1871,8 +2168,8 @@ The work splits into three levels.
     \hline
     array & shape & what it is \\
     \hline
-    \multicolumn{3}{l}{\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us DERIVATIVES\us 1.pkl}
-      ($33.7$~MB)} \\
+    \multicolumn{3}{l}{\texttt{model\us derivatives\us dcom62\us final.npz}
+      ($0.97$~MB)} \\
     \texttt{m0} & $10{,}494$ & the fiducial band powers $m(p_0)$ \\
     \texttt{D} & $10{,}494 \times 20$ & stencil columns: 7 cosmology,
       6 $B_g$ (check only), 7 $\sigma_v$ \\
@@ -1889,8 +2186,8 @@ The work splits into three levels.
       and their fiducial values \\
     \texttt{priors}, \texttt{leaders} & & the $\sigma_v$ prior widths;
       each bin's group amplitude \\
-    \multicolumn{3}{l}{\texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL\us TEMPLATES\us 1.pkl}
-      ($19.2$~MB)} \\
+    \multicolumn{3}{l}{\texttt{model\us templates\us dcom62\us final.npz}
+      ($0.22$~MB)} \\
     \texttt{m0} & $10{,}494$ & the fiducial vector again (the
       cross-cache check) \\
     \texttt{a2} & $10{,}494 \times 76$ & column $i$: $\partial m/\partial \alpha_{2,i}$,
@@ -1903,14 +2200,17 @@ The work splits into three levels.
     \hline
   \end{tabular}
   \caption{The precomputed arrays of $\Delta d_{\rm com} = 62$~Mpc, in
-    Python's pickle files: $n = 10{,}494$ band powers and $N = 76$ bins.
-    Each $10{,}494 \times 76$ block is $6.4$~MB in double precision.  The
+    compressed \texttt{.npz} files of plain numpy arrays
+    (Section~\ref{sec:usage}): $n = 10{,}494$ band powers and $N = 76$
+    bins.  Each $10{,}494 \times 76$ block is $6.4$~MB in double
+    precision in memory; the files are far smaller because no per-bin
+    column has a nonzero entry outside its own bin's spectra.  The
     files also hold the settings, tier and fingerprint they were made
     with (Section~\ref{sec:accuracy}).  The other layouts' files are
-    $47.5/27.3$, $8.8/4.8$ and $1.1/0.5$~MB
+    $1.28/0.29$, $0.49/0.11$ and $0.13/0.03$~MB
     ($\Delta z = 0.02$, $0.05$, $0.2$;
-    derivatives/templates), and the scale-cut cache is $6.2$~MB.  In the
-    toy's notation,
+    derivatives/templates), and the scale-cut working copy is
+    $3.6$~MB.  In the toy's notation,
     \texttt{ops['b1']} is $[u_1, \ldots, u_N]$ and \texttt{ops['b2']} is
     $[v_1, \ldots, v_N]$.}
   \label{tab:arrays}
@@ -3639,23 +3939,30 @@ columns to $4.6\times10^{-14}$.
 \section{Using the caches}
 \label{sec:usage}
 
-The caches are the pickle files of Table~\ref{tab:arrays}, one set per
-layout, in \texttt{chains/}, which git ignores: a fresh clone recomputes
-them (hours), and every later run reads them.  Their names start with
-\texttt{EXAMPLE\us EVALUATE\us FISHER}, and $\langle n\rangle = 1$ to
-$4$ numbers the layouts in the order $\Delta d_{\rm com} = 62$~Mpc,
-$\Delta z = 0.02$, $0.05$, $0.2$.
+The caches live in two places.  The working copies, which the
+notebooks read and write, are the files of Table~\ref{tab:arrays}, one
+set per layout, in \texttt{chains/}, which git ignores.  Final-tier
+copies are archived in \texttt{fisher\us caches/}, whose \texttt{.npz}
+files git stores through Git LFS, so a fresh clone copies an archived
+cache instead of recomputing it (hours).  A cache's name says what it
+holds, the layout and the tier, with the layouts \texttt{dcom62}
+($\Delta d_{\rm com} = 62$~Mpc), \texttt{dz0p02}, \texttt{dz0p05} and
+\texttt{dz0p20} ($\Delta z = 0.02$, $0.05$, $0.2$).
 \begin{itemize}
-  \item \texttt{\us MODEL\us SCALE\us CUTS.pkl}, written by the
+  \item \texttt{model\us scale\us cuts\us reference}, written by the
     notebook's section~3: the bands each
-    ultraviolet-fraction cut keeps, computed on the paper fiducial, at
+    ultraviolet-fraction cut keeps, computed on the paper fiducial at
+    the reference settings of the derivative convergence study, at
     $\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$, with its settings and
     fingerprints; the scans use the seven
     cuts up to $0.2$.  (The linear notebook,
     \texttt{EXAMPLE\us EVALUATE\us FISHER.ipynb}, keeps its own cut
-    cache on the linear-bias fiducial for the linear-bias experiments.)
-  \item \texttt{\us MODEL\us DERIVATIVES\us<n>.pkl} and
-    \texttt{\us MODEL\us TEMPLATES\us<n>.pkl}: the base caches of
+    cache on the linear-bias fiducial,
+    \texttt{linear\us scale\us cuts\us final}, for the linear-bias
+    experiments.)  This is the one cache without an archived copy: its
+    working copy is computed by the notebook's own cells.
+  \item \texttt{model\us derivatives\us<layout>\us final} and
+    \texttt{model\us templates\us<layout>\us final}: the base caches of
     Table~\ref{tab:arrays} -- the stencil and per-bin operator columns,
     the $\SNzi$ templates, the fiducial vector and biases in the first;
     the exact $\alpha_2$ columns and the $\SNzi$ and $\SNti$ templates
@@ -3666,18 +3973,54 @@ $\Delta z = 0.02$, $0.05$, $0.2$.
 Neither the notebook nor the script caches a Fisher matrix, $\mG_m$ or
 FoM: these depend on the covariance and are rebuilt at every run.
 
-\paragraph{Explicit compute, save and load cells.}
-Caches are computed, saved and loaded only in their own cells.  The
-compute cells run only with their switch set by hand
-(\texttt{COMPUTE\us SCALE\us CUTS} for section~3,
-\texttt{COMPUTE\us BASE} for section~4, both \texttt{False} by
-default); the layouts are computed cheapest first.  The save cells
-refuse to replace an existing file unless called with
-\texttt{overwrite=True}, and write both caches of a layout or neither.
-The load cells raise when a cache is missing (naming the switch and
-the MPI script) or when its stored settings or fingerprint differ from
-the notebook's own: a mismatched cache is never read past the check.
-The MPI script follows the same rules with \texttt{--overwrite}, and
+\paragraph{The file format.}
+A cache is one \texttt{.npz} file (a zip archive of numpy arrays) of
+plain arrays plus one JSON header.  A pickle can run code when it is
+loaded; plain arrays and JSON text cannot, so reading a cache runs no
+code.  The header lists the settings, the tier, the fingerprints, the
+parameter names, the shape of every array and the date, and it holds a
+provenance record: for every model the fully resolved cobaya input
+with its fingerprint, the sha256 of every dataset file, the stored
+settings, and the git state of the repositories, the CAMB version and
+the halofit patch at write time.  The archive keeps the same record
+next to each file as \texttt{fisher\us caches/<name>.json}, in plain
+git, readable on GitHub, and \texttt{fisher\us
+caches/checksums.json} holds the sha256 of every archived file.
+
+\paragraph{Four calls, each explicit in its own cell.}
+Nothing loads, computes or writes a cache on its own; no code checks
+whether a file exists to decide what to do.  A notebook cell calls one
+of four functions of the Fisher module, so every load and every save
+shows intent, and a changed setting can never reuse or overwrite a
+cache unnoticed.
+\begin{itemize}
+  \item \texttt{load\us fisher\us from\us cache} copies an archived
+    cache to its working copy.  It refuses a Git LFS pointer (the
+    small text file git leaves for a large file it never downloaded;
+    the message names \texttt{git lfs pull}), a checksum that differs
+    from \texttt{checksums.json}, and a different existing working
+    copy without \texttt{overwrite=True}.
+  \item \texttt{read\us fisher\us cache} reads a working copy.  It
+    raises when the stored settings differ from the notebook's, when a
+    tier entry differs from the notebook's tier, or when a stored
+    fingerprint no longer matches the current yaml, parameter and
+    dataset files; it never recomputes.
+  \item \texttt{write\us fisher\us cache} writes a freshly computed
+    result, with its settings and the provenance record, to the
+    working copy.  It refuses an existing file without
+    \texttt{overwrite=True}, and writes nothing when a stored
+    fingerprint differs from the current files.
+  \item \texttt{save\us fisher\us to\us cache} archives a working
+    copy, records its checksum and writes the record
+    \texttt{.json}: the only call that changes the archive.  Only
+    final-tier results enter the archive; it refuses a cache without a
+    tier or with any tier other than final, a changed fingerprint, and
+    a different archived file without \texttt{overwrite=True}.
+\end{itemize}
+The compute cells are committed commented out: to recompute, run a
+compute cell in place of its read cell, then the write cell; the
+layouts are computed cheapest first.  The MPI script follows the same
+rules with \texttt{--overwrite}, writes working copies only, and
 stops without writing when its ranks see different files or a file
 changes during the run.
 
@@ -3686,7 +4029,7 @@ changes during the run.
   \item \textbf{Detected automatically}: any change of the model input
     that the fingerprint covers (a likelihood option, a CAMB argument, a
     prior, a tie between parameters, the fiducial point), of the tier,
-    of the stencil rule or of the steps.  The load cell stops and
+    of the stencil rule or of the steps.  The read cell stops and
     names the mismatch.  A file that moves or is renamed with the same
     content
     keeps its cache.
@@ -3912,6 +4255,16 @@ confirms, bit for bit, that no step survives its evaluation.
     FoMs were rescored for the paper model on the paper-fiducial cuts.
     The derivative columns are shared, so a rescoring would change the
     quoted stabilities, not the chosen settings.
+  \item \textbf{The greedy coloring is not minimal on longer pair
+    lists.}  On today's lists \texttt{pair\us coloring} reaches the
+    minimum, four batches.  If the lists grow -- every within-sample
+    $C^{i,i+2}$ measured, or the $\Delta z = 0.02$ list rebuilt at the
+    dispersions an $\alpha_2$ truth at the prior edge drives -- it
+    uses six or five batches where four still suffice, at $18$ extra
+    evaluations per batch (Section~\ref{sec:morepairs}).  Switching
+    the rule to DSATUR, in the notebook and in
+    \texttt{scripts/compute\us fisher\us base\us mpi.py} together,
+    keeps the minimum in every case; whether to switch is undecided.
 \end{itemize}
 
 \begin{thebibliography}{99}
