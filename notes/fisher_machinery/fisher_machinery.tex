@@ -2156,6 +2156,32 @@ $0.014$, a $\Delta\chi^2$ of $2\times10^{-4}$ -- far below the MCMC
 convergence criterion $|\Delta\chi^2| < 0.2$, and harmless for a
 likelihood evaluation.  The next paragraph is why it still matters.
 
+\begin{table}[tbp]
+  \centering
+  \begin{tabular}{lcccc}
+    \hline
+    configuration & $H_0$ & $\Omega_m$ & $w_0$ & $w_a$ \\
+    \hline
+    MCMC settings          & $2.1\times10^{-3}$ & $1.7\times10^{-2}$ & $2.5\times10^{-2}$ & $1.4\times10^{-2}$ \\
+    $g = 64$               & $2.2\times10^{-3}$ & $8.1\times10^{-3}$ & $1.1\times10^{-2}$ & $4.8\times10^{-3}$ \\
+    $g = 128$ (starting)   & $2.2\times10^{-3}$ & $6.5\times10^{-3}$ & $4.3\times10^{-3}$ & $1.8\times10^{-3}$ \\
+    $g = 256$ (final)      & $2.2\times10^{-3}$ & $6.1\times10^{-3}$ & $2.2\times10^{-3}$ & $3.5\times10^{-4}$ \\
+    \hline
+  \end{tabular}
+  \caption{The noise of one evaluation along each stencil parameter,
+    in $\sqrt{\chi^2}$ units, on $\Delta z = 0.05$.  The rows with a
+    grid factor $g$ keep every other control at the starting
+    configuration's value ($g = 128$ is the starting configuration
+    itself).  The unit is the natural one for a Fisher forecast: the
+    data vector enters $F = \mD\T\Cov^{-1}\mD$ only through the metric
+    $\Cov^{-1}$, so a change $\delta m$ matters only through its
+    whitened length $\sqrt{\delta m\T\Cov^{-1}\delta m}$, and a column
+    whose noise is $\sigma$ per evaluation adds about
+    $0.9\,(\sigma/\epsilon)^2$ to $F_{jj}$,
+    Eq.~\eqref{eq:derivnoise}.}
+  \label{tab:noise}
+\end{table}
+
 \paragraph{Why the jitter matters for a derivative.}
 First the objects.  The Fisher matrix, Eq.~\eqref{eq:fisher}, is built
 from the derivative matrix $\mD$, one column per sampled parameter
@@ -2231,26 +2257,68 @@ settings to the final grid, is a $1600$-fold fall of its spurious
 contribution to $F$.
 
 \paragraph{From the spurious information to the figure of merit.}
-The spurious term has a familiar form.  Below
+First the question.  The paragraphs above pin down what the noise does
+to the Fisher matrix: the noise of stencil column $j$ adds, on
+average, about $0.9\,(\sigma/\epsilon_j)^2$ to the diagonal entry
+$F_{jj}$, and nothing, on average, anywhere else.  But the published
+numbers are not Fisher entries; they are marginalized errors and FoMs.
+What does the addition do to ${\rm FoM}(w_0, w_a)$?
+
+What the FoM reads.  Recall Section~\ref{sec:linear}: $F^{-1}$ is the
+forecast covariance of the parameters, $\Cov_w$ is its $2 \times 2$
+block for the pair $(w_0, w_a)$, and
+${\rm FoM}(w_0, w_a) = [\det\Cov_w]^{-1/2}$ is the inverse area of the
+pair's error ellipse when every other parameter is free.  So the
+additions land in $F$, while the FoM reads a block of $F^{-1}$.
+
+Why one cannot just look at $F_{ww}$.  A block of the inverse is not
+the inverse of the block: $(F^{-1})_{ww} \ne (F_{ww})^{-1}$ whenever
+the pair correlates with any other parameter, because inverting $F$
+mixes every parameter into every block -- that mixing \emph{is}
+marginalization.  The additions must therefore be followed through the
+inverse of the full matrix.  The route below: the addition rewritten
+as a prior, the marginalization as a block formula, a $2 \times 2$
+determinant, a worked toy, and then the general case of every column
+noisy at once.
+
+The noise as a fake prior.  The addition has a familiar form.  Below
 Eq.~\eqref{eq:fisher}: a Gaussian prior of width $w$ adds $1/w^2$ to
-its parameter's diagonal entry.  The noise adds, on average,
+its parameter's diagonal entry of $F$, and nothing else.  The noise of
+column $j$ adds, on average,
 \begin{equation}
   a_j \;=\; \langle e_j\T\Cov^{-1}e_j\rangle
   \;\approx\; 0.9\,(\sigma/\epsilon_j)^2
   \label{eq:spuriousprior}
 \end{equation}
 to $F_{jj}$, and nothing, on average, anywhere else (the cross terms
-of ``What the noise does to $F$'' have zero mean).  So the noise of
-column $j$ acts like a spurious Gaussian prior on $p_j$, of width
-$w_j = a_j^{-1/2} \approx \epsilon_j/(0.95\,\sigma)$: information the
-data do not carry.  Along $w_a$, the numbers above are a spurious
-prior of width $1.5$ at the MCMC settings, and of width $60$ at the
-final grid.
+of ``What the noise does to $F$'' have zero mean).  Matching the two
+statements: the noise of column $j$ acts exactly like a Gaussian prior
+on $p_j$ with $1/w_j^2 = a_j$ -- a spurious prior of width
+$w_j = a_j^{-1/2} \approx \epsilon_j/(0.95\,\sigma)$, information the
+data do not carry.
 
-How such a prior moves the FoM.  Split the sampled parameters into the
-pair $w = (w_0, w_a)$ and the rest, $o$, and write $F$ in blocks,
-$F_{ww}$, $F_{wo}$, $F_{oo}$.  The pair's block of $F^{-1}$, the
-$\Cov_w$ of the FoM, is the inverse of
+In numbers, along $w_a$.  At the MCMC settings the addition computed
+above is $a_{w_a} \approx 0.44$, a spurious prior of width
+$1/\sqrt{0.44} \approx 1.5$ on $w_a$; at the final grid,
+$a_{w_a} \approx 2.8\times10^{-4}$, a width of $60$.  Whether a prior
+of width $1.5$ matters depends on how well the data measure $w_a$: a
+forecast feels a prior through the ratio of the parameter's
+marginalized error $\sigma_j$ to the prior's width.  The determinant
+expansion below makes that precise.
+
+\paragraph{Marginalizing over the other parameters.}
+The block split.  Order the sampled parameters so the pair
+$w = (w_0, w_a)$ comes first and the rest -- call them $o$, for
+``others'' -- follow, and write the Fisher matrix in blocks,
+\begin{equation*}
+  F \;=\;
+  \begin{pmatrix} F_{ww} & F_{wo} \\ F_{ow} & F_{oo} \end{pmatrix} :
+\end{equation*}
+$F_{ww}$ is the pair's $2 \times 2$ corner, $F_{oo}$ the square block
+of the other parameters among themselves, and $F_{wo} = F_{ow}\T$
+(two rows, one column per other parameter) their cross information.
+The pair's block of $F^{-1}$, the $\Cov_w$ of the FoM, is the inverse
+of
 \begin{equation}
   F_w \;=\; F_{ww} - F_{wo}\,F_{oo}^{-1}\,F_{ow} ,
   \qquad
@@ -2259,11 +2327,12 @@ $\Cov_w$ of the FoM, is the inverse of
 \end{equation}
 $F_w$ is the $2 \times 2$ information left on the pair when every
 other parameter is free -- the subtraction is what marginalization
-costs -- and ${\rm FoM}(w_0, w_a) = (\det F_w)^{1/2}$.
+costs -- and ${\rm FoM}(w_0, w_a) = [\det\Cov_w]^{-1/2}
+= (\det F_w)^{1/2}$.
 
-Eq.~\eqref{eq:schurpair} is a standard linear-algebra result worth
-recalling, the inverse of a partitioned matrix: split a matrix into
-four blocks,
+Where the formula comes from.  Eq.~\eqref{eq:schurpair} is a standard
+linear-algebra result, the inverse of a partitioned matrix: split any
+invertible matrix into four blocks,
 \begin{equation*}
   M \;=\;
   \begin{pmatrix} M_{11} & M_{12} \\ M_{21} & M_{22} \end{pmatrix}
@@ -2271,96 +2340,391 @@ four blocks,
   (M^{-1})_{11} \;=\;
   \bigl(M_{11} - M_{12}\,M_{22}^{-1}\,M_{21}\bigr)^{-1} ,
 \end{equation*}
-whenever $M$ and $M_{22}$ are invertible.  The combination
+whenever $M_{22}$ is invertible too.  The combination
 $M_{11} - M_{12}\,M_{22}^{-1}\,M_{21}$ is called the Schur complement
 of $M_{22}$ in $M$; block matrices and their inverses are collected in
-the Matrix Cookbook~\cite{Petersen2012}.
+the Matrix Cookbook~\cite{Petersen2012}.  Here $M_{11} = F_{ww}$,
+$M_{12} = F_{wo}$, $M_{21} = F_{ow}$ ($F$ is symmetric),
+$M_{22} = F_{oo}$, and $\Cov_w^{-1} = F_w$ is the Schur complement of
+$F_{oo}$.
 
-The proof is three lines of block elimination, written here directly
-on $F$.  The first block column of $F^{-1}$ holds $\Cov_w$ on top and,
-below it, the cross block $(F^{-1})_{ow}$, the forecast covariance of
-the other parameters with the pair.  Reading $F\,F^{-1} = I$ block row
-by block row on that column gives two equations ($I$ the identity):
+The proof, in three steps on $F$ itself.  First, name the unknowns:
+the first block column of $F^{-1}$ holds $\Cov_w$ on top and, below
+it, the cross block $(F^{-1})_{ow}$, the forecast covariance of the
+other parameters with the pair.  Second, read $F\,F^{-1} = I$ block
+row by block row on that column ($I$ the identity):
 \begin{equation*}
   F_{ww}\,\Cov_w + F_{wo}\,(F^{-1})_{ow} \;=\; I ,
   \qquad
   F_{ow}\,\Cov_w + F_{oo}\,(F^{-1})_{ow} \;=\; 0 .
 \end{equation*}
-The second equation gives
-$(F^{-1})_{ow} = -F_{oo}^{-1}\,F_{ow}\,\Cov_w$; substituted into the
-first, $\bigl(F_{ww} - F_{wo}\,F_{oo}^{-1}\,F_{ow}\bigr)\,\Cov_w = I$,
-which is Eq.~\eqref{eq:schurpair}.  The blocks are $M_{11} = F_{ww}$,
-$M_{12} = F_{wo}$, $M_{21} = F_{ow} = F_{wo}\T$ ($F$ is symmetric) and
-$M_{22} = F_{oo}$, and $\Cov_w^{-1} = F_w$ is the Schur complement of
-$F_{oo}$.
+Third, solve: the second equation gives
+$(F^{-1})_{ow} = -F_{oo}^{-1}\,F_{ow}\,\Cov_w$, and substituting it
+into the first leaves
+$\bigl(F_{ww} - F_{wo}\,F_{oo}^{-1}\,F_{ow}\bigr)\,\Cov_w = I$, which
+is Eq.~\eqref{eq:schurpair}.
 
-The statistics behind the algebra: $F_{ww}$ alone is the information
+The statistics behind the algebra.  $F_{ww}$ alone is the information
 on $(w_0, w_a)$ with every other parameter held fixed, and the
 subtracted $F_{wo}\,F_{oo}^{-1}\,F_{ow}$ is the information the other
 parameters absorb when they are left free, that is, marginalized.
 Marginalizing a Gaussian keeps a block of its covariance $F^{-1}$
 (Section~\ref{sec:linear}); written in terms of $F$, that block is
-this Schur complement.  The smallest check: one $w$ parameter and one
-other parameter, every block a number.  Then
-$F_w = F_{ww} - F_{wo}^2/F_{oo}$, and the $2 \times 2$ inverse gives
-$(F^{-1})_{ww} = F_{oo}/(F_{ww}F_{oo} - F_{wo}^2) = 1/F_w$: the same
-number.
+this Schur complement.
 
-Now let only
-the $w_0$ and $w_a$ columns be noisy.  Their average additions
-$a_{w_0}$ and $a_{w_a}$ land on the diagonal of $F_{ww}$, the one
-block that enters Eq.~\eqref{eq:schurpair} linearly and whole (the
-subtracted term is built from $F_{wo}$ and $F_{oo}$ alone), so they
-pass to the diagonal of $F_w$ unchanged -- exactly, not only to first
-order.  The $2 \times 2$ determinant can be expanded by hand,
+The smallest check.  Take two parameters only, one $w$ and one other
+parameter $o$.  Then $F$ is a $2 \times 2$ matrix and every block of
+the split above is a single number,
 \begin{equation*}
-  \det F_w' \;=\;
-  \bigl[(F_w)_{11} + a_{w_0}\bigr]\bigl[(F_w)_{22} + a_{w_a}\bigr]
-  - (F_w)_{12}^2
-  \;=\; \det F_w + a_{w_0}\,(F_w)_{22} + a_{w_a}\,(F_w)_{11}
-  + a_{w_0}\,a_{w_a} ,
+  F \;=\;
+  \begin{pmatrix} F_{ww} & F_{wo} \\ F_{wo} & F_{oo} \end{pmatrix}
 \end{equation*}
-and the $2 \times 2$ inverse turns these entries into marginalized
-errors: $\sigma_{w_0}^2 = (\Cov_w)_{11} = (F_w)_{22}/\det F_w$, the
-same with $1 \leftrightarrow 2$ for $\sigma_{w_a}^2$, and
-$1/\det F_w = \det \Cov_w = \sigma_{w_0}^2\sigma_{w_a}^2(1 - \rho^2)$,
-with $\rho$ the forecast correlation of $w_0$ and $w_a$.  Dividing
-through by $\det F_w$,
+($F$ is symmetric, so the two off-diagonal blocks are the same
+number).  In this case the marginalized variance needs no block
+algebra at all: the general $2 \times 2$ inverse,
+\begin{equation*}
+  \begin{pmatrix} a & b \\ b & d \end{pmatrix}^{-1}
+  \;=\; \frac{1}{ad - b^2}
+  \begin{pmatrix} d & -b \\ -b & a \end{pmatrix} ,
+\end{equation*}
+read with $a = F_{ww}$, $b = F_{wo}$, $d = F_{oo}$, gives the top-left
+entry directly,
+\begin{equation*}
+  \sigma_w^2 \;=\; (F^{-1})_{ww}
+  \;=\; \frac{F_{oo}}{F_{ww}F_{oo} - F_{wo}^2} .
+\end{equation*}
+Now the Schur route to the same number.  $F_{oo}$ is a number, so
+$F_{oo}^{-1}$ is just $1/F_{oo}$, and Eq.~\eqref{eq:schurpair} reads
+$F_w = F_{ww} - F_{wo}^2/F_{oo}$.  Its inverse,
+\begin{equation*}
+  \frac{1}{F_w} \;=\; \frac{1}{F_{ww} - F_{wo}^2/F_{oo}}
+  \;=\; \frac{F_{oo}}{F_{ww}F_{oo} - F_{wo}^2}
+\end{equation*}
+(multiply numerator and denominator by $F_{oo}$), is the same number:
+the two routes agree.
+
+The same check with numbers.  Take $F_{ww} = 4$, $F_{wo} = 2$,
+$F_{oo} = 3$.  The Schur complement is $F_w = 4 - 2^2/3 = 8/3$, and
+the inverse's top-left entry is $3/(4 \times 3 - 2^2) = 3/8$, which is
+indeed $1/(8/3)$.  The statistics it encodes: with $o$ held fixed,
+$\sigma_w = 1/\sqrt{F_{ww}} = 1/\sqrt{4} = 0.50$; with $o$ free,
+$\sigma_w = 1/\sqrt{F_w} = \sqrt{3/8} \approx 0.61$.  The subtracted
+$F_{wo}^2/F_{oo} = 4/3$ is the information $o$ absorbs -- and the gap
+between $0.50$ and $0.61$ is why the FoM cannot be read off $F_{ww}$
+alone.
+
+\paragraph{Why the additions pass through the marginalization whole.}
+The claim, then its construction.  Let only the $w_0$ and $w_a$
+columns be noisy.  Their additions land on the diagonal of $F_w$
+unchanged -- exactly, not only to first order.  Three block steps show
+it, and a $3 \times 3$ example then shows it entry by entry.
+
+Step one, the noisy matrix in blocks.  On average the noise adds
+$a_{w_0}$ and $a_{w_a}$ to the two diagonal entries of the pair and
+nothing else (the off-diagonal additions average to zero, as shown
+above), so the noisy Fisher matrix is
+\begin{equation*}
+  F' \;=\; F + \mathsf{E} ,
+  \qquad
+  \mathsf{E} \;=\;
+  \begin{pmatrix} \mathsf{A} & 0 \\ 0 & 0 \end{pmatrix} ,
+  \qquad
+  \mathsf{A} \;=\;
+  \begin{pmatrix} a_{w_0} & 0 \\ 0 & a_{w_a} \end{pmatrix} ,
+\end{equation*}
+with zeros in every block the noise does not touch.
+
+Step two, the blocks of $F'$.  Adding $\mathsf{E}$ changes one block
+and leaves three alone:
+\begin{equation*}
+  F'_{ww} = F_{ww} + \mathsf{A} ,
+  \qquad
+  F'_{wo} = F_{wo} ,
+  \qquad
+  F'_{ow} = F_{ow} ,
+  \qquad
+  F'_{oo} = F_{oo} .
+\end{equation*}
+
+Step three, into the marginalization.  Put these blocks into
+Eq.~\eqref{eq:schurpair}:
+\begin{equation*}
+  F'_w \;=\; (F_{ww} + \mathsf{A}) - F_{wo}\,F_{oo}^{-1}\,F_{ow}
+  \;=\; F_w + \mathsf{A} .
+\end{equation*}
+No approximation was made: $F_{ww}$ is the one block that enters
+Eq.~\eqref{eq:schurpair} linearly and whole, and the subtracted term
+is built from $F_{wo}$ and $F_{oo}$ alone, which the noise leaves
+untouched.
+
+The same, entry by entry.  Take three parameters $(w_0, w_a, o)$, so
+$F_{oo} = f_{33}$ is a number, and write the marginalization out:
+\begin{equation*}
+  F \;=\;
+  \begin{pmatrix}
+    f_{11} & f_{12} & f_{13} \\
+    f_{12} & f_{22} & f_{23} \\
+    f_{13} & f_{23} & f_{33}
+  \end{pmatrix}
+  \quad\Longrightarrow\quad
+  F_w \;=\;
+  \begin{pmatrix}
+    f_{11} - f_{13}^2/f_{33} & f_{12} - f_{13}f_{23}/f_{33} \\
+    f_{12} - f_{13}f_{23}/f_{33} & f_{22} - f_{23}^2/f_{33}
+  \end{pmatrix} .
+\end{equation*}
+The noise changes only $f_{11} \to f_{11} + a_{w_0}$ and
+$f_{22} \to f_{22} + a_{w_a}$:
+\begin{align*}
+  F' \;&=\;
+  \begin{pmatrix}
+    f_{11} + a_{w_0} & f_{12} & f_{13} \\
+    f_{12} & f_{22} + a_{w_a} & f_{23} \\
+    f_{13} & f_{23} & f_{33}
+  \end{pmatrix}
+  \\
+  \Longrightarrow\quad
+  F'_w \;&=\;
+  \begin{pmatrix}
+    f_{11} + a_{w_0} - f_{13}^2/f_{33} &
+    f_{12} - f_{13}f_{23}/f_{33} \\
+    f_{12} - f_{13}f_{23}/f_{33} &
+    f_{22} + a_{w_a} - f_{23}^2/f_{33}
+  \end{pmatrix} .
+\end{align*}
+None of the three subtracted pieces -- $f_{13}^2/f_{33}$,
+$f_{13}f_{23}/f_{33}$, $f_{23}^2/f_{33}$ -- contains $f_{11}$ or
+$f_{22}$, so $F'_w = F_w + \mathsf{A}$: each addition rides through
+the marginalization into its own diagonal entry.
+
+\paragraph{A worked toy, part one: the marginalization.}
+The toy the rest of this subsection reuses.  Three sampled parameters,
+the pair $(w_0, w_a)$ and one other parameter $o$ standing in for all
+the others, with the round-number Fisher matrix
+\begin{equation*}
+  F \;=\;
+  \begin{pmatrix} 5 & 4 & 1 \\ 4 & 5 & 2 \\ 1 & 2 & 3 \end{pmatrix}
+\end{equation*}
+in that order (all three parameters treated as dimensionless, so every
+entry is a plain number; the matrix is positive definite, with
+eigenvalues $0.71$, $2.6$ and $9.7$).  The entries are chosen so the
+forecast resembles the real one: a strong $w_0$--$w_a$ anticorrelation
+and a sizeable correlation with $o$, computed below.
+
+The marginalization, with the entry-by-entry formula.  Here
+$f_{33} = 3$, and the three subtracted pieces are
+$f_{13}^2/f_{33} = 1/3$, $f_{13}f_{23}/f_{33} = 2/3$ and
+$f_{23}^2/f_{33} = 4/3$:
+\begin{equation*}
+  F_w \;=\;
+  \begin{pmatrix} 5 - 1/3 & 4 - 2/3 \\ 4 - 2/3 & 5 - 4/3 \end{pmatrix}
+  \;=\;
+  \begin{pmatrix} 14/3 & 10/3 \\ 10/3 & 11/3 \end{pmatrix}
+  \;\approx\;
+  \begin{pmatrix} 4.67 & 3.33 \\ 3.33 & 3.67 \end{pmatrix} ,
+\end{equation*}
+with $\det F_w = (14 \times 11 - 10 \times 10)/9 = 6$, so
+${\rm FoM} = \sqrt{6} \approx 2.45$.
+
+The pass-through, with numbers.  Add $a_{w_0} = 0.5$ and
+$a_{w_a} = 0.3$.  The direct route -- form $F + \mathsf{E}$, redo the
+Schur complement with $f_{11} = 5.5$ and $f_{22} = 5.3$ -- gives
+\begin{equation*}
+  F'_w \;=\;
+  \begin{pmatrix} 5.5 - 1/3 & 4 - 2/3 \\ 4 - 2/3 & 5.3 - 4/3
+  \end{pmatrix}
+  \;\approx\;
+  \begin{pmatrix} 5.17 & 3.33 \\ 3.33 & 3.97 \end{pmatrix}
+  \;=\; F_w +
+  \begin{pmatrix} 0.5 & 0 \\ 0 & 0.3 \end{pmatrix} ,
+\end{equation*}
+the additions sitting whole on the diagonal, as the blocks promised.
+How much the FoM moved takes the determinant, next.
+
+\paragraph{The two-column result, step by step.}
+The determinant, term by term.  The noisy FoM is
+$(\det F'_w)^{1/2}$ with $F'_w = F_w + \mathsf{A}$, and the
+$2 \times 2$ determinant can be expanded by hand:
+\begin{align*}
+  \det F'_w \;&=\;
+  \bigl[(F_w)_{11} + a_{w_0}\bigr]\bigl[(F_w)_{22} + a_{w_a}\bigr]
+  - (F_w)_{12}^2 \\
+  &=\; \underbrace{(F_w)_{11}(F_w)_{22} - (F_w)_{12}^2}_{\det F_w}
+  \;+\; a_{w_0}\,(F_w)_{22} \;+\; a_{w_a}\,(F_w)_{11}
+  \;+\; a_{w_0}\,a_{w_a} .
+\end{align*}
+
+Each term in forecast language.  Divide by $\det F_w$ and use the
+$2 \times 2$ inverse of the smallest check once more, now on $F_w$
+itself: $\sigma_{w_0}^2 = (\Cov_w)_{11} = (F_w)_{22}/\det F_w$ and
+$\sigma_{w_a}^2 = (\Cov_w)_{22} = (F_w)_{11}/\det F_w$, the
+marginalized errors.  So the two linear terms, divided by $\det F_w$,
+become $a_{w_0}\sigma_{w_0}^2$ and $a_{w_a}\sigma_{w_a}^2$.  The last
+term needs
+$1/\det F_w = \det\Cov_w = \sigma_{w_0}^2\sigma_{w_a}^2 -
+(\Cov_w)_{12}^2 = \sigma_{w_0}^2\sigma_{w_a}^2\,(1 - \rho^2)$, with
+$\rho = (\Cov_w)_{12}/(\sigma_{w_0}\sigma_{w_a})$ the forecast
+correlation of $w_0$ and $w_a$; divided through, it becomes
+$(1 - \rho^2)\,a_{w_0}\sigma_{w_0}^2\,a_{w_a}\sigma_{w_a}^2$.
+
+The result.  The FoM is the square root of the determinant, so
 \begin{equation}
   \frac{{\rm FoM}'}{{\rm FoM}} \;=\;
+  \biggl[\frac{\det F'_w}{\det F_w}\biggr]^{1/2} \;=\;
   \bigl[\,1 + a_{w_0}\sigma_{w_0}^2 + a_{w_a}\sigma_{w_a}^2
   + (1 - \rho^2)\,a_{w_0}\sigma_{w_0}^2\,a_{w_a}\sigma_{w_a}^2
   \,\bigr]^{1/2} ,
   \label{eq:fomtwo}
 \end{equation}
-the prime marking the noisy forecast.  Each term
-$a_j\sigma_j^2 = (\sigma_j/w_j)^2$ is the squared ratio of the
-parameter's marginalized error to its spurious prior width ($\sigma_j$
-here is the forecast error, not the evaluation noise $\sigma$).  When
-both are small,
-${\rm FoM}'/{\rm FoM} \approx 1 + \tfrac{1}{2}(\sigma_{w_0}/w_{w_0})^2
-+ \tfrac{1}{2}(\sigma_{w_a}/w_{w_a})^2$: one first-order term per
-noisy column, not one per evaluation -- the four evaluations behind a
-column sit inside its $a_j$, through the squared stencil weights
-$(1 + 64 + 64 + 1)/144 \approx 0.9$ of Eq.~\eqref{eq:derivnoise}.
-With equal terms, $x = a_{w_0}\sigma_{w_0}^2 = a_{w_a}\sigma_{w_a}^2$,
+the prime marking the noisy forecast, and the relation is exact.  Each
+term $a_j\sigma_j^2 = (\sigma_j/w_j)^2$ is the squared ratio of the
+parameter's marginalized error to its spurious prior width: the
+dimensionless measure of how informative the fake prior is.  (Careful
+with the two sigmas: $\sigma_j$ here is the forecast error of
+parameter $j$, not the evaluation noise $\sigma$ of
+Table~\ref{tab:noise}; the evaluation noise lives inside $a_j$.)
+
+The first-order rule.  When both terms are small,
+$\sqrt{1 + x} \approx 1 + x/2$ and the product term is second order,
+so
+\begin{equation*}
+  \frac{{\rm FoM}'}{{\rm FoM}} \;\approx\;
+  1 + \tfrac{1}{2}\,a_{w_0}\sigma_{w_0}^2
+  + \tfrac{1}{2}\,a_{w_a}\sigma_{w_a}^2 :
+\end{equation*}
+one first-order term per noisy column, not one per evaluation -- the
+four evaluations behind a column already sit inside its $a_j$, through
+the squared stencil weights $(1 + 64 + 64 + 1)/144 \approx 0.9$ of
+Eq.~\eqref{eq:derivnoise}.  With equal terms,
+$x = a_{w_0}\sigma_{w_0}^2 = a_{w_a}\sigma_{w_a}^2$,
 Eq.~\eqref{eq:fomtwo} is
 $[1 + 2x + (1 - \rho^2)\,x^2]^{1/2} \approx 1 + x$, and exactly
 $1 + x$ at $\rho = 0$.
 
-A toy with the $w_a$ numbers above.  Only the $w_a$ column noisy and,
-for illustration alone, $\sigma_{w_a} = 1$.  At the MCMC settings,
-$a_{w_a} \approx 0.44$:
+First numbers, with the real $w_a$ column.  Let only the $w_a$ column
+be noisy and, for illustration alone, take $\sigma_{w_a} = 1$.  At the
+MCMC settings, $a_{w_a} \approx 0.44$:
 ${\rm FoM}'/{\rm FoM} = (1 + 0.44)^{1/2} = 1.20$, a $20\%$ spurious
 gain.  At the final grid, $a_{w_a} \approx 2.8\times10^{-4}$:
 $1 + 1.4\times10^{-4}$.
 
+\paragraph{The toy, part two: the forecast errors and the noisy FoM.}
+The forecast errors.  The $2 \times 2$ inverse of the toy's $F_w$ is
+\begin{equation*}
+  \Cov_w \;=\; F_w^{-1} \;=\; \frac{1}{6}
+  \begin{pmatrix} 11/3 & -10/3 \\ -10/3 & 14/3 \end{pmatrix}
+  \;\approx\;
+  \begin{pmatrix} 0.611 & -0.556 \\ -0.556 & 0.778 \end{pmatrix} ,
+\end{equation*}
+so $\sigma_{w_0} = \sqrt{0.611} \approx 0.78$,
+$\sigma_{w_a} = \sqrt{0.778} \approx 0.88$, and
+$\rho = -0.556/(0.78 \times 0.88) \approx -0.81$: the strong
+anticorrelation announced ($1 - \rho^2 \approx 0.35$).  For later use,
+the full inverse is
+\begin{equation*}
+  F^{-1} \;=\; \frac{1}{18}
+  \begin{pmatrix} 11 & -10 & 3 \\ -10 & 14 & -6 \\ 3 & -6 & 9
+  \end{pmatrix}
+\end{equation*}
+(its top-left $2 \times 2$ block is $\Cov_w$, as
+Eq.~\eqref{eq:schurpair} promises), so $\sigma_o^2 = 9/18 = 0.5$, and
+$o$'s forecast correlations are $0.30$ with $w_0$ and $-0.53$ with
+$w_a$.
+
+The tens-of-percent case, finished.  For the additions
+$a_{w_0} = 0.5$, $a_{w_a} = 0.3$ of part one, the terms of
+Eq.~\eqref{eq:fomtwo} are $a_{w_0}\sigma_{w_0}^2 = 0.5 \times 0.611 =
+0.306$ and $a_{w_a}\sigma_{w_a}^2 = 0.3 \times 0.778 = 0.233$, and the
+product term $0.35 \times 0.306 \times 0.233 = 0.025$.  The sum is
+$1.564$ -- the same number as $\det F'_w/\det F_w$ computed from part
+one's matrices -- so ${\rm FoM}'/{\rm FoM} = (1.564)^{1/2} = 1.251$
+exactly, while the first-order rule gives $1 + (0.306 + 0.233)/2 =
+1.269$: once the terms are not small the expansion overshoots, and
+only Eq.~\eqref{eq:fomtwo} itself is exact.
+
+A few-percent case.  Add $a_{w_0} = a_{w_a} = 0.05$ instead.  The
+terms are $0.031$ and $0.039$, the product term $4.2\times10^{-4}$,
+negligible: ${\rm FoM}'/{\rm FoM} = (1.070)^{1/2} = 1.034$, against
+the first-order rule $1 + (0.031 + 0.039)/2 = 1.035$.  At the few
+percent the published forecasts care about, first order is already the
+whole story.
+
+Noise on the other column.  Add $a_o = 0.6$ to the $o$ column alone.
+This addition sits in $f_{33}$, inside every subtracted piece of the
+entry-by-entry formula, so it does not pass through whole; it acts
+through the marginalization.  Redoing the Schur complement with
+$f_{33} = 3.6$,
+\begin{equation*}
+  F'_w \;=\;
+  \begin{pmatrix} 5 - 1/3.6 & 4 - 2/3.6 \\ 4 - 2/3.6 & 5 - 4/3.6
+  \end{pmatrix}
+  \;\approx\;
+  \begin{pmatrix} 4.72 & 3.44 \\ 3.44 & 3.89 \end{pmatrix} ,
+  \qquad
+  \det F'_w \;=\; 6.50 ,
+\end{equation*}
+so ${\rm FoM}'/{\rm FoM} = (6.50/6)^{1/2} = 1.041$: a $4.1\%$ spurious
+gain from a column that is neither $w_0$ nor $w_a$.  The mechanism:
+the fake prior makes $o$ look better measured, a better-measured $o$
+absorbs less information, and the pair keeps more.  The next paragraph
+derives the first-order rule that predicts this number from $o$'s
+correlation with the pair.
+
 \paragraph{Every noisy column, through its correlation with the pair.}
-When every column is noisy, first order is enough: a small change of
-$F$ moves its inverse by $\delta(F^{-1}) = -F^{-1}\,\delta F\,F^{-1}$,
-and keeping the $(w_0, w_a)$ block and the determinant's response
-$\delta\ln\det\Cov_w = {\rm tr}\bigl(\Cov_w^{-1}\,\delta\Cov_w\bigr)$
-collects the diagonal additions $a_j$ into
+The general case, to first order.  In the real system every column is
+noisy at once: the $2 \times 2$ matrix $\mathsf{A}$ of the
+construction grows to the full diagonal,
+$\mathsf{A} = {\rm diag}(a_1, a_2, \dots)$ with one $a_j$ per sampled
+parameter, and the noisy Fisher matrix is $F + \mathsf{A}$.  Near the
+final settings every $a_j\sigma_j^2$ is small, so first order in
+$\mathsf{A}$ is enough.  Three steps: how the inverse moves, which
+block to keep, and how a determinant responds.
+
+How the inverse moves.  For a small $\mathsf{A}$, factor and expand:
+\begin{equation*}
+  (F + \mathsf{A})^{-1}
+  \;=\; \bigl[F\,(I + F^{-1}\mathsf{A})\bigr]^{-1}
+  \;=\; (I + F^{-1}\mathsf{A})^{-1}\,F^{-1}
+  \;\approx\; (I - F^{-1}\mathsf{A})\,F^{-1}
+  \;=\; F^{-1} - F^{-1}\mathsf{A}\,F^{-1} ,
+\end{equation*}
+using $(I + X)^{-1} \approx I - X$ for small $X$, the matrix version
+of $1/(1 + x) \approx 1 - x$.  So the change of the inverse is minus
+the change, sandwiched between two inverses,
+$\delta(F^{-1}) = -F^{-1}\,\mathsf{A}\,F^{-1}$ -- the matrix version
+of $\delta(1/x) = -\delta x/x^2$.
+
+Which block to keep.  The FoM reads the pair's block of $F^{-1}$, so
+\begin{equation*}
+  \delta\Cov_w \;=\; -\bigl(F^{-1}\mathsf{A}\,F^{-1}\bigr)_{ww}
+  \;=\; -\sum_j a_j\,(F^{-1})_{w,j}\,(F^{-1})_{j,w} ,
+\end{equation*}
+where the sum writes the diagonal $\mathsf{A}$ out, column by column:
+$(F^{-1})_{w,j}$ is the two-entry piece of parameter $j$'s column of
+$F^{-1}$ in the pair's rows (in the toy, for $j = o$, the entries
+$3/18 = 1/6$ and $-6/18 = -1/3$), and each noisy column lowers
+$\Cov_w$ by $a_j$ times the outer product of that two-vector with
+itself.
+
+How the determinant responds.  $\ln{\rm FoM} =
+-\tfrac{1}{2}\ln\det\Cov_w$, and for a small change of a matrix $S$,
+$\delta\ln\det S = {\rm tr}\bigl(S^{-1}\,\delta S\bigr)$: the matrix
+version of $\delta\ln x = \delta x/x$, read off from
+$\det(I + X) \approx 1 + {\rm tr}\,X$ for small $X$.  So
+\begin{equation*}
+  \delta\ln{\rm FoM}
+  \;=\; -\tfrac{1}{2}\,
+  {\rm tr}\bigl(\Cov_w^{-1}\,\delta\Cov_w\bigr)
+  \;=\; +\tfrac{1}{2}\sum_j a_j\,
+  (F^{-1})_{j,w}\,\Cov_w^{-1}\,(F^{-1})_{w,j} ,
+\end{equation*}
+the last step by the trace of an outer product,
+${\rm tr}(uv\T) = v\T u$, which turns each column's trace into a
+number.  The overall sign flipped twice -- $\delta\Cov_w$ is negative,
+the $-\tfrac{1}{2}$ flips it back -- and the statement is the familiar
+one: the noise shrinks the forecast ellipse and raises the FoM.
+
+Collected, with each column's number split into named factors,
 \begin{equation}
   \delta\ln{\rm FoM} \;\approx\; \frac{1}{2}\sum_j R_j^2\,a_j\sigma_j^2 ,
   \qquad
@@ -2368,67 +2732,130 @@ collects the diagonal additions $a_j$ into
   {\sigma_j^2} ,
   \label{eq:fomall}
 \end{equation}
-with $(F^{-1})_{j,w}$ parameter $j$'s row of $F^{-1}$ restricted to
-the pair's two columns.  $R_j^2$ is the squared multiple correlation
-of $p_j$ with the pair: the share of $p_j$'s forecast variance that a
-linear fit to $(w_0, w_a)$ explains.  It is $1$ for $w_0$ and $w_a$
-themselves, recovering Eq.~\eqref{eq:fomtwo} to first order, and $0$
-for a parameter uncorrelated with the pair: a nuisance column's noise
-reaches the FoM only through its correlation with the pair.  On the
-converged system at $\kmax = 0.075\hMpc$, $R_j^2 = 0.93$ for
-$\Omega_m$ and $0.76$ for $H_0$.  The same formula with the pair
-$(\Omega_m, 10^9 A_s)$ gives the response of
-${\rm FoM}(\Omega_m, 10^9 A_s)$; there the per-bin $b_{1,i}$ columns,
-degenerate with the amplitude $A_s$, reach $R_j^2 \approx 0.7$.
+one term per column, each the two-column term
+$\tfrac{1}{2}\,a_j\sigma_j^2$ weighted by a number $R_j^2$ between $0$
+and $1$.
+
+What $R_j^2$ means.  It is the squared multiple correlation of $p_j$
+with the pair: the share of $p_j$'s forecast variance that a linear
+fit to $(w_0, w_a)$ explains.  It is $1$ for $w_0$ and $w_a$
+themselves, recovering the first-order rule of Eq.~\eqref{eq:fomtwo},
+and $0$ for a parameter uncorrelated with the pair: a nuisance
+column's noise reaches the FoM only through its correlation with the
+pair.
+
+$R_o^2$ in the toy.  The two-vector is $(F^{-1})_{o,w} = (1/6, -1/3)$
+and $\Cov_w^{-1} = F_w$, so the quadratic form is
+\begin{equation*}
+  \begin{pmatrix} 1/6 & -1/3 \end{pmatrix}
+  \begin{pmatrix} 14/3 & 10/3 \\ 10/3 & 11/3 \end{pmatrix}
+  \begin{pmatrix} 1/6 \\ -1/3 \end{pmatrix}
+  \;=\;
+  \begin{pmatrix} 1/6 & -1/3 \end{pmatrix}
+  \begin{pmatrix} -1/3 \\ -2/3 \end{pmatrix}
+  \;=\; -\frac{1}{18} + \frac{2}{9}
+  \;=\; \frac{1}{6} ,
+\end{equation*}
+and dividing by $\sigma_o^2 = 1/2$ gives $R_o^2 = 1/3$.  No pairwise
+correlation gives this number -- squared, they are $0.30^2 = 0.09$
+with $w_0$ and $0.53^2 = 0.29$ with $w_a$, and their sum $0.38$
+overshoots because $w_0$ and $w_a$ are themselves correlated -- which
+is why the formula needs the full quadratic form.  (A check without
+the formula: with the pair held fixed, $o$'s variance is
+$1/f_{33} = 1/3$, two thirds of its free variance $\sigma_o^2 = 1/2$;
+the pair explains the remaining third, $R_o^2 = 1/3$.)  The
+first-order prediction for the toy's last case is then
+$\delta\ln{\rm FoM} = \tfrac{1}{2} \times \tfrac{1}{3} \times
+\tfrac{1}{2} \times 0.6 = 0.05$, a ratio of about $1.05$ against the
+exact $1.041$: the right size, a second-order distance away.
+
+On the real system.  On the converged system at
+$\kmax = 0.075\hMpc$, $R_j^2 = 0.93$ for $\Omega_m$ and $0.76$ for
+$H_0$: their columns' noise reaches ${\rm FoM}(w_0, w_a)$ almost
+undiminished.  The same formula with the pair $(\Omega_m, 10^9 A_s)$
+gives the response of ${\rm FoM}(\Omega_m, 10^9 A_s)$; there the
+per-bin $b_{1,i}$ columns, degenerate with the amplitude $A_s$, reach
+$R_j^2 \approx 0.7$.
 
 \paragraph{The part that averages to zero.}
-The middle term of Eq.~\eqref{eq:fjjnoise}, $2\,d_j\T\Cov^{-1}e_j$,
-and the off-diagonal terms have zero mean but scatter, so the realized
-$\delta\ln{\rm FoM}$ gains one zero-mean term per column, linear in
-that column's noise.  Write $X = \sum_j R_j^2\,a_j\sigma_j^2$, twice
-the average shift of Eq.~\eqref{eq:fomall}.  A column's whitened noise
-spread evenly over the $N_d$ kept band powers gives the linear terms a
-standard deviation of about $(X/N_d)^{1/2}$ (without priors; priors
-only lower it); noise concentrated along the derivative directions can
-push one column's term up to the square root of its whole contribution
-to $X$.  The average shift grows as the noise squared, the scatter
-only as the noise, so near convergence the scatter dominates the
-realized error.  That is why the practical criterion below is
-independence of the step -- two steps, the same FoM -- and not the
-average formula alone.
+What the average misses.  Eq.~\eqref{eq:fomall} keeps only the mean of
+the noise's effect.  The middle term of Eq.~\eqref{eq:fjjnoise},
+$2\,d_j\T\Cov^{-1}e_j$, and the off-diagonal gains $e_j\T\Cov^{-1}e_k$
+have zero mean, but a forecast is run once, on one realization of the
+computed vectors, and in that one realization they are not zero.  So
+the realized $\delta\ln{\rm FoM}$ is the average shift plus a
+zero-mean remainder, one term per column, linear in that column's
+noise.
+
+How large the scatter is.  Write $X = \sum_j R_j^2\,a_j\sigma_j^2$,
+twice the average shift of Eq.~\eqref{eq:fomall}.  Two limits bracket
+the scatter.  A column's whitened noise spread evenly over the $N_d$
+kept band powers overlaps the few directions the derivatives span only
+by chance, and the linear terms end with a standard deviation of about
+$(X/N_d)^{1/2}$ (without priors; priors only lower it).  Noise
+concentrated along the derivative directions is the worst case: one
+column's linear term can reach the square root of that column's whole
+contribution to $X$.
+
+Why the scatter wins near convergence.  The average shift is built
+from the $a_j$, each proportional to the noise squared; the linear
+terms grow as the noise itself.  Halve the noise and the shift falls
+fourfold, the scatter only twofold.  So close to convergence the
+zero-mean scatter, not the average push, dominates the realized error.
+
+The practical consequence.  A quantity that scatters with the noise
+realization is not shown converged by shrinking a predicted mean; it
+is shown converged by checking that the realization does not matter.
+That is why the practical criterion below is independence of the step
+-- two steps, two different noise realizations, the same FoM -- and
+not the average formula alone.
 
 \paragraph{The prediction against the measured offsets.}
-At the final settings the additions are small and
-Eq.~\eqref{eq:fomall} can be checked.  With each stencil column's
+What goes in.  At the final settings the additions are small, first
+order holds, and Eq.~\eqref{eq:fomall} can be checked against the
+measured offsets.  Its ingredients: each stencil column's evaluation
 noise measured at those settings (the final-settings analogue of the
-$g = 256$ row of Table~\ref{tab:noise}) and the converged system's
-$\sigma_j$ and $R_j$, it predicts a spurious
-${\rm FoM}(w_0, w_a)$ gain of $2.6\%$ at $\kmax = 0.075\hMpc$ and
-$0.2\%$ at $0.2\hMpc$, against measured offsets (``The final
-settings'' below) of $+2.1\%$ and $-0.5\%$, which also carry the
-smooth part of the settings change; for
-${\rm FoM}(\Omega_m, 10^9 A_s)$ it predicts the same two values,
-against $+1.8\%$ and $-0.4\%$ measured.  The prediction covers the
-stencil columns only -- the per-bin columns' noise is not measured by
-Table~\ref{tab:noise}, and swapping them moves the FoM by less than
-$0.1\%$ (``The distance grid dominates'' below).
+$g = 256$ row of Table~\ref{tab:noise}), which gives the column's
+$a_j$ through Eq.~\eqref{eq:spuriousprior}, and the converged system's
+$\sigma_j$ and $R_j$.
 
-At the MCMC settings the additions are far beyond first order,
-$a_{w_a}\sigma_{w_a}^2 \approx 30$, and Eq.~\eqref{eq:fomtwo} with the
-measured noise gives about eight times the converged FoM at
-$0.075\hMpc$, where the measured offset is $1.56$
-(Figure~\ref{fig:convergence}).  What fails there is the direction of
-the error, not its size: the additions pass whole to $F_w$ only
-because noise with no preferred direction in data space has vanishing
-cross terms with the other columns.  The coarse grid's realized error
-is instead a smooth, broadband shape within each spectrum -- the kind
-of change the nuisance columns can fit.  On the $0.075\hMpc$ cut,
-about $95\%$ of the realized $w_a$-column error lies inside the span
-of the other columns, where the subtraction of
-Eq.~\eqref{eq:schurpair} removes it.  So near
-convergence the average formula sizes the residual push; far from
-convergence it is an overestimate, and only the direct comparison --
-the grid scan and the step test -- measures the offset.
+What comes out.  The sum predicts a spurious ${\rm FoM}(w_0, w_a)$
+gain of $2.6\%$ at $\kmax = 0.075\hMpc$ and $0.2\%$ at $0.2\hMpc$,
+against measured offsets (``The final settings'' below) of $+2.1\%$
+and $-0.5\%$.  At $0.075\hMpc$ the size and the sign agree; at
+$0.2\hMpc$ both numbers are below half a percent, where the smooth
+part of the settings change, which the measured offsets also carry, is
+of the same size.  For ${\rm FoM}(\Omega_m, 10^9 A_s)$ the prediction
+is the same two values, against $+1.8\%$ and $-0.4\%$ measured.
+
+What the prediction does not cover.  It covers the stencil columns
+only: the per-bin columns' noise is not measured by
+Table~\ref{tab:noise}.  Swapping those columns moves the FoM by less
+than $0.1\%$ (``The distance grid dominates'' below), so the omission
+sits below the comparison's resolution.
+
+Far from convergence the formula overestimates.  At the MCMC settings
+the additions are far beyond first order,
+$a_{w_a}\sigma_{w_a}^2 \approx 30$, and even the exact
+Eq.~\eqref{eq:fomtwo} with the measured noise gives about eight times
+the converged FoM at $0.075\hMpc$ -- where the measured offset is
+$1.56$ (Figure~\ref{fig:convergence}).
+
+What fails there is the direction of the error, not its size.  The
+additions pass whole to $F_w$ only because noise with no preferred
+direction in data space has vanishing cross terms with the other
+columns.  The coarse grid's realized error is not directionless: it is
+a smooth, broadband shape within each spectrum -- the kind of change
+the nuisance columns can fit.  On the $0.075\hMpc$ cut, about $95\%$
+of the realized $w_a$-column error lies inside the span of the other
+columns, where the subtraction of Eq.~\eqref{eq:schurpair} removes it;
+only the remainder behaves like the directionless noise the formula
+assumes.
+
+So the division of labor.  Near convergence the average formula sizes
+the residual push; far from convergence it is an overestimate, and
+only the direct comparison -- the grid scan and the step test --
+measures the offset.
 
 \paragraph{What the estimator does and does not see.}
 The estimate treats the five errors as independent.  An error that
@@ -2447,32 +2874,6 @@ to twelve times noisier than the $H_0$ column, which does not change
 with the grid.  The finer grid quiets $w_0$ and $w_a$ most: the $w_a$
 noise falls fortyfold from the MCMC settings to $g = 256$, the final
 grid.
-
-\begin{table}[tbp]
-  \centering
-  \begin{tabular}{lcccc}
-    \hline
-    configuration & $H_0$ & $\Omega_m$ & $w_0$ & $w_a$ \\
-    \hline
-    MCMC settings          & $2.1\times10^{-3}$ & $1.7\times10^{-2}$ & $2.5\times10^{-2}$ & $1.4\times10^{-2}$ \\
-    $g = 64$               & $2.2\times10^{-3}$ & $8.1\times10^{-3}$ & $1.1\times10^{-2}$ & $4.8\times10^{-3}$ \\
-    $g = 128$ (starting)   & $2.2\times10^{-3}$ & $6.5\times10^{-3}$ & $4.3\times10^{-3}$ & $1.8\times10^{-3}$ \\
-    $g = 256$ (final)      & $2.2\times10^{-3}$ & $6.1\times10^{-3}$ & $2.2\times10^{-3}$ & $3.5\times10^{-4}$ \\
-    \hline
-  \end{tabular}
-  \caption{The noise of one evaluation along each stencil parameter,
-    in $\sqrt{\chi^2}$ units, on $\Delta z = 0.05$.  The rows with a
-    grid factor $g$ keep every other control at the starting
-    configuration's value ($g = 128$ is the starting configuration
-    itself).  The unit is the natural one for a Fisher forecast: the
-    data vector enters $F = \mD\T\Cov^{-1}\mD$ only through the metric
-    $\Cov^{-1}$, so a change $\delta m$ matters only through its
-    whitened length $\sqrt{\delta m\T\Cov^{-1}\delta m}$, and a column
-    whose noise is $\sigma$ per evaluation adds about
-    $0.9\,(\sigma/\epsilon)^2$ to $F_{jj}$,
-    Eq.~\eqref{eq:derivnoise}.}
-  \label{tab:noise}
-\end{table}
 
 \paragraph{How the non-Limber spectra are computed: FFTLog on a
 distance grid.}
