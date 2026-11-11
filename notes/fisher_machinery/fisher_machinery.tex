@@ -2230,6 +2230,158 @@ fall of the $w_a$ noise in Table~\ref{tab:noise}, from the MCMC
 settings to the final grid, is a $1600$-fold fall of its spurious
 contribution to $F$.
 
+\paragraph{From the spurious information to the figure of merit.}
+The spurious term has a familiar form.  Below
+Eq.~\eqref{eq:fisher}: a Gaussian prior of width $w$ adds $1/w^2$ to
+its parameter's diagonal entry.  The noise adds, on average,
+\begin{equation}
+  a_j \;=\; \langle e_j\T\Cov^{-1}e_j\rangle
+  \;\approx\; 0.9\,(\sigma/\epsilon_j)^2
+  \label{eq:spuriousprior}
+\end{equation}
+to $F_{jj}$, and nothing, on average, anywhere else (the cross terms
+of ``What the noise does to $F$'' have zero mean).  So the noise of
+column $j$ acts like a spurious Gaussian prior on $p_j$, of width
+$w_j = a_j^{-1/2} \approx \epsilon_j/(0.95\,\sigma)$: information the
+data do not carry.  Along $w_a$, the numbers above are a spurious
+prior of width $1.5$ at the MCMC settings, and of width $60$ at the
+final grid.
+
+How such a prior moves the FoM.  Split the sampled parameters into the
+pair $w = (w_0, w_a)$ and the rest, $o$, and write $F$ in blocks,
+$F_{ww}$, $F_{wo}$, $F_{oo}$.  The pair's block of $F^{-1}$, the
+$\Cov_w$ of the FoM, is the inverse of
+\begin{equation}
+  F_w \;=\; F_{ww} - F_{wo}\,F_{oo}^{-1}\,F_{ow} ,
+  \qquad
+  \Cov_w = F_w^{-1} :
+  \label{eq:schurpair}
+\end{equation}
+$F_w$ is the $2 \times 2$ information left on the pair when every
+other parameter is free -- the subtraction is what marginalization
+costs -- and ${\rm FoM}(w_0, w_a) = (\det F_w)^{1/2}$.  Now let only
+the $w_0$ and $w_a$ columns be noisy.  Their average additions
+$a_{w_0}$ and $a_{w_a}$ land on the diagonal of $F_{ww}$, the one
+block that enters Eq.~\eqref{eq:schurpair} linearly and whole, so they
+pass to the diagonal of $F_w$ unchanged -- exactly, not only to first
+order.  The $2 \times 2$ determinant can be expanded by hand,
+\begin{equation*}
+  \det F_w' \;=\;
+  \bigl[(F_w)_{11} + a_{w_0}\bigr]\bigl[(F_w)_{22} + a_{w_a}\bigr]
+  - (F_w)_{12}^2
+  \;=\; \det F_w + a_{w_0}\,(F_w)_{22} + a_{w_a}\,(F_w)_{11}
+  + a_{w_0}\,a_{w_a} ,
+\end{equation*}
+and the $2 \times 2$ inverse turns these entries into marginalized
+errors: $\sigma_{w_0}^2 = (\Cov_w)_{11} = (F_w)_{22}/\det F_w$, the
+same with $1 \leftrightarrow 2$ for $\sigma_{w_a}^2$, and
+$1/\det F_w = \det \Cov_w = \sigma_{w_0}^2\sigma_{w_a}^2(1 - \rho^2)$,
+with $\rho$ the forecast correlation of $w_0$ and $w_a$.  Dividing
+through by $\det F_w$,
+\begin{equation}
+  \frac{{\rm FoM}'}{{\rm FoM}} \;=\;
+  \bigl[\,1 + a_{w_0}\sigma_{w_0}^2 + a_{w_a}\sigma_{w_a}^2
+  + (1 - \rho^2)\,a_{w_0}\sigma_{w_0}^2\,a_{w_a}\sigma_{w_a}^2
+  \,\bigr]^{1/2} ,
+  \label{eq:fomtwo}
+\end{equation}
+the prime marking the noisy forecast.  Each term
+$a_j\sigma_j^2 = (\sigma_j/w_j)^2$ is the squared ratio of the
+parameter's marginalized error to its spurious prior width ($\sigma_j$
+here is the forecast error, not the evaluation noise $\sigma$).  When
+both are small,
+${\rm FoM}'/{\rm FoM} \approx 1 + \tfrac{1}{2}(\sigma_{w_0}/w_{w_0})^2
++ \tfrac{1}{2}(\sigma_{w_a}/w_{w_a})^2$: one first-order term per
+noisy column, not one per evaluation -- the four evaluations behind a
+column sit inside its $a_j$, through the squared stencil weights
+$(1 + 64 + 64 + 1)/144 \approx 0.9$ of Eq.~\eqref{eq:derivnoise}.
+With equal terms, $x = a_{w_0}\sigma_{w_0}^2 = a_{w_a}\sigma_{w_a}^2$,
+Eq.~\eqref{eq:fomtwo} is
+$[1 + 2x + (1 - \rho^2)\,x^2]^{1/2} \approx 1 + x$, and exactly
+$1 + x$ at $\rho = 0$.
+
+A toy with the $w_a$ numbers above.  Only the $w_a$ column noisy and,
+for illustration alone, $\sigma_{w_a} = 1$.  At the MCMC settings,
+$a_{w_a} \approx 0.44$:
+${\rm FoM}'/{\rm FoM} = (1 + 0.44)^{1/2} = 1.20$, a $20\%$ spurious
+gain.  At the final grid, $a_{w_a} \approx 2.8\times10^{-4}$:
+$1 + 1.4\times10^{-4}$.
+
+\paragraph{Every noisy column, through its correlation with the pair.}
+When every column is noisy, first order is enough: a small change of
+$F$ moves its inverse by $\delta(F^{-1}) = -F^{-1}\,\delta F\,F^{-1}$,
+and keeping the $(w_0, w_a)$ block and the determinant's response
+$\delta\ln\det\Cov_w = {\rm tr}\bigl(\Cov_w^{-1}\,\delta\Cov_w\bigr)$
+collects the diagonal additions $a_j$ into
+\begin{equation}
+  \delta\ln{\rm FoM} \;\approx\; \frac{1}{2}\sum_j R_j^2\,a_j\sigma_j^2 ,
+  \qquad
+  R_j^2 \;=\; \frac{(F^{-1})_{j,w}\,\Cov_w^{-1}\,(F^{-1})_{w,j}}
+  {\sigma_j^2} ,
+  \label{eq:fomall}
+\end{equation}
+with $(F^{-1})_{j,w}$ parameter $j$'s row of $F^{-1}$ restricted to
+the pair's two columns.  $R_j^2$ is the squared multiple correlation
+of $p_j$ with the pair: the share of $p_j$'s forecast variance that a
+linear fit to $(w_0, w_a)$ explains.  It is $1$ for $w_0$ and $w_a$
+themselves, recovering Eq.~\eqref{eq:fomtwo} to first order, and $0$
+for a parameter uncorrelated with the pair: a nuisance column's noise
+reaches the FoM only through its correlation with the pair.  On the
+converged system at $\kmax = 0.075\hMpc$, $R_j^2 = 0.93$ for
+$\Omega_m$ and $0.76$ for $H_0$.  The same formula with the pair
+$(\Omega_m, 10^9 A_s)$ gives the response of
+${\rm FoM}(\Omega_m, 10^9 A_s)$; there the per-bin $b_{1,i}$ columns,
+degenerate with the amplitude $A_s$, reach $R_j^2 \approx 0.7$.
+
+\paragraph{The part that averages to zero.}
+The middle term of Eq.~\eqref{eq:fjjnoise}, $2\,d_j\T\Cov^{-1}e_j$,
+and the off-diagonal terms have zero mean but scatter, so the realized
+$\delta\ln{\rm FoM}$ gains one zero-mean term per column, linear in
+that column's noise.  Write $X = \sum_j R_j^2\,a_j\sigma_j^2$, twice
+the average shift of Eq.~\eqref{eq:fomall}.  A column's whitened noise
+spread evenly over the $N_d$ kept band powers gives the linear terms a
+standard deviation of about $(X/N_d)^{1/2}$ (without priors; priors
+only lower it); noise concentrated along the derivative directions can
+push one column's term up to the square root of its whole contribution
+to $X$.  The average shift grows as the noise squared, the scatter
+only as the noise, so near convergence the scatter dominates the
+realized error.  That is why the practical criterion below is
+independence of the step -- two steps, the same FoM -- and not the
+average formula alone.
+
+\paragraph{The prediction against the measured offsets.}
+At the final settings the additions are small and
+Eq.~\eqref{eq:fomall} can be checked.  With each stencil column's
+noise measured at those settings (the final-settings analogue of the
+$g = 256$ row of Table~\ref{tab:noise}) and the converged system's
+$\sigma_j$ and $R_j$, it predicts a spurious
+${\rm FoM}(w_0, w_a)$ gain of $2.6\%$ at $\kmax = 0.075\hMpc$ and
+$0.2\%$ at $0.2\hMpc$, against measured offsets (``The final
+settings'' below) of $+2.1\%$ and $-0.5\%$, which also carry the
+smooth part of the settings change; for
+${\rm FoM}(\Omega_m, 10^9 A_s)$ it predicts the same two values,
+against $+1.8\%$ and $-0.4\%$ measured.  The prediction covers the
+stencil columns only -- the per-bin columns' noise is not measured by
+Table~\ref{tab:noise}, and swapping them moves the FoM by less than
+$0.1\%$ (``The distance grid dominates'' below).
+
+At the MCMC settings the additions are far beyond first order,
+$a_{w_a}\sigma_{w_a}^2 \approx 30$, and Eq.~\eqref{eq:fomtwo} with the
+measured noise gives about eight times the converged FoM at
+$0.075\hMpc$, where the measured offset is $1.56$
+(Figure~\ref{fig:convergence}).  What fails there is the direction of
+the error, not its size: the additions pass whole to $F_w$ only
+because noise with no preferred direction in data space has vanishing
+cross terms with the other columns.  The coarse grid's realized error
+is instead a smooth, broadband shape within each spectrum -- the kind
+of change the nuisance columns can fit.  On the $0.075\hMpc$ cut,
+about $95\%$ of the realized $w_a$-column error lies inside the span
+of the other columns, where the subtraction of
+Eq.~\eqref{eq:schurpair} removes it.  So near
+convergence the average formula sizes the residual push; far from
+convergence it is an overestimate, and only the direct comparison --
+the grid scan and the step test -- measures the offset.
+
 \paragraph{What the estimator does and does not see.}
 The estimate treats the five errors as independent.  An error that
 varies smoothly across the five points, a smooth offset of the whole
