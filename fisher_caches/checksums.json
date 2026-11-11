@@ -1,0 +1,19 @@
+{
+ "linear_alternatives_final": "5c3c331b44a74510d624b2c251fc15f1924fdbb24e49a5fe53947f346ff01fc5",
+ "linear_bin_bias_final": "0a26fde4791f7d2e634ac4c0f8d380961cd00bd6bc798fb2a19de51d3eff386a",
+ "linear_fisher_dcom62_final": "75c478353e7d586b3728ee8a3ceceea30d1b03735b368f6e36f5f2df46b48b10",
+ "linear_fisher_dz0p02_final": "81cc32ee0f6a97454c10090dc4c93fd674b71e3c31e5b6e208a4d108ac16a7e8",
+ "linear_fisher_dz0p05_final": "aed891a24d292f3fa2c19b6b16ede8155ce023e3d97dc5c626d0b000fcea271f",
+ "linear_fom_scale_cuts_final": "425db0e4843abac0ca1a6bb792307395d0233f86998e444a74207323d5b9aa77",
+ "linear_kmax_truths_final": "860c554ee324bbab14ede2f3bd3e9dd8cc37a61fe1c16df61b330dd7963dba9b",
+ "linear_probes_dz0p20_lsst_ab3_final": "bf1b856ee7615ffa3b0e92ac2838846c7d091c0bf82afe214061183f96014e4e",
+ "linear_scale_cuts_final": "192c51fbef4840ebf89f1969fb7b253b9d407d6fc275d1bd7d7852195015f220",
+ "model_derivatives_dcom62_final": "eb3e105988b2570ae2c8e79611a590cf9a57947e2caf12914cdcaf0e23508ac9",
+ "model_derivatives_dz0p02_final": "99ea0fedbe072fad5636c8f7607b047b0e0390cc7db36d79ee0165266bd99c39",
+ "model_derivatives_dz0p05_final": "1331ad681e24c4714cb0e91134f5707b9237a47c29cde5fad8e571301729fe30",
+ "model_derivatives_dz0p20_final": "13cc304080449139934c44165f52e157b9de0baa27f7641f78ad3cfb11c77410",
+ "model_templates_dcom62_final": "e142a587324fd4f0a1807ecc83dfc35c0cf6e944bfef922f3bcac3cad8e4100e",
+ "model_templates_dz0p02_final": "ebab3d03065cb8ed551438662909b175b7ced4e3304b2bc731656f151eb929ec",
+ "model_templates_dz0p05_final": "106975b67a0d4d65c3b530b9693cbaeb38149a19b36ad2695197f67a64805bac",
+ "model_templates_dz0p20_final": "9d8b705af58b1273d2f3e805e5e7907bfd378587ae9912a9718cb105bd93a0e6"
+}

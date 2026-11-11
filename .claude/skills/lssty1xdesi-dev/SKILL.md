@@ -342,13 +342,29 @@ linear-bias spectra, serves the linear-bias experiments. The two differ
 by at most 3% in FoM(w0, wa) on the main layouts
 (`notes/scale_cut_fiducial_dependence`).
 
-| notebook | does | caches in `chains/` (gitignored) | writes |
+| notebook | does | caches (working copies in `chains/`, gitignored; final tier archived in `fisher_caches/`) | writes |
 |---|---|---|---|
-| EXAMPLE_EVALUATE_FISHER.ipynb | linear-bias Fisher, engine Fisher biases, amplitude cut against the contours, the UV-fraction cuts, the linear-bias ladder and accuracy test | `EXAMPLE_EVALUATE<n>_FISHER_AB<b>.pkl`, `..._BIN_BIAS.pkl`, `..._SCALE_CUTS.pkl`, `..._FOM_SCALE_CUTS.pkl`, `..._ALTERNATIVES.pkl` | no figure folder |
-| EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb (builder) | linear-bias fits to model A truths against k_max; the accuracy test for Omega_m and A_s | `..._LINEAR_KMAX_TRUTHS.pkl` | `notes/linear_bias_kmax/plots/` |
-| EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (builder) | the scale cuts on the paper fiducial and the derivative base on the paper yamls (explicit compute, save and load cells), model B and model B + tilts against k_max to 0.2 and where model B breaks, the paper model (model B + tilts without alpha_2, sigma_v widths x6) with its error-bar test, untied, growth-tied and pair-threshold comparisons, and the alpha_2 / sigma_v study | `..._MODEL_SCALE_CUTS.pkl`, `..._MODEL_DERIVATIVES_<n>.pkl`, `..._MODEL_TEMPLATES_<n>.pkl` | v2: fom_kmax_models, growth_tied_kmax; summary: summary_fom_kmax, summary_fom_untied, summary_prior_draws, summary_pair_threshold; fog_parameter_degeneracy_study: fog_templates, fog_degeneracy_kmax, fog_sigv_width, fog_pair_overlap; cross_correlations: pair_threshold |
+| EXAMPLE_EVALUATE_FISHER.ipynb | linear-bias Fisher, engine Fisher biases, amplitude cut against the contours, the UV-fraction cuts, the linear-bias ladder and accuracy test | `linear_fisher_<layout>_final.npz`, `linear_probes_dz0p20_lsst_ab3_final.npz`, `linear_bin_bias_final.npz`, `linear_scale_cuts_final.npz`, `linear_fom_scale_cuts_final.npz`, `linear_alternatives_final.npz` | no figure folder |
+| EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb (builder) | linear-bias fits to model A truths against k_max; the accuracy test for Omega_m and A_s | `linear_kmax_truths_final.npz` | `notes/linear_bias_kmax/plots/` |
+| EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (builder) | the scale cuts on the paper fiducial and the derivative base on the paper yamls (explicit copy, read, compute, write and archive cells), model B and model B + tilts against k_max to 0.2 and where model B breaks, the paper model (model B + tilts without alpha_2, sigma_v widths x6) with its error-bar test, untied, growth-tied and pair-threshold comparisons, and the alpha_2 / sigma_v study | `model_scale_cuts_reference.npz` (no archived copy), `model_derivatives_<layout>_final.npz`, `model_templates_<layout>_final.npz` | v2: fom_kmax_models, growth_tied_kmax; summary: summary_fom_kmax, summary_fom_untied, summary_prior_draws, summary_pair_threshold; fog_parameter_degeneracy_study: fog_templates, fog_degeneracy_kmax, fog_sigv_width, fog_pair_overlap; cross_correlations: pair_threshold |
 
-The cached names start with `EXAMPLE_EVALUATE_FISHER` where abbreviated.
+A cache name says what it holds, the layout (`<layout>` = `dcom62`,
+`dz0p02`, `dz0p05`, `dz0p20`) and the tier. Caches are `.npz` files of
+plain arrays with a JSON header, no pickles; the archive
+(`fisher_caches/`, `.npz` through git-lfs) also keeps each cache's
+provenance record as `fisher_caches/<name>.json` and the checksums in
+`checksums.json` (guide: `fisher_caches/README.md`). Four module
+functions move them, each called in its own notebook cell:
+`load_fisher_from_cache` copies an archived final-tier cache to
+`chains/` after the checksum test; `read_fisher_cache` checks a
+working copy's settings, tier and fingerprints against the notebook's
+and raises on a mismatch, never recomputing; `write_fisher_cache`
+writes a freshly computed working copy; `save_fisher_to_cache`
+archives a final-tier working copy, the only call that changes the
+archive. Nothing checks for a file to decide what runs, and nothing
+replaces a file without `overwrite=True`. The paper-fiducial scale
+cuts (`model_scale_cuts_reference`) have no archived copy: the paper
+notebook computes them with its own cells (about an hour).
 `scripts/compute_fisher_base_mpi.py` (with
 `compute_fisher_base_mpi_classes.py`) writes the same derivative caches
 on MPI ranks; one rank and the notebook evaluate in one order, and 1 x 8,

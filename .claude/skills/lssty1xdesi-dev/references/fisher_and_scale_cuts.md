@@ -69,11 +69,21 @@ from a failure it prevents.
   every run (`refresh_fisher` in EXAMPLE_EVALUATE_FISHER.ipynb), with
   the Gaussian priors read from the example yaml through cobaya
   `update_info` (`prior_diagonal` in the k_max notebook). The F stored
-  in the linear caches (`chains/EXAMPLE_EVALUATE<n>_FISHER_AB<b>.pkl`)
+  in the linear caches (`chains/linear_fisher_<layout>_final.npz`)
   predates the covariance fix and is unused: the printed rebuild check
   reads max |dF_ij|/sqrt(F_ii F_jj) = 0.76 for DESI and 1.8e-14 for
   LSST. The scale-cut FoM cache stores each layout's covariance sha256
   and recomputes on a change.
+- **Explicit cache calls.** Caches are `.npz` working copies in
+  `chains/` with final-tier archives in `fisher_caches/` (git-lfs,
+  provenance records, checksums; `fisher_caches/README.md`). Four
+  module functions move them, each in its own notebook cell:
+  `load_fisher_from_cache` (archive to working copy, checksum
+  checked), `read_fisher_cache` (raises on a settings, tier or
+  fingerprint mismatch; never recomputes), `write_fisher_cache` and
+  `save_fisher_to_cache` (the only call that changes the archive;
+  final tier only). Nothing checks for a file to decide what runs;
+  nothing replaces a file without `overwrite=True`.
 - **Never difference a cached Fisher matrix.** An earlier k_max
   notebook obtained the Gaussian prior as diag(F_cached - F_data); once
   F_data used the new covariance and F_cached the old one, the
@@ -185,7 +195,7 @@ the frozen pre-fix covariance at the likelihood's chi grid, so the two
 are not comparable.
 
 Per layout (AB 1, h = 0.02, alternatives cached in
-`chains/EXAMPLE_EVALUATE_FISHER_ALTERNATIVES.pkl`; DESI C_gg alone /
+`chains/linear_alternatives_final.npz`; DESI C_gg alone /
 LSST Y1 3x2pt + DESI C_gg; delta chi2 FKEM / Limber):
 
 | layout | FKEM, cap 550 | Limber | Delta chi2 |
@@ -234,14 +244,15 @@ The interface exposes `gg_scale_cuts_tomo(kmax, alpha)` - a dict with
 cross pairs in data-vector order - and `C_gg_kwindow_tomo(kmax,
 keep_ir)` for the IR or UV spectra directly. The window is off by
 default and reset in initial_setup. The linear notebook caches its cuts,
-on the linear-bias spectra, in `chains/EXAMPLE_EVALUATE_FISHER_SCALE_CUTS.pkl`
-(the k_max notebook reads them) and the FoM scan in
-`chains/EXAMPLE_EVALUATE_FISHER_FOM_SCALE_CUTS.pkl`. The Fisher notebook of
-the paper model, EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, computes its own
-cuts on the paper fiducial (EXAMPLE_EVALUATE<n>.yaml at the reference
-settings of the derivative convergence study) and caches them in
-`chains/EXAMPLE_EVALUATE_FISHER_MODEL_SCALE_CUTS.pkl`, with the same
-structure and k_max list plus settings and fingerprints.
+on the linear-bias spectra, in `chains/linear_scale_cuts_final.npz`
+(the k_max and paper notebooks read them) and the FoM scan in
+`chains/linear_fom_scale_cuts_final.npz`; both are archived. The Fisher
+notebook of the paper model, EXAMPLE_EVALUATE_FISHER_MODEL.ipynb,
+computes its own cuts on the paper fiducial (EXAMPLE_EVALUATE<n>.yaml
+at the reference settings of the derivative convergence study) and
+caches them in `chains/model_scale_cuts_reference.npz`, with the same
+structure and k_max list plus settings and fingerprints; this cache
+has no archived copy.
 
 Validation (measured):
 

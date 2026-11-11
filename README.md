@@ -628,23 +628,30 @@ In order, the notebook:
   [cross_correlations](notes/cross_correlations) (pair_threshold).
 
 The derivative base costs 154 evaluations of the data vector per
-layout and is cached. The notebook keeps three caches in `chains/`
-(not tracked by git), with $`n`$ = 1 to 4 for the layouts
-$`\Delta d_\mathrm{com} = 62`$ Mpc and $`\Delta z`$ = 0.02, 0.05, 0.2:
+layout and is cached. The working copies live in `chains/` (not
+tracked by git); the final-tier copies are archived in
+[fisher_caches/](fisher_caches/README.md) through Git LFS, so a fresh
+clone copies them instead of recomputing. With `<layout>` one of
+`dcom62` ($`\Delta d_\mathrm{com} = 62`$ Mpc), `dz0p02`, `dz0p05` and
+`dz0p20` ($`\Delta z`$ = 0.02, 0.05, 0.2), the notebook keeps three
+caches:
 
 | Cache | Holds |
 |---|---|
-| `EXAMPLE_EVALUATE_FISHER_MODEL_DERIVATIVES_<n>.pkl` | the stencil columns of the 20 sampled parameters, the per-bin columns of $`b_1`$, $`b_2`$, $`b_{s^2}`$ and $`\alpha_0`$, the $`\mathrm{SN}_0`$ templates and the fiducial vector |
-| `EXAMPLE_EVALUATE_FISHER_MODEL_TEMPLATES_<n>.pkl` | the $`\alpha_2`$ columns and the $`\mathrm{SN}_0`$ and $`\mathrm{SN}_2`$ templates |
-| `EXAMPLE_EVALUATE_FISHER_MODEL_SCALE_CUTS.pkl` | the UV-fraction scale cuts |
+| `model_derivatives_<layout>_final.npz` | the stencil columns of the 20 sampled parameters, the per-bin columns of $`b_1`$, $`b_2`$, $`b_{s^2}`$ and $`\alpha_0`$, the $`\mathrm{SN}_0`$ templates and the fiducial vector |
+| `model_templates_<layout>_final.npz` | the $`\alpha_2`$ columns and the $`\mathrm{SN}_0`$ and $`\mathrm{SN}_2`$ templates |
+| `model_scale_cuts_reference.npz` | the UV-fraction scale cuts on the paper fiducial |
 
-Caches are loaded and saved only in explicit cells. A cache whose
-fingerprint (the settings and resolved model it was built with)
-differs from the notebook's is refused, and an existing file is never
-overwritten without `overwrite=True`. Fisher matrices are never
-cached: every run rebuilds them from the base and the current
-covariance files. The two derivative caches can also be computed on
-many cores ([MPI](#fisher_mpi)).
+Copying from the archive, reading, computing, writing and archiving
+are each an explicit call in its own cell. A cache whose settings or
+fingerprint (the sha256 of the resolved model input) differ from the
+notebook's is refused, and no file is replaced without
+`overwrite=True`. Fisher matrices are never cached: every run rebuilds
+them from the base and the current covariance files. The two
+derivative caches can also be computed on many cores
+([MPI](#fisher_mpi)). The scale cuts are not archived yet: the
+notebook computes them with its own cells (about an hour for the four
+layouts).
 
 The DESI covariance is built on the one-loop model at its fiducial, so
 the data vector and its covariance share one model
@@ -690,11 +697,13 @@ contours.
 
 `scripts/compute_fisher_base_mpi.py` computes the derivative base of
 one layout on $`N`$ MPI ranks times $`T`$ OpenMP threads and writes
-the two derivative caches of the table above (the scale-cut cache is
-the notebook's own), equal to the serial notebook's. Its docstring
-holds the cache rules and the parallel layout; `--dry-run` prints the
-plan without building a model, and an existing cache is never replaced
-without `--overwrite`.
+the working copies of the two derivative caches of the table above
+(the scale-cut cache is the notebook's own), equal to the serial
+notebook's; archiving them stays the notebook's
+`fm.save_fisher_to_cache` cell. The script's docstring holds the cache
+rules and the parallel layout; `--dry-run` prints the plan without
+building a model, and an existing cache is never replaced without
+`--overwrite`.
 
 Each rank builds its own cobaya model, covariance included. On
 $`\Delta d_\mathrm{com} = 62`$ Mpc a rank pays about 40 s of start-up,

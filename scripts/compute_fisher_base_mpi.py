@@ -40,24 +40,25 @@ of the inverse covariance to the survey area. G costs seconds once B
 exists, and no cache stores it, so this script stops at B.
 
 Outputs. The two caches the notebook reads from chains/ (section 4,
-"The derivative base"), in its format, with its settings and
-fingerprint (fm.settings_fingerprint, the sha256 of the fully resolved
-paper yaml: its options, parameter files, priors and fiducial point),
-at the final derivative tier of fm.derivative_settings (the converged
-settings of the derivative convergence study
-tests/studies/run_fisher_derivatives.py):
+"The derivative base"), written with fm.write_fisher_cache (an .npz
+file of plain arrays with a JSON header, no pickle), with the
+notebook's settings and fingerprint (fm.settings_fingerprint, the
+sha256 of the fully resolved paper yaml: its options, parameter files,
+priors and fiducial point), at the final derivative tier of
+fm.derivative_settings (the converged settings of the derivative
+convergence study tests/studies/run_fisher_derivatives.py):
 
-  EXAMPLE_EVALUATE_FISHER_MODEL_DERIVATIVES_<n>.pkl  stencil columns,
-      per-bin b_1, b_2, b_{s^2}, alpha_0 columns, SN0 templates, the
-      fiducial vector and biases;
-  EXAMPLE_EVALUATE_FISHER_MODEL_TEMPLATES_<n>.pkl    alpha_2 columns,
-      SN0 and SN2 templates,
+  model_derivatives_<layout>_final.npz  stencil columns, per-bin b_1,
+      b_2, b_{s^2}, alpha_0 columns, SN0 templates, the fiducial
+      vector and biases;
+  model_templates_<layout>_final.npz    alpha_2 columns, SN0 and SN2
+      templates,
 
-with n = 1, 2, 3, 4 for the layouts dcom62 (Delta d_com = 62 Mpc),
-dz0p02, dz0p05 and dz0p20 (Delta z = 0.02, 0.05, 0.2). The notebook
-compares a cache's settings, fingerprint included, with its own and
-refuses a cache that differs. The 'seconds' entries hold the wall time
-of this run.
+with <layout> = dcom62 (Delta d_com = 62 Mpc), dz0p02, dz0p05 or
+dz0p20 (Delta z = 0.02, 0.05, 0.2). The notebook reads them with
+fm.read_fisher_cache, which compares a cache's settings, fingerprint
+included, with its own and stops on any difference. The 'seconds'
+entries hold the wall time of this run.
 
 The parallel layout. An MPI rank is one of the N processes mpirun
 starts. The unit of work is one evaluation of the data vector. A layout
@@ -145,13 +146,15 @@ before building any model, and says whether the existing file holds the
 current fingerprint. Every rank computes the fingerprint from the files
 it sees, and rank 0 recomputes it before saving; any mismatch (ranks
 that see different files, or a yaml, parameter file or dataset file
-edited during the run) stops the run without writing.
+edited during the run) stops the run without writing. The script writes
+working copies only: archiving a final-tier cache in fisher_caches/ is
+the separate call fm.save_fisher_to_cache (the last cell of the
+notebook).
 """
 import argparse
 import hashlib
 import inspect
 import os
-import pickle
 import resource
 import sys
 import tempfile
@@ -260,10 +263,11 @@ ALPHA2_KEYWORD = "A2"
 DERIVATIVE_TIER = "final"
 STENCIL_RULE = "five-point"
 
-# the cache files, by kind, with {:d} = the layout number
+# the cache names, by kind (what each holds, the layout, the tier), as the
+# notebook names them; {layout} = a LAYOUTS key, {tier} = DERIVATIVE_TIER
 CACHE_NAMES = {
-    "derivatives": "EXAMPLE_EVALUATE_FISHER_MODEL_DERIVATIVES_{:d}.pkl",
-    "templates": "EXAMPLE_EVALUATE_FISHER_MODEL_TEMPLATES_{:d}.pkl",
+    "derivatives": "model_derivatives_{layout}_{tier}",
+    "templates": "model_templates_{layout}_{tier}",
 }
 
 # the kinds of evaluation, in task-list order (the module docstring)
@@ -597,20 +601,32 @@ def cache_settings(settings, fingerprint):
     }
 
 
+def cache_names(layout):
+    """Return {kind: cache name} of the two caches of a layout."""
+    names = {}
+    for kind, pattern in CACHE_NAMES.items():
+        names[kind] = pattern.format(layout=layout, tier=DERIVATIVE_TIER)
+    return names
+
+
 def cache_paths(out_dir, layout):
     """Return {kind: path} of the two cache files of a layout in out_dir."""
-    number = LAYOUTS[layout]["number"]
     paths = {}
-    for kind, pattern in CACHE_NAMES.items():
-        paths[kind] = os.path.join(out_dir, pattern.format(number))
+    for kind, name in cache_names(layout=layout).items():
+        paths[kind] = os.path.join(out_dir, name + ".npz")
     return paths
 
 
-def existing_targets(paths, fingerprint):
+def existing_targets(fm, out_dir, layout, fingerprint):
     """Describe the cache files that already exist.
 
+    The fingerprint is read from each file's JSON header
+    (fm.read_fisher_cache_header, which reads no array).
+
     Arguments:
-      paths       = {kind: path} of cache_paths.
+      fm          = the module cosmolike_lssty1xdesi_fisher.
+      out_dir     = the output folder.
+      layout      = a LAYOUTS key.
       fingerprint = the fingerprint of this run's model.
 
     Returns:
@@ -618,14 +634,16 @@ def existing_targets(paths, fingerprint):
       current fingerprint, another one, or cannot be read.
     """
     lines = []
-    for path in paths.values():
+    paths = cache_paths(out_dir=out_dir, layout=layout)
+    for kind, name in cache_names(layout=layout).items():
+        path = paths[kind]
         if not os.path.exists(path):
             continue
         try:
-            with open(path, "rb") as handle:
-                stored = pickle.load(handle)["settings"]["fingerprint"]
-        except Exception as error:
-            lines.append(f"{path} exists and cannot be read ({error!r})")
+            header = fm.read_fisher_cache_header(name, folder=out_dir)
+            stored = header["tiers_and_fingerprints"]["settings/fingerprint"]
+        except (ValueError, KeyError) as error:
+            lines.append(f"{path} exists and cannot be read as a cache ({error!r})")
             continue
         if stored == fingerprint:
             lines.append(f"{path} exists and holds the current fingerprint "
@@ -636,32 +654,37 @@ def existing_targets(paths, fingerprint):
     return lines
 
 
-def save_caches(paths, payloads, overwrite):
+def save_caches(fm, layout, payloads, out_dir, overwrite):
     """Write the two caches, both in full or neither.
 
-    Each payload goes to a temporary file in the target folder first;
-    only when both are written are they moved onto their names
-    (os.replace renames in one step on one file system), so a failure
-    leaves no half-written cache under a cache name.
+    fm.write_fisher_cache writes each cache into a fresh staging folder
+    inside out_dir first; only when both are written are they moved onto
+    their names (os.replace renames in one step on one file system), so
+    a failure leaves no half-written cache, and no lone new cache of the
+    pair, under a cache name.
 
     Arguments:
-      paths     = {kind: path} of cache_paths.
-      payloads  = {kind: the dict to pickle}, the same kinds.
+      fm        = the module cosmolike_lssty1xdesi_fisher.
+      layout    = a LAYOUTS key.
+      payloads  = {kind: {"result": ..., "settings": ...}} of
+                  assemble_caches, the kinds of CACHE_NAMES.
+      out_dir   = the output folder.
       overwrite = True to replace existing files.
 
     Raises:
       FileExistsError naming every existing target when overwrite is
       False (nothing is written then).
 
-    Side effects: writes the two files (pickle at its default protocol,
-    as the notebook writes them).
+    Side effects: writes the two files (the format of
+    fm.write_fisher_cache, as the notebook writes them).
     """
-    partial = {}
+    names = cache_names(layout=layout)
+    paths = cache_paths(out_dir=out_dir, layout=layout)
+    staging = tempfile.mkdtemp(prefix=".fisher_base_staging_", dir=out_dir)
     try:
-        for kind, path in paths.items():
-            partial[kind] = f"{path}.partial.{os.getpid()}"
-            with open(partial[kind], "wb") as handle:
-                pickle.dump(payloads[kind], handle)
+        for kind, name in names.items():
+            fm.write_fisher_cache(payloads[kind]["result"], name,
+                                  payloads[kind]["settings"], folder=staging)
         if not overwrite:
             present = []
             for path in paths.values():
@@ -671,14 +694,14 @@ def save_caches(paths, payloads, overwrite):
                 raise FileExistsError(
                     f"{present} appeared during the run; nothing was written. "
                     "Rerun with --overwrite to replace them, or choose another --out")
-        for kind, path in paths.items():
-            os.replace(partial[kind], path)
-            partial[kind] = None
+        for kind, name in names.items():
+            os.replace(os.path.join(staging, name + ".npz"), paths[kind])
     finally:
-        # a temporary file left by a failure is removed; a moved one is None
-        for name in partial.values():
-            if name is not None and os.path.exists(name):
-                os.remove(name)
+        # a staged file left by a failure is removed with its folder; a
+        # moved one is gone from it already
+        for entry in os.listdir(staging):
+            os.remove(os.path.join(staging, entry))
+        os.rmdir(staging)
 
 
 # ---------------------------------------------------------------------------
@@ -1199,8 +1222,9 @@ def assemble_caches(fm, model, tables, color, points, tasks, gathered, fiducial_
       start           = the run's start time.
 
     Returns:
-      (payloads, checks): {kind: the dict to pickle}, the notebook's
-      cache dictionaries key by key; checks = {"nonlinearity", "reset"}.
+      (payloads, checks): {kind: {"result": the cached dict, "settings":
+      its settings}}, the notebook's cache dictionaries key by key;
+      checks = {"nonlinearity", "reset"}.
 
     Raises:
       RuntimeError when an evaluation is missing, or from the replay and
@@ -1271,8 +1295,8 @@ def assemble_caches(fm, model, tables, color, points, tasks, gathered, fiducial_
         "seconds": seconds,
     }
     payloads = {
-        "derivatives": {"derivs": derivs, "settings": stored["derivatives"]},
-        "templates": {"templates": templates, "settings": stored["templates"]},
+        "derivatives": {"result": derivs, "settings": stored["derivatives"]},
+        "templates": {"result": templates, "settings": stored["templates"]},
     }
     checks = {
         "nonlinearity": nonlinearity,
@@ -1370,7 +1394,7 @@ def dry_run(args, comm, fm, step_classes, yaml_path, settings, out_dir, data_dir
           f"{n_ranks*args.threads_per_rank} cores", flush=True)
     print(split_report(tasks=tasks, owners=owners, n_ranks=n_ranks), flush=True)
     print(f"output folder {out_dir}", flush=True)
-    lines = existing_targets(paths=cache_paths(out_dir=out_dir, layout=args.layout),
+    lines = existing_targets(fm=fm, out_dir=out_dir, layout=args.layout,
                              fingerprint=fingerprint)
     if not lines:
         print("  no cache of this layout exists there", flush=True)
@@ -1382,7 +1406,7 @@ def dry_run(args, comm, fm, step_classes, yaml_path, settings, out_dir, data_dir
               flush=True)
 
 
-def check_before_build(fm, ci, comm, fingerprint, paths, overwrite, out_dir):
+def check_before_build(fm, ci, comm, fingerprint, layout, overwrite, out_dir):
     """Run the checks that must pass before any model is built (rank 0).
 
     The final tier needs CAMB with the halofit tolerance patch, the
@@ -1395,7 +1419,7 @@ def check_before_build(fm, ci, comm, fingerprint, paths, overwrite, out_dir):
                     cosmolike_lssty1xdesi_interface.
       comm        = the MPI communicator.
       fingerprint = this rank's fingerprint.
-      paths       = cache_paths.
+      layout      = a LAYOUTS key.
       overwrite   = --overwrite.
       out_dir     = the output folder.
 
@@ -1420,7 +1444,8 @@ def check_before_build(fm, ci, comm, fingerprint, paths, overwrite, out_dir):
                 f"{fingerprints[other_rank]}, rank 0 {fingerprint}: the ranks see "
                 "different yaml, parameter or dataset files; give every node the "
                 "same files at the same paths")
-    lines = existing_targets(paths=paths, fingerprint=fingerprint)
+    lines = existing_targets(fm=fm, out_dir=out_dir, layout=layout,
+                             fingerprint=fingerprint)
     if lines and not overwrite:
         raise FileExistsError(
             "the caches exist:\n  " + "\n  ".join(lines)
@@ -1477,8 +1502,8 @@ def run(args, comm, process_start):
     start = time.time()
     paths = cache_paths(out_dir=out_dir, layout=args.layout)
     fingerprint = layout_fingerprint(fm=fm, yaml_path=yaml_path, settings=settings)
-    check_before_build(fm=fm, ci=ci, comm=comm, fingerprint=fingerprint, paths=paths,
-                       overwrite=args.overwrite, out_dir=out_dir)
+    check_before_build(fm=fm, ci=ci, comm=comm, fingerprint=fingerprint,
+                       layout=args.layout, overwrite=args.overwrite, out_dir=out_dir)
     if rank == 0:
         print(f"layout {args.layout} ({spec['label']}), {size} ranks x "
               f"{args.threads_per_rank} threads; yaml {yaml_path}; fingerprint "
@@ -1526,7 +1551,8 @@ def run(args, comm, process_start):
             f"the fingerprint changed during the run ({fingerprint} at the start, "
             f"{final_fingerprint} now): a yaml, parameter or dataset file was edited, "
             "so the vectors may mix two models; nothing was written")
-    save_caches(paths=paths, payloads=payloads, overwrite=args.overwrite)
+    save_caches(fm=fm, layout=args.layout, payloads=payloads, out_dir=out_dir,
+                overwrite=args.overwrite)
 
     print(f"alpha_2: max |forward - backward| / max |central| = "
           f"{checks['nonlinearity']:.2e}; the fiducial point after every step (rank "

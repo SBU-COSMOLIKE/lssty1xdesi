@@ -1,0 +1,2258 @@
+{
+  "code_at_write": {
+    "PATCH_CAMB_HALOFIT_TOLERANCE": null,
+    "camb": {
+      "changed_count": 5,
+      "changed_files": [
+        "camb/_compilers.py",
+        "fortran/Makefile",
+        "fortran/Makefile_main",
+        "fortran/halofit.f90",
+        "forutils"
+      ],
+      "commit": "6c978c716e163157c95191ee1c089e8b36c8adb9",
+      "describe": "1.6.6-10-g6c978c7-dirty",
+      "dirty": true,
+      "folder": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa/external_modules/code/CAMB",
+      "halofit_tolerance_patch_in_source": true,
+      "library": {
+        "modified": "2026-11-04T21:20:29-05:00",
+        "newer_than_halofit": true,
+        "path": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa/external_modules/code/CAMB/camb/camblib.so"
+      },
+      "version": "1.6.7"
+    },
+    "cobaya": "3.6.2",
+    "cocoa": {
+      "changed_count": 1,
+      "changed_files": [
+        "Cocoa/set_installation_options.sh"
+      ],
+      "commit": "a2ad694556a9ef0768847f020c036f88f9df4d52",
+      "describe": "v5.10-608-ga2ad6945-dirty",
+      "dirty": true,
+      "folder": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa"
+    },
+    "cosmolike_core": {
+      "changed_count": 0,
+      "changed_files": [],
+      "commit": "ea4537817da789420b78195c5b67c80aa1b07865",
+      "describe": "v4.11.3-421-gea45378",
+      "dirty": false,
+      "folder": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa/external_modules/code/cosmolike_core"
+    },
+    "lssty1xdesi": {
+      "changed_count": 3,
+      "changed_files": [
+        ".gitattributes",
+        "interface/cosmolike_lssty1xdesi_fisher.py",
+        "scripts/compute_fisher_base_mpi.py"
+      ],
+      "commit": "365415ed63dda97ccea653592678227ab876b8d6",
+      "describe": "365415e-dirty",
+      "dirty": true,
+      "folder": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa/projects/lssty1xdesi"
+    },
+    "numpy": "1.26.3",
+    "python": "3.11.12"
+  },
+  "fingerprints": {
+    "settings/desi/fingerprint": "e618ac239cf10e9fb198dd2320367860475e216e2f025baef38ec0b68fbc58de",
+    "settings/desi/tier": "final",
+    "settings/lsst/fingerprint": "97c4686bcdfeb62e498706950335768cadf6994701de17336642859a325e4ec1",
+    "settings/lsst/tier": null
+  },
+  "format": "lssty1xdesi-fisher-provenance-1",
+  "models": {
+    "settings/desi/fingerprint": {
+      "accuracy_boost": 1.0,
+      "camb_overrides": {
+        "AccuracyBoost": 2.0,
+        "k_per_logint": 30
+      },
+      "dataset_files": {
+        "lssty1xdesi.desi_cl_dr1_dz0p20": {
+          "dataset_file": {
+            "name": "lssty1xdesi_desi_dr1_dz0p20.dataset",
+            "sha256": "e0c1330ceed2c1a078b73f03e8cb9aa2ec0721157c10d49b4897c2eb302db82f"
+          },
+          "entries": {
+            "cov_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20_cov",
+              "in_fingerprint": false,
+              "sha256": "53032a2d34129159c197fcf6b44fa952d9dfd4d382fdceae151f553cbd0c76e8"
+            },
+            "data_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20_fid.datavector",
+              "in_fingerprint": false,
+              "sha256": "184a9b01b1d7cbfb43000120ae0622159466ea3c3e06807071625d0a056a6643"
+            },
+            "ell_file": {
+              "file": "lssty1xdesi_desi_dr3_ells.txt",
+              "in_fingerprint": true,
+              "sha256": "9f9aac251d3eb27e0d96212b8ed6874d7d6d6e664cbb5c8f90741b87f11a2cca"
+            },
+            "gg_cross_pairs_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20_pairs.txt",
+              "in_fingerprint": true,
+              "sha256": "14c3096d9a0a7aacafeaf34aef68713f1e175b53786abcbf4d41802eba8bd736"
+            },
+            "lens_bin_table": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20_bins.txt",
+              "in_fingerprint": true,
+              "sha256": "86108631c3161047db12eabb9ed764d70faad46964de8e8bcd0a935b3bc4baa3"
+            },
+            "lens_ntomo": {
+              "in_fingerprint": true,
+              "value": "10"
+            },
+            "mask_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20.mask",
+              "in_fingerprint": true,
+              "sha256": "ad9e28fa40c4829fb1763b22be5e77f01e6cbe53a7e35d120101dd2b7b267d26"
+            },
+            "nz_lens_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20.nz",
+              "in_fingerprint": true,
+              "sha256": "9d07a04507212ce6a96e90439a9a6ad5114cf06ea60456ca6fbadeb924af86ef"
+            },
+            "nz_source_file": {
+              "file": "lssty1xdesi_source.nz",
+              "in_fingerprint": true,
+              "sha256": "de0bd0ee395ade11ca08af7fbee3b414528ff4c628fda8c56a1da76befe995f8"
+            },
+            "source_ntomo": {
+              "in_fingerprint": true,
+              "value": "5"
+            }
+          },
+          "path": "./external_modules/data/lssty1xdesi"
+        }
+      },
+      "fingerprint_check": "equal",
+      "fingerprint_of_the_files": "e618ac239cf10e9fb198dd2320367860475e216e2f025baef38ec0b68fbc58de",
+      "fingerprint_stored": "e618ac239cf10e9fb198dd2320367860475e216e2f025baef38ec0b68fbc58de",
+      "likelihood_overrides": {
+        "accuracyboost": 3.0,
+        "data_file": "lssty1xdesi_desi_dr1_dz0p20.dataset",
+        "integration_accuracy": 1,
+        "kmax_boltzmann": 20.0,
+        "nonlimber_accuracyboost": 64.0
+      },
+      "resolved_input": {
+        "datasets": {
+          "lssty1xdesi.desi_cl_dr1_dz0p20": "5721f4aa998d531c98cfac4ea386eadacaf0f372303fecb947d51043dcfafc31"
+        },
+        "likelihood": {
+          "lssty1xdesi.desi_cl_dr1_dz0p20": {
+            "IA_code": 1,
+            "IA_model": 0,
+            "IA_redshift_evolution": 3,
+            "accuracyboost": 3.0,
+            "add_baryons_on_dv": false,
+            "adopt_limber_gg": 0,
+            "baryon_pca_select_sims": "antilles-2-99/antilles-101-378/antilles-380-400",
+            "bias_model": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "binning_space": "fourier",
+            "create_baryon_pca": false,
+            "debug": false,
+            "external_baryon_suppression": false,
+            "external_nz_modeling": 1,
+            "filename_baryon_pca": "./projects/lssty1xdesi/chains/pca.txt",
+            "ggl_exclude": "all",
+            "higher_order_bias": 0,
+            "include_HOD_GX": 0,
+            "include_halo_IA": 0,
+            "integration_accuracy": 1,
+            "internal_accuracyboost": 1.0,
+            "kmax_boltzmann": 20.0,
+            "lmax": 5000,
+            "lmax_nonlimber": 150,
+            "non_linear_emul": 2,
+            "nonlimber_accuracyboost": 64.0,
+            "nonlimber_lowrank_gg": 1,
+            "nonlimber_lowrank_lmax": 1000,
+            "nonlimber_lowrank_rank": 5,
+            "params": {
+              "DESI_B1_1": {
+                "latex": "b_\\mathrm{BGS}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.34,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_10": {
+                "value": "lambda DESI_B1_9: DESI_B1_9"
+              },
+              "DESI_B1_2": {
+                "value": "lambda DESI_B1_1: DESI_B1_1"
+              },
+              "DESI_B1_3": {
+                "latex": "b_\\mathrm{LRG1}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.7,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_4": {
+                "latex": "b_\\mathrm{LRG2}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.7,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_5": {
+                "latex": "b_\\mathrm{LRG3}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.7,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_6": {
+                "value": "lambda DESI_B1_5: DESI_B1_5"
+              },
+              "DESI_B1_7": {
+                "latex": "b_\\mathrm{ELG1}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.84,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_8": {
+                "value": "lambda DESI_B1_7: DESI_B1_7"
+              },
+              "DESI_B1_9": {
+                "latex": "b_\\mathrm{ELG2}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.84,
+                  "scale": 0.02
+                }
+              },
+              "DESI_SIGV_1": {
+                "latex": "\\sigma_v^\\mathrm{BGS0}",
+                "prior": {
+                  "a": -2.558621,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 371.0,
+                  "scale": 145.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 371.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_10": {
+                "value": "lambda DESI_SIGV_9: DESI_SIGV_9"
+              },
+              "DESI_SIGV_2": {
+                "latex": "\\sigma_v^\\mathrm{BGS1}",
+                "prior": {
+                  "a": -3.409524,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 358.0,
+                  "scale": 105.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 358.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_3": {
+                "latex": "\\sigma_v^\\mathrm{LRG1}",
+                "prior": {
+                  "a": -5.1,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 357.0,
+                  "scale": 70.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 357.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_4": {
+                "latex": "\\sigma_v^\\mathrm{LRG2}",
+                "prior": {
+                  "a": -6.96,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 348.0,
+                  "scale": 50.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 348.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_5": {
+                "latex": "\\sigma_v^\\mathrm{LRG3}",
+                "prior": {
+                  "a": -6.86,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 343.0,
+                  "scale": 50.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 343.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_6": {
+                "value": "lambda DESI_SIGV_5: DESI_SIGV_5"
+              },
+              "DESI_SIGV_7": {
+                "latex": "\\sigma_v^\\mathrm{ELG1}",
+                "prior": {
+                  "a": -7.6,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 304.0,
+                  "scale": 40.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 304.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_8": {
+                "value": "lambda DESI_SIGV_7: DESI_SIGV_7"
+              },
+              "DESI_SIGV_9": {
+                "latex": "\\sigma_v^\\mathrm{ELG2}",
+                "prior": {
+                  "a": -9.633333,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 289.0,
+                  "scale": 30.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 289.0,
+                  "scale": 5.0
+                }
+              }
+            },
+            "path": "./external_modules/data/lssty1xdesi",
+            "photoz_histogram_akima": 0,
+            "photoz_histogram_akima_factor": 3,
+            "photoz_interpolation_type": 0,
+            "photoz_zmid_convention": 1,
+            "pk_z_refinement": 1,
+            "print_datavector": false,
+            "print_datavector_file": "./projects/lssty1xdesi/chains/desi_dr1_dz0p20_theory.modelvector",
+            "speed": 1,
+            "stop_at_error": false,
+            "type": [],
+            "use_baryon_pca": false,
+            "use_emulator": 0,
+            "version": null,
+            "which_bsims_add_on_dv": "antilles-2"
+          }
+        },
+        "params": {
+          "As": {
+            "derived": true,
+            "latex": "A_\\mathrm{s}",
+            "value": "lambda As_1e9: 1e-9 * As_1e9"
+          },
+          "As_1e9": {
+            "drop": true,
+            "latex": "10^9 A_\\mathrm{s}",
+            "prior": {
+              "max": 5,
+              "min": 0.5
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 2.1,
+              "scale": 0.2
+            },
+            "renames": "A"
+          },
+          "DESI_B1_1": {
+            "latex": "b_\\mathrm{BGS}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.34,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_10": {
+            "derived": true,
+            "value": "lambda DESI_B1_9: DESI_B1_9"
+          },
+          "DESI_B1_2": {
+            "derived": true,
+            "value": "lambda DESI_B1_1: DESI_B1_1"
+          },
+          "DESI_B1_3": {
+            "latex": "b_\\mathrm{LRG1}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.7,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_4": {
+            "latex": "b_\\mathrm{LRG2}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.7,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_5": {
+            "latex": "b_\\mathrm{LRG3}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.7,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_6": {
+            "derived": true,
+            "value": "lambda DESI_B1_5: DESI_B1_5"
+          },
+          "DESI_B1_7": {
+            "latex": "b_\\mathrm{ELG1}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.84,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_8": {
+            "derived": true,
+            "value": "lambda DESI_B1_7: DESI_B1_7"
+          },
+          "DESI_B1_9": {
+            "latex": "b_\\mathrm{ELG2}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.84,
+              "scale": 0.02
+            }
+          },
+          "DESI_SIGV_1": {
+            "latex": "\\sigma_v^\\mathrm{BGS0}",
+            "prior": {
+              "a": -2.558621,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 371.0,
+              "scale": 145.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 371.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_10": {
+            "derived": true,
+            "value": "lambda DESI_SIGV_9: DESI_SIGV_9"
+          },
+          "DESI_SIGV_2": {
+            "latex": "\\sigma_v^\\mathrm{BGS1}",
+            "prior": {
+              "a": -3.409524,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 358.0,
+              "scale": 105.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 358.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_3": {
+            "latex": "\\sigma_v^\\mathrm{LRG1}",
+            "prior": {
+              "a": -5.1,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 357.0,
+              "scale": 70.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 357.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_4": {
+            "latex": "\\sigma_v^\\mathrm{LRG2}",
+            "prior": {
+              "a": -6.96,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 348.0,
+              "scale": 50.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 348.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_5": {
+            "latex": "\\sigma_v^\\mathrm{LRG3}",
+            "prior": {
+              "a": -6.86,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 343.0,
+              "scale": 50.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 343.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_6": {
+            "derived": true,
+            "value": "lambda DESI_SIGV_5: DESI_SIGV_5"
+          },
+          "DESI_SIGV_7": {
+            "latex": "\\sigma_v^\\mathrm{ELG1}",
+            "prior": {
+              "a": -7.6,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 304.0,
+              "scale": 40.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 304.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_8": {
+            "derived": true,
+            "value": "lambda DESI_SIGV_7: DESI_SIGV_7"
+          },
+          "DESI_SIGV_9": {
+            "latex": "\\sigma_v^\\mathrm{ELG2}",
+            "prior": {
+              "a": -9.633333,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 289.0,
+              "scale": 30.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 289.0,
+              "scale": 5.0
+            }
+          },
+          "H0": {
+            "latex": "H_0",
+            "prior": {
+              "max": 91,
+              "min": 55
+            },
+            "proposal": 3,
+            "ref": {
+              "dist": "norm",
+              "loc": 67.32,
+              "scale": 3
+            }
+          },
+          "age": {
+            "derived": true,
+            "latex": "{\\rm{Age}}/\\mathrm{Gyr}"
+          },
+          "mnu": {
+            "prior": {
+              "max": 0.6,
+              "min": 0.06
+            },
+            "proposal": 0.05,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.25,
+              "scale": 0.1
+            }
+          },
+          "ns": {
+            "latex": "n_\\mathrm{s}",
+            "prior": {
+              "max": 1.07,
+              "min": 0.87
+            },
+            "proposal": 0.015,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.96605,
+              "scale": 0.015
+            }
+          },
+          "omegab": {
+            "drop": true,
+            "latex": "\\Omega_\\mathrm{b}",
+            "prior": {
+              "max": 0.07,
+              "min": 0.03
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0495,
+              "scale": 0.005
+            }
+          },
+          "omegabh2": {
+            "derived": true,
+            "latex": "\\Omega_\\mathrm{b} h^2",
+            "renames": [
+              "ombh2"
+            ],
+            "value": "lambda omegab, H0: omegab*(H0/100)**2"
+          },
+          "omegach2": {
+            "derived": true,
+            "latex": "\\Omega_\\mathrm{c} h^2",
+            "renames": [
+              "omch2"
+            ],
+            "value": "lambda omegam, omegab, mnu, H0: (omegam-omegab)*(H0/100)**2-(mnu*(3.046/3)**0.75)/94.0708"
+          },
+          "omegal": {
+            "derived": true,
+            "latex": "\\Omega_\\Lambda",
+            "renames": [
+              "omega_de"
+            ]
+          },
+          "omegam": {
+            "drop": true,
+            "latex": "\\Omega_\\mathrm{m}",
+            "prior": {
+              "max": 0.5,
+              "min": 0.2
+            },
+            "proposal": 0.015,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.316,
+              "scale": 0.015
+            }
+          },
+          "omegamh2": {
+            "derived": "lambda omegam, H0: omegam*(H0/100)**2",
+            "latex": "\\Omega_\\mathrm{m} h^2"
+          },
+          "omegan": {
+            "derived": "lambda omegan2, H0: omegan2/((H0/100)**2)",
+            "latex": "\\Omega_\\mathrm{\\\\nu}"
+          },
+          "omegan2": {
+            "derived": true,
+            "latex": "\\Omega_\\mathrm{\\\\nu} h^2",
+            "renames": [
+              "omnuh2"
+            ]
+          },
+          "rdrag": {
+            "derived": true,
+            "latex": "r_\\mathrm{drag}"
+          },
+          "s8h5": {
+            "derived": "lambda sigma8, H0: sigma8*(H0*1e-2)**(-0.5)",
+            "latex": "\\sigma_8/h^{0.5}"
+          },
+          "s8omegamp25": {
+            "derived": "lambda sigma8, omegam: sigma8*omegam**0.25",
+            "latex": "\\sigma_8 \\Omega_\\mathrm{m}^{0.25}"
+          },
+          "s8omegamp5": {
+            "derived": "lambda sigma8, omegam: sigma8*omegam**0.5",
+            "latex": "\\sigma_8 \\Omega_\\mathrm{m}^{0.5}"
+          },
+          "sigma8": {
+            "derived": true,
+            "latex": "\\sigma_8"
+          },
+          "tau": {
+            "latex": "\\tau_\\mathrm{reio}",
+            "value": 0.0697186
+          },
+          "w": {
+            "latex": "w_{0,\\mathrm{DE}}",
+            "prior": {
+              "max": -0.33333,
+              "min": -3
+            },
+            "proposal": 0.05,
+            "ref": {
+              "dist": "norm",
+              "loc": -0.99,
+              "scale": 0.05
+            }
+          },
+          "w0pwa": {
+            "drop": true,
+            "latex": "w_{0,\\mathrm{DE}}+w_{a,\\mathrm{DE}}",
+            "prior": {
+              "max": -0.01,
+              "min": -3
+            },
+            "proposal": 0.05,
+            "ref": {
+              "dist": "norm",
+              "loc": -0.99,
+              "scale": 0.05
+            }
+          },
+          "wa": {
+            "derived": true,
+            "latex": "w_{a,\\mathrm{DE}}",
+            "value": "lambda w0pwa, w: w0pwa - w"
+          },
+          "yheused": {
+            "derived": true,
+            "latex": "Y_P^\\mathrm{BBN}",
+            "renames": [
+              "YHe"
+            ]
+          }
+        },
+        "point": {
+          "As_1e9": 2.1,
+          "DESI_B1_1": 1.34,
+          "DESI_B1_3": 1.7,
+          "DESI_B1_4": 1.7,
+          "DESI_B1_5": 1.7,
+          "DESI_B1_7": 0.84,
+          "DESI_B1_9": 0.84,
+          "DESI_SIGV_1": 371.0,
+          "DESI_SIGV_2": 358.0,
+          "DESI_SIGV_3": 357.0,
+          "DESI_SIGV_4": 348.0,
+          "DESI_SIGV_5": 343.0,
+          "DESI_SIGV_7": 304.0,
+          "DESI_SIGV_9": 289.0,
+          "H0": 67.32,
+          "mnu": 0.06,
+          "ns": 0.96605,
+          "omegab": 0.04,
+          "omegam": 0.3,
+          "w": -1.0,
+          "w0pwa": -1.0
+        },
+        "prior": {
+          "amplitude_cut": "lambda As_1e9, DESI_B1_1, DESI_B1_3, DESI_B1_4, DESI_B1_5, DESI_B1_7, DESI_B1_9: 0.0 if (As_1e9/2.1)*max((DESI_B1_1/1.34)**2, (DESI_B1_3/1.7)**2, (DESI_B1_4/1.7)**2, (DESI_B1_5/1.7)**2, (DESI_B1_7/0.84)**2, (DESI_B1_9/0.84)**2) <= 8 else -np.inf"
+        },
+        "theory": {
+          "camb": {
+            "external_primordial_pk": false,
+            "extra_args": {
+              "AccuracyBoost": 2.0,
+              "accurate_massive_neutrino_transfers": false,
+              "dark_energy_model": "ppf",
+              "halofit_version": "takahashi",
+              "k_per_logint": 30,
+              "kmax": 7.5,
+              "lens_potential_accuracy": 1.0
+            },
+            "ignore_obsolete": false,
+            "path": "./external_modules/code/CAMB",
+            "renames": {
+              "YpBBN": "Y_p",
+              "omegabh2": "ombh2",
+              "omegach2": "omch2",
+              "omegak": "omk",
+              "omegal": "omega_de",
+              "omegan2": "omnuh2",
+              "yhe": "YHe",
+              "yheused": "YHe"
+            },
+            "speed": 0.3,
+            "stop_at_error": false,
+            "use_non_linear_ratio": false,
+            "use_renames": true,
+            "version": null
+          }
+        },
+        "tier": "final"
+      },
+      "tier": "final",
+      "yaml": "projects/lssty1xdesi/exploration/EXAMPLE_EVALUATE_LINEAR4.yaml",
+      "yaml_sha256": "84338f771dcaf1959251e2b9583e1a9a736518fb2a9015212439fa14c4fa6aa2"
+    },
+    "settings/lsst/fingerprint": {
+      "accuracy_boost": 3.0,
+      "camb_overrides": {},
+      "dataset_files": {
+        "lssty1xdesi.lsst_y1_3x2pt": {
+          "dataset_file": {
+            "name": "lssty1xdesi_lsst_y1_3x2pt.dataset",
+            "sha256": "66c5dac9ab8436f39730dbe7cec37413827346445926d8f71b82623382236a77"
+          },
+          "entries": {
+            "cov_file": {
+              "file": "lssty1xdesi_lsst_y1_3x2pt_cov",
+              "in_fingerprint": false,
+              "sha256": "30a0595830029532b9a2dc12efc5ecb40cb5dbfcde6c05864c20b36c0cd6415c"
+            },
+            "data_file": {
+              "file": "lssty1xdesi_lsst_y1_3x2pt_fid.datavector",
+              "in_fingerprint": false,
+              "sha256": "0055b2b20c0431e101f81a6072104755fa37d8847a48ac53745560d15fc5cead"
+            },
+            "ell_file": {
+              "file": "lssty1xdesi_desi_dr3_ells.txt",
+              "in_fingerprint": true,
+              "sha256": "9f9aac251d3eb27e0d96212b8ed6874d7d6d6e664cbb5c8f90741b87f11a2cca"
+            },
+            "lens_ntomo": {
+              "in_fingerprint": true,
+              "value": "5"
+            },
+            "mask_file": {
+              "file": "lssty1xdesi_lsst_y1_3x2pt.mask",
+              "in_fingerprint": true,
+              "sha256": "63e4b822d0ce9fbd36fb22d10f11386c0bf5b0a7eb7eba119527110184bcfe4b"
+            },
+            "nz_lens_file": {
+              "file": "lssty1xdesi_lens.nz",
+              "in_fingerprint": true,
+              "sha256": "dcdd1b15476287ffdd7091d605a684ac2c7807728ad2147155b2632f1280b256"
+            },
+            "nz_source_file": {
+              "file": "lssty1xdesi_source.nz",
+              "in_fingerprint": true,
+              "sha256": "de0bd0ee395ade11ca08af7fbee3b414528ff4c628fda8c56a1da76befe995f8"
+            },
+            "source_ntomo": {
+              "in_fingerprint": true,
+              "value": "5"
+            }
+          },
+          "path": "./external_modules/data/lssty1xdesi"
+        }
+      },
+      "fingerprint_check": "equal",
+      "fingerprint_of_the_files": "97c4686bcdfeb62e498706950335768cadf6994701de17336642859a325e4ec1",
+      "fingerprint_stored": "97c4686bcdfeb62e498706950335768cadf6994701de17336642859a325e4ec1",
+      "likelihood_overrides": {},
+      "resolved_input": {
+        "datasets": {
+          "lssty1xdesi.lsst_y1_3x2pt": "2e1ca3b812414126105d578b244760a0f2de55b4dc524cec3d8299042b7db79a"
+        },
+        "likelihood": {
+          "lssty1xdesi.lsst_y1_3x2pt": {
+            "IA_code": 1,
+            "IA_model": 0,
+            "IA_redshift_evolution": 3,
+            "accuracyboost": 3.0,
+            "add_baryons_on_dv": false,
+            "adopt_limber_gg": 0,
+            "adopt_limber_gs": 0,
+            "baryon_pca_select_sims": "antilles-2-99/antilles-101-378/antilles-380-400",
+            "bias_model": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "binning_space": "fourier",
+            "create_baryon_pca": false,
+            "debug": false,
+            "external_baryon_suppression": false,
+            "external_nz_modeling": 0,
+            "filename_baryon_pca": "./projects/lssty1xdesi/chains/pca.txt",
+            "include_HOD_GX": 0,
+            "include_halo_IA": 0,
+            "integration_accuracy": 6,
+            "internal_accuracyboost": 1.0,
+            "kmax_boltzmann": 5.0,
+            "lmax": 50000,
+            "non_linear_emul": 2,
+            "nonlimber_accuracyboost": 1.0,
+            "nonlimber_lowrank_gg": 0,
+            "nonlimber_lowrank_lmax": 150,
+            "nonlimber_lowrank_rank": 5,
+            "params": {
+              "LSST_A1_1": {
+                "latex": "A_\\mathrm{1-IA,LSST}^1",
+                "prior": {
+                  "max": 5,
+                  "min": -5
+                },
+                "proposal": 0.5,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.7,
+                  "scale": 0.5
+                }
+              },
+              "LSST_A1_2": {
+                "latex": "A_\\mathrm{1-IA,LSST}^2",
+                "prior": {
+                  "max": 5,
+                  "min": -5
+                },
+                "proposal": 0.5,
+                "ref": {
+                  "dist": "norm",
+                  "loc": -1.7,
+                  "scale": 0.5
+                }
+              },
+              "LSST_A1_3": {
+                "latex": "A_\\mathrm{1-IA,LSST}^3",
+                "value": 0
+              },
+              "LSST_A1_4": {
+                "latex": "A_\\mathrm{1-IA,LSST}^4",
+                "value": 0
+              },
+              "LSST_A1_5": {
+                "latex": "A_\\mathrm{1-IA,LSST}^5",
+                "value": 0
+              },
+              "LSST_A2_1": {
+                "latex": "A_\\mathrm{2-IA,LSST}^1",
+                "value": 0.0
+              },
+              "LSST_A2_2": {
+                "latex": "A_\\mathrm{2-IA,LSST}^2",
+                "value": 0.0
+              },
+              "LSST_A2_3": {
+                "latex": "A_\\mathrm{2-IA,LSST}^3",
+                "value": 0
+              },
+              "LSST_A2_4": {
+                "latex": "A_\\mathrm{2-IA,LSST}^4",
+                "value": 0
+              },
+              "LSST_A2_5": {
+                "latex": "A_\\mathrm{2-IA,LSST}^5",
+                "value": 0
+              },
+              "LSST_B1_1": {
+                "latex": "b_\\mathrm{1-LSST}^1",
+                "prior": {
+                  "max": 3,
+                  "min": 0.8
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.24,
+                  "scale": 0.15
+                }
+              },
+              "LSST_B1_2": {
+                "latex": "b_\\mathrm{1-LSST}^2",
+                "prior": {
+                  "max": 3,
+                  "min": 0.8
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.36,
+                  "scale": 0.15
+                }
+              },
+              "LSST_B1_3": {
+                "latex": "b_\\mathrm{1-LSST}^3",
+                "prior": {
+                  "max": 3,
+                  "min": 0.8
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.47,
+                  "scale": 0.15
+                }
+              },
+              "LSST_B1_4": {
+                "latex": "b_\\mathrm{1-LSST}^4",
+                "prior": {
+                  "max": 3,
+                  "min": 0.8
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.6,
+                  "scale": 0.15
+                }
+              },
+              "LSST_B1_5": {
+                "latex": "b_\\mathrm{1-LSST}^5",
+                "prior": {
+                  "max": 3,
+                  "min": 0.8
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.76,
+                  "scale": 0.1
+                }
+              },
+              "LSST_B2_1": {
+                "latex": "b_\\mathrm{2-LSST}^1",
+                "value": 0.0
+              },
+              "LSST_B2_2": {
+                "latex": "b_\\mathrm{2-LSST}^2",
+                "value": 0.0
+              },
+              "LSST_B2_3": {
+                "latex": "b_\\mathrm{2-LSST}^3",
+                "value": 0.0
+              },
+              "LSST_B2_4": {
+                "latex": "b_\\mathrm{2-LSST}^4",
+                "value": 0.0
+              },
+              "LSST_B2_5": {
+                "latex": "b_\\mathrm{2-LSST}^5",
+                "value": 0.0
+              },
+              "LSST_B3NL_1": {
+                "latex": "b_\\mathrm{B3NL-LSST}^1",
+                "value": 0.0
+              },
+              "LSST_B3NL_2": {
+                "latex": "b_\\mathrm{B3NL-LSST}^2",
+                "value": 0.0
+              },
+              "LSST_B3NL_3": {
+                "latex": "b_\\mathrm{B3NL-LSST}^3",
+                "value": 0.0
+              },
+              "LSST_B3NL_4": {
+                "latex": "b_\\mathrm{B3NL-LSST}^4",
+                "value": 0.0
+              },
+              "LSST_B3NL_5": {
+                "latex": "b_\\mathrm{B3NL-LSST}^5",
+                "value": 0.0
+              },
+              "LSST_BARYON_Q1": {
+                "latex": "Q1_\\mathrm{LSST}^1",
+                "value": 0.0
+              },
+              "LSST_BARYON_Q2": {
+                "latex": "Q2_\\mathrm{LSST}^2",
+                "value": 0.0
+              },
+              "LSST_BARYON_Q3": {
+                "latex": "Q3_\\mathrm{LSST}^3",
+                "value": 0.0
+              },
+              "LSST_BARYON_Q4": {
+                "latex": "Q4_\\mathrm{LSST}^4",
+                "value": 0.0
+              },
+              "LSST_BK_1": {
+                "latex": "b_\\mathrm{B3NL-LSST}^1",
+                "value": 0.0
+              },
+              "LSST_BK_2": {
+                "latex": "b_\\mathrm{B3NL-LSST}^2",
+                "value": 0.0
+              },
+              "LSST_BK_3": {
+                "latex": "b_\\mathrm{B3NL-LSST}^3",
+                "value": 0.0
+              },
+              "LSST_BK_4": {
+                "latex": "b_\\mathrm{B3NL-LSST}^4",
+                "value": 0.0
+              },
+              "LSST_BK_5": {
+                "latex": "b_\\mathrm{B3NL-LSST}^5",
+                "value": 0.0
+              },
+              "LSST_BMAG_1": {
+                "latex": "b_\\mathrm{BMAG-LSST}^1",
+                "value": 0.0
+              },
+              "LSST_BMAG_2": {
+                "latex": "b_\\mathrm{BMAG-LSST}^2",
+                "value": 0.0
+              },
+              "LSST_BMAG_3": {
+                "latex": "b_\\mathrm{BMAG-LSST}^3",
+                "value": 0.0
+              },
+              "LSST_BMAG_4": {
+                "latex": "b_\\mathrm{BMAG-LSST}^4",
+                "value": 0.0
+              },
+              "LSST_BMAG_5": {
+                "latex": "b_\\mathrm{BMAG-LSST}^5",
+                "value": 0.0
+              },
+              "LSST_BTA_1": {
+                "latex": "A_\\mathrm{BTA-IA,LSST}^1",
+                "value": 0.0
+              },
+              "LSST_BTA_2": {
+                "latex": "A_\\mathrm{BTA-IA,LSST}^2",
+                "value": 0
+              },
+              "LSST_BTA_3": {
+                "latex": "A_\\mathrm{BTA-IA,LSST}^3",
+                "value": 0
+              },
+              "LSST_BTA_4": {
+                "latex": "A_\\mathrm{BTA-IA,LSST}^4",
+                "value": 0
+              },
+              "LSST_BTA_5": {
+                "latex": "A_\\mathrm{BTA-IA,LSST}^5",
+                "value": 0
+              },
+              "LSST_DZ_L1": {
+                "latex": "\\Delta z_\\mathrm{l,LSST}^1",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_DZ_L2": {
+                "latex": "\\Delta z_\\mathrm{l,LSST}^2",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_DZ_L3": {
+                "latex": "\\Delta z_\\mathrm{l,LSST}^3",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_DZ_L4": {
+                "latex": "\\Delta z_\\mathrm{l,LSST}^4",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_DZ_L5": {
+                "latex": "\\Delta z_\\mathrm{l,LSST}^5",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_DZ_S1": {
+                "latex": "\\Delta z_\\mathrm{s,LSST}^1",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                },
+                "proposal": 0.002,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                }
+              },
+              "LSST_DZ_S2": {
+                "latex": "\\Delta z_\\mathrm{s,LSST}^2",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                },
+                "proposal": 0.002,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                }
+              },
+              "LSST_DZ_S3": {
+                "latex": "\\Delta z_\\mathrm{s,LSST}^3",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                },
+                "proposal": 0.002,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                }
+              },
+              "LSST_DZ_S4": {
+                "latex": "\\Delta z_\\mathrm{s,LSST}^4",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                },
+                "proposal": 0.002,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                }
+              },
+              "LSST_DZ_S5": {
+                "latex": "\\Delta z_\\mathrm{s,LSST}^5",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                },
+                "proposal": 0.002,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.002
+                }
+              },
+              "LSST_M1": {
+                "latex": "m_\\mathrm{LSST}^1",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_M2": {
+                "latex": "m_\\mathrm{LSST}^2",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_M3": {
+                "latex": "m_\\mathrm{LSST}^3",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_M4": {
+                "latex": "m_\\mathrm{LSST}^4",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_M5": {
+                "latex": "m_\\mathrm{LSST}^5",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                },
+                "proposal": 0.005,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.005
+                }
+              },
+              "LSST_PM1": {
+                "latex": "PM_\\mathrm{LSST}^1",
+                "value": 0.0
+              },
+              "LSST_PM2": {
+                "latex": "PM_\\mathrm{LSST}^2",
+                "value": 0.0
+              },
+              "LSST_PM3": {
+                "latex": "PM_\\mathrm{LSST}^3",
+                "value": 0.0
+              },
+              "LSST_PM4": {
+                "latex": "PM_\\mathrm{LSST}^4",
+                "value": 0.0
+              },
+              "LSST_PM5": {
+                "latex": "PM_\\mathrm{LSST}^5",
+                "value": 0.0
+              }
+            },
+            "path": "./external_modules/data/lssty1xdesi",
+            "photoz_histogram_akima": 0,
+            "photoz_histogram_akima_factor": 3,
+            "photoz_interpolation_type": 0,
+            "photoz_zmid_convention": 0,
+            "pk_z_refinement": 1,
+            "print_datavector": false,
+            "print_datavector_file": "./projects/lssty1xdesi/chains/lsst_y1_3x2pt_theory.modelvector",
+            "speed": 1,
+            "stop_at_error": false,
+            "type": [],
+            "use_baryon_pca": false,
+            "use_emulator": 0,
+            "version": null,
+            "which_bsims_add_on_dv": "antilles-2"
+          }
+        },
+        "params": {
+          "As": {
+            "derived": true,
+            "latex": "A_\\mathrm{s}",
+            "value": "lambda As_1e9: 1e-9 * As_1e9"
+          },
+          "As_1e9": {
+            "drop": true,
+            "latex": "10^9 A_\\mathrm{s}",
+            "prior": {
+              "max": 5,
+              "min": 0.5
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 2.1,
+              "scale": 0.2
+            },
+            "renames": "A"
+          },
+          "H0": {
+            "latex": "H_0",
+            "prior": {
+              "max": 91,
+              "min": 55
+            },
+            "proposal": 3,
+            "ref": {
+              "dist": "norm",
+              "loc": 67.32,
+              "scale": 3
+            }
+          },
+          "LSST_A1_1": {
+            "latex": "A_\\mathrm{1-IA,LSST}^1",
+            "prior": {
+              "max": 5,
+              "min": -5
+            },
+            "proposal": 0.5,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.7,
+              "scale": 0.5
+            }
+          },
+          "LSST_A1_2": {
+            "latex": "A_\\mathrm{1-IA,LSST}^2",
+            "prior": {
+              "max": 5,
+              "min": -5
+            },
+            "proposal": 0.5,
+            "ref": {
+              "dist": "norm",
+              "loc": -1.7,
+              "scale": 0.5
+            }
+          },
+          "LSST_A1_3": {
+            "latex": "A_\\mathrm{1-IA,LSST}^3",
+            "value": 0
+          },
+          "LSST_A1_4": {
+            "latex": "A_\\mathrm{1-IA,LSST}^4",
+            "value": 0
+          },
+          "LSST_A1_5": {
+            "latex": "A_\\mathrm{1-IA,LSST}^5",
+            "value": 0
+          },
+          "LSST_A2_1": {
+            "latex": "A_\\mathrm{2-IA,LSST}^1",
+            "value": 0.0
+          },
+          "LSST_A2_2": {
+            "latex": "A_\\mathrm{2-IA,LSST}^2",
+            "value": 0.0
+          },
+          "LSST_A2_3": {
+            "latex": "A_\\mathrm{2-IA,LSST}^3",
+            "value": 0
+          },
+          "LSST_A2_4": {
+            "latex": "A_\\mathrm{2-IA,LSST}^4",
+            "value": 0
+          },
+          "LSST_A2_5": {
+            "latex": "A_\\mathrm{2-IA,LSST}^5",
+            "value": 0
+          },
+          "LSST_B1_1": {
+            "latex": "b_\\mathrm{1-LSST}^1",
+            "prior": {
+              "max": 3,
+              "min": 0.8
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.24,
+              "scale": 0.15
+            }
+          },
+          "LSST_B1_2": {
+            "latex": "b_\\mathrm{1-LSST}^2",
+            "prior": {
+              "max": 3,
+              "min": 0.8
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.36,
+              "scale": 0.15
+            }
+          },
+          "LSST_B1_3": {
+            "latex": "b_\\mathrm{1-LSST}^3",
+            "prior": {
+              "max": 3,
+              "min": 0.8
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.47,
+              "scale": 0.15
+            }
+          },
+          "LSST_B1_4": {
+            "latex": "b_\\mathrm{1-LSST}^4",
+            "prior": {
+              "max": 3,
+              "min": 0.8
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.6,
+              "scale": 0.15
+            }
+          },
+          "LSST_B1_5": {
+            "latex": "b_\\mathrm{1-LSST}^5",
+            "prior": {
+              "max": 3,
+              "min": 0.8
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.76,
+              "scale": 0.1
+            }
+          },
+          "LSST_B2_1": {
+            "latex": "b_\\mathrm{2-LSST}^1",
+            "value": 0.0
+          },
+          "LSST_B2_2": {
+            "latex": "b_\\mathrm{2-LSST}^2",
+            "value": 0.0
+          },
+          "LSST_B2_3": {
+            "latex": "b_\\mathrm{2-LSST}^3",
+            "value": 0.0
+          },
+          "LSST_B2_4": {
+            "latex": "b_\\mathrm{2-LSST}^4",
+            "value": 0.0
+          },
+          "LSST_B2_5": {
+            "latex": "b_\\mathrm{2-LSST}^5",
+            "value": 0.0
+          },
+          "LSST_B3NL_1": {
+            "latex": "b_\\mathrm{B3NL-LSST}^1",
+            "value": 0.0
+          },
+          "LSST_B3NL_2": {
+            "latex": "b_\\mathrm{B3NL-LSST}^2",
+            "value": 0.0
+          },
+          "LSST_B3NL_3": {
+            "latex": "b_\\mathrm{B3NL-LSST}^3",
+            "value": 0.0
+          },
+          "LSST_B3NL_4": {
+            "latex": "b_\\mathrm{B3NL-LSST}^4",
+            "value": 0.0
+          },
+          "LSST_B3NL_5": {
+            "latex": "b_\\mathrm{B3NL-LSST}^5",
+            "value": 0.0
+          },
+          "LSST_BARYON_Q1": {
+            "latex": "Q1_\\mathrm{LSST}^1",
+            "value": 0.0
+          },
+          "LSST_BARYON_Q2": {
+            "latex": "Q2_\\mathrm{LSST}^2",
+            "value": 0.0
+          },
+          "LSST_BARYON_Q3": {
+            "latex": "Q3_\\mathrm{LSST}^3",
+            "value": 0.0
+          },
+          "LSST_BARYON_Q4": {
+            "latex": "Q4_\\mathrm{LSST}^4",
+            "value": 0.0
+          },
+          "LSST_BK_1": {
+            "latex": "b_\\mathrm{B3NL-LSST}^1",
+            "value": 0.0
+          },
+          "LSST_BK_2": {
+            "latex": "b_\\mathrm{B3NL-LSST}^2",
+            "value": 0.0
+          },
+          "LSST_BK_3": {
+            "latex": "b_\\mathrm{B3NL-LSST}^3",
+            "value": 0.0
+          },
+          "LSST_BK_4": {
+            "latex": "b_\\mathrm{B3NL-LSST}^4",
+            "value": 0.0
+          },
+          "LSST_BK_5": {
+            "latex": "b_\\mathrm{B3NL-LSST}^5",
+            "value": 0.0
+          },
+          "LSST_BMAG_1": {
+            "latex": "b_\\mathrm{BMAG-LSST}^1",
+            "value": 0.0
+          },
+          "LSST_BMAG_2": {
+            "latex": "b_\\mathrm{BMAG-LSST}^2",
+            "value": 0.0
+          },
+          "LSST_BMAG_3": {
+            "latex": "b_\\mathrm{BMAG-LSST}^3",
+            "value": 0.0
+          },
+          "LSST_BMAG_4": {
+            "latex": "b_\\mathrm{BMAG-LSST}^4",
+            "value": 0.0
+          },
+          "LSST_BMAG_5": {
+            "latex": "b_\\mathrm{BMAG-LSST}^5",
+            "value": 0.0
+          },
+          "LSST_BTA_1": {
+            "latex": "A_\\mathrm{BTA-IA,LSST}^1",
+            "value": 0.0
+          },
+          "LSST_BTA_2": {
+            "latex": "A_\\mathrm{BTA-IA,LSST}^2",
+            "value": 0
+          },
+          "LSST_BTA_3": {
+            "latex": "A_\\mathrm{BTA-IA,LSST}^3",
+            "value": 0
+          },
+          "LSST_BTA_4": {
+            "latex": "A_\\mathrm{BTA-IA,LSST}^4",
+            "value": 0
+          },
+          "LSST_BTA_5": {
+            "latex": "A_\\mathrm{BTA-IA,LSST}^5",
+            "value": 0
+          },
+          "LSST_DZ_L1": {
+            "latex": "\\Delta z_\\mathrm{l,LSST}^1",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_DZ_L2": {
+            "latex": "\\Delta z_\\mathrm{l,LSST}^2",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_DZ_L3": {
+            "latex": "\\Delta z_\\mathrm{l,LSST}^3",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_DZ_L4": {
+            "latex": "\\Delta z_\\mathrm{l,LSST}^4",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_DZ_L5": {
+            "latex": "\\Delta z_\\mathrm{l,LSST}^5",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_DZ_S1": {
+            "latex": "\\Delta z_\\mathrm{s,LSST}^1",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            },
+            "proposal": 0.002,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            }
+          },
+          "LSST_DZ_S2": {
+            "latex": "\\Delta z_\\mathrm{s,LSST}^2",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            },
+            "proposal": 0.002,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            }
+          },
+          "LSST_DZ_S3": {
+            "latex": "\\Delta z_\\mathrm{s,LSST}^3",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            },
+            "proposal": 0.002,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            }
+          },
+          "LSST_DZ_S4": {
+            "latex": "\\Delta z_\\mathrm{s,LSST}^4",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            },
+            "proposal": 0.002,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            }
+          },
+          "LSST_DZ_S5": {
+            "latex": "\\Delta z_\\mathrm{s,LSST}^5",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            },
+            "proposal": 0.002,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.002
+            }
+          },
+          "LSST_M1": {
+            "latex": "m_\\mathrm{LSST}^1",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_M2": {
+            "latex": "m_\\mathrm{LSST}^2",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_M3": {
+            "latex": "m_\\mathrm{LSST}^3",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_M4": {
+            "latex": "m_\\mathrm{LSST}^4",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_M5": {
+            "latex": "m_\\mathrm{LSST}^5",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.005
+            }
+          },
+          "LSST_PM1": {
+            "latex": "PM_\\mathrm{LSST}^1",
+            "value": 0.0
+          },
+          "LSST_PM2": {
+            "latex": "PM_\\mathrm{LSST}^2",
+            "value": 0.0
+          },
+          "LSST_PM3": {
+            "latex": "PM_\\mathrm{LSST}^3",
+            "value": 0.0
+          },
+          "LSST_PM4": {
+            "latex": "PM_\\mathrm{LSST}^4",
+            "value": 0.0
+          },
+          "LSST_PM5": {
+            "latex": "PM_\\mathrm{LSST}^5",
+            "value": 0.0
+          },
+          "age": {
+            "derived": true,
+            "latex": "{\\rm{Age}}/\\mathrm{Gyr}"
+          },
+          "mnu": {
+            "prior": {
+              "max": 0.6,
+              "min": 0.06
+            },
+            "proposal": 0.05,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.25,
+              "scale": 0.1
+            }
+          },
+          "ns": {
+            "latex": "n_\\mathrm{s}",
+            "prior": {
+              "max": 1.07,
+              "min": 0.87
+            },
+            "proposal": 0.015,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.96605,
+              "scale": 0.015
+            }
+          },
+          "omegab": {
+            "drop": true,
+            "latex": "\\Omega_\\mathrm{b}",
+            "prior": {
+              "max": 0.07,
+              "min": 0.03
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0495,
+              "scale": 0.005
+            }
+          },
+          "omegabh2": {
+            "derived": true,
+            "latex": "\\Omega_\\mathrm{b} h^2",
+            "renames": [
+              "ombh2"
+            ],
+            "value": "lambda omegab, H0: omegab*(H0/100)**2"
+          },
+          "omegach2": {
+            "derived": true,
+            "latex": "\\Omega_\\mathrm{c} h^2",
+            "renames": [
+              "omch2"
+            ],
+            "value": "lambda omegam, omegab, mnu, H0: (omegam-omegab)*(H0/100)**2-(mnu*(3.046/3)**0.75)/94.0708"
+          },
+          "omegal": {
+            "derived": true,
+            "latex": "\\Omega_\\Lambda",
+            "renames": [
+              "omega_de"
+            ]
+          },
+          "omegam": {
+            "drop": true,
+            "latex": "\\Omega_\\mathrm{m}",
+            "prior": {
+              "max": 0.5,
+              "min": 0.2
+            },
+            "proposal": 0.015,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.316,
+              "scale": 0.015
+            }
+          },
+          "omegamh2": {
+            "derived": "lambda omegam, H0: omegam*(H0/100)**2",
+            "latex": "\\Omega_\\mathrm{m} h^2"
+          },
+          "omegan": {
+            "derived": "lambda omegan2, H0: omegan2/((H0/100)**2)",
+            "latex": "\\Omega_\\mathrm{\\\\nu}"
+          },
+          "omegan2": {
+            "derived": true,
+            "latex": "\\Omega_\\mathrm{\\\\nu} h^2",
+            "renames": [
+              "omnuh2"
+            ]
+          },
+          "rdrag": {
+            "derived": true,
+            "latex": "r_\\mathrm{drag}"
+          },
+          "s8h5": {
+            "derived": "lambda sigma8, H0: sigma8*(H0*1e-2)**(-0.5)",
+            "latex": "\\sigma_8/h^{0.5}"
+          },
+          "s8omegamp25": {
+            "derived": "lambda sigma8, omegam: sigma8*omegam**0.25",
+            "latex": "\\sigma_8 \\Omega_\\mathrm{m}^{0.25}"
+          },
+          "s8omegamp5": {
+            "derived": "lambda sigma8, omegam: sigma8*omegam**0.5",
+            "latex": "\\sigma_8 \\Omega_\\mathrm{m}^{0.5}"
+          },
+          "sigma8": {
+            "derived": true,
+            "latex": "\\sigma_8"
+          },
+          "tau": {
+            "latex": "\\tau_\\mathrm{reio}",
+            "value": 0.0697186
+          },
+          "w": {
+            "latex": "w_{0,\\mathrm{DE}}",
+            "prior": {
+              "max": -0.33333,
+              "min": -3
+            },
+            "proposal": 0.05,
+            "ref": {
+              "dist": "norm",
+              "loc": -0.99,
+              "scale": 0.05
+            }
+          },
+          "w0pwa": {
+            "drop": true,
+            "latex": "w_{0,\\mathrm{DE}}+w_{a,\\mathrm{DE}}",
+            "prior": {
+              "max": -0.01,
+              "min": -3
+            },
+            "proposal": 0.05,
+            "ref": {
+              "dist": "norm",
+              "loc": -0.99,
+              "scale": 0.05
+            }
+          },
+          "wa": {
+            "derived": true,
+            "latex": "w_{a,\\mathrm{DE}}",
+            "value": "lambda w0pwa, w: w0pwa - w"
+          },
+          "yheused": {
+            "derived": true,
+            "latex": "Y_P^\\mathrm{BBN}",
+            "renames": [
+              "YHe"
+            ]
+          }
+        },
+        "point": {
+          "As_1e9": 2.1,
+          "H0": 67.32,
+          "LSST_A1_1": 0.606102,
+          "LSST_A1_2": -1.51541,
+          "LSST_B1_1": 1.72716,
+          "LSST_B1_2": 1.65168,
+          "LSST_B1_3": 1.61423,
+          "LSST_B1_4": 1.92886,
+          "LSST_B1_5": 2.11633,
+          "LSST_DZ_L1": 0.0,
+          "LSST_DZ_L2": 0.0,
+          "LSST_DZ_L3": 0.0,
+          "LSST_DZ_L4": 0.0,
+          "LSST_DZ_L5": 0.0,
+          "LSST_DZ_S1": 0.0,
+          "LSST_DZ_S2": 0.0,
+          "LSST_DZ_S3": 0.0,
+          "LSST_DZ_S4": 0.0,
+          "LSST_DZ_S5": 0.0,
+          "LSST_M1": 0.0,
+          "LSST_M2": 0.0,
+          "LSST_M3": 0.0,
+          "LSST_M4": 0.0,
+          "LSST_M5": 0.0,
+          "mnu": 0.06,
+          "ns": 0.96605,
+          "omegab": 0.04,
+          "omegam": 0.3,
+          "w": -1.0,
+          "w0pwa": -1.0
+        },
+        "prior": {
+          "amplitude_cut": "lambda As_1e9, LSST_B1_1, LSST_B1_2, LSST_B1_3, LSST_B1_4, LSST_B1_5: 0.0 if (As_1e9/2.1)*max((LSST_B1_1/1.72716)**2, (LSST_B1_2/1.65168)**2, (LSST_B1_3/1.61423)**2, (LSST_B1_4/1.92886)**2, (LSST_B1_5/2.11633)**2) <= 8 else -np.inf"
+        },
+        "theory": {
+          "camb": {
+            "external_primordial_pk": false,
+            "extra_args": {
+              "AccuracyBoost": 1.75,
+              "accurate_massive_neutrino_transfers": false,
+              "dark_energy_model": "ppf",
+              "halofit_version": "takahashi",
+              "k_per_logint": 34,
+              "kmax": 22.499999999999996,
+              "lens_potential_accuracy": 1.0
+            },
+            "ignore_obsolete": false,
+            "path": "./external_modules/code/CAMB",
+            "renames": {
+              "YpBBN": "Y_p",
+              "omegabh2": "ombh2",
+              "omegach2": "omch2",
+              "omegak": "omk",
+              "omegal": "omega_de",
+              "omegan2": "omnuh2",
+              "yhe": "YHe",
+              "yheused": "YHe"
+            },
+            "speed": 0.3,
+            "stop_at_error": false,
+            "use_non_linear_ratio": false,
+            "use_renames": true,
+            "version": null
+          }
+        },
+        "tier": null
+      },
+      "tier": null,
+      "yaml": "projects/lssty1xdesi/EXAMPLE_EVALUATE5.yaml",
+      "yaml_sha256": "92f1eed2e16ac712537ba0ae7ef85ae8af7ca4a0e9fcb2d136531f32c3af353b"
+    }
+  },
+  "name": "linear_probes_dz0p20_lsst_ab3_final",
+  "notes": {
+    "code": "approximate: computed with lssty1xdesi 7354228 + uncommitted changes, cosmolike_core e5f873b (+ any uncommitted changes of that time) and cocoa a2ad6945: the last commits before the computation date",
+    "computed": "2026-11-09T01:00:04-05:00 (the date of chains/EXAMPLE_EVALUATE_LINEAR4_LSST_FISHER_AB3.pkl, converted to .npz on 2026-11-11)",
+    "converted_from": "chains/EXAMPLE_EVALUATE_LINEAR4_LSST_FISHER_AB3.pkl, sha256 14847d10417806361a281894b300acaa20c183c6583265fa1e8e0f10b2ed8a6a",
+    "resolved_input": "resolved from the files at 2026-11-11; fingerprint verified equal"
+  },
+  "settings": {
+    "desi": {
+      "accuracy_boost": 1.0,
+      "camb_overrides": {
+        "AccuracyBoost": 2.0,
+        "k_per_logint": 30
+      },
+      "fingerprint": "e618ac239cf10e9fb198dd2320367860475e216e2f025baef38ec0b68fbc58de",
+      "likelihood_overrides": {
+        "accuracyboost": 3.0,
+        "data_file": "lssty1xdesi_desi_dr1_dz0p20.dataset",
+        "integration_accuracy": 1,
+        "kmax_boltzmann": 20.0,
+        "nonlimber_accuracyboost": 64.0
+      },
+      "stencil": "five-point",
+      "steps": [
+        0.01,
+        0.02,
+        0.03,
+        0.05
+      ],
+      "tier": "final",
+      "yaml": "projects/lssty1xdesi/exploration/EXAMPLE_EVALUATE_LINEAR4.yaml"
+    },
+    "lsst": {
+      "accuracy_boost": 3.0,
+      "camb_overrides": {},
+      "fingerprint": "97c4686bcdfeb62e498706950335768cadf6994701de17336642859a325e4ec1",
+      "likelihood_overrides": {},
+      "stencil": "five-point",
+      "steps": [
+        0.01,
+        0.02,
+        0.03,
+        0.05
+      ],
+      "tier": null,
+      "yaml": "projects/lssty1xdesi/EXAMPLE_EVALUATE5.yaml"
+    }
+  },
+  "tiers": {
+    "settings/desi/tier": "final",
+    "settings/lsst/tier": null
+  },
+  "written": "2026-11-11T01:23:46-05:00"
+}
