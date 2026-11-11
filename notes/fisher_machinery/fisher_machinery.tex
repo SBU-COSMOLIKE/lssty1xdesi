@@ -2332,7 +2332,8 @@ hours per base on the thin layouts, so a scan over candidate
 settings costs hours to days.  This subsection builds a cheap
 estimate instead: one low-accuracy base, computed once, and then,
 per candidate setting, only the noise of a few heavy columns --
-about $8$ to $20$ evaluations.
+about $9$ to $21$ evaluations, minutes instead of the better part
+of an hour.
 
 First the question.  The paragraphs above pin down what the noise does
 to the Fisher matrix: the noise of stencil column $j$ adds, on
@@ -3080,20 +3081,23 @@ comparison's resolution.
 
 \begin{table}[tbp]
   \centering
-  \begin{tabular}{lcccc}
+  \setlength{\tabcolsep}{4pt}%
+  \begin{tabular}{lcccccc}
     \hline
     & \multicolumn{2}{c}{$\kmax = 0.075\hMpc$}
-    & \multicolumn{2}{c}{$\kmax = 0.2\hMpc$} \\
-    configuration & measured & predicted & measured & predicted \\
+    & \multicolumn{2}{c}{$\kmax = 0.2\hMpc$}
+    & \multicolumn{2}{c}{cost at this setting} \\
+    configuration & measured & predicted & measured & predicted
+                  & full base & cheap ($n$) \\
     \hline
-    \multicolumn{5}{l}{${\rm FoM}(w_0, w_a)$} \\
-    MCMC settings        & $1.556$ & $5.98$  & $1.130$ & $1.935$ \\
-    $g = 64$             & $1.292$ & $2.13$  & $1.059$ & $1.170$ \\
-    $g = 128$ (starting) & $1.006$ & $1.202$ & $1.004$ & $1.024$ \\
-    $g = 256$            & $1.000$ & $1.000$ & $1.000$ & $1.000$ \\
-    final settings       & $1.021$ & $0.969$ & $0.995$ & $0.997$ \\
+    \multicolumn{7}{l}{${\rm FoM}(w_0, w_a)$} \\
+    MCMC settings        & $1.556$ & $5.98$  & $1.130$ & $1.935$ & $10$ min  & $35$ s ($2$) \\
+    $g = 64$             & $1.292$ & $2.13$  & $1.059$ & $1.170$ & $29$ min  & $1.7$ min ($2$) \\
+    $g = 128$ (starting) & $1.006$ & $1.202$ & $1.004$ & $1.024$ & $44$ min  & $3.7$ min ($3$) \\
+    $g = 256$            & $1.000$ & $1.000$ & $1.000$ & $1.000$ & $1.2$ h   & $6.1$ min ($3$) \\
+    final settings       & $1.021$ & $0.969$ & $0.995$ & $0.997$ & $50$ min  & $6.8$ min ($5$) \\
     \hline
-    \multicolumn{5}{l}{${\rm FoM}(\Omega_m, 10^9 A_s)$} \\
+    \multicolumn{7}{l}{${\rm FoM}(\Omega_m, 10^9 A_s)$} \\
     MCMC settings        & $1.513$ & $2.98$  & $1.115$ & $1.593$ \\
     $g = 64$             & $1.265$ & $1.787$ & $1.049$ & $1.135$ \\
     $g = 128$ (starting) & $1.007$ & $1.169$ & $1.003$ & $1.020$ \\
@@ -3113,7 +3117,18 @@ comparison's resolution.
     configuration's per-bin columns) and the $a_j$ from the
     matching row of Table~\ref{tab:noise}, divided by the same
     prediction for the reference's own noise; the per-bin columns
-    are omitted.  $\kmax$ in $\hMpc$, quoted at $z = 0$.}
+    are omitted.  The last two columns price the row's numbers with
+    the per-evaluation times of Table~\ref{tab:time}: the measured
+    side needs a full base at that setting, $154$ evaluations,
+    while the cheap prediction needs the fiducial plus four
+    evaluations per heavy column, $1 + 4n$ in all, with $n$ the
+    columns carrying $90\%$ of the prediction, united over both
+    pairs and both cuts.  The costs depend only on the setting, so
+    they are given once, in the upper block.  One-time costs: the
+    cheap method's $g = 64$ base, $154 \times 11.4\,{\rm s} \approx
+    29$ min, and the measured column's $g = 512$ reference,
+    $154 \times 48.4\,{\rm s} \approx 2.1$ h.  $\kmax$ in $\hMpc$,
+    quoted at $z = 0$.}
   \label{tab:noisefom}
 \end{table}
 
@@ -3161,12 +3176,16 @@ Three steps.  First, build one cheap system -- here the $g = 64$
 columns -- and compute $F$, $R_j$ and $\sigma_j$ from it, once.
 Second, for each candidate setting measure the noise of the few
 heavy columns only: ranked by their contribution
-$R_j^2\,a_j\sigma_j^2$, two columns ($w_a$ and $w_0$) carry $90\%$
-of the prediction at $g = 128$, and four or five ($w_a$,
-$\Omega_m$, $H_0$, $w_0$, once one $\sigma_v$) at the final
-settings -- four stencil evaluations per column, about $8$ to $20$
-evaluations per candidate setting against $154$ for a full
-derivative base.  Third, evaluate the
+$R_j^2\,a_j\sigma_j^2$, two or three columns ($w_a$, $w_0$, then
+$\Omega_m$) carry $90\%$ of the prediction on the grid rows, and
+five ($w_a$, $\Omega_m$, $H_0$, $w_0$ and one $\sigma_v$) at the
+final settings -- the $n$ of Table~\ref{tab:noisefom} -- four
+stencil evaluations per column, about $9$ to $21$ evaluations per
+candidate setting against $154$ for a full derivative base.  In
+Cocoa time (Table~\ref{tab:time}), scanning the table's five
+settings the full way costs about $3.4$ h of bases plus the
+$2.1$ h reference; the cheap way, about $19$ min of noise
+measurements plus the $29$ min $g = 64$ base.  Third, evaluate the
 prediction and ask where it stops changing by order unity: there
 the FoM has stabilized -- in Table~\ref{tab:noisefom}, at
 $g = 256$, one conservative doubling after the measured $g = 128$.
