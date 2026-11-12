@@ -1,0 +1,121 @@
+{
+ "about": "The paper model's FoM(w0, wa) and FoM(Omega_m, 10^9 A_s) with sigma_v fitted along the gap axis of each thin layout, over the same figure of merit of the Delta z = 0.2 layout on its current pair list at the same k_max (the wide-bin reference), at k_max = 0.075 and 0.2 h/Mpc (z = 0 value of a per-bin cut at k_max/D(zbar_i)). Copied by notes/bias_model_summary/plots/make_summary_pair_axes_data.py from notes/cross_correlations/plots/pair_axes_wide_ratio.",
+ "kmax_h_per_Mpc": [
+  "0.075",
+  "0.2"
+ ],
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "color": "#0072B2",
+   "g": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "0.075": {
+    "fom_ratio_to_wide": [
+     12.617147048477673,
+     17.04624802241777,
+     18.65479990226582,
+     19.502490494517964
+    ],
+    "fom_om_as_ratio_to_wide": [
+     7.613307901167238,
+     9.486432135768029,
+     10.447428584308703,
+     10.858485424972947
+    ]
+   },
+   "0.2": {
+    "fom_ratio_to_wide": [
+     21.82933926944038,
+     27.102920627547466,
+     27.673217002544806,
+     28.124383733796734
+    ],
+    "fom_om_as_ratio_to_wide": [
+     15.717855674034013,
+     17.281789628911632,
+     17.59264906483097,
+     17.77007748503054
+    ]
+   }
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "color": "#E69F00",
+   "g": [
+    0,
+    1,
+    2
+   ],
+   "0.075": {
+    "fom_ratio_to_wide": [
+     7.879303506789242,
+     7.879303506789242,
+     8.252035663886634
+    ],
+    "fom_om_as_ratio_to_wide": [
+     3.8543807918318467,
+     3.8543807918318467,
+     4.346164483346368
+    ]
+   },
+   "0.2": {
+    "fom_ratio_to_wide": [
+     25.898166179535284,
+     34.97299171211926,
+     37.23686538932065
+    ],
+    "fom_om_as_ratio_to_wide": [
+     16.62886101972192,
+     21.037705736154322,
+     21.533653300455992
+    ]
+   }
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "color": "#CC79A7",
+   "g": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "0.075": {
+    "fom_ratio_to_wide": [
+     3.8742276244218723,
+     5.451172469922959,
+     6.029427677515266,
+     6.165252501404414
+    ],
+    "fom_om_as_ratio_to_wide": [
+     3.005380642736053,
+     3.972656799416215,
+     4.265203687958362,
+     4.339977369216852
+    ]
+   },
+   "0.2": {
+    "fom_ratio_to_wide": [
+     7.613932987553478,
+     7.977279832500872,
+     8.117557574834503,
+     8.15197909619766
+    ],
+    "fom_om_as_ratio_to_wide": [
+     6.217837666800581,
+     6.44826663677642,
+     6.532132768557748,
+     6.557061725667409
+    ]
+   }
+  }
+ ]
+}

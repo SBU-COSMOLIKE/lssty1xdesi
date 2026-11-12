@@ -11,6 +11,10 @@
 \newcommand{\sv}{\sigma_v}
 % An underscore after which a long code name may break.
 \newcommand{\us}{\_\allowbreak}
+% A break inside a long code name adds no stretch of its own, so give
+% paragraphs full of such names a little slack instead of an overfull
+% line (the same setting as the summary note).
+\emergencystretch=2em
 
 % Floats sit near their first reference instead of drifting to
 % figure-only pages.
@@ -90,7 +94,12 @@ kernel overlap; their signal is the low-$\ell$ correlation that
 survives only outside the Limber approximation
 (Section~\ref{sec:limber}).  On the three thinner
 layouts those pairs raise the paper model's ${\rm FoM}(w_0, w_a)$ by
-up to $55$--$59\%$, on $\Delta z = 0.2$ by at most $2\%$.  Attribution
+up to $55$--$59\%$, on $\Delta z = 0.2$ by at most $2\%$.  Measured
+against the wide layout itself, the thin slicing is worth far more
+than the added pairs: at $k_{\rm max} = 0.2\,h$/Mpc the two thin
+layouts' ${\rm FoM}(w_0, w_a)$ is $22$--$26$ times that of
+$\Delta z = 0.2$ on the current lists, and the added pairs raise the
+factors to $28$--$37$ (Section~\ref{sec:axes}).  Attribution
 fits trace the gain to the free level and slope of each sample
 group's bias amplitude $\beta_i = b_{1,i}\,D(\bar{z}_i)$, the linear
 bias times the growth factor: in the auto spectra the level is
@@ -1372,6 +1381,45 @@ $k_{\rm max} = 0.075\,h$/Mpc on $\Delta z = 0.02$ the scale cut
 removes every band of the added pairs up to $s = 900$~km/s (and at
 $g = 1$), so those points sit at one by the cut.
 
+\paragraph{Thin bins against wide bins.}
+Every ratio so far compares a layout to its own current list.  That
+answers what the added pairs are worth, but it hides the comparison
+the paper turns on: how much the thin slicing itself is worth.
+Figure~\ref{fig:wideratio} therefore redraws the gap axis against one
+common reference, the wide layout: every figure of merit is divided
+by that of $\Delta z = 0.2$ on its current list at the same scale
+cut.  ($\Delta z = 0.2$'s own gain along the axis is at most $2\%$,
+so its ratio would stay within $2\%$ of one; it is not drawn.)  Read
+this way, the thin bins measure dark energy far better than the wide
+bins: on the current lists at $k_{\rm max} = 0.2\,h$/Mpc,
+${\rm FoM}(w_0, w_a)$ is $26$ times the wide layout's on
+$\Delta z = 0.02$ and $22$ times on \dcom{}, against $8$ on
+$\Delta z = 0.05$, and the added pairs raise the three factors to
+$37$, $28$ and $8$.  The advantage grows with the cut: at
+$0.075\,h$/Mpc the current lists hold factors of $8$, $13$ and $4$.
+
+One flat stretch needs the same care as before.  On
+$\Delta z = 0.02$ at $k_{\rm max} = 0.075\,h$/Mpc the scale cut
+removes every band of the added pairs, so the curve barely moves
+along the axis: the factor that point holds over the wide layout is
+a property of the cut, not of the pairs.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/pair_axes_wide_ratio/pair_axes_wide_ratio.pdf}
+  \caption{The figures of merit of the paper model along the gap
+    axis, over those of the $\Delta z = 0.2$ layout on its current
+    list at the same scale cut, with $\sv$ fitted
+    ($\Delta z = 0.2$'s own gain along the axis is at most $2\%$ and
+    its ratio is not drawn).  Rows: ${\rm FoM}(w_0, w_a)$ and
+    ${\rm FoM}(\Omega_m, 10^9 A_s)$; columns:
+    $k_{\rm max} = 0.075$, $0.1$ and $0.2\,h$/Mpc; every panel
+    shares one logarithmic $y$ range.  Color, line width and marker:
+    the layout.  $k_{\rm max}$ quoted at $z = 0$; each bin is cut at
+    $k_{\rm max}/D(\bar{z}_i)$.}
+  \label{fig:wideratio}
+\end{figure}
+
 \paragraph{Why the figures of merit rise.}
 The solid and the dashed curves separate two cases: the dashed
 curves hold the seven dispersions at their fiducial values, the
@@ -1692,6 +1740,60 @@ group's bias amplitude, not by the correlated per-bin residuals.
   \label{tab:b1split}
 \end{table}
 
+\paragraph{The attribution against wide bins.}
+The same conditioning answers a second question: how much of the
+thin-over-wide advantage of Figure~\ref{fig:wideratio} flows through
+the bias line?  Figure~\ref{fig:attributionwide} draws the gap axis
+once more, now over $\Delta z = 0.2$ on its current list, with each
+block of nuisance parameters held fixed in the numerator and the
+denominator alike, so that both layouts are conditioned on the same
+knowledge and the ratio compares like with like.  The answer is that
+most of the advantage comes from measuring the bias line.  With each
+group's level and slope held fixed the thin layouts still beat the
+wide one, but by factors of about $7$--$9$ at
+$k_{\rm max} = 0.2\,h$/Mpc instead of $22$--$26$ (and by only
+$1.4$--$1.8$ with every nuisance parameter fixed at $0.075$).  A
+thin layout, with many bins per sample group, measures the bias
+evolution across each group from its own spectra; the wide layout --
+two BGS, four LRG and four ELG bins, with sample groups of one or
+two bins -- cannot, so freeing the bias line costs it far more.
+This is the same mechanism as the gain of the added pairs:
+separating the bias line from the growth history.
+
+The figure also separates the two thin layouts.  On the current
+lists \dcom{} leads $\Delta z = 0.02$ only at
+$k_{\rm max} = 0.075\,h$/Mpc ($12.6$ against $7.9$ in
+${\rm FoM}(w_0, w_a)$); at $0.1$ and $0.2$ the order reverses.  With
+the bias line fixed the two layouts are equal at $0.075$ ($4.4$
+against $4.6$), so the \dcom{} lead at the conservative cut comes
+from constraining the bias line better there.  Why it does has not
+been tested; its finer slicing at low redshift -- $18$ BGS bins of
+$\Delta z \approx 0.016$ against $15$ bins of $0.02$ -- is a
+candidate.  The two layouts slice essentially the same galaxy
+samples (per-sample densities within $2$--$3\%$, mean redshifts
+within $0.01$), so the difference is in how the bins are cut, not in
+which galaxies are used.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/pair_axes_attribution_wide/pair_axes_attribution_wide.pdf}
+  \caption{${\rm FoM}(w_0, w_a)$ of the gap axis over the same
+    figure of merit of the $\Delta z = 0.2$ layout on its current
+    list, with $\sv$ fitted and with blocks of nuisance parameters
+    held at their fiducial values by conditioning; each curve holds
+    the same block fixed in the numerator and the denominator.
+    Rows: \dcom{}, $\Delta z = 0.02$ and $\Delta z = 0.05$; columns:
+    $k_{\rm max} = 0.075$, $0.1$ and $0.2\,h$/Mpc, quoted at
+    $z = 0$; each bin is cut at $k_{\rm max}/D(\bar{z}_i)$; the $y$
+    axis is logarithmic.  Black solid (circles): every parameter
+    free; sky-blue wide solid (triangles), drawn under the black
+    curve: the $b_1$ residuals fixed; blue dash-dotted (diamonds):
+    $b_2$ and $b_{s^2}$ fixed; vermillion dashed (squares): the
+    $b_1$ levels and slopes fixed; orange long-dashed (triangles):
+    every nuisance parameter fixed.}
+  \label{fig:attributionwide}
+\end{figure}
+
 \paragraph{The mechanism.}
 On large scales the galaxy map of bin $i$ is the matter map times
 its linear bias $b_i$ (Section~\ref{sec:groups}), and within each
@@ -1896,11 +1998,13 @@ command on the
 examples.
 \texttt{scripts/compute\us pair\us axes\us fits.py --layout <layout>}
 then writes \texttt{chains/pair\us axes\us fits\us <layout>.json},
-the input of the three generators of \texttt{plots/}
-(\texttt{make\us pair\us axes\us data.py},
+the input of the five generators of \texttt{plots/}:
+\texttt{make\us pair\us axes\us data.py},
 \texttt{make\us pair\us axes\us attribution\us data.py},
-\texttt{make\us pair\us axes\us priors\us data.py}); the
-docstrings of the script and the generators state the exact
+\texttt{make\us pair\us axes\us priors\us data.py},
+\texttt{make\us pair\us axes\us wide\us ratio\us data.py} and
+\texttt{make\us pair\us axes\us attribution\us wide\us data.py}.
+The docstrings of the script and the generators state the exact
 prerequisites and arguments.
 \texttt{plots/make\us sv\us templates\us data.py} writes
 \texttt{plots/sv\us templates}' \texttt{data.json} from the

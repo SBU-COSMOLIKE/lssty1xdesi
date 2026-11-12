@@ -13,8 +13,13 @@ cross-correlations note's figure data (all in this repository):
   beta_i = b_1,i D(zbar_i)) held fixed, and with every nuisance parameter
   held fixed, at k_max = 0.075 and 0.2.
 
+- plots/summary_pair_wide_ratio/data.json: the same gap axis as a ratio to
+  wide bins: each thin layout's FoM over the FoM of the Delta z = 0.2 layout
+  on its current list, at k_max = 0.075 and 0.2.
+
 Inputs: ../../cross_correlations/plots/pair_axes_gap/data.json,
-pair_axes_sigv/data.json and pair_axes_attribution/data.json.
+pair_axes_sigv/data.json, pair_axes_attribution/data.json and
+pair_axes_wide_ratio/data.json.
     python make_summary_pair_axes_data.py      (from any folder)
 """
 import json
@@ -83,7 +88,28 @@ def main():
                 **{cut: {block: [p[cut][block][SV]['fom_ratio'] for p in lay['points']]
                          for block in BLOCKS} for cut in CUTS},
             } for lay in src['layouts']]}, f, indent=1)
-    print('wrote summary_pair_axes/data.json and summary_pair_attribution/data.json')
+    src = load('pair_axes_wide_ratio')
+    folder = os.path.join(HERE, 'summary_pair_wide_ratio')
+    os.makedirs(folder, exist_ok=True)
+    with open(os.path.join(folder, 'data.json'), 'w') as f:
+        json.dump({
+            'about': ('The paper model\'s FoM(w0, wa) and FoM(Omega_m, 10^9 A_s) with sigma_v '
+                      'fitted along the gap axis of each thin layout, over the same figure of '
+                      'merit of the Delta z = 0.2 layout on its current pair list at the same '
+                      'k_max (the wide-bin reference), at k_max = 0.075 and 0.2 h/Mpc (z = 0 '
+                      'value of a per-bin cut at k_max/D(zbar_i)). Copied by notes/'
+                      'bias_model_summary/plots/make_summary_pair_axes_data.py from notes/'
+                      'cross_correlations/plots/pair_axes_wide_ratio.'),
+            'kmax_h_per_Mpc': CUTS,
+            'layouts': [{
+                'name': lay['name'], 'label': lay['label'], 'color': lay['color'],
+                'g': [p['g'] for p in lay['points']],
+                **{cut: {key: [p[cut][key] for p in lay['points']]
+                         for key in ('fom_ratio_to_wide', 'fom_om_as_ratio_to_wide')}
+                   for cut in CUTS},
+            } for lay in src['layouts'] if lay['name'] != 'Delta z = 0.2']}, f, indent=1)
+    print('wrote summary_pair_axes/data.json, summary_pair_attribution/data.json and '
+          'summary_pair_wide_ratio/data.json')
 
 
 if __name__ == '__main__':

@@ -76,7 +76,10 @@
 %   - pairs beyond the list: the largest gains, their values with the
 %     bias line fixed and with every nuisance parameter fixed, and the
 %     agreement across the passing priors track the Pair* macros below
-%     (the section "The cross pairs and their overlaps").
+%     (the section "The cross pairs and their overlaps");
+%   - the thin-over-wide factors of the same section (and the Summary)
+%     track the Wide* macros below, from the wide-ratio figure and the
+%     companion note's attribution against wide bins.
 % ---------------------------------------------------------------------
 % The refresh switch: \numbersfinalfalse prints every \refresh value in
 % red and the note under the title; \numbersfinaltrue prints them plain.
@@ -207,6 +210,26 @@
 \newcommand{\PairLineFive}{\refresh{1.08}}
 \newcommand{\PairNuisMax}{\refresh{$8\%$}}
 \newcommand{\PairPriorSpread}{\refresh{$3\%$}}
+% The ratio to wide bins (plots/summary_pair_wide_ratio/data.json,
+% written by plots/make_summary_pair_axes_data.py from the
+% cross-correlations note's figure data): FoM(w0, wa) of each thinner
+% layout over that of Delta z = 0.2 on the current data vector, at the
+% same cut, sigma_v fitted.  WideHigh*: the current data vector at
+% k_max = 0.2; WideHigh*Max: the gap axis' largest list at 0.2;
+% WideLow*: the current data vector at 0.075.  WideLineMin/Max: the
+% range of the two thin layouts at 0.2, largest list, with each
+% group's bias line held fixed in both layouts (the companion note's
+% plots/pair_axes_attribution_wide/data.json).
+\newcommand{\WideHighCom}{\refresh{22}}
+\newcommand{\WideHighTwo}{\refresh{26}}
+\newcommand{\WideHighFive}{\refresh{8}}
+\newcommand{\WideHighComMax}{\refresh{28}}
+\newcommand{\WideHighTwoMax}{\refresh{37}}
+\newcommand{\WideLowCom}{\refresh{13}}
+\newcommand{\WideLowTwo}{\refresh{8}}
+\newcommand{\WideLowFive}{\refresh{4}}
+\newcommand{\WideLineMin}{\refresh{7}}
+\newcommand{\WideLineMax}{\refresh{9}}
 % ---------------------------------------------------------------------
 % Part 2: inputs and template properties (not moved by the recompute).
 %
@@ -471,7 +494,10 @@ layout (Section~\ref{sec:forecast}).
 \paragraph{Pairs beyond the list.}
 Cross spectra of bins further apart than the pair list measures
 would raise ${\rm FoM}(w_0, w_a)$ by up to a factor of \PairGainCom{}
-on the thin layouts (Section~\ref{sec:pairs}).  The gain rests on the
+on the thin layouts, widening their lead over the wide
+$\Delta z = 0.2$ layout from \WideHighCom{}--\WideHighTwo{} times
+its figure of merit to \WideHighComMax{}--\WideHighTwoMax{} at
+$\kmax = 0.2\hMpc$ (Section~\ref{sec:pairs}).  The gain rests on the
 freedom the prior grants: each group's free bias level and slope
 mimic the growth history in the auto spectra, the added cross
 spectra separate the two, and with that level and slope held fixed
@@ -818,6 +844,43 @@ biases are known.
     long-dashed, triangles: every nuisance parameter held fixed.
     Rows: $\kmax = 0.075$ and $0.2\hMpc$.  \kmaxclause}
   \label{fig:pairattribution}
+\end{figure}
+
+\paragraph{The gain over wide bins.}
+The ratios above compare each layout to its own current data vector;
+Figure~\ref{fig:pairwideratio} compares the layouts to each other,
+dividing every figure of merit by that of the wide $\Delta z = 0.2$
+layout on the current data vector at the same cut.  The thin slicing
+is worth far more than the added pairs: on the current data vector
+at $\kmax = 0.2\hMpc$ the thin layouts hold \WideHighTwo{}
+($\Delta z = 0.02$) and \WideHighCom{}
+($\Delta d_{\rm com} = 62$~Mpc) times the wide layout's
+${\rm FoM}(w_0, w_a)$, against \WideHighFive{} on
+$\Delta z = 0.05$, and the added pairs raise the first two factors
+to \WideHighTwoMax{} and \WideHighComMax{}; at $0.075$ the factors
+are \WideLowTwo{}, \WideLowCom{} and \WideLowFive{}.  Most of this
+advantage, too, comes from measuring each group's bias line: with
+the levels and slopes held fixed in both layouts, the thin layouts
+keep factors of about \WideLineMin{}--\WideLineMax{} at $0.2\hMpc$
+in place of \WideHighCom{}--\WideHighTwo{}, because the thin slicing
+measures each group's bias evolution from its own spectra and the
+wide slicing, with one or two bins per group, cannot.  The
+attribution against wide bins, block by block, is in
+\texttt{notes/cross\_correlations}.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=3.5in]{plots/summary_pair_wide_ratio/summary_pair_wide_ratio.pdf}
+  \caption{The figures of merit along the gap axis, over those of
+    the $\Delta z = 0.2$ layout on the current data vector at the
+    same cut, with the dispersions fitted ($\Delta z = 0.2$'s own
+    gain along the axis stays below \PairGainTwentyMax{}; its ratio
+    is not drawn).  Top: ${\rm FoM}(w_0, w_a)$; bottom:
+    ${\rm FoM}(\Omega_m, 10^9 A_s)$; the panels share the $y$ axis,
+    logarithmic.  Color, line width and marker: the layout; solid,
+    filled markers: $\kmax = 0.2\hMpc$; dashed, open: $0.075$.
+    \kmaxclause}
+  \label{fig:pairwideratio}
 \end{figure}
 
 \paragraph{What is robust, and what is open.}
