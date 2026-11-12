@@ -1,0 +1,1054 @@
+{
+ "about": "Figures of merit over those of the current data vector when cross pairs are added along one axis (gap<=g: today's pairs + every pair whose raw n(z) ranges are at most g bin widths apart). Extracted by notes/cross_correlations/plots/make_pair_axes_data.py from the results.json of the pair-axes study (written 2026-11-12T06:44:08): one Fisher derivative base per layout on its largest pair list (final derivative tier), every point a row selection from it, checked bit for bit against the current caches on the shared rows. Models: paper: B tilts noA2 sv x6 on the pessimistic prior (alpha_2 fixed at 0, sigma_v widths x6); reference: B tilts on the pessimistic prior (alpha_2 free, exploration sigma_v widths): the model of the pair_threshold figure. Variants: free = sigma_v fitted; fixed = the same model with every sigma_v column removed (held at the fiducial). k_max is the z = 0 value of a per-bin cut at k_max/D(zbar_i).",
+ "axis": "gap",
+ "xlabel": "$g$: pairs measured up to $g$ bin widths apart",
+ "x_ticks": [
+  0.0,
+  1.0,
+  2.0,
+  3.0
+ ],
+ "x_ticklabels": [
+  "0",
+  "1",
+  "2",
+  "3"
+ ],
+ "kmax_h_per_Mpc": [
+  "0.075",
+  "0.1",
+  "0.2"
+ ],
+ "models": [
+  "paper",
+  "reference"
+ ],
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "color": "#0072B2",
+   "n_pairs_current": 107,
+   "points": [
+    {
+     "x": 0.0,
+     "key": "today",
+     "n_pairs": 107,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 1.0,
+     "key": "gap<=1",
+     "n_pairs": 190,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.3510382305066733,
+        "fom_om_as_ratio": 1.2460329017185303
+       },
+       "fixed": {
+        "fom_ratio": 1.2713945991380213,
+        "fom_om_as_ratio": 1.2662237886515393
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.4737970350976142,
+        "fom_om_as_ratio": 1.4145690871576138
+       },
+       "fixed": {
+        "fom_ratio": 1.4727464024714965,
+        "fom_om_as_ratio": 1.4179734192289397
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.3926578062081452,
+        "fom_om_as_ratio": 1.2571459866453012
+       },
+       "fixed": {
+        "fom_ratio": 1.280137856683648,
+        "fom_om_as_ratio": 1.3150278884987894
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.399376751600522,
+        "fom_om_as_ratio": 1.299362052187961
+       },
+       "fixed": {
+        "fom_ratio": 1.3958147373298653,
+        "fom_om_as_ratio": 1.3041072192409329
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2415822711358815,
+        "fom_om_as_ratio": 1.0995004654140734
+       },
+       "fixed": {
+        "fom_ratio": 1.1210908650319291,
+        "fom_om_as_ratio": 1.0703848626351873
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.182721153567816,
+        "fom_om_as_ratio": 1.0750295930615539
+       },
+       "fixed": {
+        "fom_ratio": 1.1637341286578915,
+        "fom_om_as_ratio": 1.0783262052451057
+       }
+      }
+     }
+    },
+    {
+     "x": 2.0,
+     "key": "gap<=2",
+     "n_pairs": 285,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.4785275808065204,
+        "fom_om_as_ratio": 1.3722587763338654
+       },
+       "fixed": {
+        "fom_ratio": 1.3663314593455005,
+        "fom_om_as_ratio": 1.378461853092284
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.6658050740484736,
+        "fom_om_as_ratio": 1.6110616227760373
+       },
+       "fixed": {
+        "fom_ratio": 1.6641721432141616,
+        "fom_om_as_ratio": 1.6147721438124598
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.4611213956544045,
+        "fom_om_as_ratio": 1.3200152285720674
+       },
+       "fixed": {
+        "fom_ratio": 1.323316788674463,
+        "fom_om_as_ratio": 1.3618010876356939
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.473489922443407,
+        "fom_om_as_ratio": 1.3696266144405793
+       },
+       "fixed": {
+        "fom_ratio": 1.4687391140166965,
+        "fom_om_as_ratio": 1.3737634654527329
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2677074949898033,
+        "fom_om_as_ratio": 1.1192779364868535
+       },
+       "fixed": {
+        "fom_ratio": 1.137047307668864,
+        "fom_om_as_ratio": 1.0814849400569502
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.2056773470320232,
+        "fom_om_as_ratio": 1.092061873606965
+       },
+       "fixed": {
+        "fom_ratio": 1.185444081505666,
+        "fom_om_as_ratio": 1.094697638405728
+       }
+      }
+     }
+    },
+    {
+     "x": 3.0,
+     "key": "gap<=3",
+     "n_pairs": 378,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.5457131806093236,
+        "fom_om_as_ratio": 1.4262506608077905
+       },
+       "fixed": {
+        "fom_ratio": 1.4143625454993165,
+        "fom_om_as_ratio": 1.4187278762872948
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.7661040510027277,
+        "fom_om_as_ratio": 1.6994491675193135
+       },
+       "fixed": {
+        "fom_ratio": 1.7641084714430106,
+        "fom_om_as_ratio": 1.7031422809456376
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.5098740958386363,
+        "fom_om_as_ratio": 1.3570437803767899
+       },
+       "fixed": {
+        "fom_ratio": 1.351761697189951,
+        "fom_om_as_ratio": 1.386806361916586
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.526315531421391,
+        "fom_om_as_ratio": 1.4116423814669352
+       },
+       "fixed": {
+        "fom_ratio": 1.5206506793649817,
+        "fom_om_as_ratio": 1.4153355990517749
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2883754009526527,
+        "fom_om_as_ratio": 1.1305662714785458
+       },
+       "fixed": {
+        "fom_ratio": 1.1461328169938125,
+        "fom_om_as_ratio": 1.0861318920489074
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.2225203266323579,
+        "fom_om_as_ratio": 1.1009789343192764
+       },
+       "fixed": {
+        "fom_ratio": 1.2005897842810314,
+        "fom_om_as_ratio": 1.1031335714417363
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "color": "#E69F00",
+   "n_pairs_current": 133,
+   "points": [
+    {
+     "x": 0.0,
+     "key": "today",
+     "n_pairs": 133,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 1.0,
+     "key": "gap<=1",
+     "n_pairs": 249,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.4950401119639287,
+        "fom_om_as_ratio": 1.5013946377320568
+       },
+       "fixed": {
+        "fom_ratio": 1.2085406591509147,
+        "fom_om_as_ratio": 1.290672275399304
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.3323196738947958,
+        "fom_om_as_ratio": 1.3440729123415098
+       },
+       "fixed": {
+        "fom_ratio": 1.3294343464546325,
+        "fom_om_as_ratio": 1.346203234107297
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.3504041741671615,
+        "fom_om_as_ratio": 1.26513209240269
+       },
+       "fixed": {
+        "fom_ratio": 1.0940838139036944,
+        "fom_om_as_ratio": 1.0737194366249685
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.2282865433708172,
+        "fom_om_as_ratio": 1.1434748098441367
+       },
+       "fixed": {
+        "fom_ratio": 1.1978712001542484,
+        "fom_om_as_ratio": 1.1304502991045926
+       }
+      }
+     }
+    },
+    {
+     "x": 2.0,
+     "key": "gap<=2",
+     "n_pairs": 363,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.047305216352718,
+        "fom_om_as_ratio": 1.1275908422324807
+       },
+       "fixed": {
+        "fom_ratio": 1.0567339017557886,
+        "fom_om_as_ratio": 1.1734043730323633
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0843911177889007,
+        "fom_om_as_ratio": 1.1777053569862497
+       },
+       "fixed": {
+        "fom_ratio": 1.085587202662212,
+        "fom_om_as_ratio": 1.1803772905503238
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.5783103030607013,
+        "fom_om_as_ratio": 1.5691126154669066
+       },
+       "fixed": {
+        "fom_ratio": 1.2683230561574759,
+        "fom_om_as_ratio": 1.341339841634185
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.4154831202543043,
+        "fom_om_as_ratio": 1.408906887120813
+       },
+       "fixed": {
+        "fom_ratio": 1.4106111549682685,
+        "fom_om_as_ratio": 1.4102746960590813
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.4378186135335402,
+        "fom_om_as_ratio": 1.2949565983453082
+       },
+       "fixed": {
+        "fom_ratio": 1.1574338609371877,
+        "fom_om_as_ratio": 1.1017289658697045
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.3130561352571852,
+        "fom_om_as_ratio": 1.1735504325281354
+       },
+       "fixed": {
+        "fom_ratio": 1.2757091823007805,
+        "fom_om_as_ratio": 1.1599527372553293
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "color": "#CC79A7",
+   "n_pairs_current": 52,
+   "points": [
+    {
+     "x": 0.0,
+     "key": "today",
+     "n_pairs": 52,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 1.0,
+     "key": "gap<=1",
+     "n_pairs": 96,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.407034639771948,
+        "fom_om_as_ratio": 1.3218481356157166
+       },
+       "fixed": {
+        "fom_ratio": 1.4082550397878464,
+        "fom_om_as_ratio": 1.31659456942914
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.443922379069253,
+        "fom_om_as_ratio": 1.37776491100213
+       },
+       "fixed": {
+        "fom_ratio": 1.44407020506339,
+        "fom_om_as_ratio": 1.3777270620783895
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.1449463795524484,
+        "fom_om_as_ratio": 1.115489983836965
+       },
+       "fixed": {
+        "fom_ratio": 1.1438524703662176,
+        "fom_om_as_ratio": 1.1081261275581666
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.1597002850873885,
+        "fom_om_as_ratio": 1.1343057656506175
+       },
+       "fixed": {
+        "fom_ratio": 1.1597372691890357,
+        "fom_om_as_ratio": 1.134214030316982
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0477213084934367,
+        "fom_om_as_ratio": 1.0370593415788558
+       },
+       "fixed": {
+        "fom_ratio": 1.0329088047633206,
+        "fom_om_as_ratio": 1.0207382202633761
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0389087724316117,
+        "fom_om_as_ratio": 1.0270388202148062
+       },
+       "fixed": {
+        "fom_ratio": 1.0380028669954116,
+        "fom_om_as_ratio": 1.026047576355492
+       }
+      }
+     }
+    },
+    {
+     "x": 2.0,
+     "key": "gap<=2",
+     "n_pairs": 138,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.5562915404112327,
+        "fom_om_as_ratio": 1.4191891793364932
+       },
+       "fixed": {
+        "fom_ratio": 1.5556935201762419,
+        "fom_om_as_ratio": 1.4132413994503492
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.6057111273488618,
+        "fom_om_as_ratio": 1.4797704472495208
+       },
+       "fixed": {
+        "fom_ratio": 1.6058547049499423,
+        "fom_om_as_ratio": 1.4797178360181238
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2105894035440066,
+        "fom_om_as_ratio": 1.1622175540743995
+       },
+       "fixed": {
+        "fom_ratio": 1.209059057109151,
+        "fom_om_as_ratio": 1.1539738986566246
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.229644837287464,
+        "fom_om_as_ratio": 1.1852189402478206
+       },
+       "fixed": {
+        "fom_ratio": 1.2296853491791888,
+        "fom_om_as_ratio": 1.1851158009000342
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0661451300010523,
+        "fom_om_as_ratio": 1.050547331500034
+       },
+       "fixed": {
+        "fom_ratio": 1.045962129198829,
+        "fom_om_as_ratio": 1.0288622777854
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0545514246783172,
+        "fom_om_as_ratio": 1.0376231882574745
+       },
+       "fixed": {
+        "fom_ratio": 1.053282231620918,
+        "fom_om_as_ratio": 1.03627843195764
+       }
+      }
+     }
+    },
+    {
+     "x": 3.0,
+     "key": "gap<=3",
+     "n_pairs": 178,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.5913500958334676,
+        "fom_om_as_ratio": 1.444069116405103
+       },
+       "fixed": {
+        "fom_ratio": 1.5908131602360696,
+        "fom_om_as_ratio": 1.437955755920639
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.64256439170669,
+        "fom_om_as_ratio": 1.5060957279225906
+       },
+       "fixed": {
+        "fom_ratio": 1.6427188490698903,
+        "fom_om_as_ratio": 1.5060418291152502
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2267556160156683,
+        "fom_om_as_ratio": 1.1746078223218208
+       },
+       "fixed": {
+        "fom_ratio": 1.2253336056442006,
+        "fom_om_as_ratio": 1.1659649264799388
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.247052361694573,
+        "fom_om_as_ratio": 1.19905624501911
+       },
+       "fixed": {
+        "fom_ratio": 1.2471018512804672,
+        "fom_om_as_ratio": 1.198950973935937
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0706659895120862,
+        "fom_om_as_ratio": 1.054556596206761
+       },
+       "fixed": {
+        "fom_ratio": 1.0489092395262793,
+        "fom_om_as_ratio": 1.031048272823049
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0582051315890255,
+        "fom_om_as_ratio": 1.040596512821663
+       },
+       "fixed": {
+        "fom_ratio": 1.0568388987777941,
+        "fom_om_as_ratio": 1.0391385544244354
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.2",
+   "label": "$\\Delta z = 0.2$",
+   "color": "#56B4E9",
+   "n_pairs_current": 13,
+   "points": [
+    {
+     "x": 0.0,
+     "key": "today",
+     "n_pairs": 13,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 1.0,
+     "key": "gap<=1",
+     "n_pairs": 23,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0143395521440899,
+        "fom_om_as_ratio": 1.015502075443022
+       },
+       "fixed": {
+        "fom_ratio": 1.0143480673283736,
+        "fom_om_as_ratio": 1.015508197844144
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0178471826492301,
+        "fom_om_as_ratio": 1.0161710914957383
+       },
+       "fixed": {
+        "fom_ratio": 1.0178471466930084,
+        "fom_om_as_ratio": 1.0161708486046923
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0085329055992966,
+        "fom_om_as_ratio": 1.0109461982111965
+       },
+       "fixed": {
+        "fom_ratio": 1.0085439451118294,
+        "fom_om_as_ratio": 1.0109509513675685
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0104684458416309,
+        "fom_om_as_ratio": 1.0112784300732316
+       },
+       "fixed": {
+        "fom_ratio": 1.0104684379962938,
+        "fom_om_as_ratio": 1.0112779066860993
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0057199291039345,
+        "fom_om_as_ratio": 1.0073351402466721
+       },
+       "fixed": {
+        "fom_ratio": 1.0056481808616655,
+        "fom_om_as_ratio": 1.0071567991817438
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0060106728176392,
+        "fom_om_as_ratio": 1.00726772059307
+       },
+       "fixed": {
+        "fom_ratio": 1.0060105620144892,
+        "fom_om_as_ratio": 1.0072625689539163
+       }
+      }
+     }
+    },
+    {
+     "x": 2.0,
+     "key": "gap<=2",
+     "n_pairs": 32,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0145831178161544,
+        "fom_om_as_ratio": 1.0161330383030143
+       },
+       "fixed": {
+        "fom_ratio": 1.0145924946874139,
+        "fom_om_as_ratio": 1.0161397180580056
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0180745312715067,
+        "fom_om_as_ratio": 1.0167327512672222
+       },
+       "fixed": {
+        "fom_ratio": 1.01807450845026,
+        "fom_om_as_ratio": 1.0167325149408821
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0088318013237234,
+        "fom_om_as_ratio": 1.0115949750371998
+       },
+       "fixed": {
+        "fom_ratio": 1.0088445093471714,
+        "fom_om_as_ratio": 1.0115998916213742
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0107556823301798,
+        "fom_om_as_ratio": 1.011910902636743
+       },
+       "fixed": {
+        "fom_ratio": 1.010755709811118,
+        "fom_om_as_ratio": 1.0119103723904623
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0059516675050926,
+        "fom_om_as_ratio": 1.007784321154926
+       },
+       "fixed": {
+        "fom_ratio": 1.0058858611078563,
+        "fom_om_as_ratio": 1.0075897789791064
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0062362908275466,
+        "fom_om_as_ratio": 1.0077355239617647
+       },
+       "fixed": {
+        "fom_ratio": 1.0062361795680022,
+        "fom_om_as_ratio": 1.007730157693366
+       }
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

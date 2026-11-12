@@ -1,0 +1,1768 @@
+{
+ "about": "Figures of merit over those of the current data vector when cross pairs are added along one axis (sigv=s: today's pairs + every pair with blurred-kernel overlap O_ij >= 1e-6 when every sigma_v = s km/s (selection only; the model stays at the fiducial sigma_v)). Extracted by notes/cross_correlations/plots/make_pair_axes_data.py from the results.json of the pair-axes study (written 2026-11-12T06:44:08): one Fisher derivative base per layout on its largest pair list (final derivative tier), every point a row selection from it, checked bit for bit against the current caches on the shared rows. Models: paper: B tilts noA2 sv x6 on the pessimistic prior (alpha_2 fixed at 0, sigma_v widths x6); reference: B tilts on the pessimistic prior (alpha_2 free, exploration sigma_v widths): the model of the pair_threshold figure. Variants: free = sigma_v fitted; fixed = the same model with every sigma_v column removed (held at the fiducial). k_max is the z = 0 value of a per-bin cut at k_max/D(zbar_i).",
+ "axis": "sigv",
+ "xlabel": "$\\sigma_v$ that selects the pairs [km/s]",
+ "x_ticks": [
+  330.0,
+  450.0,
+  600.0,
+  750.0,
+  900.0,
+  1200.0
+ ],
+ "x_ticklabels": [
+  "fid.",
+  "450",
+  "600",
+  "750",
+  "900",
+  "1200"
+ ],
+ "kmax_h_per_Mpc": [
+  "0.075",
+  "0.1",
+  "0.2"
+ ],
+ "models": [
+  "paper",
+  "reference"
+ ],
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "color": "#0072B2",
+   "n_pairs_current": 107,
+   "points": [
+    {
+     "x": 330.0,
+     "key": "today",
+     "n_pairs": 107,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 450.0,
+     "key": "sigv=450",
+     "n_pairs": 107,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 600.0,
+     "key": "sigv=600",
+     "n_pairs": 107,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 750.0,
+     "key": "sigv=750",
+     "n_pairs": 199,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.371465321644075,
+        "fom_om_as_ratio": 1.2639261823971504
+       },
+       "fixed": {
+        "fom_ratio": 1.2854986627347909,
+        "fom_om_as_ratio": 1.279850978381555
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.4974920459532588,
+        "fom_om_as_ratio": 1.436438818676058
+       },
+       "fixed": {
+        "fom_ratio": 1.4962562964353026,
+        "fom_om_as_ratio": 1.439747173237349
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.4023173849181036,
+        "fom_om_as_ratio": 1.2643076287729722
+       },
+       "fixed": {
+        "fom_ratio": 1.285607059350314,
+        "fom_om_as_ratio": 1.320117350107275
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.4088532656265356,
+        "fom_om_as_ratio": 1.306836186400531
+       },
+       "fixed": {
+        "fom_ratio": 1.4050810558290063,
+        "fom_om_as_ratio": 1.31145832044169
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2435910156037908,
+        "fom_om_as_ratio": 1.1007016345348815
+       },
+       "fixed": {
+        "fom_ratio": 1.1222024062986884,
+        "fom_om_as_ratio": 1.0711907969811172
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.184373060791715,
+        "fom_om_as_ratio": 1.076048149858503
+       },
+       "fixed": {
+        "fom_ratio": 1.165251905095558,
+        "fom_om_as_ratio": 1.0793248602888994
+       }
+      }
+     }
+    },
+    {
+     "x": 900.0,
+     "key": "sigv=900",
+     "n_pairs": 199,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.371465321644075,
+        "fom_om_as_ratio": 1.2639261823971504
+       },
+       "fixed": {
+        "fom_ratio": 1.2854986627347909,
+        "fom_om_as_ratio": 1.279850978381555
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.4974920459532588,
+        "fom_om_as_ratio": 1.436438818676058
+       },
+       "fixed": {
+        "fom_ratio": 1.4962562964353026,
+        "fom_om_as_ratio": 1.439747173237349
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.4023173849181036,
+        "fom_om_as_ratio": 1.2643076287729722
+       },
+       "fixed": {
+        "fom_ratio": 1.285607059350314,
+        "fom_om_as_ratio": 1.320117350107275
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.4088532656265356,
+        "fom_om_as_ratio": 1.306836186400531
+       },
+       "fixed": {
+        "fom_ratio": 1.4050810558290063,
+        "fom_om_as_ratio": 1.31145832044169
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2435910156037908,
+        "fom_om_as_ratio": 1.1007016345348815
+       },
+       "fixed": {
+        "fom_ratio": 1.1222024062986884,
+        "fom_om_as_ratio": 1.0711907969811172
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.184373060791715,
+        "fom_om_as_ratio": 1.076048149858503
+       },
+       "fixed": {
+        "fom_ratio": 1.165251905095558,
+        "fom_om_as_ratio": 1.0793248602888994
+       }
+      }
+     }
+    },
+    {
+     "x": 1200.0,
+     "key": "sigv=1200",
+     "n_pairs": 201,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.371918767301121,
+        "fom_om_as_ratio": 1.2640728359846691
+       },
+       "fixed": {
+        "fom_ratio": 1.285569686076865,
+        "fom_om_as_ratio": 1.2803753230351997
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.4980700108188438,
+        "fom_om_as_ratio": 1.436807505422819
+       },
+       "fixed": {
+        "fom_ratio": 1.4968227826322429,
+        "fom_om_as_ratio": 1.4401144537306345
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.402602667751295,
+        "fom_om_as_ratio": 1.2644296068893814
+       },
+       "fixed": {
+        "fom_ratio": 1.285693102442774,
+        "fom_om_as_ratio": 1.3204145384707855
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.4090597112890262,
+        "fom_om_as_ratio": 1.3069777518144923
+       },
+       "fixed": {
+        "fom_ratio": 1.4052738908894442,
+        "fom_om_as_ratio": 1.3116039644794149
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2437019807803675,
+        "fom_om_as_ratio": 1.100789853860167
+       },
+       "fixed": {
+        "fom_ratio": 1.1222478104627853,
+        "fom_om_as_ratio": 1.0713392155249994
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.1844607927751565,
+        "fom_om_as_ratio": 1.0761587263426597
+       },
+       "fixed": {
+        "fom_ratio": 1.165319851124986,
+        "fom_om_as_ratio": 1.0794551137802268
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "color": "#E69F00",
+   "n_pairs_current": 133,
+   "points": [
+    {
+     "x": 330.0,
+     "key": "today",
+     "n_pairs": 133,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 450.0,
+     "key": "sigv=450",
+     "n_pairs": 147,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.1718007513246187,
+        "fom_om_as_ratio": 1.173921299874664
+       },
+       "fixed": {
+        "fom_ratio": 1.0191101995382827,
+        "fom_om_as_ratio": 1.0249259545280411
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.1165110944437486,
+        "fom_om_as_ratio": 1.1128178837502498
+       },
+       "fixed": {
+        "fom_ratio": 1.1134348167447679,
+        "fom_om_as_ratio": 1.1102633919370366
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2227729954717685,
+        "fom_om_as_ratio": 1.1750791077516025
+       },
+       "fixed": {
+        "fom_ratio": 1.0341133730097924,
+        "fom_om_as_ratio": 1.0160103304997783
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.1323251026906027,
+        "fom_om_as_ratio": 1.0825473504079512
+       },
+       "fixed": {
+        "fom_ratio": 1.1082434552219143,
+        "fom_om_as_ratio": 1.0666660985565373
+       }
+      }
+     }
+    },
+    {
+     "x": 600.0,
+     "key": "sigv=600",
+     "n_pairs": 219,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.4909789840990246,
+        "fom_om_as_ratio": 1.4958635514043848
+       },
+       "fixed": {
+        "fom_ratio": 1.2010638380392724,
+        "fom_om_as_ratio": 1.2775322750104092
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.3272736587822669,
+        "fom_om_as_ratio": 1.3375788090214278
+       },
+       "fixed": {
+        "fom_ratio": 1.3243624629539215,
+        "fom_om_as_ratio": 1.3393791848488947
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.333153888263871,
+        "fom_om_as_ratio": 1.2471898343787178
+       },
+       "fixed": {
+        "fom_ratio": 1.0728937040428295,
+        "fom_om_as_ratio": 1.0525462102314502
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.2099137781774962,
+        "fom_om_as_ratio": 1.1243831544686904
+       },
+       "fixed": {
+        "fom_ratio": 1.1769765656877649,
+        "fom_om_as_ratio": 1.108736133371025
+       }
+      }
+     }
+    },
+    {
+     "x": 750.0,
+     "key": "sigv=750",
+     "n_pairs": 236,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.4935968671345081,
+        "fom_om_as_ratio": 1.499210248522711
+       },
+       "fixed": {
+        "fom_ratio": 1.2062859982390608,
+        "fom_om_as_ratio": 1.2871504152964146
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.3303019121713686,
+        "fom_om_as_ratio": 1.3413875580335173
+       },
+       "fixed": {
+        "fom_ratio": 1.3274249411968881,
+        "fom_om_as_ratio": 1.34349973851116
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.347207830576153,
+        "fom_om_as_ratio": 1.2611509234568883
+       },
+       "fixed": {
+        "fom_ratio": 1.090269211498691,
+        "fom_om_as_ratio": 1.0696203793540753
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.224865684281943,
+        "fom_om_as_ratio": 1.1394577081589792
+       },
+       "fixed": {
+        "fom_ratio": 1.1941703655390292,
+        "fom_om_as_ratio": 1.1262601191841266
+       }
+      }
+     }
+    },
+    {
+     "x": 900.0,
+     "key": "sigv=900",
+     "n_pairs": 266,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.5424202997469434,
+        "fom_om_as_ratio": 1.5342296741061319
+       },
+       "fixed": {
+        "fom_ratio": 1.2468606798243107,
+        "fom_om_as_ratio": 1.3201819866298878
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.3812138883305456,
+        "fom_om_as_ratio": 1.3763568229129426
+       },
+       "fixed": {
+        "fom_ratio": 1.3769419940408911,
+        "fom_om_as_ratio": 1.378035663895186
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.4020546090803354,
+        "fom_om_as_ratio": 1.278288926429151
+       },
+       "fixed": {
+        "fom_ratio": 1.127458623222826,
+        "fom_om_as_ratio": 1.0857169099532364
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.2782943929165045,
+        "fom_om_as_ratio": 1.156477593905787
+       },
+       "fixed": {
+        "fom_ratio": 1.2421989447963266,
+        "fom_om_as_ratio": 1.1426034734878656
+       }
+      }
+     }
+    },
+    {
+     "x": 1200.0,
+     "key": "sigv=1200",
+     "n_pairs": 344,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0439249564994788,
+        "fom_om_as_ratio": 1.1217569484276215
+       },
+       "fixed": {
+        "fom_ratio": 1.036695342639302,
+        "fom_om_as_ratio": 1.1487119007007012
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0962193156536697,
+        "fom_om_as_ratio": 1.189348921525987
+       },
+       "fixed": {
+        "fom_ratio": 1.096867539996888,
+        "fom_om_as_ratio": 1.1911189843079033
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.5837624806988544,
+        "fom_om_as_ratio": 1.5807695157483308
+       },
+       "fixed": {
+        "fom_ratio": 1.2705355346086247,
+        "fom_om_as_ratio": 1.3429464767088048
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.422487666872249,
+        "fom_om_as_ratio": 1.419876880721482
+       },
+       "fixed": {
+        "fom_ratio": 1.4175739614030378,
+        "fom_om_as_ratio": 1.4211594423964156
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.445836513884585,
+        "fom_om_as_ratio": 1.299059450696033
+       },
+       "fixed": {
+        "fom_ratio": 1.1640433574120697,
+        "fom_om_as_ratio": 1.1043534080707267
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.3211130376403735,
+        "fom_om_as_ratio": 1.1774119120858597
+       },
+       "fixed": {
+        "fom_ratio": 1.2829893401061976,
+        "fom_om_as_ratio": 1.1634647183158007
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "color": "#CC79A7",
+   "n_pairs_current": 52,
+   "points": [
+    {
+     "x": 330.0,
+     "key": "today",
+     "n_pairs": 52,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 450.0,
+     "key": "sigv=450",
+     "n_pairs": 52,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 600.0,
+     "key": "sigv=600",
+     "n_pairs": 52,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 750.0,
+     "key": "sigv=750",
+     "n_pairs": 52,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 900.0,
+     "key": "sigv=900",
+     "n_pairs": 52,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 1200.0,
+     "key": "sigv=1200",
+     "n_pairs": 60,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.2264271798909065,
+        "fom_om_as_ratio": 1.1861256334042816
+       },
+       "fixed": {
+        "fom_ratio": 1.2246534230515338,
+        "fom_om_as_ratio": 1.179829440147893
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.2509229275673746,
+        "fom_om_as_ratio": 1.2282042054365103
+       },
+       "fixed": {
+        "fom_ratio": 1.251009960182646,
+        "fom_om_as_ratio": 1.228175191317976
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0775704311817937,
+        "fom_om_as_ratio": 1.0660933070598029
+       },
+       "fixed": {
+        "fom_ratio": 1.075543641068141,
+        "fom_om_as_ratio": 1.059853076949141
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0865423443220423,
+        "fom_om_as_ratio": 1.078560365032576
+       },
+       "fixed": {
+        "fom_ratio": 1.0865250835900044,
+        "fom_om_as_ratio": 1.0784638210361976
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0261959681660808,
+        "fom_om_as_ratio": 1.0219871366126798
+       },
+       "fixed": {
+        "fom_ratio": 1.0170048968446568,
+        "fom_om_as_ratio": 1.0112792834614517
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0207603954493605,
+        "fom_om_as_ratio": 1.0153507163736293
+       },
+       "fixed": {
+        "fom_ratio": 1.0201781392482598,
+        "fom_om_as_ratio": 1.0147243095429705
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.2",
+   "label": "$\\Delta z = 0.2$",
+   "color": "#56B4E9",
+   "n_pairs_current": 13,
+   "points": [
+    {
+     "x": 330.0,
+     "key": "today",
+     "n_pairs": 13,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 450.0,
+     "key": "sigv=450",
+     "n_pairs": 13,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 600.0,
+     "key": "sigv=600",
+     "n_pairs": 13,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 750.0,
+     "key": "sigv=750",
+     "n_pairs": 13,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 900.0,
+     "key": "sigv=900",
+     "n_pairs": 13,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "x": 1200.0,
+     "key": "sigv=1200",
+     "n_pairs": 13,
+     "0.075": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "paper": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "reference": {
+       "free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

@@ -81,6 +81,28 @@ first two are the thin layouts.  This note answers three questions:
     is $0.015$ wide in redshift at $z = 0.1$ and $0.035$ at $z = 1.5$.
 \end{enumerate}
 
+\paragraph{Beyond the current list.}
+A further forecast measures what the pairs outside this rule would
+add, along two axes: pairs whose raw ranges are up to three bin widths
+apart, and pair lists selected with every dispersion raised to a
+common test value (Section~\ref{sec:axes}).  On the three thinner
+layouts those pairs raise the paper model's ${\rm FoM}(w_0, w_a)$ by
+up to $55$--$59\%$, on $\Delta z = 0.2$ by at most $2\%$.  Attribution
+fits trace the gain to the free level and slope of each sample
+group's bias amplitude $\beta_i = b_{1,i}\,D(\bar{z}_i)$, the linear
+bias times the growth factor: in the auto spectra the level is
+degenerate with the clustering amplitude and the slope with the
+evolution of growth that $w_0$ and $w_a$ control -- $\sv$ rides on
+the same degeneracy -- while the cross spectra's correlation
+coefficients do not depend on the linear bias, so the added pairs
+separate the bias line from the growth history; with every nuisance
+parameter held fixed they are worth only $2$--$8\%$
+(Section~\ref{sec:bias}).  Every bias prior that passes the
+project's accuracy test gives the same gain within a few percent;
+under a prior on the bias levels and slopes themselves it would be
+smaller, by an amount not yet computed, and whether any longer list
+is adopted is the authors' choice.
+
 \section{Fiducial model and parameter values}
 \label{sec:fiducial}
 
@@ -88,9 +110,9 @@ Three of this note's figures (Figures~\ref{fig:fog},
 \ref{fig:layouts} and~\ref{fig:zoom}) depend only on the shipped
 redshift distributions, the pair lists and the default velocity
 dispersions: no scale cut and no bias value enters them.  Only the
-pair-threshold test of Section~\ref{sec:threshold} runs a Fisher fit.
-This section freezes the values behind both, so the record does not
-depend on configuration files that can change.
+Fisher forecasts of Sections~\ref{sec:threshold} and~\ref{sec:axes}
+run a fit.  This section freezes the values behind both, so the record
+does not depend on configuration files that can change.
 
 \paragraph{Geometry of the pair rule and the masks.}
 The comoving distances of the \dcom{} slicing, of the pair rule and of
@@ -114,7 +136,10 @@ and $289$~km/s for the seven groups (BGS split at $\bar{z} = 0.255$),
 with exploration prior widths $145$, $105$, $70$, $50$, $50$, $40$ and
 $30$~km/s and paper widths six times these (Table~\ref{tab:sigv} and
 Section~\ref{sec:fog}).  Every blur in this note runs at the
-fiducials; only the fit below uses the widths, the exploration ones.
+fiducials, except the pair selection on the $\sv$ axis of
+Section~\ref{sec:axes}; the fit of Section~\ref{sec:threshold} uses
+the exploration widths, the forecasts of Section~\ref{sec:axes} the
+paper widths.
 
 \paragraph{The pair-threshold fit.}
 Its cosmology is the evaluate override of the example yamls:
@@ -135,7 +160,8 @@ $5$, and flat tilts, with $\alpha_2$ free and the exploration $\sv$
 widths: the reference model of
 \texttt{notes/fog\us parameter\us degeneracy\us study}, not the paper
 model, which fixes $\alpha_2 = 0$ in every bin and widens every $\sv$
-prior sixfold.
+prior sixfold.  The pair-axes forecasts of Section~\ref{sec:axes} run
+the same cosmology and scale cut with the paper model.
 
 \paragraph{Scale cut and covariance of the fit.}
 The fit keeps the bands of the UV-fraction cut computed on the paper
@@ -147,6 +173,8 @@ intersected with the shipped mask.  The covariance is the Gaussian
 covariance of the $107$-pair data set, built on the one-loop fiducial
 ($b_2$ and $b_{s^2}$ on their calibrations) with massless neutrinos
 over $14{,}000$~deg$^2$, its inverse rescaled by $12{,}300/14{,}000$.
+The forecasts of Section~\ref{sec:axes} build the same Gaussian
+covariance on each layout's largest pair list.
 
 \section{Why cross spectra between thin bins matter}
 \label{sec:why}
@@ -410,8 +438,10 @@ the prior and the others are tied to it), the paper widths in
 the same seven defaults in \texttt{CHUNK\us SIGMA\us V} of
 \texttt{covariance/lssty1xdesi\us covariance.py}, which convolves the
 covariance's kernels at fixed $\sv$.  Every figure of this note blurs
-at the defaults; the fit of Section~\ref{sec:threshold} uses the
-exploration widths (Section~\ref{sec:fiducial}).  The ELG dispersions
+at the defaults, except that the $\sv$ axis of Section~\ref{sec:axes}
+selects pairs with the blur at a common test dispersion; the fit of
+Section~\ref{sec:threshold} uses the exploration widths
+(Section~\ref{sec:fiducial}).  The ELG dispersions
 are the lowest, as expected for star-forming galaxies, which tend to
 live in lighter halos with slower orbits.
 
@@ -770,6 +800,8 @@ is still a correct one; it uses less information.  So the choice can
 cost precision, by the information the unmeasured spectra carry, but it
 cannot bias a fit: a bias would need a wrong prediction for a spectrum
 that is kept, and leaving another spectrum out changes no prediction.
+How much precision the current list gives up is measured in
+Section~\ref{sec:axes}.
 
 \section{How much do the low-overlap pairs carry?}
 \label{sec:threshold}
@@ -790,7 +822,11 @@ ${\rm FoM}(w_0, w_a) = [\det{\rm Cov}(w_0, w_a)]^{-1/2}$, the inverse
 area of the marginalized ellipse of $w_0$ and $w_a$ (the dark-energy
 equation of state $w(a) = w_0 + w_a(1 - a)$, $a$ the scale factor),
 and by ${\rm FoM}(\Omega_m, 10^9 A_s)$, defined the same way for the
-matter density $\Omega_m$ and the primordial amplitude $A_s$.  The fit
+matter density $\Omega_m$ and the primordial amplitude $A_s$.  Each
+score is quoted over ${\rm FoM}_{\rm current}$, the same figure of
+merit of the current data vector: the pairs whose blurred overlap at
+the default dispersions reaches $10^{-6}$, plus the BGS--LRG1 boundary
+pair of \dcom{} (Section~\ref{sec:rule}).  The fit
 carries the forecast's scale cut, computed on the paper model's
 fiducial (Section~\ref{sec:fiducial}): bin $i$ keeps wavenumbers below
 $k_{\rm max}/D(\bar{z}_i)$, with $D$ the linear growth factor
@@ -811,11 +847,13 @@ $10^{-2}$ (Section~\ref{sec:overlap}).
 
 \paragraph{What it costs.}
 Dropping the boundary pair changes ${\rm FoM}(w_0, w_a)$ by a factor
-$0.999$ at $k_{\rm max} = 0.2\,h$/Mpc and nothing at the smaller cuts,
-and every other layout is unchanged at every floor up to $10^{-3}$
-(Figure~\ref{fig:threshold}).  At $10^{-2}$ the $\Delta z = 0.2$
-figures of merit fall to $0.82$ of the full vector's for
-$(w_0, w_a)$ and to $0.65$--$0.72$ for $(\Omega_m, 10^9 A_s)$.
+$0.999$ at $k_{\rm max} = 0.2\,h$/Mpc and nothing at the smaller cuts
+-- the only difference between the ``current'' point and the
+$10^{-6}$ floor in Figure~\ref{fig:threshold} -- and every other
+layout is unchanged at every floor up to $10^{-3}$.  At $10^{-2}$ the
+$\Delta z = 0.2$ figures of merit fall to $0.82$ of
+${\rm FoM}_{\rm current}$ for $(w_0, w_a)$ and to $0.65$--$0.72$ for
+$(\Omega_m, 10^9 A_s)$.
 
 \paragraph{The reading.}
 The only listed pair with overlap below $10^{-3}$ is the boundary
@@ -834,8 +872,10 @@ them costs up to $35\%$ of ${\rm FoM}(\Omega_m, 10^9 A_s)$.
   \caption{The figures of merit of the fit of
     Section~\ref{sec:threshold} with only the cross pairs whose
     blurred overlap at the default dispersions reaches
-    $O_{\min}$, over the full data vector's, against $O_{\min}$;
-    ``all'', every measured pair, sits left of the separator.  Upper
+    $O_{\min}$, over ${\rm FoM}_{\rm current}$, the figure of merit of
+    the current data vector, against $O_{\min}$; ``current'', the
+    current data vector with every measured pair, sits left of the
+    separator.  Upper
     panel: ${\rm FoM}(w_0, w_a)$; lower: ${\rm FoM}(\Omega_m,
     10^9 A_s)$; the panels share the $y$ axis.  Color, line width and
     marker: the layout; solid, filled markers: $k_{\rm max} =
@@ -844,6 +884,585 @@ them costs up to $35\%$ of ${\rm FoM}(\Omega_m, 10^9 A_s)$.
     $k_{\rm max}/D(\bar{z}_i)$.}
   \label{fig:threshold}
 \end{figure}
+
+\section{What would pairs beyond the list add?}
+\label{sec:axes}
+
+\paragraph{The question, reversed.}
+Section~\ref{sec:threshold} removed pairs from the current list and
+found that no listed low-overlap pair carries much.  This section asks
+the opposite question: how much would the data vector gain if it
+measured pairs \emph{beyond} the current list?  Two families of pair
+lists answer it; each contains the current list and grows along one
+axis.
+
+\paragraph{The gap axis.}
+The first family loosens the first step of the pair rule
+(Section~\ref{sec:rule}).  For a whole number $g$ it measures, besides
+the current list, every pair of bins whose raw $n(z)$ ranges are at
+most $g$ bin widths apart; $g$ counts the gap between the two ranges
+in units of the layout's bin width, so $g = 0$ is the current list and
+each step in $g$ adds the next chain of pairs, $C^{i,i+2}_\ell$ at
+$g = 1$, $C^{i,i+3}_\ell$ at $g = 2$, and so on, with the matching
+pairs across the sample boundaries.  On \dcom{} the list grows from
+$107$ pairs to $190$, $285$ and $378$ at $g = 1$, $2$ and $3$; the
+other layouts grow in the same way.
+
+\paragraph{The $\sv$ axis.}
+The second family loosens the second step.  It reruns the
+blurred-overlap criterion, $O_{ij} \ge 10^{-6}$
+(Eq.~\eqref{eq:overlap}), with every velocity dispersion set to one
+common value $s$ in place of the seven defaults.  The dispersion $s$
+only \emph{selects} the pairs: the model and the covariance of every
+forecast keep the fiducial $\sv$, so this axis measures what a longer
+list is worth, not what a stronger blur does.  The lists change late:
+on \dcom{} no pair is added until $s = 750$~km/s, where the bins two
+apart begin to overlap ($199$ pairs); on $\Delta z = 0.02$ the list
+grows at every step, from $147$ pairs at $s = 450$ to $344$ at
+$1200$; on $\Delta z = 0.05$ the first new pairs appear only at
+$s = 1200$, and on $\Delta z = 0.2$ none ever do.  Among these lists
+are the ones that building the pair rule at the edge of the $\sv$
+prior would produce (Section~\ref{sec:open}).
+
+\paragraph{How it was computed.}
+For each layout the derivative base -- the change of every band of
+every spectrum per unit change of every model parameter, the input of
+a Fisher matrix -- was computed once, on the layout's largest list
+(the union of every point's pairs: $378$, $370$, $178$ and $32$ cross
+pairs).  Each point of Figures~\ref{fig:axesgap}
+and~\ref{fig:axessigv} is then a row selection: it keeps the rows of
+the data vector that belong to its own list (every auto band and the
+bands of the list's cross pairs that pass the scale cut; the shear
+rows are masked in these forecasts) together with the matching rows and
+columns of the covariance, and builds its Fisher matrix from those
+alone.  For a Gaussian likelihood this is exact, not an
+approximation: selecting the rows equals rebuilding the data set on
+the smaller list.  Two checks confirm the machinery: on the shared
+rows every derivative base equals the current caches bit for bit, and
+the $s = 600$ point of $\Delta z = 0.02$ reproduces, to every digit,
+a separate forecast whose data vector, covariance and derivatives
+were built on exactly those pairs.
+
+The model is the paper model (Section~\ref{sec:fiducial}): model B +
+tilts with $\alpha_2$ fixed at zero in every bin and every $\sv$
+prior width six times the exploration width, on the pessimistic
+linear-bias prior.  Each list is forecast twice: once with the seven
+$\sv$ fitted -- left free, so the quoted errors carry their
+uncertainty -- and once with them held at the fiducial values.  The
+reference model of Figure~\ref{fig:threshold} behaves similarly; its
+grids are in the two figure folders' \texttt{data.json}.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/pair_axes_gap/pair_axes_gap.pdf}
+  \caption{The figures of merit of the paper model when, besides the
+    current list, every pair whose raw $n(z)$ ranges are at most $g$
+    bin widths apart is measured, over ${\rm FoM}_{\rm current}$
+    ($g = 0$, the current list).  Rows: $k_{\rm max} = 0.075$, $0.1$
+    and $0.2\,h$/Mpc; left column ${\rm FoM}(w_0, w_a)$, right
+    ${\rm FoM}(\Omega_m, 10^9 A_s)$; every panel shares one $y$
+    range.  Color, line width and marker: the layout; solid lines,
+    filled markers: $\sv$ fitted; dashed, open: $\sv$ held at the
+    fiducial; gray: one.  $k_{\rm max}$ quoted at $z = 0$; each bin
+    is cut at $k_{\rm max}/D(\bar{z}_i)$.}
+  \label{fig:axesgap}
+\end{figure}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/pair_axes_sigv/pair_axes_sigv.pdf}
+  \caption{The figures of merit of the paper model when the pair list
+    is selected with every velocity dispersion set to the common
+    value on the horizontal axis, over ${\rm FoM}_{\rm current}$
+    (``fid.'', the selection at the default dispersions, is the
+    current list).  The dispersion only selects the pairs; the model
+    keeps the fiducial $\sv$.  Rows: $k_{\rm max} = 0.075$, $0.1$ and
+    $0.2\,h$/Mpc; left column ${\rm FoM}(w_0, w_a)$, right
+    ${\rm FoM}(\Omega_m, 10^9 A_s)$; every panel shares one $y$
+    range.  Color, line width and marker: the layout; solid lines,
+    filled markers: $\sv$ fitted; dashed, open: $\sv$ held at the
+    fiducial; gray: one.  $k_{\rm max}$ quoted at $z = 0$; each bin
+    is cut at $k_{\rm max}/D(\bar{z}_i)$.}
+  \label{fig:axessigv}
+\end{figure}
+
+\paragraph{What the figures show.}
+No ratio can fall below one: the larger list contains the current
+one, and giving a Fisher forecast more data can only add information,
+never remove it.  The question is how much is added.  On the three
+thinner layouts the gain is large -- at its largest point each layout
+gains $55$--$59\%$ of ${\rm FoM}(w_0, w_a)$ -- and the first added
+chain of pairs carries most of it.  On $\Delta z = 0.2$ the gain
+never exceeds $2\%$.  Two kinds of flat stretch in the figures mean
+selection, not physics: on the $\sv$ axis a ratio of one before the
+first jump only says that the list has not changed yet, and at
+$k_{\rm max} = 0.075\,h$/Mpc on $\Delta z = 0.02$ the scale cut
+removes every band of the added pairs up to $s = 900$~km/s (and at
+$g = 1$), so those points sit at one by the cut.
+
+\paragraph{Why the figures of merit rise.}
+The solid and the dashed curves separate two cases: the dashed
+curves hold the seven dispersions at their fiducial values, the
+solid curves fit them, and on the two thin layouts the solid curves
+gain visibly more.  Section~\ref{sec:bias} traces both gains to one
+source.  The auto and cross spectra of narrow bins together recover
+the three-dimensional clustering information, redshift-space
+distortions included~\cite{Asorey2012}; in this model that
+information pays off mainly by separating each group's free bias
+level and slope from the growth history, and the dispersions ride
+on the same separation.
+
+\section{Why the added pairs help: the free bias levels and slopes}
+\label{sec:bias}
+
+\paragraph{The question.}
+The gains of Section~\ref{sec:axes} call for an explanation.  The
+added pairs raise ${\rm FoM}(w_0, w_a)$ by up to $55$--$59\%$ on the
+three thinner layouts, and on the two thin layouts they raise it
+more when the dispersions $\sv$ are fitted than when they are held
+fixed -- although the added spectra barely respond to $\sv$ at all
+(Table~\ref{tab:svresponse}).  Which parameters turn the extra
+spectra into so much dark-energy precision?  This section answers in
+two steps: it first measures how $\sv$ changes each kind of spectrum
+and which other parameters change it the same way, then refits every
+pair list with blocks of parameters held fixed and reads off which
+block the gain flows through.
+
+\paragraph{Cosmology and nuisance parameters.}
+The model's parameters are of two kinds.  The cosmological
+parameters -- $A_s$, $n_s$, $H_0$, $\Omega_b$, $\Omega_m$, $w_0$ and
+$w_a$ -- are the goal.  The rest are nuisance parameters: parameters
+that describe the galaxies rather than the universe, but that the
+fit must determine from the same data.  In the paper model they are
+the linear bias $b_{1,i}$ of every bin, fitted through its
+amplitude $\beta_i = b_{1,i}\,D(\bar{z}_i)$ -- the bias times the
+growth factor, constant in redshift for a population that is
+conserved -- under the pessimistic prior of
+Section~\ref{sec:fiducial}: within each sample group the amplitudes
+may take any overall level and any slope in redshift without
+penalty, while each bin's departure from that straight line, its
+residual, carries a Gaussian prior of width $3\%$ of the group's
+fiducial amplitude, correlated between bins as
+$\exp(-|z_i - z_j|/L)$ with $L = 0.05$.  Per sample come the
+higher-order biases $b_2$ and $b_{s^2}$, the counterterm $\alpha_0$,
+their redshift tilts, and two shot-noise amplitudes; and there are
+the seven $\sv$.  Every figure of merit of Section~\ref{sec:axes} is
+marginalized: it quotes the dark-energy errors with every one of
+these left free, so that their uncertainty is included in the error
+bars.
+
+\paragraph{Templates, and what a degeneracy is.}
+For a parameter $p$, its template (or response vector) is the
+derivative of every kept band of the data vector with respect to
+$p$, each divided by that band's error bar, the square root of that
+band's covariance diagonal:
+$\sigma_\ell^{-1}\,\partial C_\ell/\partial p$.  The template is the
+pattern the parameter imprints on the data, in units of what the
+data can resolve, and a fit can tell two parameters apart only as
+far as their patterns differ.  Treating each template as an arrow in
+a space with one axis per band, the squared length of the arrow is
+the information the bands carry on that parameter alone, and the
+cosine of the angle between two arrows says how alike two parameters
+act: $\pm 1$ is the same pattern up to sign, $0$ is two independent
+patterns.  Two parameters whose templates are nearly parallel are
+degenerate: they change the predicted spectra in nearly the same
+pattern, so the fit measures only a combination of them and both
+error bars grow.
+
+\paragraph{How each kind of spectrum responds to $\sv$.}
+Table~\ref{tab:svresponse} measures these quantities for $\sv$ and
+the spectra of $\Delta z = 0.02$, kind by kind.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{lccccc}
+    \hline
+    spectra & bands kept & median $d\ln C_\ell/d\ln \sv$
+      & information on $\sv$ & $\cos(\sv, b_1)$ & $\cos(\sv, w_0)$ \\
+    \hline
+    autos $C^{ii}_\ell$ & $1910$ & $-0.086$ & $3.6 \times 10^3$
+      & $-0.991$ & $+0.981$ \\
+    neighbours $C^{i,i+1}_\ell$ & $1514$ & $+0.293$ & $1.3 \times 10^3$
+      & $+0.932$ & $+0.271$ \\
+    two apart $C^{i,i+2}_\ell$ & $416$ & $-0.042$ & $1.2$
+      & $-0.118$ & $+0.649$ \\
+    three apart $C^{i,i+3}_\ell$ & $523$ & $-0.002$ & $0.13$
+      & $-0.271$ & $+0.087$ \\
+    \hline
+  \end{tabular}
+  \caption{How the within-sample spectra of $\Delta z = 0.02$ (both
+    bins from one galaxy sample) respond to $\sv$ at
+    $k_{\rm max} = 0.1\,h$/Mpc (quoted at $z = 0$; each bin cut at
+    $k_{\rm max}/D(\bar{z}_i)$), measured on the layout's largest
+    derivative base with the diagonal of the covariance, moving every
+    dispersion together.  ``Information'': the squared length of the
+    response vector defined in the text, the derivative of every kept
+    band over its error bar; $\cos$: the cosine between the $\sv$
+    response and the named parameter's.  The neighbours are in the
+    current list; the pairs two and three apart enter at $g = 1$
+    and $2$.}
+  \label{tab:svresponse}
+\end{table}
+
+Three facts in the table carry the section.
+\begin{enumerate}
+  \item In the auto spectra, the $\sv$ template is almost exactly
+    minus the bias template and almost exactly the $w_0$ template
+    (cosines $-0.991$ and $+0.981$): blurring the kernels lowers
+    every auto spectrum the way a lower bias or a changed $w_0$
+    does.  Fitting $\sv$ is therefore expensive exactly where the
+    bins are thin against the blur (Table~\ref{tab:svcost}): on the
+    current list it costs a factor $2.7$ of ${\rm FoM}(w_0, w_a)$ on
+    $\Delta z = 0.02$ at $k_{\rm max} = 0.1\,h$/Mpc and $2.1$ on
+    \dcom{}, against $1.04$--$1.13$ on $\Delta z = 0.05$ and nothing
+    on $\Delta z = 0.2$.
+  \item The neighbour cross spectra, already in the current list,
+    respond to $\sv$ with the opposite sign to the autos: the blur
+    moves galaxies across the shared bin edge and so raises the
+    neighbour correlation while it lowers the autos -- a pattern no
+    bias change mimics.  On the current list they are what limits
+    the degeneracy.
+  \item The pairs two and three bins apart barely respond to $\sv$:
+    their information on $\sv$ is $1.2$ and $0.13$, against
+    $3.6 \times 10^3$ in the autos, with median responses near
+    zero.  The added pairs do not measure $\sv$; they measure bias
+    and cosmology with negligible $\sv$ dependence.
+\end{enumerate}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lccc}
+    \hline
+    layout & $k_{\rm max} = 0.075$ & $0.1$ & $0.2$ \\
+    \hline
+    \dcom{} & $1.98$ / $1.81$ & $2.12$ / $1.90$ & $1.65$ / $1.47$ \\
+    $\Delta z = 0.02$ & $2.22$ / $2.24$ & $2.72$ / $2.19$ & $1.78$ / $1.43$ \\
+    $\Delta z = 0.05$ & $1.05$ / $1.05$ & $1.04$ / $1.04$ & $1.13$ / $1.10$ \\
+    $\Delta z = 0.2$ & $1.00$ / $1.00$ & $1.00$ / $1.00$ & $1.00$ / $1.00$ \\
+    \hline
+  \end{tabular}
+  \caption{The cost of fitting $\sv$ in the paper model:
+    ${\rm FoM}(w_0, w_a)$ with $\sv$ fixed over the same figure of
+    merit with $\sv$ fitted, on the current list / on the largest
+    list of the gap axis.  $k_{\rm max}$ in $h$/Mpc, quoted at
+    $z = 0$; each bin is cut at $k_{\rm max}/D(\bar{z}_i)$.}
+  \label{tab:svcost}
+\end{table}
+
+Table~\ref{tab:svcost} reads the same facts from the side of the
+added pairs: they lower the cost of fitting $\sv$ on the two thin
+layouts and leave it unchanged where it was already small.
+
+\paragraph{The $\sv$ template, band by band.}
+Figure~\ref{fig:svtemplates} draws these facts for one bin.  The
+construction is the one of the template figure of
+\texttt{notes/fog\us parameter\us degeneracy\us study} (there for
+$\alpha_2$ against $\sv$): the $b_1$ and $w_0$ templates of the
+bin's sample are scaled by the coefficient that best matches the
+$\sv$ template over the kept bands of all $90$ auto spectra, so
+every panel shows how far the auto-spectrum match carries over to
+the other spectra.  In the auto panel the three curves coincide, and
+the leftover after the joint $b_1 + w_0$ match is about a tenth of
+an error bar per band: within the autos, $\sv$ is indistinguishable
+from a bias change plus a $w_0$ change.  In the neighbour cross the
+blur raises the spectrum while the matched bias change lowers it,
+and the leftover reaches $1.2$ error bars per band: this is the part
+of the $\sv$ pattern that the current list resolves.  In the pair
+two apart neither $\sv$ nor the matched bias does much, and the
+leftover stays small.  One limitation: the figure moves one $b_1$
+per sample, every bin of the sample together, so it cannot show what
+the added pairs constrain bin by bin.  That is what the attribution
+fits measure.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{plots/sv_templates/sv_templates.pdf}
+  \caption{The $\sv$, $b_1$ and $w_0$ templates of three
+    $\Delta z = 0.02$ spectra of ELG1 bin $56$ ($\bar{z} = 0.93$) at
+    $k_{\rm max} = 0.1\,h$/Mpc: the bin's auto spectrum, its cross
+    spectrum with the next bin (in the current list) and with the
+    bin two apart (added at $g = 1$; drawn at twice its size).  Top
+    row: the templates
+    $\sigma_\ell^{-1}\,\partial C_\ell/\partial p$, with the $b_1$
+    and $w_0$ templates scaled by the coefficient that best matches
+    the $\sv$ template over the kept bands of all $90$ auto
+    spectra.  Bottom row: the leftover of the joint $b_1 + w_0$
+    match, with the same coefficients in every column.
+    $k_{\rm max}$ quoted at $z = 0$; each bin is cut at
+    $k_{\rm max}/D(\bar{z}_i)$.}
+  \label{fig:svtemplates}
+\end{figure}
+
+\paragraph{The attribution fits.}
+Which parameters turn the added spectra into dark-energy precision?
+The test repeats the forecasts of the gap axis with one block of
+nuisance parameters held at its fiducial values, as if those
+parameters were known exactly.  In a Fisher forecast this takes one
+deletion: remove the block's rows and columns from the full Fisher
+matrix -- the data term plus every prior, the correlated prior of
+the bias residuals included -- and invert what remains.  This is
+conditioning, and for a Gaussian likelihood it is exact; it is the
+mirror image of marginalizing, which inverts the full matrix first
+and then reads off a sub-block, keeping the deleted parameters'
+uncertainty in the error bars.  The blocks are the ones of the
+nuisance list above: the linear biases $b_1$, held fixed as a whole
+(every group's level, slope and residuals together); $b_2$ and
+$b_{s^2}$ with their tilts; $\alpha_0$ with its tilt; the shot-noise
+amplitudes; and every nuisance parameter at once, with cosmology and
+$\sv$ staying free.  The linear-bias block is also split in two.
+Per group, the amplitudes $\beta_i$ of its bins are written as a
+straight line in redshift plus residuals: the line spans the two
+directions the
+prior leaves free, the level and the slope, and the residuals span
+the directions it charges.  Each part is then held fixed with the
+other left free.  Three checks anchor the machinery: with no block
+deleted the ratios equal those of Section~\ref{sec:axes} to every
+printed digit, deleting the $\sv$ block reproduces the $\sv$-fixed
+variants, and with both parts of the split left free the figures of
+merit equal the every-parameter-free ones, so the change of basis
+loses nothing.
+
+\paragraph{What the fits show.}
+Figure~\ref{fig:attribution} draws the gap axis again, block by
+block, and Table~\ref{tab:attribution} collects the key numbers.
+With every nuisance parameter fixed the gain nearly vanishes: the
+largest list is worth $2$--$8\%$ where it was worth $55$--$59\%$,
+and the $\sv$-fixed gains collapse the same way, to $2$--$7\%$.  The
+line-of-sight clustering information that the added spectra carry by
+themselves is therefore worth a few percent once the biases are
+known.  Most of the gain enters through the linear-bias block alone:
+holding it fixed cuts $\times 1.59$ to $\times 1.07$ on
+$\Delta z = 0.05$, $\times 1.58$ to $\times 1.15$ on
+$\Delta z = 0.02$ and $\times 1.55$ to $\times 1.26$ on \dcom{}
+(each at the scale cut of Table~\ref{tab:attribution}).  Holding
+$b_2$ and $b_{s^2}$ fixed removes a smaller part, and the
+counterterm and the shot noise change little.  The split of the
+linear-bias block decides the reading (Table~\ref{tab:b1split}):
+holding only the residuals fixed, with every level and slope still
+free, barely changes the gain, while holding only the levels and
+slopes fixed removes almost exactly as much as fixing the whole
+block.  The gain is carried by the free level and slope of each
+group's bias amplitude, not by the correlated per-bin residuals.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/pair_axes_attribution/pair_axes_attribution.pdf}
+  \caption{${\rm FoM}(w_0, w_a)$ of the gap axis over the same
+    figure of merit of the current list, with $\sv$ fitted and with
+    blocks of nuisance parameters held at their fiducial values by
+    conditioning; each curve holds the same block fixed on both
+    lists.  Rows: \dcom{}, $\Delta z = 0.02$ and $\Delta z = 0.05$
+    ($\Delta z = 0.2$ gains at most $2\%$ and is not drawn);
+    columns: $k_{\rm max} = 0.075$, $0.1$ and $0.2\,h$/Mpc, quoted
+    at $z = 0$; each bin is cut at $k_{\rm max}/D(\bar{z}_i)$.
+    Black solid: every parameter free; sky-blue wide solid
+    (triangles), drawn under the black curve: the $b_1$ residuals
+    fixed; blue dash-dotted: $b_2$ and $b_{s^2}$ fixed; vermillion
+    dashed (squares): the $b_1$ levels and slopes fixed; orange
+    long-dashed: every nuisance parameter fixed.}
+  \label{fig:attribution}
+\end{figure}
+
+\begin{table}[ht]
+  \centering
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{lccc}
+    \hline
+    & \dcom{} & $\Delta z = 0.02$ & $\Delta z = 0.05$ \\
+    block held fixed & $k_{\rm max} = 0.075$ & $k_{\rm max} = 0.1$
+      & $k_{\rm max} = 0.075$ \\
+    \hline
+    none & $1.546$ / $1.426$ & $1.578$ / $1.569$ & $1.591$ / $1.444$ \\
+    all $b_1$ & $1.256$ / $1.312$ & $1.146$ / $1.189$ & $1.072$ / $1.083$ \\
+    $b_2$, $b_{s^2}$ & $1.399$ / $1.328$ & $1.230$ / $1.247$ & $1.339$ / $1.230$ \\
+    $\alpha_0$ & $1.525$ / $1.392$ & $1.445$ / $1.435$ & $1.464$ / $1.355$ \\
+    shot noise & $1.458$ / $1.348$ & $1.459$ / $1.432$ & $1.563$ / $1.417$ \\
+    every nuisance & $1.084$ / $1.132$ & $1.035$ / $1.037$ & $1.024$ / $1.031$ \\
+    \hline
+  \end{tabular}
+  \caption{The gain of the gap axis' largest list over the current
+    list with one block of nuisance parameters held fixed on both,
+    ${\rm FoM}(w_0, w_a)$ / ${\rm FoM}(\Omega_m, 10^9 A_s)$, with
+    $\sv$ fitted.  Each layout is quoted at the scale cut where its
+    gain is largest ($k_{\rm max}$ in $h$/Mpc, quoted at $z = 0$;
+    each bin cut at $k_{\rm max}/D(\bar{z}_i)$) and at its largest
+    gap point: $g = 3$, or $g = 2$ on $\Delta z = 0.02$.}
+  \label{tab:attribution}
+\end{table}
+
+\begin{table}[ht]
+  \centering
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{lcccc}
+    \hline
+    layout, $k_{\rm max}$ & all free & residuals fixed
+      & level, slope fixed & all $b_1$ fixed \\
+    \hline
+    $\Delta z = 0.02$, $0.1$ & $1.578$ & $1.553$ & $1.151$ & $1.146$ \\
+    $\Delta z = 0.02$, $0.2$ & $1.438$ & $1.431$ & $1.083$ & $1.075$ \\
+    $\Delta z = 0.05$, $0.075$ & $1.591$ & $1.543$ & $1.075$ & $1.072$ \\
+    \dcom{}, $0.075$ & $1.546$ & $1.530$ & $1.292$ & $1.256$ \\
+    \dcom{}, $0.1$ & $1.510$ & $1.484$ & $1.219$ & $1.201$ \\
+    \dcom{}, $0.2$ & $1.288$ & $1.279$ & $1.092$ & $1.085$ \\
+    \hline
+  \end{tabular}
+  \caption{The split of the linear-bias block: ${\rm FoM}(w_0, w_a)$
+    of the gap axis' largest list over the current list, with $\sv$
+    fitted and with parts of the block held fixed on both lists.
+    ``Residuals fixed'' keeps every group's level and slope free;
+    ``level, slope fixed'' keeps the residuals free.  $k_{\rm max}$
+    in $h$/Mpc, quoted at $z = 0$; each bin is cut at
+    $k_{\rm max}/D(\bar{z}_i)$.}
+  \label{tab:b1split}
+\end{table}
+
+\paragraph{The mechanism.}
+On large scales the galaxy map of bin $i$ is the matter map times
+its linear bias $b_i$ (Section~\ref{sec:groups}), and within each
+group the amplitude $\beta_i = b_i D(\bar{z}_i)$ is in effect a free
+straight line in redshift -- the bias line of this section: the
+prior charges only the per-bin departures from that line.  The auto
+spectra cannot pin the line down by themselves.  A higher level
+raises every auto spectrum of the group through $b_i^2$ the way a
+larger clustering amplitude does, so the level is degenerate with
+$A_s$ and the growth of structure; a slope in redshift tilts the
+group's spectra against each other the way an evolving growth does,
+and how growth evolves with redshift is what $w_0$ and $w_a$
+control.  And $\sv$, which in the autos acts like a lower bias,
+rides on the same degeneracy.  A cross spectrum depends on the
+biases differently, as the product $b_i b_j$, and its ratio to the
+two auto spectra -- the correlation coefficient
+$C^{ij}_\ell/\sqrt{C^{ii}_\ell C^{jj}_\ell}$ of
+Section~\ref{sec:overlap} -- does not depend on the linear biases at
+all at linear order.  Each added pair is therefore one more
+measurement of the clustering shared by two shells that no bias
+line can reshape: it separates the bias line from the growth
+history.  This is also why the gain collapses when the levels and
+slopes are held fixed, and barely moves when only the residuals
+are: where the bias line is known, the auto spectra already measure
+what the added pairs would add.
+
+\paragraph{Why the gain is larger with $\sv$ fitted.}
+The added pairs carry almost no information on $\sv$ itself
+(Table~\ref{tab:svresponse}), yet the $\sv$-fitted curves gain more
+than the $\sv$-fixed ones.  The reason is that $\sv$ rides on the
+degeneracy between the bias line and growth: in the auto spectra it
+acts like a lower bias (Figure~\ref{fig:svtemplates}), so whatever
+separates the bias line from cosmology also separates $\sv$.  The
+attribution fits show the same link from the other side: with the
+bias levels and slopes held fixed, the cost of fitting $\sv$ on the
+\emph{current} list falls from $2.7$ to $1.9$ on $\Delta z = 0.02$
+at $k_{\rm max} = 0.1\,h$/Mpc, while holding only the residuals
+fixed leaves it at $2.7$; with the whole bias block fixed it falls
+from $2.1$ to $1.5$ on \dcom{}.  The extra gain of the fitted
+curves shrinks with the cost.
+
+\subsection{How the gain depends on the linear-bias prior}
+\label{sec:priorgain}
+
+The attribution fits all ran under one prior, the paper's
+pessimistic one.  A natural worry is that the gain itself is an
+artifact of that choice.  Three priors on the amplitudes $\beta_i$
+pass the accuracy test of
+\texttt{notes/correlated\us bias\us prior\us v2}, which checks that
+the error bars a prior produces still cover the true cosmology
+across simulated universes:
+\begin{itemize}
+  \item the baseline prior: per group a free level and a free slope
+    in redshift, plus residuals of width $1\%$ of the group's
+    fiducial amplitude ($3\%$ for BGS), correlated as
+    $\exp(-|z_i - z_j|/L)$ with $L = 0.2$;
+  \item the pessimistic prior, the paper's choice: the same
+    structure with $3\%$ in every group and $L = 0.05$;
+  \item the free prior: every $\beta_i$ free, with no prior at all.
+\end{itemize}
+A fourth, the growth-tied prior -- one amplitude per group, with no
+slope and no residuals -- fails that accuracy test, so it is
+excluded and no figure of merit is quoted for it anywhere in this
+note.
+
+Figure~\ref{fig:priorgain} repeats the gap axis under each passing
+prior, every point over the same prior's fit on the current list,
+and Table~\ref{tab:priorgain} gives the ratios at each layout's
+best-gaining scale cut.  The three curves nearly coincide: the
+gain agrees within a few percent of the ratio across the priors,
+in the expected order -- the looser the residual prior, the
+slightly larger the gain, because the added pairs have a little
+more left to determine.  The absolute figures of merit do differ
+(the tighter the prior, the larger the figure of merit on either
+list), but the added pairs raise each by about the same factor.
+The agreement follows from the attribution: all three priors leave
+each group's level and slope of $\beta(z)$ completely free and
+differ only in the residual prior, and the residuals play almost
+no part in the gain (Table~\ref{tab:b1split}).  What no passing
+prior does is constrain the levels and slopes themselves; the only
+tested prior without a free slope is the growth-tied one, which
+the accuracy test excludes.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/pair_axes_priors/pair_axes_priors.pdf}
+  \caption{${\rm FoM}(w_0, w_a)$ of the gap axis over the same
+    figure of merit of the current list, with $\sv$ fitted, under
+    each linear-bias prior that passes the accuracy test of
+    \texttt{notes/correlated\us bias\us prior\us v2}; each curve is
+    normalized to its own prior's fit on the current list.  Rows:
+    \dcom{}, $\Delta z = 0.02$ and $\Delta z = 0.05$
+    ($\Delta z = 0.2$ gains at most $2\%$ and is not drawn);
+    columns: $k_{\rm max} = 0.075$, $0.1$ and $0.2\,h$/Mpc, quoted
+    at $z = 0$; each bin is cut at $k_{\rm max}/D(\bar{z}_i)$.
+    Sky-blue wide solid (circles): the baseline prior; vermillion
+    dashed (squares): the pessimistic prior of the paper; black
+    dash-dotted (diamonds): every amplitude free.}
+  \label{fig:priorgain}
+\end{figure}
+
+\begin{table}[ht]
+  \centering
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{lccc}
+    \hline
+    & \dcom{} & $\Delta z = 0.02$ & $\Delta z = 0.05$ \\
+    prior & $k_{\rm max} = 0.075$ & $k_{\rm max} = 0.1$
+      & $k_{\rm max} = 0.075$ \\
+    \hline
+    baseline & $1.535$ / $1.422$ & $1.563$ / $1.554$ & $1.558$ / $1.418$ \\
+    pessimistic (paper) & $1.546$ / $1.426$ & $1.578$ / $1.569$ & $1.591$ / $1.444$ \\
+    free & $1.551$ / $1.430$ & $1.585$ / $1.576$ & $1.606$ / $1.456$ \\
+    \hline
+  \end{tabular}
+  \caption{The gain of the gap axis' largest list over the current
+    list under each linear-bias prior that passes the accuracy
+    test, ${\rm FoM}(w_0, w_a)$ / ${\rm FoM}(\Omega_m, 10^9 A_s)$,
+    with $\sv$ fitted and each ratio taken within one prior.  Each
+    layout is quoted at the scale cut where its gain is largest
+    ($k_{\rm max}$ in $h$/Mpc, quoted at $z = 0$; each bin cut at
+    $k_{\rm max}/D(\bar{z}_i)$) and at its largest gap point:
+    $g = 3$, or $g = 2$ on $\Delta z = 0.02$.}
+  \label{tab:priorgain}
+\end{table}
+
+\paragraph{What this establishes, and what it does not.}
+The gain of Section~\ref{sec:axes} is a property of the bias model.
+It exists because each group's bias level and slope are completely
+free: the added pairs earn their keep by separating that bias line
+-- and $\sv$ with it -- from the growth history, while the
+correlated residuals play almost no part.  It is not an artifact of
+the paper's pessimistic choice: every linear-bias prior that passes
+the accuracy test leaves the levels and slopes free and gives the
+same gain within a few percent (Section~\ref{sec:priorgain}).  What
+remains open is a finite prior on the levels and slopes themselves,
+which no passing prior imposes.  A forecast with such prior
+knowledge would gain less from the added pairs, with the
+level-and-slope-fixed curves of Figure~\ref{fig:attribution} as the
+limiting case, but none has been run: how much of the gain such a
+prior keeps is an open point (Section~\ref{sec:open}), not a result
+of this note.
 
 \section{Open issues}
 \label{sec:open}
@@ -858,14 +1477,29 @@ them costs up to $35\%$ of ${\rm FoM}(\Omega_m, 10^9 A_s)$.
     default dispersions.  A sampled $\sv$ changes every kernel overlap
     but not which pairs are measured.  Within two prior widths of the
     defaults no unmeasured pair of any layout reaches an overlap of
-    $10^{-4}$.
+    $10^{-4}$; what the lists selected at larger dispersions would
+    measure is forecast on the $\sv$ axis of Section~\ref{sec:axes}.
   \item \textbf{The pair list at the $\sv$ prior edge.}  Just beyond
     those two prior widths the thin layouts' bins two apart begin to
     overlap by more than $10^{-6}$
     (\texttt{notes/fog\us parameter\us degeneracy\us study}, on the
-    pair rule at the edges of the $\sv$ prior).  Building the
-    list at the prior edge, which adds those pairs and needs new
-    spectra, covariances and derivative caches, is open.
+    pair rule at the edges of the $\sv$ prior).  Those lists have now
+    been forecast (Section~\ref{sec:axes}, the $\sv$ axis), and the
+    gain is attributed to the free level and slope of each group's
+    bias amplitude (Section~\ref{sec:bias}).  What remains open: the
+    archiving of
+    the largest lists' derivative bases, and the choice of a pair
+    list for the paper, which is the authors' and is not made in
+    this note.
+  \item \textbf{The gain under a prior on the bias levels and
+    slopes.}  Every linear-bias prior that passes the accuracy test
+    leaves each group's level and slope free, and all of them give
+    the same gain within a few percent
+    (Section~\ref{sec:priorgain}); with the levels and slopes
+    exactly fixed the gain falls from $55$--$59\%$ to $8$--$29\%$
+    (Section~\ref{sec:bias}).  A finite prior on them would land
+    between those curves; no forecast with one has been run, so
+    where the gain lands is not known.
 \end{itemize}
 
 \paragraph{Reproducing the figures.}
@@ -875,8 +1509,23 @@ project's \texttt{data/} and \texttt{likelihood/} files and writes the
 number quoted for them here;
 \texttt{plots/pair\us threshold/data.json} is written by the Fisher
 notebook \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL.ipynb}
-(section 11, item 7).  Each folder's \texttt{plot\us <name>.py}
-redraws its figure from that file alone.
+(section 11, item 7).  \texttt{plots/make\us pair\us axes\us data.py}
+writes the \texttt{data.json} of \texttt{plots/pair\us axes\us gap}
+and \texttt{plots/pair\us axes\us sigv} from the pair-axes study's
+results file; they hold the full grids of Section~\ref{sec:axes},
+for the paper and the reference model both.
+\texttt{plots/make\us sv\us templates\us data.py} writes
+\texttt{plots/sv\us templates}' \texttt{data.json} from the study's
+$\Delta z = 0.02$ derivative base and data set, and
+\texttt{plots/make\us pair\us axes\us attribution\us data.py} writes
+\texttt{plots/pair\us axes\us attribution}'s from the study's
+attribution fits, one file per layout;
+\texttt{plots/make\us pair\us axes\us priors\us data.py} writes
+\texttt{plots/pair\us axes\us priors}' from the study's prior-gain
+fits, one file per layout; these inputs are outputs of the
+pair-axes study and sit outside the repository.
+Each folder's \texttt{plot\us <name>.py} redraws its figure from that
+file alone.
 
 \begin{thebibliography}{99}
 
@@ -900,6 +1549,11 @@ MNRAS 156, 1P (1972).
 N. Kaiser,
 ``Clustering in real space and in redshift space'',
 MNRAS 227, 1 (1987).
+
+\bibitem{Asorey2012}
+J. Asorey, M. Crocce, E. Gazta\~naga and A. Lewis,
+``Recovering 3D clustering information with angular correlations'',
+MNRAS 427, 1891 (2012), arXiv:1207.6487.
 
 \bibitem{GrasshornGebhardt2020}
 H.~S. Grasshorn Gebhardt and D. Jeong,

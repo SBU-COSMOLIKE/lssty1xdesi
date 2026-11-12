@@ -1,0 +1,1521 @@
+{
+ "about": "FoM(w0, wa) and FoM(Omega_m, 10^9 A_s) of the paper model along the gap axis under the baseline, pessimistic and free linear-bias priors, absolute and over the same prior's fit on the current pair list. The growth-tied prior fails the accuracy test of notes/correlated_bias_prior_v2 and is not included. Row selection from each layout's largest derivative base (the pair-axes study); the pessimistic ratios equal those of plots/pair_axes_gap. Written by notes/cross_correlations/plots/make_pair_axes_priors_data.py from the study's prior_gain_<layout>.json files. k_max is the z = 0 value of a per-bin cut at k_max/D(zbar_i).",
+ "kmax_h_per_Mpc": [
+  "0.075",
+  "0.1",
+  "0.2"
+ ],
+ "priors": [
+  "baseline",
+  "pessimistic",
+  "free"
+ ],
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "color": "#0072B2",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.5820988968209172,
+        "fom_om_as": 2.9618200008670015,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 1.1409911436163893,
+        "fom_om_as": 5.095376455502275,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.5637621693343988,
+        "fom_om_as": 2.9016394754266646,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 1.1136139322840888,
+        "fom_om_as": 5.040167941792584,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.5536555544489288,
+        "fom_om_as": 2.8585828323292573,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 1.1030799386212558,
+        "fom_om_as": 5.0154657489302705,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 1.354424195217145,
+        "fom_om_as": 7.87087705395921,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 2.8376710632590525,
+        "fom_om_as": 14.037205408310227,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 1.3129819969928143,
+        "fom_om_as": 7.6459899171070305,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 2.789176217601956,
+        "fom_om_as": 13.837466938859174,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 1.296871134493222,
+        "fom_om_as": 7.5534437718428595,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 2.7696299655238694,
+        "fom_om_as": 13.775430346099052,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 6.804168069434019,
+        "fom_om_as": 51.05497550713611,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 11.15915763243099,
+        "fom_om_as": 79.80925556835248,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 6.697468026441202,
+        "fom_om_as": 50.27490598965518,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 11.032432805676194,
+        "fom_om_as": 78.91214276327325,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 6.6562163241423535,
+        "fom_om_as": 49.971418944911925,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 10.993102046822825,
+        "fom_om_as": 78.61253634436879,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.7820120161788043,
+        "fom_om_as": 3.682227205271515,
+        "fom_ratio": 1.3434349737642441,
+        "fom_om_as_ratio": 1.2432312578730753
+       },
+       "sigma_v fixed": {
+        "fom": 1.4528814398894805,
+        "fom_om_as": 6.454763478202875,
+        "fom_ratio": 1.2733503217952682,
+        "fom_om_as_ratio": 1.2667883393056576
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.7616642436841496,
+        "fom_om_as": 3.6155382553069213,
+        "fom_ratio": 1.3510382305066733,
+        "fom_om_as_ratio": 1.2460329017185303
+       },
+       "sigma_v fixed": {
+        "fom": 1.4158427390308448,
+        "fom_om_as": 6.381980546696636,
+        "fom_ratio": 1.2713945991380213,
+        "fom_om_as_ratio": 1.2662237886515393
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.7499333045220048,
+        "fom_om_as": 3.5685451537938575,
+        "fom_ratio": 1.3545123831882038,
+        "fom_om_as_ratio": 1.2483616404028084
+       },
+       "sigma_v fixed": {
+        "fom": 1.400137348738277,
+        "fom_om_as": 6.344475352047914,
+        "fom_ratio": 1.2692981711627487,
+        "fom_om_as_ratio": 1.264982290707718
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 1.8697291558777454,
+        "fom_om_as": 9.830016129394547,
+        "fom_ratio": 1.3804605399698913,
+        "fom_om_as_ratio": 1.248909881580459
+       },
+       "sigma_v fixed": {
+        "fom": 3.624271900748086,
+        "fom_om_as": 18.43975447177821,
+        "fom_ratio": 1.2771994427661486,
+        "fom_om_as_ratio": 1.3136342979537514
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 1.8285346275228023,
+        "fom_om_as": 9.612125538221543,
+        "fom_ratio": 1.3926578062081452,
+        "fom_om_as_ratio": 1.2571459866453012
+       },
+       "sigma_v fixed": {
+        "fom": 3.570530065113972,
+        "fom_om_as": 18.196654930779786,
+        "fom_ratio": 1.280137856683648,
+        "fom_om_as_ratio": 1.3150278884987894
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 1.810752620888998,
+        "fom_om_as": 9.514909891727378,
+        "fom_ratio": 1.3962471464804291,
+        "fom_om_as_ratio": 1.2596783902987825
+       },
+       "sigma_v fixed": {
+        "fom": 3.547681396398655,
+        "fom_om_as": 18.108809933849187,
+        "fom_ratio": 1.280922520538811,
+        "fom_om_as_ratio": 1.3145730825735886
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 8.420688831168292,
+        "fom_om_as": 55.98021107260449,
+        "fom_ratio": 1.2375780176559832,
+        "fom_om_as_ratio": 1.0964692572378174
+       },
+       "sigma_v fixed": {
+        "fom": 12.490234958950435,
+        "fom_om_as": 85.29951738459964,
+        "fom_ratio": 1.1192811653319636,
+        "fom_om_as_ratio": 1.0687922945421415
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 8.315457563128817,
+        "fom_om_as": 55.27728253427466,
+        "fom_ratio": 1.2415822711358815,
+        "fom_om_as_ratio": 1.0995004654140734
+       },
+       "sigma_v fixed": {
+        "fom": 12.368359637522158,
+        "fom_om_as": 84.46636309191453,
+        "fom_ratio": 1.1210908650319291,
+        "fom_om_as_ratio": 1.0703848626351873
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 8.273034771823152,
+        "fom_om_as": 54.98331680665952,
+        "fom_ratio": 1.2429035309168868,
+        "fom_om_as_ratio": 1.100295288138059
+       },
+       "sigma_v fixed": {
+        "fom": 12.329488208889252,
+        "fom_om_as": 84.18060434961491,
+        "fom_ratio": 1.1215658834398488,
+        "fom_om_as_ratio": 1.070829262916219
+       }
+      }
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.8551430661877956,
+        "fom_om_as": 4.053388520677699,
+        "fom_ratio": 1.4690683505124051,
+        "fom_om_as_ratio": 1.368546542156906
+       },
+       "sigma_v fixed": {
+        "fom": 1.5629315504730508,
+        "fom_om_as": 7.0318376343740825,
+        "fom_ratio": 1.3698016493969574,
+        "fom_om_as_ratio": 1.3800428085702494
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.8335379163762245,
+        "fom_om_as": 3.9818002359110336,
+        "fom_ratio": 1.4785275808065204,
+        "fom_om_as_ratio": 1.3722587763338654
+       },
+       "sigma_v fixed": {
+        "fom": 1.5215657492452004,
+        "fom_om_as": 6.9476792409397286,
+        "fom_ratio": 1.3663314593455005,
+        "fom_om_as_ratio": 1.378461853092284
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.8211429865159043,
+        "fom_om_as": 3.932846238080394,
+        "fom_ratio": 1.483129682196026,
+        "fom_om_as_ratio": 1.375802790670157
+       },
+       "sigma_v fixed": {
+        "fom": 1.5040418993819886,
+        "fom_om_as": 6.902101313757981,
+        "fom_ratio": 1.3634931129849908,
+        "fom_om_as_ratio": 1.3761635826603151
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 1.9600341910088819,
+        "fom_om_as": 10.312846305207522,
+        "fom_ratio": 1.447134655398447,
+        "fom_om_as_ratio": 1.3102537664490583
+       },
+       "sigma_v fixed": {
+        "fom": 3.744906270924032,
+        "fom_om_as": 19.087423518211427,
+        "fom_ratio": 1.3197111953571616,
+        "fom_om_as_ratio": 1.359773755744245
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 1.9184260879152477,
+        "fom_om_as": 10.09282312808976,
+        "fom_ratio": 1.4611213956544045,
+        "fom_om_as_ratio": 1.3200152285720674
+       },
+       "sigma_v fixed": {
+        "fom": 3.690963715324205,
+        "fom_om_as": 18.84387752746138,
+        "fom_ratio": 1.323316788674463,
+        "fom_om_as_ratio": 1.3618010876356939
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 1.9005337615989055,
+        "fom_om_as": 9.994846594334868,
+        "fom_ratio": 1.465476184217468,
+        "fom_om_as_ratio": 1.3232171836100615
+       },
+       "sigma_v fixed": {
+        "fom": 3.6677755032452795,
+        "fom_om_as": 18.754723852306903,
+        "fom_ratio": 1.3242835862196225,
+        "fom_om_as_ratio": 1.361461920325262
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 8.596823266106252,
+        "fom_om_as": 56.978921669712626,
+        "fom_ratio": 1.2634642734245907,
+        "fom_om_as_ratio": 1.1160307316521678
+       },
+       "sigma_v fixed": {
+        "fom": 12.667307082998398,
+        "fom_om_as": 86.17734940776806,
+        "fom_ratio": 1.1351490408365943,
+        "fom_om_as_ratio": 1.079791420106176
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 8.490430414574078,
+        "fom_om_as": 56.2715930331718,
+        "fom_ratio": 1.2677074949898033,
+        "fom_om_as_ratio": 1.1192779364868535
+       },
+       "sigma_v fixed": {
+        "fom": 12.54439801873177,
+        "fom_om_as": 85.34229398610407,
+        "fom_ratio": 1.137047307668864,
+        "fom_om_as_ratio": 1.0814849400569502
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 8.447548740556627,
+        "fom_om_as": 55.97538845931088,
+        "fom_ratio": 1.26912172459255,
+        "fom_om_as_ratio": 1.1201480694598183
+       },
+       "sigma_v fixed": {
+        "fom": 12.5052558176693,
+        "fom_om_as": 85.05598459871479,
+        "fom_ratio": 1.1375547833910546,
+        "fom_om_as_ratio": 1.0819646401703658
+       }
+      }
+     }
+    },
+    {
+     "g": 3,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.8934002453798231,
+        "fom_om_as": 4.210377188106779,
+        "fom_ratio": 1.5347911673755976,
+        "fom_om_as_ratio": 1.421550663738611
+       },
+       "sigma_v fixed": {
+        "fom": 1.6175368747086867,
+        "fom_om_as": 7.2354509997002445,
+        "fom_ratio": 1.4176594478918374,
+        "fom_om_as_ratio": 1.4200032250584735
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.8714146158690856,
+        "fom_om_as": 4.138465219253251,
+        "fom_ratio": 1.5457131806093236,
+        "fom_om_as_ratio": 1.4262506608077905
+       },
+       "sigma_v fixed": {
+        "fom": 1.5750538359688273,
+        "fom_om_as": 7.150626760190698,
+        "fom_ratio": 1.4143625454993165,
+        "fom_om_as_ratio": 1.4187278762872948
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.8587101302397777,
+        "fom_om_as": 4.08869717567994,
+        "fom_ratio": 1.550982598006227,
+        "fom_om_as_ratio": 1.4303231410469044
+       },
+       "sigma_v fixed": {
+        "fom": 1.5569500497324282,
+        "fom_om_as": 7.1039523569395895,
+        "fom_ratio": 1.411457134900365,
+        "fom_om_as_ratio": 1.4164093052484237
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 2.0245503835545415,
+        "fom_om_as": 10.598342183051495,
+        "fom_ratio": 1.4947683234719238,
+        "fom_om_as_ratio": 1.346526201641063
+       },
+       "sigma_v fixed": {
+        "fom": 3.824847582613985,
+        "fom_om_as": 19.43590304431028,
+        "fom_ratio": 1.347882646490099,
+        "fom_om_as_ratio": 1.384599176186732
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 1.9824375055619325,
+        "fom_om_as": 10.375943061833743,
+        "fom_ratio": 1.5098740958386363,
+        "fom_om_as_ratio": 1.3570437803767899
+       },
+       "sigma_v fixed": {
+        "fom": 3.7703015776674684,
+        "fom_om_as": 19.18988718362033,
+        "fom_ratio": 1.351761697189951,
+        "fom_om_as_ratio": 1.386806361916586
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 1.9643993820450767,
+        "fom_om_as": 10.277481631538366,
+        "fom_ratio": 1.5147221106225828,
+        "fom_om_as_ratio": 1.3606352204341499
+       },
+       "sigma_v fixed": {
+        "fom": 3.746861102817068,
+        "fom_om_as": 19.09952952348038,
+        "fom_ratio": 1.3528381586918445,
+        "fom_om_as_ratio": 1.3864924030405348
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 8.735961752097396,
+        "fom_om_as": 57.547238317537065,
+        "fom_ratio": 1.2839132812344045,
+        "fom_om_as_ratio": 1.1271621961603626
+       },
+       "sigma_v fixed": {
+        "fom": 12.767790484021296,
+        "fom_om_as": 86.5425458364225,
+        "fom_ratio": 1.1441536094906717,
+        "fom_om_as_ratio": 1.084367285725442
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 8.628853053933755,
+        "fom_om_as": 56.839113013658874,
+        "fom_ratio": 1.2883754009526527,
+        "fom_om_as_ratio": 1.1305662714785458
+       },
+       "sigma_v fixed": {
+        "fom": 12.644633289864608,
+        "fom_om_as": 85.70899492510748,
+        "fom_ratio": 1.1461328169938125,
+        "fom_om_as_ratio": 1.0861318920489074
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 8.585699045144029,
+        "fom_om_as": 56.542078247845346,
+        "fom_ratio": 1.2898768049354656,
+        "fom_om_as_ratio": 1.1314883475727768
+       },
+       "sigma_v fixed": {
+        "fom": 12.605362070130042,
+        "fom_om_as": 85.4226551931273,
+        "fom_ratio": 1.1466610622224855,
+        "fom_om_as_ratio": 1.0866289165245377
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "color": "#E69F00",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.37371976439342214,
+        "fom_om_as": 1.5482148850117228,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.8242156232138005,
+        "fom_om_as": 2.636877606007436,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.35206479093604576,
+        "fom_om_as": 1.4690097397992912,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.7808961975449766,
+        "fom_om_as": 2.5273444978706956,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.3293223464666632,
+        "fom_om_as": 1.3843637324114757,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.7412833189112147,
+        "fom_om_as": 2.415079785420442,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 1.5711525946001634,
+        "fom_om_as": 7.069800444092816,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 4.232149231512908,
+        "fom_om_as": 19.432513425894967,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 1.5333556657434577,
+        "fom_om_as": 6.903179072908612,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 4.169999511638331,
+        "fom_om_as": 19.158017714078508,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 1.50752234271126,
+        "fom_om_as": 6.787440258265984,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 4.1293207856820855,
+        "fom_om_as": 18.980550903583595,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 8.038993126218623,
+        "fom_om_as": 53.834846188590085,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 14.27368623442217,
+        "fom_om_as": 96.27438489895047,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 7.945826384847109,
+        "fom_om_as": 53.188834521661995,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 14.122480725568485,
+        "fom_om_as": 95.25470979922335,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 7.875778229056623,
+        "fom_om_as": 52.65125565718912,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 14.00889079079373,
+        "fom_om_as": 94.41179118745713,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.37371976439342214,
+        "fom_om_as": 1.5482148850117228,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.8242156232138005,
+        "fom_om_as": 2.636877606007436,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.35206479093604576,
+        "fom_om_as": 1.4690097397992912,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.7808961975449766,
+        "fom_om_as": 2.5273444978706956,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.3293223464666632,
+        "fom_om_as": 1.3843637324114757,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.7412833189112147,
+        "fom_om_as": 2.415079785420442,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 2.3269427424529323,
+        "fom_om_as": 10.516624263545083,
+        "fom_ratio": 1.481041848163136,
+        "fom_om_as_ratio": 1.4875418827885398
+       },
+       "sigma_v fixed": {
+        "fom": 5.092636085123791,
+        "fom_om_as": 24.957154050389622,
+        "fom_ratio": 1.203321481956173,
+        "fom_om_as_ratio": 1.2842988193762288
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 2.2924282261936235,
+        "fom_om_as": 10.364396043369142,
+        "fom_ratio": 1.4950401119639287,
+        "fom_om_as_ratio": 1.5013946377320568
+       },
+       "sigma_v fixed": {
+        "fom": 5.03961395845438,
+        "fom_om_as": 24.72672231516988,
+        "fom_ratio": 1.2085406591509147,
+        "fom_om_as_ratio": 1.290672275399304
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 2.262107932130471,
+        "fom_om_as": 10.227018115108025,
+        "fom_ratio": 1.5005468695489435,
+        "fom_om_as_ratio": 1.5067562624441817
+       },
+       "sigma_v fixed": {
+        "fom": 5.003755033584317,
+        "fom_om_as": 24.56546193178151,
+        "fom_ratio": 1.2117622469376137,
+        "fom_om_as_ratio": 1.2942438845198885
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 10.83672379610521,
+        "fom_om_as": 67.97544777004416,
+        "fom_ratio": 1.348020035091457,
+        "fom_om_as_ratio": 1.2626663319872375
+       },
+       "sigma_v fixed": {
+        "fom": 15.597974044559672,
+        "fom_om_as": 103.2570761278524,
+        "fom_ratio": 1.0927782626287437,
+        "fom_om_as_ratio": 1.0725290661293858
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 10.730077117305102,
+        "fom_om_as": 67.29090151085067,
+        "fom_ratio": 1.3504041741671615,
+        "fom_om_as_ratio": 1.26513209240269
+       },
+       "sigma_v fixed": {
+        "fom": 15.45117757401138,
+        "fom_om_as": 102.27683334149695,
+        "fom_ratio": 1.0940838139036944,
+        "fom_om_as_ratio": 1.0737194366249685
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 10.64268029322436,
+        "fom_om_as": 66.66732131283582,
+        "fom_ratio": 1.3513179248699037,
+        "fom_om_as_ratio": 1.2662057244542262
+       },
+       "sigma_v fixed": {
+        "fom": 15.337804815886285,
+        "fom_om_as": 101.44616015736916,
+        "fom_ratio": 1.094862187516365,
+        "fom_om_as_ratio": 1.0745073139852321
+       }
+      }
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.39035632984539403,
+        "fom_om_as": 1.7425856876665913,
+        "fom_ratio": 1.0445161509693617,
+        "fom_om_as_ratio": 1.1255451065201436
+       },
+       "sigma_v fixed": {
+        "fom": 0.8708447158397356,
+        "fom_om_as": 3.1012293108053712,
+        "fom_ratio": 1.0565739004608015,
+        "fom_om_as_ratio": 1.1760990740488035
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.36871929204144976,
+        "fom_om_as": 1.6564419297480002,
+        "fom_ratio": 1.047305216352718,
+        "fom_om_as_ratio": 1.1275908422324807
+       },
+       "sigma_v fixed": {
+        "fom": 0.8251994856979623,
+        "fom_om_as": 2.9655970859607566,
+        "fom_ratio": 1.0567339017557886,
+        "fom_om_as_ratio": 1.1734043730323633
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.3467977034070983,
+        "fom_om_as": 1.569686080670699,
+        "fom_ratio": 1.0530645950022226,
+        "fom_om_as_ratio": 1.1338682485826201
+       },
+       "sigma_v fixed": {
+        "fom": 0.7849632729947972,
+        "fom_om_as": 2.834483233823246,
+        "fom_ratio": 1.058924776761116,
+        "fom_om_as_ratio": 1.1736602868918429
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 2.455006385174013,
+        "fom_om_as": 10.984389958181158,
+        "fom_ratio": 1.5625512083368187,
+        "fom_om_as_ratio": 1.5537058004740691
+       },
+       "sigma_v fixed": {
+        "fom": 5.345683038883328,
+        "fom_om_as": 25.936974023509805,
+        "fom_ratio": 1.2631130771757673,
+        "fom_om_as_ratio": 1.3347204993537924
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 2.4201110454994,
+        "fom_om_as": 10.831865370128048,
+        "fom_ratio": 1.5783103030607013,
+        "fom_om_as_ratio": 1.5691126154669066
+       },
+       "sigma_v fixed": {
+        "fom": 5.288906524776309,
+        "fom_om_as": 25.697412446626977,
+        "fom_ratio": 1.2683230561574759,
+        "fom_om_as_ratio": 1.341339841634185
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 2.389661652128614,
+        "fom_om_as": 10.694210524033222,
+        "fom_ratio": 1.5851583651031251,
+        "fom_om_as_ratio": 1.5755881624165216
+       },
+       "sigma_v fixed": {
+        "fom": 5.251267326118267,
+        "fom_om_as": 25.52793930488573,
+        "fom_ratio": 1.2717024417977876,
+        "fom_om_as_ratio": 1.344952495560388
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 11.533001267266846,
+        "fom_om_as": 69.54829698152794,
+        "fom_ratio": 1.434632557360045,
+        "fom_om_as_ratio": 1.2918825241534397
+       },
+       "sigma_v fixed": {
+        "fom": 16.49485818869552,
+        "fom_om_as": 105.90981124710324,
+        "fom_ratio": 1.1556130573276027,
+        "fom_om_as_ratio": 1.1000829697148011
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 11.424657076039093,
+        "fom_om_as": 68.87723222212291,
+        "fom_ratio": 1.4378186135335402,
+        "fom_om_as_ratio": 1.2949565983453082
+       },
+       "sigma_v fixed": {
+        "fom": 16.34583739220575,
+        "fom_om_as": 104.94487292131716,
+        "fom_ratio": 1.1574338609371877,
+        "fom_om_as_ratio": 1.1017289658697045
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 11.334651884011173,
+        "fom_om_as": 68.26058828450684,
+        "fom_ratio": 1.4391786505863637,
+        "fom_om_as_ratio": 1.2964664837045798
+       },
+       "sigma_v fixed": {
+        "fom": 16.22930663896699,
+        "fom_om_as": 104.11606496677379,
+        "fom_ratio": 1.1585004752576455,
+        "fom_om_as_ratio": 1.1027866716356283
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "color": "#CC79A7",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.18365072447694178,
+        "fom_om_as": 1.2017360016317078,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.1923894986495101,
+        "fom_om_as": 1.261952328934683,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.1731090999928433,
+        "fom_om_as": 1.1454326062799982,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.18192217062617808,
+        "fom_om_as": 1.206217751440148,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.16833315736442273,
+        "fom_om_as": 1.1166276909136361,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.1770886714257613,
+        "fom_om_as": 1.1770061701883867,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.550909100784496,
+        "fom_om_as": 3.917793308275285,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.5735256146580191,
+        "fom_om_as": 4.1352208843382545,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.5329985598874044,
+        "fom_om_as": 3.8014578121959737,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.5563416615089596,
+        "fom_om_as": 4.023957927061711,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.4916829625271314,
+        "fom_om_as": 3.5011896014848203,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 0.5145850794021816,
+        "fom_om_as": 3.7162221019970003,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 2.3723394038246406,
+        "fom_om_as": 20.16733214072489,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 2.6699575191036287,
+        "fom_om_as": 23.888061566448748,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 2.3360337255371566,
+        "fom_om_as": 19.888285694959976,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 2.6291928106555718,
+        "fom_om_as": 23.536670475553517,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 2.2877473583692924,
+        "fom_om_as": 19.473863215911948,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom": 2.5766126742980604,
+        "fom_om_as": 23.061617000736945,
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.2539256664719187,
+        "fom_om_as": 1.5650674036171126,
+        "fom_ratio": 1.382655403049065,
+        "fom_om_as_ratio": 1.3023387844685324
+       },
+       "sigma_v fixed": {
+        "fom": 0.26629797360577234,
+        "fom_om_as": 1.6374068451490085,
+        "fom_ratio": 1.3841606505296147,
+        "fom_om_as_ratio": 1.297518779121615
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.24357050014967638,
+        "fom_om_as": 1.5140879550846666,
+        "fom_ratio": 1.407034639771948,
+        "fom_om_as_ratio": 1.3218481356157166
+       },
+       "sigma_v fixed": {
+        "fom": 0.2561928136334598,
+        "fom_om_as": 1.5880997410951272,
+        "fom_ratio": 1.4082550397878464,
+        "fom_om_as_ratio": 1.31659456942914
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.23865105178463172,
+        "fom_om_as": 1.4859776828132343,
+        "fom_ratio": 1.4177305025413294,
+        "fom_om_as_ratio": 1.3307727319545446
+       },
+       "sigma_v fixed": {
+        "fom": 0.2512686015467094,
+        "fom_om_as": 1.5600052669188613,
+        "fom_ratio": 1.4188858018060497,
+        "fom_om_as_ratio": 1.3254010951099546
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.6285433952062136,
+        "fom_om_as": 4.356442855674262,
+        "fom_ratio": 1.1409203338829694,
+        "fom_om_as_ratio": 1.1119634224889934
+       },
+       "sigma_v fixed": {
+        "fom": 0.6539555446026654,
+        "fom_om_as": 4.569519509452809,
+        "fom_ratio": 1.1402377293865156,
+        "fom_om_as_ratio": 1.1050242870361335
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.6102547714497525,
+        "fom_om_as": 4.240488113483391,
+        "fom_ratio": 1.1449463795524484,
+        "fom_om_as_ratio": 1.115489983836965
+       },
+       "sigma_v fixed": {
+        "fom": 0.6363727838846694,
+        "fom_om_as": 4.459052915171881,
+        "fom_ratio": 1.1438524703662176,
+        "fom_om_as_ratio": 1.1081261275581666
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.5672934132624211,
+        "fom_om_as": 3.935975802044262,
+        "fom_ratio": 1.1537788707313963,
+        "fom_om_as_ratio": 1.124182420847775
+       },
+       "sigma_v fixed": {
+        "fom": 0.5929644449764766,
+        "fom_om_as": 4.149084810848027,
+        "fom_ratio": 1.1523156591818637,
+        "fom_om_as_ratio": 1.1164792353552866
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 2.484701923693434,
+        "fom_om_as": 20.908814939532274,
+        "fom_ratio": 1.047363593795915,
+        "fom_om_as_ratio": 1.0367665288414658
+       },
+       "sigma_v fixed": {
+        "fom": 2.7571310924968926,
+        "fom_om_as": 24.37772966610398,
+        "fom_ratio": 1.0326497978973577,
+        "fom_om_as_ratio": 1.0204984443083898
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 2.4475123116045876,
+        "fom_om_as": 20.62533246794737,
+        "fom_ratio": 1.0477213084934367,
+        "fom_om_as_ratio": 1.0370593415788558
+       },
+       "sigma_v fixed": {
+        "fom": 2.715716403546562,
+        "fom_om_as": 24.024779132142047,
+        "fom_ratio": 1.0329088047633206,
+        "fom_om_as_ratio": 1.0207382202633761
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 2.3986428745104016,
+        "fom_om_as": 20.209415844556382,
+        "fom_ratio": 1.0484736724688672,
+        "fom_om_as_ratio": 1.0377712742710148
+       },
+       "sigma_v fixed": {
+        "fom": 2.6627513998590056,
+        "fom_om_as": 23.551196018505312,
+        "fom_ratio": 1.0334309950502791,
+        "fom_om_as_ratio": 1.021229171300205
+       }
+      }
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.2799253944165076,
+        "fom_om_as": 1.6759626788285025,
+        "fom_ratio": 1.5242270087077907,
+        "fom_om_as_ratio": 1.3946180163970234
+       },
+       "sigma_v fixed": {
+        "fom": 0.29323947799279726,
+        "fom_om_as": 1.7532364274318957,
+        "fom_ratio": 1.5241969029037956,
+        "fom_om_as_ratio": 1.3893047995814118
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.2694082278870642,
+        "fom_om_as": 1.6255855604917713,
+        "fom_ratio": 1.5562915404112327,
+        "fom_om_as_ratio": 1.4191891793364932
+       },
+       "sigma_v fixed": {
+        "fom": 0.28301514201954187,
+        "fom_om_as": 1.7046768630871283,
+        "fom_ratio": 1.5556935201762419,
+        "fom_om_as_ratio": 1.4132413994503492
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.26436968737129996,
+        "fom_om_as": 1.597402954105748,
+        "fom_ratio": 1.570514636037918,
+        "fom_om_as_ratio": 1.4305600399348297
+       },
+       "sigma_v fixed": {
+        "fom": 0.27798280122781804,
+        "fom_om_as": 1.6765445209371128,
+        "fom_ratio": 1.5697379114640506,
+        "fom_om_as_ratio": 1.4244143857536211
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.6636168112601922,
+        "fom_om_as": 4.5333030432689085,
+        "fom_ratio": 1.204584949341371,
+        "fom_om_as_ratio": 1.1571062295944823
+       },
+       "sigma_v fixed": {
+        "fom": 0.69025628166643,
+        "fom_om_as": 4.752841015320026,
+        "fom_ratio": 1.2035317412597428,
+        "fom_om_as_ratio": 1.149356019486395
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.6452424087039074,
+        "fom_om_as": 4.418121000407423,
+        "fom_ratio": 1.2105894035440066,
+        "fom_om_as_ratio": 1.1622175540743995
+       },
+       "sigma_v fixed": {
+        "fom": 0.6726499246945612,
+        "fom_om_as": 4.643542417121632,
+        "fom_ratio": 1.209059057109151,
+        "fom_om_as_ratio": 1.1539738986566246
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.6016880114885246,
+        "fom_om_as": 4.113539012879736,
+        "fom_ratio": 1.2237316672434486,
+        "fom_om_as_ratio": 1.1748975294383441
+       },
+       "sigma_v fixed": {
+        "fom": 0.6286238636343491,
+        "fom_om_as": 4.333445222295057,
+        "fom_ratio": 1.2216130797353315,
+        "fom_om_as_ratio": 1.1660888674997054
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 2.527953183280962,
+        "fom_om_as": 21.17800794134654,
+        "fom_ratio": 1.0655950742989995,
+        "fom_om_as_ratio": 1.0501145016886364
+       },
+       "sigma_v fixed": {
+        "fom": 2.7915509329059796,
+        "fom_om_as": 24.56882105399649,
+        "fom_ratio": 1.0455413290033067,
+        "fom_om_as_ratio": 1.028497895723104
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 2.490550979999654,
+        "fom_om_as": 20.8935854649505,
+        "fom_ratio": 1.0661451300010523,
+        "fom_om_as_ratio": 1.050547331500034
+       },
+       "sigma_v fixed": {
+        "fom": 2.7500361103075557,
+        "fom_om_as": 24.215992396962363,
+        "fom_ratio": 1.045962129198829,
+        "fom_om_as_ratio": 1.0288622777854
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 2.4415415485131278,
+        "fom_om_as": 20.47786543104634,
+        "fom_ratio": 1.0672251634697374,
+        "fom_om_as_ratio": 1.051556396591819
+       },
+       "sigma_v fixed": {
+        "fom": 2.696977752335819,
+        "fom_om_as": 23.743244206538993,
+        "fom_ratio": 1.046714463232449,
+        "fom_om_as_ratio": 1.029556782847459
+       }
+      }
+     }
+    },
+    {
+     "g": 3,
+     "0.075": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.28607684935444494,
+        "fom_om_as": 1.704591567345096,
+        "fom_ratio": 1.5577224112195824,
+        "fom_om_as_ratio": 1.418440959603952
+       },
+       "sigma_v fixed": {
+        "fom": 0.29969893118466767,
+        "fom_om_as": 1.783113617849929,
+        "fom_ratio": 1.5577717769858683,
+        "fom_om_as_ratio": 1.4129801712519527
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.2754771828632565,
+        "fom_om_as": 1.654083851652351,
+        "fom_ratio": 1.5913500958334676,
+        "fom_om_as_ratio": 1.444069116405103
+       },
+       "sigma_v fixed": {
+        "fom": 0.2894041831708358,
+        "fom_om_as": 1.7344877585770115,
+        "fom_ratio": 1.5908131602360696,
+        "fom_om_as_ratio": 1.437955755920639
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.27039668171079706,
+        "fom_om_as": 1.6257700536324506,
+        "fom_ratio": 1.606318600235235,
+        "fom_om_as_ratio": 1.4559642993469284
+       },
+       "sigma_v fixed": {
+        "fom": 0.2843330343306382,
+        "fom_om_as": 1.7062439433588148,
+        "fom_ratio": 1.6055969703846114,
+        "fom_om_as_ratio": 1.449647407613607
+       }
+      }
+     },
+     "0.1": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 0.6722936953111526,
+        "fom_om_as": 4.580528834298546,
+        "fom_ratio": 1.220335068623489,
+        "fom_om_as_ratio": 1.1691604109444493
+       },
+       "sigma_v fixed": {
+        "fom": 0.69936221497751,
+        "fom_om_as": 4.801116528982418,
+        "fom_ratio": 1.219408858302736,
+        "fom_om_as_ratio": 1.1610302480252455
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 0.6538589766701368,
+        "fom_om_as": 4.465222082431786,
+        "fom_ratio": 1.2267556160156683,
+        "fom_om_as_ratio": 1.1746078223218208
+       },
+       "sigma_v fixed": {
+        "fom": 0.6817041340668588,
+        "fom_om_as": 4.691793808584875,
+        "fom_ratio": 1.2253336056442006,
+        "fom_om_as_ratio": 1.1659649264799388
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 0.6100614736798399,
+        "fom_om_as": 4.159694968949156,
+        "fom_ratio": 1.2407618733508103,
+        "fom_om_as_ratio": 1.188080464761197
+       },
+       "sigma_v fixed": {
+        "fom": 0.6374322132905895,
+        "fom_om_as": 4.380858956951962,
+        "fom_ratio": 1.2387304622806503,
+        "fom_om_as_ratio": 1.1788474522547518
+       }
+      }
+     },
+     "0.2": {
+      "baseline": {
+       "sigma_v free": {
+        "fom": 2.538624447238257,
+        "fom_om_as": 21.258447696339175,
+        "fom_ratio": 1.0700932771868708,
+        "fom_om_as_ratio": 1.0541031182508735
+       },
+       "sigma_v fixed": {
+        "fom": 2.7993645228681916,
+        "fom_om_as": 24.62052676734942,
+        "fom_ratio": 1.0484678137530847,
+        "fom_om_as_ratio": 1.0306623958944177
+       }
+      },
+      "pessimistic": {
+       "sigma_v free": {
+        "fom": 2.501111860285845,
+        "fom_om_as": 20.973322866864606,
+        "fom_ratio": 1.0706659895120862,
+        "fom_om_as_ratio": 1.054556596206761
+       },
+       "sigma_v fixed": {
+        "fom": 2.757784631592697,
+        "fom_om_as": 24.267443441824703,
+        "fom_ratio": 1.0489092395262793,
+        "fom_om_as_ratio": 1.031048272823049
+       }
+      },
+      "free": {
+       "sigma_v free": {
+        "fom": 2.4520256310449233,
+        "fom_om_as": 20.557054160047183,
+        "fom_ratio": 1.0718078733976677,
+        "fom_om_as_ratio": 1.0556228074586747
+       },
+       "sigma_v fixed": {
+        "fom": 2.704676550261179,
+        "fom_om_as": 23.79450866686105,
+        "fom_ratio": 1.0497024163703637,
+        "fom_om_as_ratio": 1.0317797171855159
+       }
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

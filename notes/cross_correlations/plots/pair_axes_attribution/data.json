@@ -1,0 +1,2870 @@
+{
+ "about": "FoM(w0, wa) and FoM(Omega_m, 10^9 A_s) of the paper model (alpha_2 fixed at 0, sigma_v prior widths x6, pessimistic linear-bias prior) along the gap axis, over the same fit on the current pair list, with blocks of nuisance parameters held at the fiducial: all free, b1 per bin fixed, b1 residuals fixed (level, slope free), b1 level and slope fixed (residuals free), b2 bs2 fixed, a0 fixed, shot noise fixed, all nuisance fixed. Holding a block fixed deletes its rows and columns from the full Fisher matrix (data plus every prior) before the inversion. Row selection from each layout's largest derivative base (the pair-axes study); the \"all free\" ratios equal those of plots/pair_axes_gap. Written by notes/cross_correlations/plots/make_pair_axes_attribution_data.py from the study's attribution_<layout>.json files. k_max is the z = 0 value of a per-bin cut at k_max/D(zbar_i).",
+ "kmax_h_per_Mpc": [
+  "0.075",
+  "0.1",
+  "0.2"
+ ],
+ "blocks": [
+  "all free",
+  "b1 per bin fixed",
+  "b1 residuals fixed (level, slope free)",
+  "b1 level and slope fixed (residuals free)",
+  "b2 bs2 fixed",
+  "a0 fixed",
+  "shot noise fixed",
+  "all nuisance fixed"
+ ],
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "color": "#0072B2",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "cost_of_fitting_sigma_v": {
+       "all free": 1.9753257540566411,
+       "b1 per bin fixed": 1.854582251146916,
+       "b1 residuals fixed (level, slope free)": 1.9560342398372863,
+       "b1 level and slope fixed (residuals free)": 1.9504519774923623,
+       "b2 bs2 fixed": 1.8739404059125289,
+       "a0 fixed": 1.966713695995972,
+       "shot noise fixed": 1.9591815828189196,
+       "all nuisance fixed": 1.9213501216678799
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "cost_of_fitting_sigma_v": {
+       "all free": 2.124306520185187,
+       "b1 per bin fixed": 1.5119644075299838,
+       "b1 residuals fixed (level, slope free)": 2.0778859883307623,
+       "b1 level and slope fixed (residuals free)": 1.6196602430121543,
+       "b2 bs2 fixed": 1.7454032789225578,
+       "a0 fixed": 1.997202812197718,
+       "shot noise fixed": 2.3405594871656072,
+       "all nuisance fixed": 1.9572661687783466
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "cost_of_fitting_sigma_v": {
+       "all free": 1.6472542700701132,
+       "b1 per bin fixed": 1.4576006369635093,
+       "b1 residuals fixed (level, slope free)": 1.6312367121360996,
+       "b1 level and slope fixed (residuals free)": 1.4334583568290575,
+       "b2 bs2 fixed": 1.3737811403310605,
+       "a0 fixed": 1.638415076926533,
+       "shot noise fixed": 1.9215080038345924,
+       "all nuisance fixed": 1.7085849843252474
+      }
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.351038230764618,
+        "fom_om_as_ratio": 1.2460329020148107
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2713945994403635,
+        "fom_om_as_ratio": 1.2662237890287698
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1769437930550375,
+        "fom_om_as_ratio": 1.2249965952789088
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1441123936625577,
+        "fom_om_as_ratio": 1.2006519893229313
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.3400045948694468,
+        "fom_om_as_ratio": 1.2419386387919549
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2730547951401416,
+        "fom_om_as_ratio": 1.2662289989991977
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.1993344816340183,
+        "fom_om_as_ratio": 1.246720899805316
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1562873415576083,
+        "fom_om_as_ratio": 1.207833439212065
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2552047143482565,
+        "fom_om_as_ratio": 1.1916850193477002
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.220175084047546,
+        "fom_om_as_ratio": 1.2285814715586751
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3384267127863716,
+        "fom_om_as_ratio": 1.2219796363192652
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2706496485303163,
+        "fom_om_as_ratio": 1.2487593926145477
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2903531713810423,
+        "fom_om_as_ratio": 1.1926529652644349
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2158765923232975,
+        "fom_om_as_ratio": 1.1904693573690512
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0554165894034226,
+        "fom_om_as_ratio": 1.0981983862331464
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0493855721728145,
+        "fom_om_as_ratio": 1.1045879095890472
+       }
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.3926578065766182,
+        "fom_om_as_ratio": 1.257145987012834
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2801378566302264,
+        "fom_om_as_ratio": 1.3150278884443194
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1617342869912624,
+        "fom_om_as_ratio": 1.1698152613037205
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.147501131333751,
+        "fom_om_as_ratio": 1.175462375745405
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.371904463621664,
+        "fom_om_as_ratio": 1.2429646988935745
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2749976968772694,
+        "fom_om_as_ratio": 1.31227479054586
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.175762831533866,
+        "fom_om_as_ratio": 1.1865464219870547
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1516350646013986,
+        "fom_om_as_ratio": 1.1791514536933037
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.192307033653778,
+        "fom_om_as_ratio": 1.1284798931070812
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1997779543398641,
+        "fom_om_as_ratio": 1.2417384411044183
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3208909676639395,
+        "fom_om_as_ratio": 1.2085577871897295
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2635419488669595,
+        "fom_om_as_ratio": 1.297268930850034
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3322715598226558,
+        "fom_om_as_ratio": 1.207610597905168
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.215756000679995,
+        "fom_om_as_ratio": 1.2595986845310159
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0392557794265274,
+        "fom_om_as_ratio": 1.0287604981017133
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0190000610698788,
+        "fom_om_as_ratio": 1.0372259406848687
+       }
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.241582271247988,
+        "fom_om_as_ratio": 1.0995004655026925
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1210908650031735,
+        "fom_om_as_ratio": 1.0703848626060182
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0661833569809662,
+        "fom_om_as_ratio": 1.0619742474145857
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0560623854996283,
+        "fom_om_as_ratio": 1.0525975808650738
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.233647014032827,
+        "fom_om_as_ratio": 1.0936481760544376
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1176691336337046,
+        "fom_om_as_ratio": 1.0674356715258977
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0716555448402312,
+        "fom_om_as_ratio": 1.0659383391157484
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0613975174425512,
+        "fom_om_as_ratio": 1.0556052467765502
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1168728078766252,
+        "fom_om_as_ratio": 1.0389525940014674
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.090833760134107,
+        "fom_om_as_ratio": 1.053833058963572
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2366758604691768,
+        "fom_om_as_ratio": 1.0925444650094112
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.121223443428048,
+        "fom_om_as_ratio": 1.0625143713015717
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.219512613164329,
+        "fom_om_as_ratio": 1.0891414734092324
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0940836323238208,
+        "fom_om_as_ratio": 1.0566250210290171
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0263024396648572,
+        "fom_om_as_ratio": 1.0122971283416875
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0179712360273143,
+        "fom_om_as_ratio": 1.017547588863432
+       }
+      }
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.4785275810293594,
+        "fom_om_as_ratio": 1.3722587766095178
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.366331459349932,
+        "fom_om_as_ratio": 1.378461853135359
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2376944132591599,
+        "fom_om_as_ratio": 1.2900821293782687
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1925063280065233,
+        "fom_om_as_ratio": 1.2576268183715074
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.46517271695107,
+        "fom_om_as_ratio": 1.3671191089132917
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3699642219141324,
+        "fom_om_as_ratio": 1.3797501016228833
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.2692001295558641,
+        "fom_om_as_ratio": 1.3202566888948841
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2110667581158765,
+        "fom_om_as_ratio": 1.27200036043185
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3490738660394606,
+        "fom_om_as_ratio": 1.28793784864961
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2986481026013732,
+        "fom_om_as_ratio": 1.3228116867463635
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.460216610313665,
+        "fom_om_as_ratio": 1.340388115339942
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.365595299515638,
+        "fom_om_as_ratio": 1.3561917296590984
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.4004575546621436,
+        "fom_om_as_ratio": 1.3021548702830072
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3041807100355105,
+        "fom_om_as_ratio": 1.290192943607788
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0778916762206845,
+        "fom_om_as_ratio": 1.123088475179571
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.063748911948841,
+        "fom_om_as_ratio": 1.1215558255937879
+       }
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.4611213955493685,
+        "fom_om_as_ratio": 1.3200152284549285
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3233167888033908,
+        "fom_om_as_ratio": 1.3618010877873994
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.191352478449878,
+        "fom_om_as_ratio": 1.2003163502062668
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1729043671248638,
+        "fom_om_as_ratio": 1.2004416574084795
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.437528417122298,
+        "fom_om_as_ratio": 1.303426143941989
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3171679841283375,
+        "fom_om_as_ratio": 1.3581039206246168
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.207610804591366,
+        "fom_om_as_ratio": 1.2194832791546146
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.179789837609334,
+        "fom_om_as_ratio": 1.2068686554132453
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.225147465222271,
+        "fom_om_as_ratio": 1.1598952291223044
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2292366339860605,
+        "fom_om_as_ratio": 1.2743733165403879
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3806436945791891,
+        "fom_om_as_ratio": 1.2642413390719722
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3044138855959617,
+        "fom_om_as_ratio": 1.3414849131595743
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3911766291556154,
+        "fom_om_as_ratio": 1.2615829875743554
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2533620491653357,
+        "fom_om_as_ratio": 1.3011338563595949
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.045773504916248,
+        "fom_om_as_ratio": 1.0356547720279738
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0231508489311578,
+        "fom_om_as_ratio": 1.042722592549511
+       }
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.2677074949837726,
+        "fom_om_as_ratio": 1.1192779364430652
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1370473076194727,
+        "fom_om_as_ratio": 1.081484939998122
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0812569684500504,
+        "fom_om_as_ratio": 1.0753474609122207
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0671016110527112,
+        "fom_om_as_ratio": 1.0607606159910092
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.2592498083860513,
+        "fom_om_as_ratio": 1.1129671178940164
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1334386813577806,
+        "fom_om_as_ratio": 1.0783403808427652
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.087410620111857,
+        "fom_om_as_ratio": 1.0798379652860939
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0735918710390289,
+        "fom_om_as_ratio": 1.0646373425360927
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1321630472185493,
+        "fom_om_as_ratio": 1.0500910310363636
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1034547622940087,
+        "fom_om_as_ratio": 1.0621602127511618
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2610049071684328,
+        "fom_om_as_ratio": 1.110566033677584
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1361111514197704,
+        "fom_om_as_ratio": 1.0721815938970147
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2442389749056972,
+        "fom_om_as_ratio": 1.1073339942917988
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1066242780496358,
+        "fom_om_as_ratio": 1.0646724535843988
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0315013437810325,
+        "fom_om_as_ratio": 1.0139333850900292
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0215122065088025,
+        "fom_om_as_ratio": 1.0195215806036868
+       }
+      }
+     }
+    },
+    {
+     "g": 3,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.5457131811393947,
+        "fom_om_as_ratio": 1.4262506613959909
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.4143625455351287,
+        "fom_om_as_ratio": 1.4187278763913822
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2560329288388452,
+        "fom_om_as_ratio": 1.3123373541759882
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2053501687713108,
+        "fom_om_as_ratio": 1.2715205849648172
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.530468628246938,
+        "fom_om_as_ratio": 1.4198716168955736
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.4177645613344612,
+        "fom_om_as_ratio": 1.4196204551146188
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.2920850503853785,
+        "fom_om_as_ratio": 1.3466108332683324
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2270015563630488,
+        "fom_om_as_ratio": 1.2885158063805302
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3990714505228714,
+        "fom_om_as_ratio": 1.328352496402628
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3371356868214794,
+        "fom_om_as_ratio": 1.3545810182129863
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.525367197571076,
+        "fom_om_as_ratio": 1.391764588511744
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.413708871407407,
+        "fom_om_as_ratio": 1.395378902951003
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.4583245555803077,
+        "fom_om_as_ratio": 1.3480635003722263
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3474409765933775,
+        "fom_om_as_ratio": 1.3253251350981552
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.084291786196379,
+        "fom_om_as_ratio": 1.1315188350832583
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0675501065914919,
+        "fom_om_as_ratio": 1.126327857196189
+       }
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.5098740958261707,
+        "fom_om_as_ratio": 1.3570437803389606
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3517616972263957,
+        "fom_om_as_ratio": 1.3868063619571107
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2012677089192343,
+        "fom_om_as_ratio": 1.2123372368453218
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.180358905609427,
+        "fom_om_as_ratio": 1.2085196347452731
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.4844632756944125,
+        "fom_om_as_ratio": 1.3392208745087957
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.345177038314327,
+        "fom_om_as_ratio": 1.382816387982393
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.2193612070871789,
+        "fom_om_as_ratio": 1.2333988316820594
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1882625574744217,
+        "fom_om_as_ratio": 1.2158180336102504
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2499347618329224,
+        "fom_om_as_ratio": 1.178305216312013
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2484504169858397,
+        "fom_om_as_ratio": 1.2910413122517754
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.422122767325356,
+        "fom_om_as_ratio": 1.2957707303817325
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.330696328814171,
+        "fom_om_as_ratio": 1.364462535947385
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.4334039518295794,
+        "fom_om_as_ratio": 1.293294791072223
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.276324470450082,
+        "fom_om_as_ratio": 1.3217540928012423
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0474467992929073,
+        "fom_om_as_ratio": 1.0378054251796756
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0240817954343904,
+        "fom_om_as_ratio": 1.0440003286900001
+       }
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.2883754008998378,
+        "fom_om_as_ratio": 1.130566271395638
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.146132816940527,
+        "fom_om_as_ratio": 1.0861318919911103
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0849596294260695,
+        "fom_om_as_ratio": 1.0793282806008637
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0695852441404339,
+        "fom_om_as_ratio": 1.0629205254829726
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.2794511368613262,
+        "fom_om_as_ratio": 1.1239268844153982
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1423712993032904,
+        "fom_om_as_ratio": 1.0828584310597122
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0915534592426388,
+        "fom_om_as_ratio": 1.0841439500340477
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.076484628630518,
+        "fom_om_as_ratio": 1.0670650581192294
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1425598865795183,
+        "fom_om_as_ratio": 1.0551545349509068
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.110146212623876,
+        "fom_om_as_ratio": 1.06543856828162
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.281063575372149,
+        "fom_om_as_ratio": 1.1211594470581148
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.145111967767261,
+        "fom_om_as_ratio": 1.0764394892935931
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2636061771315539,
+        "fom_om_as_ratio": 1.1177145443239602
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.112682098890647,
+        "fom_om_as_ratio": 1.0674063582509956
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0323000020586646,
+        "fom_om_as_ratio": 1.0143682884043552
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.022082102609919,
+        "fom_om_as_ratio": 1.019913056268128
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "color": "#E69F00",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "cost_of_fitting_sigma_v": {
+       "all free": 2.2180468430417077,
+       "b1 per bin fixed": 1.8314171671831976,
+       "b1 residuals fixed (level, slope free)": 2.2034076722074567,
+       "b1 level and slope fixed (residuals free)": 1.9425593002895536,
+       "b2 bs2 fixed": 1.9620603149834128,
+       "a0 fixed": 2.223861637185714,
+       "shot noise fixed": 2.3752545184516674,
+       "all nuisance fixed": 2.454280631984668
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "cost_of_fitting_sigma_v": {
+       "all free": 2.719525289738139,
+       "b1 per bin fixed": 1.8694800789400248,
+       "b1 residuals fixed (level, slope free)": 2.6781019837335602,
+       "b1 level and slope fixed (residuals free)": 1.8527599171165872,
+       "b2 bs2 fixed": 1.8105736368222167,
+       "a0 fixed": 2.5018156487189827,
+       "shot noise fixed": 3.884032609511767,
+       "all nuisance fixed": 1.9480197445950498
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "cost_of_fitting_sigma_v": {
+       "all free": 1.7773457465365008,
+       "b1 per bin fixed": 1.3954629678864106,
+       "b1 residuals fixed (level, slope free)": 1.7718567869180655,
+       "b1 level and slope fixed (residuals free)": 1.3580089377129785,
+       "b2 bs2 fixed": 1.4009873164075026,
+       "a0 fixed": 1.7870798689701546,
+       "shot noise fixed": 2.301626182542859,
+       "all nuisance fixed": 1.4951091788736224
+      }
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.4950401118223813,
+        "fom_om_as_ratio": 1.5013946375678922
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2085406594217172,
+        "fom_om_as_ratio": 1.2906722757387425
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0900669840637556,
+        "fom_om_as_ratio": 1.1066079345244404
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0651264000468492,
+        "fom_om_as_ratio": 1.0965779734087266
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.4728214851055401,
+        "fom_om_as_ratio": 1.479320715895313
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.201168034974955,
+        "fom_om_as_ratio": 1.2815736727815432
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0970450500276168,
+        "fom_om_as_ratio": 1.1159492854660884
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0707618460653263,
+        "fom_om_as_ratio": 1.1023580060164377
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1909440421937578,
+        "fom_om_as_ratio": 1.2145557422857287
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.160006123365558,
+        "fom_om_as_ratio": 1.2335337572968368
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3752654859438196,
+        "fom_om_as_ratio": 1.3765600771187756
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1830711692889744,
+        "fom_om_as_ratio": 1.255577335981646
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3926073771073402,
+        "fom_om_as_ratio": 1.3785690243691242
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1492002612539416,
+        "fom_om_as_ratio": 1.1783576369302415
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0193320792307097,
+        "fom_om_as_ratio": 1.0211456628614706
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0107637258639568,
+        "fom_om_as_ratio": 1.0240186475874555
+       }
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.3504041741429276,
+        "fom_om_as_ratio": 1.2651320923716634
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.094083813770664,
+        "fom_om_as_ratio": 1.07371943645057
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0449467478609293,
+        "fom_om_as_ratio": 1.0492815403430438
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0417813556110789,
+        "fom_om_as_ratio": 1.038349223330657
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.3456264876806294,
+        "fom_om_as_ratio": 1.2601809341450247
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0914753084048663,
+        "fom_om_as_ratio": 1.0712291372433194
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.048763420000289,
+        "fom_om_as_ratio": 1.0519753772201146
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.046886495720753,
+        "fom_om_as_ratio": 1.0416159936433458
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1095776299155844,
+        "fom_om_as_ratio": 1.0767875139614327
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0662497229885752,
+        "fom_om_as_ratio": 1.0612663487380793
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3311269539182928,
+        "fom_om_as_ratio": 1.2360366976294312
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.090767578472862,
+        "fom_om_as_ratio": 1.0643508779999147
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3432748690496406,
+        "fom_om_as_ratio": 1.2395836646107665
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0694922833968445,
+        "fom_om_as_ratio": 1.0647079058696738
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0266457413984489,
+        "fom_om_as_ratio": 1.018739031755423
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.020281549865558,
+        "fom_om_as_ratio": 1.0251512645702139
+       }
+      }
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0473052176611892,
+        "fom_om_as_ratio": 1.12759084384763
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.056733901746145,
+        "fom_om_as_ratio": 1.1734043730047823
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0312421715037845,
+        "fom_om_as_ratio": 1.1019364906385445
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0267615625845372,
+        "fom_om_as_ratio": 1.1412580577762557
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0441294517996962,
+        "fom_om_as_ratio": 1.1254599185858358
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0566281810038118,
+        "fom_om_as_ratio": 1.1768207216559978
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0344518419210746,
+        "fom_om_as_ratio": 1.1000702566960823
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0285933374470666,
+        "fom_om_as_ratio": 1.1474088273745517
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0423662272114127,
+        "fom_om_as_ratio": 1.1353624257339665
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.051930284888299,
+        "fom_om_as_ratio": 1.1726128820589792
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0430798234561998,
+        "fom_om_as_ratio": 1.1288393944571045
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0544529353303658,
+        "fom_om_as_ratio": 1.1806743535399868
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.042622588073428,
+        "fom_om_as_ratio": 1.1150686924114823
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0524493544558235,
+        "fom_om_as_ratio": 1.1776569284730822
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0338398629460757,
+        "fom_om_as_ratio": 1.1216880783485361
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0160235519228988,
+        "fom_om_as_ratio": 1.0228966276848956
+       }
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.5783103033199326,
+        "fom_om_as_ratio": 1.5691126157306254
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.26832305662492,
+        "fom_om_as_ratio": 1.3413398422087328
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1459558216157522,
+        "fom_om_as_ratio": 1.1891009620151487
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0993300213242405,
+        "fom_om_as_ratio": 1.1454261127832577
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.5534186404246006,
+        "fom_om_as_ratio": 1.5447500939499348
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2610227595074521,
+        "fom_om_as_ratio": 1.3319131395284796
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.1514024880692626,
+        "fom_om_as_ratio": 1.1968712905097671
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.104783539555409,
+        "fom_om_as_ratio": 1.1469227157350013
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2295875381988965,
+        "fom_om_as_ratio": 1.2472205609184697
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2038312596411156,
+        "fom_om_as_ratio": 1.2718630407659148
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.4446091362226172,
+        "fom_om_as_ratio": 1.4345883248658822
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2370810183249468,
+        "fom_om_as_ratio": 1.3018988994169407
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.4589740926610397,
+        "fom_om_as_ratio": 1.432405875357606
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2110800068872047,
+        "fom_om_as_ratio": 1.213162562952198
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0347908893841307,
+        "fom_om_as_ratio": 1.0373101488245287
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0217295988129682,
+        "fom_om_as_ratio": 1.0401496659803116
+       }
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.4378186136103592,
+        "fom_om_as_ratio": 1.2949565984268379
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1574338608383998,
+        "fom_om_as_ratio": 1.1017289657390081
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0748732605958635,
+        "fom_om_as_ratio": 1.0796590802991575
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.067918999323244,
+        "fom_om_as_ratio": 1.0543135057490216
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.4313195142833202,
+        "fom_om_as_ratio": 1.288712413695491
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1537877217751116,
+        "fom_om_as_ratio": 1.0983063909923376
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0833940652869793,
+        "fom_om_as_ratio": 1.084342686887681
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0780465274968736,
+        "fom_om_as_ratio": 1.0604855548608232
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1598933421148256,
+        "fom_om_as_ratio": 1.0922008113020374
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1107901758634082,
+        "fom_om_as_ratio": 1.0785059879995058
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.4144357776130934,
+        "fom_om_as_ratio": 1.261318132089999
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1489039780887116,
+        "fom_om_as_ratio": 1.0865566998127785
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.4180903056527348,
+        "fom_om_as_ratio": 1.2671967856959145
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1185110713385145,
+        "fom_om_as_ratio": 1.081436605636626
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.043637540828241,
+        "fom_om_as_ratio": 1.0242920126820043
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0330340257870059,
+        "fom_om_as_ratio": 1.0342558734270904
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "color": "#CC79A7",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "cost_of_fitting_sigma_v": {
+       "all free": 1.0509104995192486,
+       "b1 per bin fixed": 1.1667987353063016,
+       "b1 residuals fixed (level, slope free)": 1.046185393633754,
+       "b1 level and slope fixed (residuals free)": 1.1121458101344337,
+       "b2 bs2 fixed": 1.035181662972709,
+       "a0 fixed": 1.0458077500955976,
+       "shot noise fixed": 1.0416795787512367,
+       "all nuisance fixed": 2.0196777031837265
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "cost_of_fitting_sigma_v": {
+       "all free": 1.0437958066478992,
+       "b1 per bin fixed": 1.1551644555897531,
+       "b1 residuals fixed (level, slope free)": 1.0393464178981557,
+       "b1 level and slope fixed (residuals free)": 1.1142248483054826,
+       "b2 bs2 fixed": 1.045458363113542,
+       "a0 fixed": 1.0380734257623272,
+       "shot noise fixed": 1.0362547158492836,
+       "all nuisance fixed": 2.395813234934768
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0,
+        "fom_om_as_ratio": 1.0
+       }
+      },
+      "cost_of_fitting_sigma_v": {
+       "all free": 1.125494371968054,
+       "b1 per bin fixed": 1.1185625723281354,
+       "b1 residuals fixed (level, slope free)": 1.1255352655973618,
+       "b1 level and slope fixed (residuals free)": 1.1091093392855322,
+       "b2 bs2 fixed": 1.051001213854268,
+       "a0 fixed": 1.1142838368598242,
+       "shot noise fixed": 1.153594255657064,
+       "all nuisance fixed": 1.8051518034486567
+      }
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.407034641344025,
+        "fom_om_as_ratio": 1.3218481373695017
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.4082550396873892,
+        "fom_om_as_ratio": 1.3165945693731858
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0578720156653203,
+        "fom_om_as_ratio": 1.0668073175904207
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0457667170011946,
+        "fom_om_as_ratio": 1.053802048820037
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.372000509279238,
+        "fom_om_as_ratio": 1.2939626612080184
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3737451065846435,
+        "fom_om_as_ratio": 1.289446657751771
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.057852685607199,
+        "fom_om_as_ratio": 1.0671206322399727
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0480388983242102,
+        "fom_om_as_ratio": 1.0561906879627856
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2293944790069238,
+        "fom_om_as_ratio": 1.1652097625474607
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2330688060189925,
+        "fom_om_as_ratio": 1.1632329610250551
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3148603766026579,
+        "fom_om_as_ratio": 1.254882107714799
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3198035978792315,
+        "fom_om_as_ratio": 1.253279073728088
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3852665930037102,
+        "fom_om_as_ratio": 1.3004165080934407
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3885665174550947,
+        "fom_om_as_ratio": 1.2973878941215837
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0191623627332296,
+        "fom_om_as_ratio": 1.0237352729689524
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.014131310148232,
+        "fom_om_as_ratio": 1.0161256597808328
+       }
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.1449463794829853,
+        "fom_om_as_ratio": 1.1154899837468117
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1438524701345465,
+        "fom_om_as_ratio": 1.1081261272939633
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0344538879344964,
+        "fom_om_as_ratio": 1.0391702266972496
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0330305004325893,
+        "fom_om_as_ratio": 1.0368926413660902
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.1381933676992284,
+        "fom_om_as_ratio": 1.1096132733109603
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1378683567318941,
+        "fom_om_as_ratio": 1.1030226822758389
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0342711155606752,
+        "fom_om_as_ratio": 1.0393356645290581
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0333930750316547,
+        "fom_om_as_ratio": 1.0374420747756792
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0765298031191026,
+        "fom_om_as_ratio": 1.0553418413799707
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0748891149501494,
+        "fom_om_as_ratio": 1.049810107570353
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1109762814021609,
+        "fom_om_as_ratio": 1.0861299261155504
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1138019108427695,
+        "fom_om_as_ratio": 1.0829178052193178
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.142965590439356,
+        "fom_om_as_ratio": 1.1136698522150217
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1421486445885833,
+        "fom_om_as_ratio": 1.1064423177609104
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0064732828622882,
+        "fom_om_as_ratio": 1.0088302581933182
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0041190222724483,
+        "fom_om_as_ratio": 1.0050765055132937
+       }
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0477213084646697,
+        "fom_om_as_ratio": 1.0370593415418978
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0329088047810961,
+        "fom_om_as_ratio": 1.020738220291689
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0133400560435069,
+        "fom_om_as_ratio": 1.016908516412434
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0121196515770308,
+        "fom_om_as_ratio": 1.014339366424234
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0469083216462058,
+        "fom_om_as_ratio": 1.0363637050719632
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0323647087391228,
+        "fom_om_as_ratio": 1.0202368248404514
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0135900377026787,
+        "fom_om_as_ratio": 1.0173467756915358
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.012515415545116,
+        "fom_om_as_ratio": 1.014761120782572
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0263608547327632,
+        "fom_om_as_ratio": 1.0194835040641181
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0238417758342084,
+        "fom_om_as_ratio": 1.0144263340509456
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0449001952022068,
+        "fom_om_as_ratio": 1.0347628419865509
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0322943221527177,
+        "fom_om_as_ratio": 1.019962438428712
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.04687259028404,
+        "fom_om_as_ratio": 1.0357873908066746
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0303127993159817,
+        "fom_om_as_ratio": 1.018378316349327
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0026259054752205,
+        "fom_om_as_ratio": 1.001974773767767
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0020369330508891,
+        "fom_om_as_ratio": 1.001560604966785
+       }
+      }
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.5562915408273696,
+        "fom_om_as_ratio": 1.4191891798025882
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.5556935197423578,
+        "fom_om_as_ratio": 1.4132413989707726
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0687420076958352,
+        "fom_om_as_ratio": 1.0791298447330298
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.055576566788807,
+        "fom_om_as_ratio": 1.0649510540848686
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.5102874126719918,
+        "fom_om_as_ratio": 1.3841317281452241
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.510598751354798,
+        "fom_om_as_ratio": 1.379204103151297
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0713957034704125,
+        "fom_om_as_ratio": 1.0812824316315177
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0610259462586247,
+        "fom_om_as_ratio": 1.0697109060205792
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.318684388764498,
+        "fom_om_as_ratio": 1.2164242365649187
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.3217635139986248,
+        "fom_om_as_ratio": 1.214759593956968
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.4356348529676812,
+        "fom_om_as_ratio": 1.3346978279718895
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.4401086706675064,
+        "fom_om_as_ratio": 1.3334208659230542
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.5291458671766676,
+        "fom_om_as_ratio": 1.3932060167782487
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.531677619509906,
+        "fom_om_as_ratio": 1.3905708232924308
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0230173487459304,
+        "fom_om_as_ratio": 1.0290678047638577
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0169542346511804,
+        "fom_om_as_ratio": 1.01998247122088
+       }
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.210589403322347,
+        "fom_om_as_ratio": 1.1622175538241202
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2090590567598267,
+        "fom_om_as_ratio": 1.1539738982491772
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0403595034940507,
+        "fom_om_as_ratio": 1.0462948804874561
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0391550048514588,
+        "fom_om_as_ratio": 1.0441090592547975
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.200525623473503,
+        "fom_om_as_ratio": 1.153692659140082
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1998711980848493,
+        "fom_om_as_ratio": 1.1463369874495757
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0409490995011468,
+        "fom_om_as_ratio": 1.046920759627012
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0402701956258855,
+        "fom_om_as_ratio": 1.0452134664788995
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1119504944644507,
+        "fom_om_as_ratio": 1.0763291658850251
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1082405432532898,
+        "fom_om_as_ratio": 1.069268580718119
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1615670761307428,
+        "fom_om_as_ratio": 1.1199372515407213
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.164202897273403,
+        "fom_om_as_ratio": 1.1162885750426994
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.20803901230053,
+        "fom_om_as_ratio": 1.160049518912843
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2069808763783025,
+        "fom_om_as_ratio": 1.1521547616915346
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0075039863307698,
+        "fom_om_as_ratio": 1.010618119520499
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0046866094704567,
+        "fom_om_as_ratio": 1.0062128914910542
+       }
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0661451299846305,
+        "fom_om_as_ratio": 1.050547331475776
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0459621292260053,
+        "fom_om_as_ratio": 1.0288622778257022
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0157810286758502,
+        "fom_om_as_ratio": 1.0205414231873031
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0144062660260196,
+        "fom_om_as_ratio": 1.0175050076146823
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.064914622222642,
+        "fom_om_as_ratio": 1.0495306642694096
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0450932728717512,
+        "fom_om_as_ratio": 1.0281065411429087
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0163372685792806,
+        "fom_om_as_ratio": 1.0212093113207807
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0150942291520635,
+        "fom_om_as_ratio": 1.0181644702313764
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.03630127734806,
+        "fom_om_as_ratio": 1.0261206803578742
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0326111069057207,
+        "fom_om_as_ratio": 1.0194535823275115
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0622129128333022,
+        "fom_om_as_ratio": 1.0473370830753346
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0449087681455134,
+        "fom_om_as_ratio": 1.0276679428964983
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.064721723721891,
+        "fom_om_as_ratio": 1.0488147483476464
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0422653134744881,
+        "fom_om_as_ratio": 1.025550025400141
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.002751270401641,
+        "fom_om_as_ratio": 1.0023302015399043
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0021494363306989,
+        "fom_om_as_ratio": 1.0018606338767762
+       }
+      }
+     }
+    },
+    {
+     "g": 3,
+     "0.075": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.591350097009443,
+        "fom_om_as_ratio": 1.444069117692399
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.5908131587053143,
+        "fom_om_as_ratio": 1.4379557543504051
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0718506326840738,
+        "fom_om_as_ratio": 1.0828971903932918
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0583335617937788,
+        "fom_om_as_ratio": 1.0683214578196136
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.543109893863049,
+        "fom_om_as_ratio": 1.4075044815951328
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.5435131403420668,
+        "fom_om_as_ratio": 1.4024429208281377
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0750217713094943,
+        "fom_om_as_ratio": 1.0853836564380521
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0644710399964386,
+        "fom_om_as_ratio": 1.0736098904349787
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.3394360409249026,
+        "fom_om_as_ratio": 1.2299574260791195
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.342800338347444,
+        "fom_om_as_ratio": 1.2284009341534194
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.4638099044063921,
+        "fom_om_as_ratio": 1.3551982559612479
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.4686121094249094,
+        "fom_om_as_ratio": 1.3540009649862215
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.5630053940169721,
+        "fom_om_as_ratio": 1.4169933655229738
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.5658271106764743,
+        "fom_om_as_ratio": 1.41441570139565
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0241369435244465,
+        "fom_om_as_ratio": 1.0307425559873935
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0177786019066852,
+        "fom_om_as_ratio": 1.0211965846721942
+       }
+      }
+     },
+     "0.1": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.2267556162836826,
+        "fom_om_as_ratio": 1.1746078226043506
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.225333605336295,
+        "fom_om_as_ratio": 1.1659649261387617
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0422460876273365,
+        "fom_om_as_ratio": 1.0486859178966215
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0410985001722812,
+        "fom_om_as_ratio": 1.0465005970691097
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.2159899011740025,
+        "fom_om_as_ratio": 1.1655155754330433
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2154796087278033,
+        "fom_om_as_ratio": 1.1577968681130946
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0429501495955371,
+        "fom_om_as_ratio": 1.0493696171913809
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0423534307420268,
+        "fom_om_as_ratio": 1.047711182883498
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1203373478273815,
+        "fom_om_as_ratio": 1.0819702462624652
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1164391202345145,
+        "fom_om_as_ratio": 1.0745142400560255
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.1737913714424044,
+        "fom_om_as_ratio": 1.1289231214518385
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.1767148996454289,
+        "fom_om_as_ratio": 1.1251193876536083
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.2240648545463015,
+        "fom_om_as_ratio": 1.1723351553102195
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.2231659462875488,
+        "fom_om_as_ratio": 1.1640833931508379
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0077688359772372,
+        "fom_om_as_ratio": 1.0112204952968478
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0048418005858457,
+        "fom_om_as_ratio": 1.0066002290812903
+       }
+      }
+     },
+     "0.2": {
+      "all free": {
+       "sigma_v free": {
+        "fom_ratio": 1.0706659895771662,
+        "fom_om_as_ratio": 1.054556596303258
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0489092394953479,
+        "fom_om_as_ratio": 1.0310482727803127
+       }
+      },
+      "b1 per bin fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0165229352584841,
+        "fom_om_as_ratio": 1.0217477626975102
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0150640762059957,
+        "fom_om_as_ratio": 1.0185084641695397
+       }
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.0693793578976487,
+        "fom_om_as_ratio": 1.0534875690911363
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0479986311296141,
+        "fom_om_as_ratio": 1.0302497467481369
+       }
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "sigma_v free": {
+        "fom_ratio": 1.01710652380539,
+        "fom_om_as_ratio": 1.0224457155981148
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0157969868102326,
+        "fom_om_as_ratio": 1.0192134290620258
+       }
+      },
+      "b2 bs2 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.038533096800673,
+        "fom_om_as_ratio": 1.0281104862959713
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0345462453079062,
+        "fom_om_as_ratio": 1.0208400987265147
+       }
+      },
+      "a0 fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0663986479199703,
+        "fom_om_as_ratio": 1.0510477132031806
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.047730551257542,
+        "fom_om_as_ratio": 1.0297234573219582
+       }
+      },
+      "shot noise fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0691527706449229,
+        "fom_om_as_ratio": 1.052699666884051
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0449183965115154,
+        "fom_om_as_ratio": 1.0274325664340282
+       }
+      },
+      "all nuisance fixed": {
+       "sigma_v free": {
+        "fom_ratio": 1.0027748979387419,
+        "fom_om_as_ratio": 1.0024561678083337
+       },
+       "sigma_v fixed": {
+        "fom_ratio": 1.0021721373626906,
+        "fom_om_as_ratio": 1.0019598109570074
+       }
+      }
+     }
+    }
+   ]
+  }
+ ]
+}
