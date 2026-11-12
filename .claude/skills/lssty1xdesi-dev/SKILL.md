@@ -1,6 +1,6 @@
 ---
 name: lssty1xdesi-dev
-description: Development on the lssty1xdesi project - DESI thin-bin spectroscopic angular clustering C_ell^gg (non-Limber band powers) on four bin layouts (Delta d_com = 62 Mpc, 76 bins of equal comoving width; fixed-width Delta z = 0.02, 0.05, 0.2), with LSST Y1 cosmic shear and an LSST Y1 3x2pt reference case. Use this skill for ANY work in projects/lssty1xdesi - the likelihood desi_cl (linear bias, and the one-loop option whose parameter files are models A and B), the Fingers-of-God model and sigma_v, the n(z) files, the low-rank non-Limber engine, the gg-cross block, the covariance adapter, the test suite, the data scripts, the Fisher module and the Fisher notebooks (EXAMPLE_EVALUATE_FISHER.ipynb, _LINEAR_KMAX, _MODEL) with their builders and caches, the MPI script of the derivative base, and the four galaxy-bias notes under notes/ (correlated_bias_prior_v2, linear_bias_kmax, higher_order_bias, bias_model_summary) with their plots/ folders. Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, DESI_DB2/DBS/A0/A2/SN0/SN2, gg cross pairs, the dndz FoG convolution, the correlated bias prior and its priors (growth-tied, baseline, pessimistic, free), the memory model, the statistic sqrt(<chi^2>/n_dof), higher-order bias models A and B, alpha_2, SN_2, where models A and B break, model A + tilts, the UV-fraction scale cut, the one-loop covariance, or the amplitude cut. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
+description: Development on the lssty1xdesi project - DESI thin-bin spectroscopic angular clustering C_ell^gg (non-Limber band powers) on four bin layouts (Delta d_com = 62 Mpc, 76 bins of equal comoving width; fixed-width Delta z = 0.02, 0.05, 0.2), with LSST Y1 cosmic shear and an LSST Y1 3x2pt reference case. Use this skill for ANY work in projects/lssty1xdesi - the likelihood desi_cl (linear bias, and the one-loop option of the fiducial model), the Fingers-of-God model and sigma_v, the n(z) files, the low-rank non-Limber engine, the gg-cross block, the covariance adapter, the test suite, the data scripts, the Fisher module and the Fisher notebooks (EXAMPLE_EVALUATE_FISHER.ipynb, _LINEAR_KMAX, _MODEL) with their builders and caches, the MPI script of the derivative base, the pair-axes script, and the galaxy-bias notes under notes/ (correlated_bias_prior_v2, linear_bias_kmax, higher_order_bias, bias_model_summary) with their plots/ folders. Also trigger on mentions of DESI thin bins, nonlimber_accuracyboost, NL_Nchi, DESI_SIGV, DESI_DB2/DBS/A0/A2/SN0/SN2, gg cross pairs, the dndz FoG convolution, the correlated bias prior and its priors (growth-tied, baseline, pessimistic, free), the memory model, the statistic sqrt(<chi^2>/n_dof), the fiducial one-loop model and its reference variant with alpha_2 free, SN_2, the UV-fraction scale cut, the one-loop covariance, or the amplitude cut. This survey is the numerical extreme of the cosmolike projects, and defaults that are safe elsewhere fail here.
 ---
 
 # lssty1xdesi: the thin-bin extreme
@@ -21,10 +21,10 @@ LSST Y1 3x2pt case complete the examples:
 
 | example | layout | covariance case |
 |---|---|---|
-| EXAMPLE_EVALUATE1 (MODEL_A1, MODEL_B1) | Delta d_com = 62 Mpc | `dr3` |
-| EXAMPLE_EVALUATE2 (A2, B2) | Delta z = 0.02 | `dr1_dz0p02` |
-| EXAMPLE_EVALUATE3 (A3, B3) | Delta z = 0.05 | `dr1_dz0p05` |
-| EXAMPLE_EVALUATE4 (A4, B4) | Delta z = 0.2 | `dr1_dz0p20` |
+| EXAMPLE_EVALUATE1 | Delta d_com = 62 Mpc | `dr3` |
+| EXAMPLE_EVALUATE2 | Delta z = 0.02 | `dr1_dz0p02` |
+| EXAMPLE_EVALUATE3 | Delta z = 0.05 | `dr1_dz0p05` |
+| EXAMPLE_EVALUATE4 | Delta z = 0.2 | `dr1_dz0p20` |
 | EXAMPLE_EVALUATE5 | LSST Y1 3x2pt alone | `lsst_y1_3x2pt` |
 
 File stems and case names keep `dr3` and `dr1`; reader-facing text
@@ -178,17 +178,28 @@ b D constant; that is why the tilt is free. The derivations are in
 `notes/correlated_bias_prior_v2` (appendices on the models and the
 memory model).
 
-### One likelihood option; models A and B as parameter files
+### One likelihood option; the model naming
 
 `likelihood/desi_cl.py` option `higher_order_bias`: 0 is linear bias;
-1 is the one-loop model with every term per bin. Models A and B are
-parameter files of option 1 (`scripts/make_desi_params.py --model-a`
-or `--model-b`), each in two variants: **model A** (one value per group
-for every higher-order family) and **model A + tilts**, in which
-Delta_2, Delta_s and alpha_0 (and alpha_2 in model B + tilts) also get
-a free straight line in redshift per group, like the linear bias's
-s_g, with flat priors on the tilts; likewise model B and model B +
-tilts. Either model runs under any of the four linear-bias priors.
+1 is the one-loop model with every term per bin. **The fiducial
+model**, the model the paper forecasts, is a parameter file of
+option 1 (`scripts/make_desi_params.py --model-b`, a flag that keeps
+its historical name): per-group offsets Delta_2, Delta_s and alpha_0
+at the DESI DR1 widths, each with a free straight line in redshift per
+group (the tilts, like the linear bias's s_g, flat priors), the
+stochastic amplitudes SN0 and SN2 without tilts, alpha_2 fixed to 0 in
+every bin, and every sigma_v prior width multiplied by 6. **The
+reference model** of the companion notes is the fiducial model with
+alpha_2 free (width 0.5/k_max^2 per cut) at the exploration sigma_v
+widths; the k_max scans also fit it without its tilts. The historical
+names stay in the code and say what they mean once: data keys 'B' (the
+reference model without tilts), 'B tilts' (the reference model) and
+'B tilts noA2 sv x6' (the fiducial model); likelihood classes
+`desi_cl*_model_b`; parameter files `*_model_b_tilts.yaml`. "Model A"
+(a tighter one-loop variant for k_max = 0.075) and "model B" were the
+development names; model A is retired, and its examples, classes and
+parameter files are deleted from the repository. Either model runs
+under any of the four linear-bias priors.
 
 The real-space power of bin i is b_{1,i}^2 P_nl + P_loop(b_{1,i},
 b_{2,i}, b_{s^2,i}) + alpha_{0,i} k^2 P_nl, with
@@ -197,17 +208,18 @@ b_{s^2,i} = -(4/7)(b_{1,i} - 1) + Delta_{s,g} (co-evolution), b3 = 0.
 Redshift space is linear Kaiser on each bin's FoG-convolved n(z), plus
 the counterterm alpha_2 and the stochastic terms:
 
-| per group | model A | model B |
+| per group | the fiducial model | the reference model |
 |---|---|---|
-| offsets Delta_2 / Delta_s | width 1.0 / 0.5 | width 2.0 / 1.0 |
-| alpha_0 [h^-2 Mpc^2] | 0.5/k_max^2 = 88.9 at k_max = 0.075 | 0.5/k_max^2 (16.1 in the yamls, the shipped mask's 0.176 h/Mpc; per cut in the Fisher scan) |
+| offsets Delta_2 / Delta_s | width 2.0 / 1.0 | the same |
+| alpha_0 [h^-2 Mpc^2] | 0.5/k_max^2 (16.1 in the yamls, the shipped mask's 0.176 h/Mpc; per cut in the Fisher scan) | the same |
 | alpha_2 [h^-2 Mpc^2] | fixed to 0 | 0.5/k_max^2 |
 | SN0 [P_Pois,i = 1/nbar_i] | width 2 | width 2 |
 | SN2 [f_sat sigma_sat^2 P_Pois,i] | width 5 | width 5 |
-| tilted in the + tilts variant | Delta_2, Delta_s, alpha_0 | Delta_2, Delta_s, alpha_0, alpha_2 |
-| parameters, without / with tilts | 5 / 8 (30 / 48 in all) | 6 / 10 (36 / 60) |
+| sigma_v prior widths | the measured widths x6 | the measured widths |
+| tilted | Delta_2, Delta_s, alpha_0 | Delta_2, Delta_s, alpha_0, alpha_2 (none in 'B') |
+| parameters | 8 (48 in all) | 10 (60); without tilts 6 (36) |
 
-All Gaussian priors are centered on zero, so both fiducials sit on the
+All Gaussian priors are centered on zero, so the fiducials sit on the
 calibrations and coincide. SN0 and SN2 never tilt: their Poisson part
 is known bin by bin.
 
@@ -217,7 +229,7 @@ Conventions that matter:
   H0/c, so bK = alpha_0/[2 b1 (c/H0)^2], c/H0 = 2997.92 Mpc/h. It
   multiplies P_nl, not DESI's (b1 + f mu^2) b1 P_lin. Its width is a
   correction of 0.5/B_g^2 of the linear galaxy power at each bin's own
-  cut (BGS 28%, LRG 17%, ELG 71% at model A's cut).
+  cut (BGS 28%, LRG 17%, ELG 71% at k_max = 0.075).
 - **alpha_2** follows the DESI DR1 field convention (Maus et al.,
   arXiv:2404.07312): P_CT = (b1 + f mu^2) f alpha_2 mu^2 k^2 P_lin, mu
   the cosine to the line of sight, f the linear growth rate. alpha_2 k^2
@@ -281,7 +293,8 @@ Every term projects without the Limber approximation where it matters
 Gaussian, built at 14,000 deg^2 (the forecasts rescale its inverse to
 12,300 deg^2) on the one-loop fiducial: b_{1,i} = B_g/D(zbar_i) with D
 computed as the likelihood does, b2 and bs2 on the calibrations, every
-other term zero. One covariance therefore serves models A and B. The
+other term zero. One covariance therefore serves every one-loop
+variant. The
 one-loop terms come from cosmolike's own C-FASTPT tables, through the
 data vector's bilinear pair formula, in Limber; the low-ell non-Limber
 recompute is linear (an error of at most 1.3% of C_ell in the lowest
@@ -290,8 +303,8 @@ bands of thin bins). `covariance/default.yaml` runs
 cross spectra to 2% and the diagonal to 0.4%. The covariance takes
 massless neutrinos, so its signal sits 3% above the data vector
 (m_nu = 0.06 eV) at every redshift; that flat 1.03 ratio is the standing
-check of its bias. Against a linear-bias covariance the model A FoMs at
-k_max = 0.075 move by -0.4% to +1.2%; on the shipped mask, where the
+check of its bias. Against a linear-bias covariance the one-loop FoMs
+at k_max = 0.075 move by -0.4% to +1.2%; on the shipped mask, where the
 loops are larger, the linear-bias FoMs rise by 3-10%. The LSST Y1
 3x2pt case stays linear on its own lens sample. Every case ships the
 Gaussian term only (G + SSC is the plan for chains). Building the files
@@ -323,7 +336,7 @@ bias shifts under further refinement of the stencil step, the
 non-Limber chi grid, cosmolike's accuracy boosts and CAMB's settings.
 Runtime is not a criterion: a final recompute may take many hours.
 Noisy derivative columns add spurious information and bias the FoM high.
-At the MCMC settings the paper model's FoM(w0, wa) on Delta z = 0.05
+At the MCMC settings the fiducial model's FoM(w0, wa) on Delta z = 0.05
 moved by 57% at k_max = 0.075 and 10% at 0.2, although the fiducial
 vector moved by only Delta chi2 = 0.015. Each cache records its tier and
 settings in its fingerprint. DerivKit (Cocoa's `DERIVKIT_*` keys;
@@ -339,14 +352,14 @@ cut on the paper fiducial (EXAMPLE_EVALUATE<n>.yaml at its evaluate
 point, b2 and bs2 on their calibrations; run at the final derivative
 tier, the settings of the derivative base); the linear notebook's cut, on the
 linear-bias spectra, serves the linear-bias experiments. The two differ
-by at most 3% in FoM(w0, wa) on the main layouts
-(`notes/scale_cut_fiducial_dependence`).
+by a few percent in FoM(w0, wa) on the main layouts, up to about 6% at
+single points (`notes/scale_cut_fiducial_dependence`).
 
 | notebook | does | caches (working copies in `chains/`, gitignored; final tier archived in `fisher_caches/`) | writes |
 |---|---|---|---|
 | EXAMPLE_EVALUATE_FISHER.ipynb | linear-bias Fisher, engine Fisher biases, amplitude cut against the contours, the UV-fraction cuts, the linear-bias ladder and accuracy test | `linear_fisher_<layout>_final.npz`, `linear_probes_dz0p20_lsst_ab3_final.npz`, `linear_bin_bias_final.npz`, `linear_scale_cuts_final.npz`, `linear_fom_scale_cuts_final.npz`, `linear_alternatives_final.npz` | no figure folder |
-| EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb (builder) | linear-bias fits to model A truths against k_max; the accuracy test for Omega_m and A_s | `linear_kmax_truths_final.npz` | `notes/linear_bias_kmax/plots/` |
-| EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (builder) | the scale cuts on the paper fiducial and the derivative base on the paper yamls (explicit copy, read, compute, write and archive cells), model B and model B + tilts against k_max to 0.2 and where model B breaks, the paper model (model B + tilts without alpha_2, sigma_v widths x6) with its error-bar test, untied, growth-tied and pair-threshold comparisons, and the alpha_2 / sigma_v study | `model_scale_cuts_final.npz`, `model_derivatives_<layout>_final.npz`, `model_templates_<layout>_final.npz` | v2: fom_kmax_models, growth_tied_kmax; summary: summary_fom_kmax, summary_fom_untied, summary_prior_draws, summary_pair_threshold; fog_parameter_degeneracy_study: fog_templates, fog_degeneracy_kmax, fog_sigv_width, fog_pair_overlap; cross_correlations: pair_threshold |
+| EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb (builder) | linear-bias fits to the fiducial model's one-loop truths against k_max (truths built from the paper yamls EXAMPLE_EVALUATE<n>.yaml with the linear vector's own settings, which point each layout at its paper data set); the accuracy test for Omega_m and A_s | `linear_kmax_truths_final.npz` | `notes/linear_bias_kmax/plots/` |
+| EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (builder) | the scale cuts on the paper fiducial and the derivative base on the paper yamls (explicit copy, read, compute, write and archive cells), the reference model with and without tilts against k_max to 0.2 and where the variant without tilts breaks, the fiducial model with its error-bar test, untied, growth-tied and pair-threshold comparisons, and the alpha_2 / sigma_v study | `model_scale_cuts_final.npz`, `model_derivatives_<layout>_final.npz`, `model_templates_<layout>_final.npz` | v2: fom_kmax_models, growth_tied_kmax; summary: summary_fom_kmax, summary_fom_untied, summary_prior_draws, summary_pair_threshold; fog_parameter_degeneracy_study: fog_templates, fog_degeneracy_kmax, fog_sigv_width, fog_pair_overlap; cross_correlations: pair_threshold |
 
 A cache name says what it holds, the layout (`<layout>` = `dcom62`,
 `dz0p02`, `dz0p05`, `dz0p20`) and the tier. Caches are `.npz` files of
@@ -366,7 +379,20 @@ replaces a file without `overwrite=True`.
 `scripts/compute_fisher_base_mpi.py` (with
 `compute_fisher_base_mpi_classes.py`) writes the same derivative caches
 on MPI ranks; one rank and the notebook evaluate in one order, and 1 x 8,
-2 x 2 and 2 x 4 ranks x threads reproduce a serial run bit for bit. The
+2 x 2 and 2 x 4 ranks x threads reproduce a serial run bit for bit.
+`scripts/compute_pair_axes_fits.py` runs the pair-axes study of the
+cross-correlation note on the archived
+`model_{derivatives,templates,scale_cuts}_<layout>_pairmax_final`
+caches (the derivative base, templates and final-tier scale cuts on
+each layout's maximal pair list, `data/<stem>_pairmax_pairs.txt`) and
+writes `chains/pair_axes_fits_<layout>.json`, which the
+`make_pair_axes_*_data.py` generators of
+`notes/cross_correlations/plots/` read; its docstring holds the usage
+and the prerequisites (explicit `fm.load_fisher_from_cache` calls, the
+`data/<stem>_pairmax_cov` covariance built with `compute_covariance.py`
+on `EXAMPLE_EVALUATE_COVARIANCE<n>_PAIRMAX.yaml` then
+`make_desi_covariance.py --case <case>_pairmax`, and
+`covariance/forecast_camb.npz` for the 62 Mpc gap axis). The
 base caches of the former model A and model B notebooks
 (`..._MODEL_A_DERIVATIVES_<n>.pkl`, `..._MODEL_B_TEMPLATES_<n>.pkl`,
 `..._MODEL_A_SN2_<n>.pkl`) stay in `chains/`: they hold the same arrays
@@ -386,8 +412,9 @@ Y1 3x2pt alone, FoM(w0, wa) = 17.26 and FoM(Omega_m, 10^9 A_s) = 214.9
 (the lsst_y1 project's SRD Fisher forecast).
 
 - **Linear bias holds only at k_max = 0.05**, and for every prior and
-  truth only on 62 Mpc, keeping 1-6% of the FoM; at 0.075 every prior
-  fails on every layout (62 Mpc: Omega_m 1.50-1.79 sigma). Source:
+  truth only on 62 Mpc, keeping about 1% of the FoM; at 0.075 every
+  prior fails on every layout (62 Mpc: Omega_m 1.72-1.94 sigma for the
+  calibrated truth). Source:
   EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb, section 4;
   `notes/linear_bias_kmax/plots/fob_kmax/data.json`.
 - **Model A at k_max = 0.075** (a record: EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb
@@ -404,21 +431,24 @@ Y1 3x2pt alone, FoM(w0, wa) = 17.26 and FoM(Omega_m, 10^9 A_s) = 214.9
   pessimistic prior is honest under both (at most 1.08); free is exactly
   1. The calibration drift moves model A by 0.39-0.46 sigma on the wide
   layouts; model A + tilts absorbs it exactly.
-- **Where model B breaks** (paper-fiducial cuts). Four fixed truths,
-  each at one prior width: (a) alpha_2 at one model B width,
-  0.5/k_max^2, (b) SN2 = +-5, (c) the offsets at +-1 sigma of model B's
+- **Where the reference model without tilts breaks** (paper-fiducial
+  cuts). Four fixed truths,
+  each at one prior width: (a) alpha_2 at one reference-model width,
+  0.5/k_max^2, (b) SN2 = +-5, (c) the offsets at +-1 sigma of the
   widths, (d) the calibration drift (Delta_2 linear across each group,
-  changing by 1, Delta_s by 0.5, zero mean). (a)-(c) lie inside model
-  B's prior and are reported; (d) is tested: a model holds at a cut
+  changing by 1, Delta_s by 0.5, zero mean). (a)-(c) lie inside the
+  prior and are reported; (d) is tested: a model holds at a cut
   while every tested shift stays below sigma/3 there and at every
   smaller fitted cut.
-  - Baseline scenario (the baseline prior with model B): it breaks at
+  - Baseline scenario (the baseline prior with the variant without
+    tilts): it breaks at
     0.075 on 62 Mpc and Delta z = 0.02 (the drift moves (w0, wa) by
     0.82 and 0.86 sigma at 0.1) and at 0.05 on Delta z = 0.05 and 0.2
     (0.35 and 0.36 sigma at 0.075); from 0.1 on the largest tested shift
     is 0.53-2.79 sigma.
-  - Pessimistic scenario (the pessimistic prior with model B + tilts,
-    whose tilts absorb the drift exactly): passes every cut, a pass with
+  - Pessimistic scenario (the pessimistic prior with the reference
+    model, whose tilts absorb the drift exactly): passes every cut, a
+    pass with
     no information on its own; its in-prior shifts reach 0.98 sigma at
     0.075 on 62 Mpc and 1.10 at 0.1 on Delta z = 0.02 (alpha_2), and
     0.33-0.73 sigma from 0.125 on on the three thinner layouts.
@@ -426,14 +456,15 @@ Y1 3x2pt alone, FoM(w0, wa) = 17.26 and FoM(Omega_m, 10^9 A_s) = 214.9
   Source: EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, section 7;
   `fom_kmax_models/data.json` (`shift`, `worst`, `worst_in_prior`,
   `break`).
-- **Model B to k_max = 0.2**, FoM(w0, wa): model B + tilts on the
-  pessimistic prior 0.407 / 0.237 / 0.155 / 0.0426 at 0.075 and 7.53 /
-  8.42 / 2.45 / 0.300 at 0.2; model B on the baseline prior 8.46 / 9.91
-  / 2.77 / 0.478 at 0.2, below LSST Y1. FoM(Omega_m, 10^9 A_s) of model
-  B stays below 214.9 (at most 67.5). Source: EXAMPLE_EVALUATE_FISHER_MODEL.ipynb,
+- **The reference model to k_max = 0.2**, FoM(w0, wa): with its tilts on
+  the pessimistic prior 0.407 / 0.237 / 0.155 / 0.0426 at 0.075 and 7.53 /
+  8.42 / 2.45 / 0.300 at 0.2; without tilts on the baseline prior 8.46 /
+  9.91 / 2.77 / 0.478 at 0.2, below LSST Y1. Its FoM(Omega_m, 10^9 A_s)
+  stays below 214.9 (at most 67.5). Source: EXAMPLE_EVALUATE_FISHER_MODEL.ipynb,
   section 6; `fom_kmax_models/data.json`.
-- **The paper model** (model B + tilts without alpha_2, every sigma_v
-  prior width x6, pessimistic prior; the yamls EXAMPLE_EVALUATE1-4),
+- **The fiducial model** (alpha_2 fixed to 0 in every bin, every sigma_v
+  prior width x6, pessimistic prior; the yamls EXAMPLE_EVALUATE1-4;
+  data key 'B tilts noA2 sv x6'),
   FoM(w0, wa): 0.564 / 0.352 / 0.173 / 0.0447 at 0.075 and 6.70 / 7.95 /
   2.34 / 0.307 at 0.2; FoM(Omega_m, 10^9 A_s) 50.3 / 53.2 / 19.9 / 3.20
   at 0.2. eta <= 1.030 at every cut; alpha_2 = +-12.5 moves no score by
@@ -441,6 +472,18 @@ Y1 3x2pt alone, FoM(w0, wa) = 17.26 and FoM(Omega_m, 10^9 A_s) = 214.9
   0.85-1.04 times those on the linear-bias cuts (0.97-1.00 on 62 Mpc and
   Delta z = 0.02). Source: EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, section
   9; `notes/bias_model_summary/plots/summary_fom_kmax/data.json`.
+- **Pairs beyond the measured list** (the pair-axes study:
+  `notes/cross_correlations`, sections "What would pairs beyond the
+  list add?" and "Why the added pairs help: the free bias levels and
+  slopes"; summary in `notes/bias_model_summary`): on the three thinner
+  layouts the added pairs raise the fiducial model's FoM(w0, wa) by up
+  to 55-59%, on Delta z = 0.2 by at most 2%. Attribution fits trace the
+  gain to the free level and slope of each group's bias amplitude
+  beta_i = b_{1,i} D(zbar_i); with every nuisance parameter held fixed
+  the added pairs are worth only 2-8%. Source:
+  `scripts/compute_pair_axes_fits.py` ->
+  `chains/pair_axes_fits_<layout>.json`;
+  `notes/cross_correlations/plots/pair_axes_*/data.json`.
 - **Coverage**: one parameter with eta = s and its drift absorbed covers
   the truth in a fraction 2 Phi(1/s) - 1 of universes (s = 1.3 -> 56%,
   1.75 -> 43%, 2.5 -> 31%); exact to 0.1% for the baseline, pessimistic
@@ -464,39 +507,44 @@ These are settled; reopen one only with the PI.
   baseline draws (top) and the pessimistic draws (bottom). A prior or
   model that fails the test (growth-tied) gets no FoM in any figure. The
   test always scores Omega_m and A_s next to (w0, wa).
-- **Model A leaves the paper notebook and the v2 note** (2026-11-10): the
-  Fisher notebook EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (the former model B
-  notebook) carries model B and the paper model only, builds its
-  derivative base on the paper yamls and its scale cuts on the paper
-  fiducial; the model A notebook and its five v2 figure folders are
-  removed (record: commit 567751f). The exploration yamls of model A
-  stay.
-- **Model A at k_max = 0.075, model B scanned in k_max**, both one-loop.
-  b2 and bs2 inherit the full b_{1,i}, plus a group offset (model A,
-  model B) or an offset and a tilt (model A + tilts, model B + tilts).
-  Only b2, bs2, alpha_0 and alpha_2 tilt (they follow the host-halo
-  population); SN0 and SN2 never do. Free b2 and bs2 per bin (152
+- **Model A is retired.** The Fisher notebook
+  EXAMPLE_EVALUATE_FISHER_MODEL.ipynb carries the reference model and
+  the fiducial model only, builds its derivative base on the paper
+  yamls and its scale cuts on the paper fiducial. The model A notebook
+  and its five v2 figure folders are removed (record: commit 567751f),
+  and model A's exploration yamls, likelihood classes and parameter
+  files are deleted; `likelihood/exploration/` keeps only
+  `params_desi_dr3_forecast.yaml`.
+- **Only b2, bs2, alpha_0 and alpha_2 tilt** (they follow the host-halo
+  population); SN0 and SN2 never do. b2 and bs2 inherit the full
+  b_{1,i}, plus a group offset and a tilt. Free b2 and bs2 per bin (152
   parameters) is a bound, not a model.
-- **SN2 is in model A.** Without it, an SN2 truth at one prior width
+- **SN2 is in the model.** Without it, an SN2 truth at one prior width
   moved Omega_m by 1.3-1.7 sigma at 0.075 through the anticorrelated
-  adjacent cross spectra, and model A broke before its own cut on the
+  adjacent cross spectra, and the k_max = 0.075 variant of the
+  development (model A) broke before its own cut on the
   thin layouts; no white noise, per group or per bin, repairs that, and
   dropping the cross pairs keeps only 18-46% of the thin-layout FoM.
-  With SN2, model A holds to 0.075 at a cost of 4-8% of FoM(w0, wa)
+  With SN2, that variant held to 0.075 at a cost of 4-8% of FoM(w0, wa)
   (`references/fom_and_bias_review.md`, Sec. 6).
-- **Model A fixes alpha_2 = 0**: at DESI's width it changes the kept
-  autos by about 1%, and a fit without it holds to 0.075 against
-  alpha_2 = +-12.5.
-- **Calibration-informed offset priors** (Delta_2 width 1, Delta_s 0.5
-  for model A) instead of DESI DR1's agnostic N(0, 5^2) on b2 sigma8^2
-  and bs sigma8^2: at 0.075 the data barely measure b2, and for the
+- **The fiducial model fixes alpha_2 = 0 in every bin**: alpha_2 is
+  about 99% degenerate with the sampled sigma_v (the FoG degeneracy
+  note), every sigma_v prior width is multiplied by 6 in exchange, and
+  alpha_2 = +-12.5 h^-2 Mpc^2 moves no score by more than 0.327 sigma.
+- **Calibration-informed offset priors** (Delta_2 width 2, Delta_s 1)
+  instead of DESI DR1's agnostic N(0, 5^2) on b2 sigma8^2
+  and bs sigma8^2: at low cuts the data barely measure b2, and for the
   dense BGS a low b2 drives P_gg negative. Fiducials come from the
   calibrations, never from DESI chain values.
 - **No FoM rests on exact calibrations.** The linear-bias and
   exact-calibration FoMs at the same cut are diagnostics in the
   notebooks' printed tables and data.json, never on a figure.
-- **One likelihood option**, models A and B as parameter files; the
+- **One likelihood option**, the model variants as parameter files; the
   former `higher_order_bias: 2` is gone.
+- **The paper keeps the standard data vector.** The cross pairs are
+  those with blurred-kernel overlap O_ij >= 1e-6 at the fiducial
+  sigma_v (`scripts/make_desi_pairs.py`); the pair-axes study's longer
+  lists are a comparison, not an open choice.
 - **The FAST-PT reference comparison** runs through TATT + IA_code 1 +
   the fastpt theory block; no reset knob was added for it.
 - **The DESI bias boxes [0.8, 4] stay**; the N-models figures argue for
@@ -507,30 +555,30 @@ These are settled; reopen one only with the PI.
 
 - **One covariance on the one-loop fiducial**, with the one-loop Gaussian
   term computed in C (the clean option, chosen over rescaling the
-  linear signal by the model A to linear ratio). Models A and B share
-  the fiducial, so they share the covariance.
+  linear signal by the one-loop to linear ratio). Every one-loop
+  variant shares the fiducial, so one covariance serves them all.
 
 **Figures, scenarios and notes**
 
 - **k_max <= 0.2 h/Mpc** on every figure axis and in every quoted FoM,
   the PI's rule (0.2 h/Mpc is also the reach of DESI DR1's one-loop
-  full-shape fits). The model B scan stops there (`KMAX_MAX`); the
+  full-shape fits). The k_max scan stops there (`KMAX_MAX`); the
   scale-cut cache's larger cuts are not used.
 - **Two scenarios, and the headline is the PI's call.** The baseline
-  scenario is the baseline prior with model A and model B; the
-  pessimistic scenario is the pessimistic prior with model A + tilts and
-  model B + tilts. The paper figure `fom_kmax_models` is one 2x3 grid:
+  scenario is the baseline prior with the reference model without
+  tilts; the pessimistic scenario is the pessimistic prior with the
+  reference model. The paper figure `fom_kmax_models` is one 2x3 grid:
   a row per scenario, columns FoM(w0, wa), FoM(Omega_m, 10^9 A_s) and
-  the largest shift (model A drawn up to its break in the FoM columns).
+  the largest shift.
   Which scenario is the paper's headline is decided by the PI after
   seeing both side by side; until then both carry equal weight, and
   neither is labeled headline, conservative or defensible.
-- **Four notes, the summary last**: correlated_bias_prior_v2 (with
-  model B; no v3), linear_bias_kmax, higher_order_bias, and
+- **Four galaxy-bias notes, the summary last**: correlated_bias_prior_v2
+  (the forecast note; no v3), linear_bias_kmax, higher_order_bias, and
   bias_model_summary, rewritten after the other three as a presentable
   summary with their key figures (not compact). Every paper figure has
   a plot folder. In correlated_bias_prior_v2 the accuracy test precedes
-  "Model B and the reach of model A", and the mathematics appendix
+  "The fiducial model against k_max", and the mathematics appendix
   places the accuracy-test method after "How the prior enters the
   Fisher matrix"; in bias_model_summary the model and the prior precede
   the section "Projection, covariance and the Fisher forecast", which
@@ -557,12 +605,19 @@ comments, captions):
   example, the non-Limber UV-fraction scale cut, arXiv:2603.13031).
 - Names: the priors are growth-tied / baseline / pessimistic / free,
   never "rung" (code keeps `'tied'`, `'independent'`, `LADDER_RUNGS`,
-  `rung_columns`). The one-loop variants are "model A" and "model A +
-  tilts" (likewise model B), where "+ tilts" means Delta_2, Delta_s and
-  alpha_0 (and alpha_2 in model B) get a free straight line in redshift
-  per group, like the linear bias's s_g; the parameter files are
-  `params_desi[_<case>]_model_{a,b}.yaml` and `..._model_{a,b}_tilts.yaml`,
-  and the data keys `'A'`, `'A tilts'`, `'B'`, `'B tilts'`. "Baseline"
+  `rung_columns`). The paper's model is **the fiducial model**
+  (one-loop, alpha_2 = 0 in every bin, sigma_v prior widths x6, the
+  pessimistic linear-bias prior); **the fiducial model with alpha_2
+  free**, at the exploration sigma_v widths, is the reference model of
+  the companion notes, and **the fiducial model without tilts** is its
+  variant with no redshift tilts (the old model B). "Model A" and
+  "model B" are retired development names and appear only in records.
+  The code keeps the historical names, each stated once where used:
+  data keys `'B'`, `'B tilts'`, `'B tilts noA2 sv x6'`; likelihood
+  classes `desi_cl*_model_b`; parameter files `*_model_b_tilts.yaml`;
+  the `--model-b` flag of `make_desi_params.py`. The tilts are a free
+  straight line in redshift per group on Delta_2, Delta_s and alpha_0
+  (and alpha_2 when free), like the linear bias's s_g. "Baseline"
   and "pessimistic" name only linear-bias priors and the scenarios
   built on them, never a model variant. A sample group is a "group",
   never "chunk". The layouts are Delta d_com = 62 Mpc (never "DR3",
@@ -605,7 +660,7 @@ comments, captions):
   Caught by a counterfactual covariance built on the data vector; the
   flat 1.03 signal ratio is the check (`references/covariance.md`,
   Sec. 3).
-- **Stale cached Fisher matrices.** The linear caches store F built with
+- **Out-of-date cached Fisher matrices.** The linear caches store F built with
   the old covariance (rebuild check 0.76 for DESI); an earlier notebook
   differenced it, diag(F_cached - F_data), to get the priors, which
   produced a fake prior once the covariance changed. Priors come from
@@ -617,7 +672,8 @@ comments, captions):
   spurious 2 sigma shift. `stable_inverse` drops sub-1e-12 directions
   and prints their component on the scored parameters.
 - **The likelihood resets alpha_2 at every point** (zeros under linear
-  bias and model A), and every other nuisance likewise, so a value left
+  bias and under the fiducial model, whose alpha_2 is fixed), and every
+  other nuisance likewise, so a value left
   by another likelihood cannot survive, and a derivative step written
   into the compiled setter is overwritten. The notebooks wrap the
   setter, add the step, restore it, and check the vector returns
@@ -697,9 +753,9 @@ physics, the note is right and the skill is corrected.
 | the forecast on a page | correlated_bias_prior_v2: Summary |
 | the setup, the scale cut, the covariance | correlated_bias_prior_v2: The forecast |
 | the linear-bias prior; physical L and sigma_g | correlated_bias_prior_v2: The linear-bias prior; appendices The models, Which L and sigma_g are physical (subsection What the measurements say) |
-| model A; model B and where model A breaks | correlated_bias_prior_v2: Model A; Model B and the reach of model A |
+| the bias model in the forecast note; the fiducial model against the scale cut and where the variant without tilts breaks | correlated_bias_prior_v2: The bias model; The fiducial model against k_max |
 | random truths, the statistic, coverage; the calibration drift | correlated_bias_prior_v2: The accuracy test; appendix The accuracy test |
-| the FoM at 0.075 | correlated_bias_prior_v2: The figure of merit at k_max = 0.075 |
+| each note's fiducial point and parameter values | every note: Fiducial model and parameter values |
 | memory model; projection algebra | correlated_bias_prior_v2: The memory model; The projected precision for two bins; Many bins: the tridiagonal inverse; The memory projection, step by step |
 | b - 1 proportional to 1/D; the BGS flux limit | correlated_bias_prior_v2: The bias continuity equation, step by step; The BGS flux-limit bias model, step by step |
 | derivatives, Fisher construction, checks, the counterterm engine | correlated_bias_prior_v2: Implementation and the Fisher construction; Numerical checks; The counterterm requires the low-rank engine |
@@ -723,22 +779,22 @@ appendix carries the relevant ones):
 - **The scale cut was built on the linear model.** On Delta z = 0.05 at
   0.075 the alpha_0 template's UV fraction is a median 0.076 (max 0.14)
   on the kept bands, above alpha = 0.05 (0.017 and 0.052 for the full
-  model A vector), and about half of each bin's SN2 kernel comes from
+  one-loop vector), and about half of each bin's SN2 kernel comes from
   k_par above its own cut. Rebuilding the cut on the one-loop model is
   undecided.
 - **Positivity far from the fiducial.** Negative alpha_0 or b2 a unit
   below its calibration makes the low-rank engine floor P_gg - P_inf
   (alpha_0 = -88.9: above k ~ 0.14 h/Mpc, 47% of the grid; the vector
-  then curves in alpha_0), and on the dense BGS at model B's cuts
-  P_gg turns negative near 0.15-0.2 h/Mpc. Harmless for the Fisher
+  then curves in alpha_0), and on the dense BGS P_gg turns negative
+  near 0.15-0.2 h/Mpc, inside the scanned cuts. Harmless for the Fisher
   forecast at the fiducial; chains need a loop taper above the trusted
   scale (near 0.15 for BGS) or a positivity prior on P_gg. Neither is
   implemented; a tighter b2 prior or SN0 does not fix the sign.
 - **The C-FASTPT b3 template** (`tab_d1d3`) is cosmology-independent and
   wrong, so b3 = 0; `internal_accuracyboost: 4` breaks the bias tables.
   Both are core bugs.
-- **No redshift-space one-loop terms**: model B relies on the sampled
-  sigma_v and on alpha_2.
+- **No redshift-space one-loop terms**: the model relies on the sampled
+  sigma_v (and, in the reference model, on alpha_2).
 - **Adjacent cross spectra see the shared edge**: any small-scale radial
   physics at a common edge reaches the cross spectra the way SN2 does.
 - **N-random-models corners**: delta chi2 of order 10 and above at the
@@ -752,36 +808,19 @@ appendix carries the relevant ones):
 
 Open work:
 
-- **Finish and commit the scenario rework** (in the working tree,
-  uncommitted, as of 2026-11-08): the renamed variants (parameter files
-  `*_pessimistic.yaml` -> `*_tilts.yaml`, data keys `'A'` / `'A tilts'`),
-  the four-truth break test with its scan stopped at 0.2 (now in
-  EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, model B only), the 2x3 `fom_kmax_models` grid with
-  `model_a_break` removed, and the reruns of the four Fisher notebooks
-  on the current covariance. Then correlated_bias_prior_v2 (its Summary,
-  "Model B and the reach of model A", the figure captions) and the other
-  notes are brought to them: the committed text still names model A
-  baseline/pessimistic, draws two FoM figures and model_a_break, runs the
-  break test with three truths on model A alone, says model B
-  pessimistic holds at every cut and quotes FoMs at 0.25.
-- **Rewrite bias_model_summary** last, from the other three notes.
 - **EXAMPLE_EVALUATE_FISHER.ipynb's markdown** still quotes the
   linear-bias-covariance values (41.2 / 50.2 / 12.6 / 2.22 on the
   shipped mask; the rerun prints 43.4 / 51.8 / 13.2 / 2.43) and predates
   the naming rules ("independent" and "tied" for the free and
   growth-tied priors, a "defensible" k_max window).
-- **Stale text outside the skill** (through the docs subagent): the
-  project README's Fisher section still quotes the pre-fix FoMs
-  (135 / 126 / 32.0 / 5.67) and says the covariance fix "will be made";
-  its amplitude-cut contour ratios (1.33-2.11) predate the corrected
-  covariance (now 1.5-3.1). `likelihood/desi_cl.py`'s module docstring
+- **Out-of-date text** (through the docs subagent):
+  `likelihood/desi_cl.py`'s module docstring
   still says cross-bin spectra have no slot, cites "the paper's eq. 20",
   says "passive evolution", and points to the higher-order note's
-  removed recommendation section, as do `scripts/make_desi_params.py`
-  (model A and B blocks) and the code comments of the model A and model
-  B builders. `covariance/lssty1xdesi_covariance.py`'s docstring still
-  calls the 62 Mpc likelihood covariance the sacc import. The model A
-  notebook's export markdown names the old layout colors.
+  removed recommendation section, as does a comment of
+  `scripts/make_desi_params.py`.
+  `covariance/lssty1xdesi_covariance.py`'s docstring still
+  calls the 62 Mpc likelihood covariance the sacc import.
 - **The comparison with the sacc covariance** is re-measured after the
   per-bin bias and the one-loop term.
 - **Optional**: a nonlinear spot-check of the linear-response shifts (a

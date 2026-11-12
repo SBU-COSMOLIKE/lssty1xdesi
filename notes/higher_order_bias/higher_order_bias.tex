@@ -55,20 +55,25 @@ one-loop Eulerian bias expansion on a per-bin linear bias, with the
 quadratic and tidal biases tied to calibrated relations plus group
 offsets, a $k^2$ counterterm, the redshift-space counterterm $\alpha_2$
 in the DESI DR1 convention, and two stochastic terms, a white noise
-$\SNz$ and a line-of-sight term $\SNt k^2\mu^2$.  Models A and B are
-two parameter files of this option: model A, built for
-$\kmax = 0.075\hMpc$, fixes $\alpha_2 = 0$; model B frees it and
-doubles the offset widths; the paper model is model B + tilts with
-$\alpha_2 = 0$ in every bin and every $\sigma_v$ prior width multiplied
+$\SNz$ and a line-of-sight term $\SNt k^2\mu^2$.  The shipped
+parameter files carry the fiducial widths (``model B'').  A narrower
+exploration variant, built for $\kmax = 0.075\hMpc$ with
+$\alpha_2 = 0$ and half the offset widths (``model A''), is not
+shipped; it stays in this note as the record of what motivated the
+fiducial widths.  The paper's fiducial model is the fiducial widths
+with their tilts, $\alpha_2 = 0$ in every bin and every $\sigma_v$
+prior width multiplied
 by six.  Every term projects exactly: $\alpha_2$
 through the Kaiser transfers, $\SNt$ through the radial derivatives of
 the bin kernels.  That derivative structure anticorrelates the
 projected $\SNt$ of neighboring thin bins, a pattern no white noise
-reproduces; without $\SNt$, model A fails on the thin layouts at its
+reproduces; without $\SNt$, the exploration variant fails on the thin
+layouts at its
 own cut.  The draft paper's bias table holds the DESI DR1 sampling
 combinations of Lagrangian biases, not Eulerian biases, so the model
 takes its fiducials from the calibrations.  The loop terms change the
-galaxy power by up to $7\%$ at model A's per-bin cut and up to $15\%$
+galaxy power by up to $7\%$ at the exploration variant's per-bin cut
+and up to $15\%$
 at the shipped mask.
 \end{abstract}
 
@@ -96,14 +101,15 @@ vector (\texttt{notes/linear\_bias\_kmax}).  This note describes the
 one-loop model that replaces it: the fiducial parameter values behind
 the note (Section~\ref{sec:fiducial}), the physics the model rests on
 (Sections~\ref{sec:oneloop}--\ref{sec:verdict}), the size of each term
-(Section~\ref{sec:sizes}), the model, its two parameter files, models
-A and B, and the paper model (Section~\ref{sec:model}), the exact
+(Section~\ref{sec:sizes}), the model, its two width configurations
+and the paper model (Section~\ref{sec:model}), the exact
 projection of each term to thin-bin spectra
 (Section~\ref{sec:projection}), and the checks
 (Section~\ref{sec:validation}).  The forecasts made with it are in
 \texttt{notes/correlated\_bias\_prior\_v2}, the correlated-prior note:
-the linear-bias priors and their accuracy test, model B against
-$\kmax$, and where model B breaks.
+the linear-bias priors and their accuracy test, the fiducial model
+against
+$\kmax$, and where it breaks.
 
 \paragraph{Conventions.}
 $\ell$ is the multipole; $k$ is the comoving wavenumber, in $h$/Mpc
@@ -160,17 +166,19 @@ $B_g = 1.34$ (BGS), $1.70$ (LRG1--LRG3) and $0.84$ (ELG1, ELG2);
 $b_{2,i}$ sits on the Lazeyras calibration, Eq.~\eqref{eq:lazeyras},
 $b_{s^2,i}$ on co-evolution, Eq.~\eqref{eq:coev}, and $\bthree = 0$;
 every offset, tilt, counterterm and stochastic amplitude is zero.
-Models A and B and the paper model share this fiducial point.
+Both width configurations and the paper model share this fiducial
+point.
 
 \paragraph{Prior widths as shipped.}
 Table~\ref{tab:widths} gives the Gaussian widths per group.  The tilt
-boxes of the + tilts variants are flat, per unit redshift: $\pm50$
-($\Delta_2$, $\Delta_s$) and $\pm5000$ ($\alpha_0$) in model A + tilts;
-$\pm100$ and $\pm1000$ (for $\alpha_0$ and $\alpha_2$) in model B +
-tilts and in the paper model's files.  In the yamls, model B's
-$\alpha_0$ and $\alpha_2$ widths are $16.1\aunit$ ($0.5/\kmax^2$ at the
+boxes of the tilted variants are flat, per unit redshift: $\pm100$
+($\Delta_2$, $\Delta_s$) and $\pm1000$ ($\alpha_0$) in the shipped
+files, the paper model's, which fix $\alpha_2 = 0$ in every bin.  In
+the yamls, the fiducial
+$\alpha_0$ width is $16.1\aunit$ ($0.5/\kmax^2$ at the
 shipped mask's $0.176\hMpc$); the Fisher notebook instead sets
-$0.5/\kmax^2$ at each cut of its scan and leaves the tilts flat.  The
+$0.5/\kmax^2$ at each cut of its scan, for $\alpha_2$ too where a
+fit frees it, and leaves the tilts flat.  The
 $\SNt$ unit $f_{\rm sat}\sigma_{\rm sat}^2$ is
 $6.084\,(h^{-1}\mathrm{Mpc})^2$ for BGS and LRG and
 $0.841\,(h^{-1}\mathrm{Mpc})^2$ for ELG.
@@ -598,8 +606,8 @@ freedom.}
 \label{fig:poisson}
 \end{figure}
 
-\paragraph{At model A's cut.}
-Model A cuts each bin at $0.075\hMpc/D(\bar{z}_i)$: $0.088$, $0.097$,
+\paragraph{At the exploration variant's cut.}
+Each bin is cut at $0.075\hMpc/D(\bar{z}_i)$: $0.088$, $0.097$,
 $0.112$ and $0.139\hMpc$ for the four tracers of the figure.  At its
 own cut the loop sum of each tracer is $+1.8\%$ (BGS-like), $+2.2\%$
 and $+6.7\%$ (LRG-like at $z = 0.5$ and $0.8$) and $-0.4\%$
@@ -618,15 +626,16 @@ forecast's sub-percent amplitude precision per group, none of these
 is negligible.  Below the cut their scale dependence is mild, so the
 linear amplitudes absorb most of each term and what remains is the
 residual shape: the case for calibration-centered freedom with modest
-priors, model A.
+priors, the exploration variant.
 
 \paragraph{At the shipped mask.}
-Model B's reference cut, the shipped mask, stops every bin at
+The fiducial widths' reference cut, the shipped mask, stops every bin at
 $k = 0.176\hMpc$.  There the $\bone\btwo$ term alone is $4$--$14\%$ of
 $P_{gg}$, with strong scale dependence, the loop sum reaches $15\%$
 (LRG-like at $z = 0.8$), and the counterterm at DESI's width is
 $6$--$15\%$.  No amplitude absorbs these terms, and their shapes
-differ from one another: the case for model B's wider offsets and its
+differ from one another: the case for the fiducial widths' wider
+offsets and the
 radial counterterm, the freedom DESI DR1 carries with seven nuisances
 per tracer at $\kmax = 0.2\hMpc$.
 
@@ -762,7 +771,8 @@ populations at a given linear bias, so the second-order biases of the
 bin's population sit on the calibration curves at $b_{1,i}$.  The
 induced shift is small but determined: near $\bone \simeq 2$ the
 Lazeyras relation has slope $d\btwo/d\bone \simeq 1.7$, so a $3\%$
-residual moves $\btwo$ by about $0.10$, a tenth of model A's offset
+residual moves $\btwo$ by about $0.10$, a tenth of the exploration
+variant's offset
 width, and the co-evolution slope $-4/7$ moves $\bs$ by about $0.03$.
 
 The deterministic part carries the within-group evolution, which is
@@ -777,9 +787,10 @@ counterterm, so the prior would set the per-bin posteriors.
 What a free parameter adds on top of the inherited trend is a drift of
 the calibration itself: $\btwo$ at fixed $\bone$ changes with the
 satellite fraction and the color mix, slowly within one selection.  The
-freedom therefore sits per group.  Models A and B give each group one
+freedom therefore sits per group.  Both width configurations give
+each group one
 offset, $\Delta_{2,i} = \Delta_{2,g}$ (and likewise $\Delta_s$);
-\emph{model A + tilts} and \emph{model B + tilts} add a free straight
+their \emph{tilted} variants add a free straight
 line in redshift within the group, the kind of line $s_g$ gives the
 linear bias,
 $\Delta_{2,i} = \Delta_{2,g} + t_{2,g}(\bar{z}_i - \bar{z}_g)$, with a
@@ -790,18 +801,26 @@ never tilt: the Poisson part $1/\bar{n}_i$ is known per bin and sits in
 the covariance, so only the non-Poisson fraction could drift, and
 only what has a physical driver tilts.
 
-\subsection{Models A and B}
+\subsection{The exploration variant and the fiducial widths}
 \label{sec:models}
 
-Models A and B are two parameter files of the one option, one per
-layout and variant under \texttt{likelihood/}, written by
-\texttt{scripts/make\_desi\_params.py} (options \texttt{--model-a} and
-\texttt{--model-b}); the example yamls
-\texttt{EXAMPLE\_EVALUATE\_MODEL\_A1}--\texttt{A4} and
-\texttt{B1}--\texttt{B4} set them up on the four layouts.  The
+The fiducial widths are shipped as one parameter file of the one
+option per layout, written by
+\texttt{scripts/make\_desi\_params.py --model-b}; ``model b'' in
+the flag and the file names is the historical key of the fiducial
+widths.  Each file,
+\texttt{likelihood/\allowbreak params\_desi[\_<case>]\allowbreak\_model\_b\_tilts.yaml},
+states the offsets and tilts of Table~\ref{tab:widths}, with
+$\alpha_2$ fixed to $0$ in every bin, the paper's choice.  The paper
+yamls \texttt{EXAMPLE\_EVALUATE1}--\texttt{4.yaml} run them on the
+four layouts.  The exploration variant, built for
+$\kmax = 0.075\hMpc$, is not shipped; its column in
+Table~\ref{tab:widths} is the record of the narrower configuration
+that motivated the fiducial widths.  The
 likelihood reads every parameter per bin; a group is a yaml statement
 that ties its bins to one offset, or to an offset and a tilt.
-Table~\ref{tab:widths} lists the prior widths.  Either model, with or
+Either width configuration,
+with or
 without tilts, runs under any of the linear-bias priors.
 
 \begin{table}[tbp]
@@ -809,7 +828,7 @@ without tilts, runs under any of the linear-bias priors.
 \small
 \begin{tabular}{lll}
 \toprule
-per group & model A & model B \\
+per group & exploration variant & fiducial widths \\
 \midrule
 offsets $\Delta_2$ / $\Delta_s$ & $1.0$ / $0.5$ & $2.0$ / $1.0$ \\
 $\alpha_0$ [$h^{-2}\mathrm{Mpc}^2$] & $0.5/\kmax^2$ & $0.5/\kmax^2$ \\
@@ -825,38 +844,44 @@ parameters, without / with tilts & $5$ / $8$ & $6$ / $10$ \\
 parameters, all centered on zero, and their number per group (the
 tilts, with flat priors, only in groups of more than one bin).
 $\kmax$ is the fit's cut, quoted at $z = 0$; each bin is cut at
-$\kmax/D(\bar{z}_i)$.  Model A: $\kmax = 0.075\hMpc$, an $\alpha_0$
-width of $88.9\aunit$.  Model B: each cut of a scan, or the shipped
+$\kmax/D(\bar{z}_i)$.  The exploration variant:
+$\kmax = 0.075\hMpc$, an $\alpha_0$
+width of $88.9\aunit$.  The fiducial widths: each cut of a scan, or
+the shipped
 mask, $0.176\hMpc$ in every bin ($16.1\aunit$).}
 \label{tab:widths}
 \end{table}
 
 The widths have stated sources.
 \begin{itemize}
-\item \textbf{Offsets.}  Model A's $1.0$ and $0.5$ cover the known
+\item \textbf{Offsets.}  The exploration variant's $1.0$ and $0.5$
+cover the known
 imperfection of the calibrations: the scatter of the Lazeyras fit and
 the $30\%$ spread between co-evolution and the excursion-set $\bs$ at
-LRG biases.  Model B doubles them, demoting the calibrations to prior
+LRG biases.  The fiducial widths double them, demoting the
+calibrations to prior
 centers for cuts where the loops reach $15\%$ of $P_{gg}$.
 \item \textbf{Counterterms.}  The DESI rule of a $50\%$ correction at
 the cut, evaluated at each cut: $0.5/\kmax^2$, which is DESI's $12.5$
 at $0.2\hMpc$.  Because $\alpha_0$ multiplies $\pnl$, at bin $i$'s own
 cut the width is a correction of $0.5/B_g^2$ of the linear galaxy power
 $b_{1,i}^2\pnl$, the same in every bin of a group: $28\%$ for BGS,
-$17\%$ for LRG, $71\%$ for ELG at model A's cut.
+$17\%$ for LRG, $71\%$ for ELG at the exploration variant's cut.
 \item \textbf{Stochastic terms.}  DESI DR1's widths.
 \end{itemize}
 
-Model A is built for $\kmax = 0.075\hMpc$, the cut matched to the
+The exploration variant is built for $\kmax = 0.075\hMpc$, the cut
+matched to the
 thin-bin radial resolution.  It fixes $\alpha_2 = 0$: at DESI's width
 the $\alpha_2$ term changes the kept auto spectra by about $1\%$
 (Section~\ref{sec:rsd-projection}), and a fit without $\alpha_2$ holds
 against a truth with $\alpha_2 = \pm12.5\aunit$
-(\texttt{notes/fog\_parameter\_degeneracy\_study}).  Model A carries
+(\texttt{notes/fog\_parameter\_degeneracy\_study}).  It carries
 $\SNt$ because without it the thin layouts fail at its cut
-(Section~\ref{sec:stochastic-projection}).  Model B frees $\alpha_2$
+(Section~\ref{sec:stochastic-projection}).  The fiducial widths free
+$\alpha_2$
 for the scan in $\kmax$.  With the amplitude $B_g$ and the linear tilt
-$s_g$, model B has eight parameters per group: DESI DR1's
+$s_g$, the fiducial-width fit has eight parameters per group: DESI DR1's
 seven per tracer \cite{DESI2024V,DESI2024VII} plus the linear tilt the
 thin bins resolve.  Every fiducial higher-order parameter is zero, so
 the fiducial model sits on the calibrations; no DESI chain value
@@ -865,15 +890,17 @@ enters (Section~\ref{sec:verdict}).
 \subsection{The paper model}
 \label{sec:papermodel}
 
-The paper forecast runs one configuration of this option: model B +
-tilts with $\alpha_2$ fixed to zero in every bin and every $\sigma_v$
+The paper forecast runs one configuration of this option -- the
+fiducial model: the fiducial widths with their tilts, $\alpha_2$
+fixed to zero in every bin and every $\sigma_v$
 prior width multiplied by six, on the pessimistic linear-bias prior.
 Its example yamls are \texttt{EXAMPLE\_EVALUATE1}--\texttt{4}, built
 on the parameter files
 \texttt{params\_desi[\_<case>]\_bias\_pessimistic.yaml} (the
 pessimistic linear bias) and
-\texttt{params\_desi[\_<case>]\_model\_b\_tilts.yaml} (model B +
-tilts with $\alpha_2 = 0$).
+\texttt{params\_desi[\_<case>]\_model\_b\_tilts.yaml} (the fiducial
+model's higher-order sector; ``model b tilts'' is the file's
+historical key).
 The sampled Fingers-of-God
 dispersions reproduce the $\alpha_2$ derivative templates almost
 exactly, so dropping $\alpha_2$ and widening the $\sigma_v$ priors
@@ -881,8 +908,8 @@ sixfold lets the dispersions absorb an $\alpha_2$ of DESI's size:
 fitted to a truth with $\alpha_2 = \pm12.5\aunit$, the paper model
 moves no scored parameter by more than $0.33\sigma$
 (\texttt{notes/fog\_parameter\_degeneracy\_study} derives the factor
-of six and the shifts).  Every other width is model B's
-(Table~\ref{tab:widths}); Section~\ref{sec:fiducial} lists the
+of six and the shifts).  Every other width is the fiducial one of
+Table~\ref{tab:widths}; Section~\ref{sec:fiducial} lists the
 $\sigma_v$ fiducials and widths.
 
 \subsection{The covariance}
@@ -890,7 +917,8 @@ $\sigma_v$ fiducials and widths.
 
 The Gaussian covariance is built on the one-loop fiducial:
 $b_{1,i} = B_g/D(\bar{z}_i)$, $\btwo$ and $\bs$ on the calibrations,
-every other term zero.  Models A and B, with or without tilts, share
+every other term zero.  Both width configurations, with or without
+tilts, share
 that fiducial, so one covariance serves all of them.  Its one-loop terms come from CosmoLike's own
 tables of C-FASTPT (its C port of FAST-PT), with the data vector's
 bilinear pair form
@@ -1091,18 +1119,20 @@ adjacent pairs, against $+0.05$ for $\SNz$.  A white noise adds only
 positive cross terms, products of positive kernels, so no $\SNz$, per
 group or per bin, reproduces the pattern.
 
-\paragraph{Why model A carries $\SNt$.}  Without $\SNt$, a truth with
-$\SNt = \pm5$ units, the one-sigma width of its prior, moved a model A
+\paragraph{Why the model carries $\SNt$.}  Without $\SNt$, a truth with
+$\SNt = \pm5$ units, the one-sigma width of its prior, moved an
+exploration-variant
 fit's
 $\Omega_m$ by $1.3$--$1.7\sigma$ at $\kmax = 0.075\hMpc$ on the two
-thin layouts, mostly through the adjacent cross spectra.  Model A then
+thin layouts, mostly through the adjacent cross spectra.  The fit then
 held only to $0.05\hMpc$ on the $62$\,Mpc layout and failed at its
 first fitted cut, $0.075\hMpc$, on $\Delta z = 0.02$.  The LRG term
 carried the effect.  ELG alone moved $\Omega_m$ by at most
 $0.23\sigma$ (its unit, $0.84\,(h^{-1}\mathrm{Mpc})^2$, is a seventh of
 LRG's $6.08$), and BGS by $0.00$, with the borrowed LRG unit or with
 one built from the BGS bins' own Fingers-of-God dispersion, so the BGS
-unit does not matter.  With one $\SNt$ per group, model A holds to its
+unit does not matter.  With one $\SNt$ per group, the exploration
+variant holds to its
 own cut on the thin layouts.  About half
 of each bin's $\SNt$ auto kernel comes from $k_\parallel$ above the
 bin's own cut at $\kmax = 0.075\hMpc$, a content the scale cut does
@@ -1230,23 +1260,28 @@ tested vectors do not reach it.  Compared with flooring $P_{gg}$
 instead, the exact treatment leaves linear-bias vectors and FKEM
 one-loop vectors bitwise unchanged, as it must, and moves the low-rank
 one-loop vector at the calibrated biases by at most $5\times10^{-3}$ of
-the angular shot noise.  At the highest band model A keeps, the share of a bin's white-noise projection from
+the angular shot noise.  At the highest band the exploration variant
+keeps, the share of a bin's white-noise projection from
 $k > k_{\rm neg}$ is at most $0.34\%$ (BGS, $z = 0.11$) and about zero
-for ELG (a flat-sky estimate at the calibrated biases).  One model A
+for ELG (a flat-sky estimate at the calibrated biases).  One
+exploration-variant
 prior width below the calibrations ($\Delta_2 = -1$,
 $\Delta_s = -0.5$), the exact treatment shows negative $C_\ell$ in the
 lowest BGS bins beyond $k \approx 0.15\hMpc$ (Limber correspondence
 $k = (\ell + \tfrac12)/\chi$) on the shipped mask, $-29$ times the shot
 noise at $\ell = 50$ ($-25$ with FKEM, Limber in its one-loop content),
-which a floor would hide.  At the model A cut the same biases keep
+which a floor would hide.  At the exploration variant's cut the same
+biases keep
 every kept $C_\ell$ positive, and the exact treatment moves them by at
 most $0.27$ of the shot noise.
 
 \paragraph{Consequences.}
-Model A at $\kmax = 0.075\hMpc$ is safe: at the calibrated biases the
+The exploration variant at $\kmax = 0.075\hMpc$ is safe: at the
+calibrated biases the
 region beyond $k_{\rm neg}$ carries a negligible share of its kept
 bands, and one prior width below the calibrations every kept $C_\ell$
-stays positive.  At model B's higher cuts on the dense low-redshift
+stays positive.  At the fiducial widths' higher cuts on the dense
+low-redshift
 BGS, one-loop perturbation theory is not trustworthy near
 $k \approx 0.15$--$0.2\hMpc$ once $\btwo$ sits a unit below the
 calibration (Figure~\ref{fig:kneg}).  A Fisher forecast at the
@@ -1301,17 +1336,20 @@ checks).
 \item \textbf{The forecast.}  The correlated-prior note fits random
 bias histories under every linear-bias prior (its accuracy test), and
 the Fisher notebook of the paper model,
-\texttt{EXAMPLE\_EVALUATE\_FISHER\_MODEL.ipynb}, fits model B and
-model B + tilts to four fixed truths: $\alpha_2$ at one model B width
-($0.5/\kmax^2$), $\SNt = \pm5$, the offsets at one sigma of model B's
+\texttt{EXAMPLE\_EVALUATE\_FISHER\_MODEL.ipynb}, fits the fiducial
+model with $\alpha_2$ free, without and with tilts, to four fixed
+truths: $\alpha_2$ at one prior width
+($0.5/\kmax^2$), $\SNt = \pm5$, the offsets at one sigma of the
+fiducial
 widths, and a linear drift of the calibrations across each group
 ($\Delta_2$ changing by $1$ and $\Delta_s$ by $0.5$, with zero mean).
-The first three lie inside model B's prior and are reported; the
+The first three lie inside the fitted prior and are reported; the
 drift is tested, and a model holds at a cut while every tested shift
-stays below $\sigma/3$.  Model B on the baseline prior breaks at
+stays below $\sigma/3$.  The fit without tilts on the baseline prior
+breaks at
 $0.075\hMpc$ on the two thin layouts (the drift moves $(w_0, w_a)$ by
 $0.82$ and $0.86\sigma$ at $0.1$) and at $0.05$ on $\Delta z = 0.05$
-and $0.2$ ($0.35$ and $0.36\sigma$ at $0.075$).  Model B + tilts on
+and $0.2$ ($0.35$ and $0.36\sigma$ at $0.075$).  The fit with tilts on
 the pessimistic prior absorbs the drift exactly and passes every cut;
 its reported in-prior shifts reach $0.98\sigma$ at $0.075$ on
 $\Delta d_{\rm com} = 62$\,Mpc and $1.10\sigma$ at $0.1$ on
@@ -1526,10 +1564,12 @@ what the fit learns about $\alpha_0$ and $\SNt$ comes from scales the
 cut is meant to exclude.
 \item \textbf{Positivity far from the fiducial.}  The low-rank engine
 floors $P_{gg} - P_\infty$ where it turns negative.  At
-$\alpha_0 = -88.9\aunit$, one model A width below zero, that happens
+$\alpha_0 = -88.9\aunit$, one exploration-variant width below zero,
+that happens
 above $k \approx \bone/\sqrt{|\alpha_0|} \approx 0.14\hMpc$ on $47\%$
 of its grid, and the vector curves in $\alpha_0$ while FKEM's stays
-linear; on the dense BGS bins at model B's cuts it happens once
+linear; on the dense BGS bins at the fiducial widths' cuts it happens
+once
 $\btwo$ sits a unit below the calibration
 (Section~\ref{sec:whitenoise}).  The Fisher forecast at the fiducial is
 unaffected, but a chain that reaches such points leaves the validated
@@ -1543,12 +1583,13 @@ fixed, cosmology-independent table that disagrees with Python FAST-PT
 $\bthree = \bone - 1$), so the model sets $\bthree = 0$.
 \item \textbf{No redshift-space one-loop terms.}  CosmoLike has none,
 and FAST-PT's redshift-space templates are not ported to C: for the
-$\mu$-dependent loop physics model B relies on the sampled
+$\mu$-dependent loop physics the model relies on the sampled
 Fingers-of-God $\sigma_v$ and on $\alpha_2$.
 \item \textbf{Adjacent cross spectra see the shared edge.}  The cross
 spectra of adjacent thin bins are sensitive to small-scale radial
 physics at the shared edge, as $\SNt$ shows
-(Section~\ref{sec:stochastic-projection}).  Models A and B carry $\SNt$
+(Section~\ref{sec:stochastic-projection}).  Both width configurations
+carry $\SNt$
 for that reason; any other radial physics on that scale reaches the
 cross spectra the same way.
 \end{itemize}

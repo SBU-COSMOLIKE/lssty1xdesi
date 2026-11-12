@@ -123,8 +123,8 @@ The scan runs over $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$, each the
 $z = 0$ value.
 
 \paragraph{The truths.}
-The truth is a data vector of model A, the one-loop bias model defined
-in \texttt{notes/higher\_order\_bias}, computed with CosmoLike's
+The truth is a data vector of the fiducial model, the one-loop bias
+model defined in \texttt{notes/higher\_order\_bias}, computed with CosmoLike's
 one-loop engine at the linear fiducial's cosmology and growth-tied
 amplitudes (Section~\ref{sec:fiducial} lists the ingredients).  Its
 real-space galaxy power spectrum is
@@ -143,9 +143,9 @@ small-scale sensitivity of the loops.
 
 The \emph{calibrated} truth keeps the fiducial $b_1$, puts $b_2$ and
 $b_{s^2}$ on their calibrations (Appendix~\ref{sec:truths}), and sets
-$\alpha_0$, the third-order bias $b_3$ and model A's stochastic terms
-to zero.  Four brackets offset every group's $b_2$ by $\pm 1$
-(``$b_2 \pm 1$'', model A's prior width) or set
+$\alpha_0$, the third-order bias $b_3$ and the stochastic terms to
+zero.  Four brackets offset every group's $b_2$ by $\pm 1$
+(``$b_2 \pm 1$'', one unit of the offset) or set
 $\alpha_0 = \pm 12.5\,h^{-2}\,{\rm Mpc}^2$, the counterterm prior
 width of the DESI 2024 full-shape analysis~\cite{DESI2024V}.  ``Every
 truth'' means all five.
@@ -313,7 +313,7 @@ precise.
 This note's experiments run at the \emph{linear} fiducial: the
 growth-tied linear-bias model of the exploration yamls
 (\texttt{exploration/EXAMPLE\_EVALUATE\_LINEAR1}--\texttt{4.yaml}),
-with model A data vectors as truths.  This section freezes those
+with the fiducial model's one-loop data vectors as truths.  This section freezes those
 values, so the record does not depend on configuration files that can
 change.
 
@@ -336,27 +336,26 @@ $k = 0.005\,{\rm Mpc}^{-1}$.  The sampled Fingers-of-God dispersions
 sit at $371$, $358$, $357$, $348$, $343$, $304$ and $289$\,km/s for
 the seven groups (BGS split at $\bar{z} = 0.255$), under Gaussian
 priors of width $145$, $105$, $70$, $50$, $50$, $40$ and $30$\,km/s:
-the exploration widths, not the sixfold widths of the paper model.
+the exploration widths, not the sixfold widths of the fiducial
+model.
 
-\paragraph{The model A truths.}
-The truths come from the model A exploration yamls,
-\texttt{EXAMPLE\_EVALUATE\_MODEL\_A1}--\texttt{4.yaml} under
-\texttt{exploration/},
-at the same cosmology, growth-tied amplitudes and velocity
-dispersions: $b_2$ and $b_{s^2}$ on the calibrations of
-Appendix~\ref{sec:truths}, $b_3 = 0$, $\alpha_2 = 0$, and, in the
-calibrated truth, every offset, counterterm and stochastic amplitude
-zero.  The brackets add $\pm1$ to every group's $\Delta_2$ or set
-every group's $\alpha_0$ to $\pm12.5\,h^{-2}\,{\rm Mpc}^2$.  Model A's
-own prior widths, which size the brackets, are $1$ ($\Delta_2$),
-$0.5$ ($\Delta_s$), $88.9\,h^{-2}\,{\rm Mpc}^2$ ($\alpha_0$,
-$0.5/\kmax^2$ at its cut $0.075\hMpc$), $2$ (${\rm SN}_0$) and $5$
-(${\rm SN}_2$), per group (\texttt{notes/higher\_order\_bias}).
+\paragraph{The one-loop truths.}
+The truths come from the yamls of the fiducial model,
+\texttt{EXAMPLE\_EVALUATE1}--\texttt{4.yaml}, run with the same
+derivative settings as the linear vector, at the same cosmology,
+growth-tied
+amplitudes and velocity dispersions: $b_2$ and $b_{s^2}$ on the
+calibrations of Appendix~\ref{sec:truths}, $b_3 = 0$, $\alpha_2 = 0$,
+and, in the calibrated truth, every offset, counterterm and stochastic
+amplitude zero.  The brackets add $\pm1$ to every group's offset
+$\Delta_2$ of $b_2$ from its calibration, or set every group's
+$\alpha_0$ to $\pm12.5\,h^{-2}\,{\rm Mpc}^2$.
 
 \paragraph{Datasets, pairs and the covariance.}
-The exploration yamls name the 97-pair \texttt{*\_linear} data sets,
-but the Fisher module's derivative settings replace the data file with
-each layout's paper data set, so every Fisher matrix and truth here
+The exploration yamls name the \texttt{*\_linear} data sets, but
+the Fisher module's derivative settings replace the data file with
+each layout's paper data set, for the linear vector and the truths
+alike, so every Fisher matrix and truth here
 uses the paper pair lists ($107$ cross pairs on
 $\Delta d_{\rm com} = 62$\,Mpc; $133$, $52$ and $13$ on
 $\Delta z = 0.02$, $0.05$, $0.2$) and the paper covariances.  The
@@ -366,12 +365,12 @@ with massless neutrinos, over $14{,}000$\,deg$^2$, its inverse
 rescaled by $12{,}300/14{,}000$.
 
 \paragraph{The scale-cut cache.}
-The cuts are \texttt{EXAMPLE\_EVALUATE\_FISHER\_SCALE\_CUTS.pkl},
+The cuts are \texttt{linear\_scale\_cuts\_final.npz},
 the linear-bias cache in \texttt{chains/}: the
 UV-fraction criterion of Eq.~\eqref{eq:uvfraction} with
 $\alpha = 0.05$, computed on the linear fiducial at the final
 derivative tier and intersected with the shipped mask.  The paper
-notebook computes its own cut on the paper model's fiducial; the
+notebook computes its own cut on the fiducial model's spectra; the
 linear experiments keep the linear-fiducial cut, and
 \texttt{notes/scale\_cut\_fiducial\_dependence} measures the
 difference between the two.
@@ -405,7 +404,7 @@ shear-calibration centers.
 \subsection{The truths}
 \label{sec:truths}
 
-Each truth is a full model A data vector at the fiducial cosmology,
+Each truth is a full one-loop data vector at the fiducial cosmology,
 with $b_{1,i} = B_g/D(\bar{z}_i)$.  The calibrations are the Lazeyras
 et al.\ separate-universe fit~\cite{Lazeyras2016},
 $b_2(b_1) = 0.412 - 2.143\,b_1 + 0.929\,b_1^2 + 0.008\,b_1^3$, and
@@ -550,10 +549,11 @@ gives no fit, and the search for the safe $\kmax$ skips it.
     signal from beyond the cut: on $\Delta z = 0.05$ at $0.075\hMpc$
     the ultraviolet fraction of the $\alpha_0$ template is a median
     $0.076$ on the kept bands, above $\alpha$, against a median
-    $0.017$ and at most $0.052$ for the full model A vector.
+    $0.017$ and at most $0.052$ for the full one-loop vector.
   \item \textbf{No stochastic term in the truths.}  The cross spectra
     of adjacent thin bins are sensitive to small-scale radial physics
-    at their shared edge, which model A's term ${\rm SN}_2\,k^2\mu^2$
+    at their shared edge, which the one-loop model's term
+    ${\rm SN}_2\,k^2\mu^2$
     carries ($\mu$ the cosine to the line of sight).  Every truth here
     sets it to zero.
   \item \textbf{No redshift-space loops.}  Truths and fits carry

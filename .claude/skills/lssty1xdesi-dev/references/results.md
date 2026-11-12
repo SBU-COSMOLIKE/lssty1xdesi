@@ -16,34 +16,39 @@ no FoM above k_max = 0.2.
 |---|---|---|
 | linear bias against k_max | EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb (4, 5) | `notes/linear_bias_kmax/plots/{fob_kmax,fom_kmax,ladder_bias_params}/data.json` |
 | model A at k_max = 0.075 (a record) | the removed EXAMPLE_EVALUATE_FISHER_MODEL_A.ipynb (6, 7), commit 567751f | the removed v2 folders baseline_ladder, ladder_bias_scatter, goodness_of_fit, drift_shifts, calibration_drift (same commit) |
-| model B against k_max; where model B breaks | EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (6, 7) | `notes/correlated_bias_prior_v2/plots/fom_kmax_models/data.json` |
-| the paper model | EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (9) | `notes/bias_model_summary/plots/{summary_fom_kmax,summary_fom_untied}/data.json` |
+| the reference model against k_max; where the variant without tilts breaks | EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (6, 7) | `notes/correlated_bias_prior_v2/plots/fom_kmax_models/data.json` |
+| the fiducial model | EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (9) | `notes/bias_model_summary/plots/{summary_fom_kmax,summary_fom_untied}/data.json` |
+| pairs beyond the measured list | `scripts/compute_pair_axes_fits.py` | `chains/pair_axes_fits_<layout>.json`; `notes/cross_correlations/plots/pair_axes_{gap,sigv,attribution,priors}/data.json` |
 | linear-bias FoMs, engine Fisher biases, amplitude-cut contours | EXAMPLE_EVALUATE_FISHER.ipynb (4-8) | printed tables; `fisher_and_scale_cuts.md` |
 | LSST Y1 3x2pt references | lsst_y1 EXAMPLE_EVALUATE2.ipynb | `lsst_y1_3x2pt_fom*` keys of the v2 data.json files |
 
 ## 1. Linear bias against k_max
 
-The truths are model A (calibrated: b2, bs2 on the calibrations at the
-fiducial b1; plus brackets b2 +- 1 and alpha_0 = +-12.5 h^-2 Mpc^2), the
-fit is linear bias under each of the four priors.
+The truths are the fiducial model's one-loop vectors, built from the
+paper yamls EXAMPLE_EVALUATE<n>.yaml with the linear vector's own
+settings, which point each layout at its paper data set
+(calibrated: b2, bs2 on the calibrations at the fiducial b1; plus
+brackets b2 +- 1 and alpha_0 = +-12.5 h^-2 Mpc^2); the fit is linear
+bias under each of the four priors.
 
 - **Safe only at k_max = 0.05**, and for every prior and truth only on
-  62 Mpc (largest shift 0.14 sigma). Delta z = 0.02 keeps no band at
+  62 Mpc (largest shift 0.10 sigma). Delta z = 0.02 keeps no band at
   0.05 and fails at 0.075. Delta z = 0.05 is safe at 0.05 for every
-  truth under growth-tied and baseline, for the calibrated truth only
-  under pessimistic, never under free. Delta z = 0.2 is safe at 0.05
-  for the calibrated truth only. The worst truths at 0.05 are the
+  truth under growth-tied, for the calibrated truth only under
+  baseline, never under pessimistic or free. Delta z = 0.2 is safe at
+  0.05 for the calibrated truth only. The worst truths at 0.05 are the
   negative brackets.
 - **At 0.075 every prior fails on every layout**, a free bias per bin
-  included: largest shifts 0.39 sigma (Delta z = 0.2, growth-tied) to
-  1.79 sigma; on 62 Mpc Omega_m moves by 1.50-1.79 sigma, A_s by
-  0.95-1.23 and (w0, wa) by 0.27-0.54. More bias freedom moves the
-  error between parameters (Delta z = 0.05: growth-tied Omega_m 1.28,
-  (w0, wa) 0.29; baseline Omega_m 0.19, (w0, wa) 0.98): a constant b_i^2
+  included: for the calibrated truth the largest shift ranges from
+  0.39 sigma (Delta z = 0.2, growth-tied) to 1.9 sigma (62 Mpc); on
+  62 Mpc the four priors move Omega_m by 1.72-1.94 sigma, A_s by
+  1.57-1.70 and (w0, wa) by 0.93-1.36. More bias freedom moves the
+  error between parameters (Delta z = 0.05: growth-tied Omega_m 1.07,
+  (w0, wa) 0.20; baseline Omega_m 0.45, (w0, wa) 1.17): a constant b_i^2
   cannot absorb the k dependence of the loops.
-- **The cost of the safe cut**: on 62 Mpc FoM(w0, wa) falls from 5.10 /
-  3.37 / 2.78 at 0.075 to 0.264 / 0.213 / 0.036 at 0.05 (baseline,
-  pessimistic, free), 1-6% of its value.
+- **The cost of the safe cut**: on 62 Mpc FoM(w0, wa) falls from 1.41 /
+  1.39 / 1.39 at 0.075 to 0.0185 / 0.015 / 0.012 at 0.05 (baseline,
+  pessimistic, free), about 1% of its value (1.3%, 1.1%, 0.8%).
 - **The accuracy test of the linear-bias priors scored for Omega_m and
   A_s** (linear-bias truths at 0.075) gives the verdict of (w0, wa):
   growth-tied excluded, baseline honest only under its own scatter,
@@ -134,7 +139,7 @@ growth-tied. Model A + tilts absorbs it exactly (1e-12), since its
 tilts have the drift's shape; a nonlinear drift within a group is
 untested.
 
-## 3. Model B against k_max; where model B breaks
+## 3. The reference model against k_max; where the variant without tilts breaks
 
 Source: EXAMPLE_EVALUATE_FISHER_MODEL.ipynb (sections 6, 7) and
 `fom_kmax_models/data.json` (`fom`, `fom_om_as`, `shift`, `worst`,
@@ -143,39 +148,44 @@ free prior included). The cuts are the UV-fraction cuts of the paper
 fiducial at the final derivative tier
 (`chains/model_scale_cuts_final.npz`). The
 scan: seven cuts 0.05, 0.075, ..., 0.2 (`KMAX_MAX`), two variants
-(model B, model B + tilts), three priors (growth-tied omitted): 168
+(the reference model, data key 'B tilts', and its variant without
+tilts, data key 'B'), three priors (growth-tied omitted): 168
 systems, 162 with a fit, 6 without any band (Delta z = 0.02 at 0.05);
 11 drop a null direction (largest component on the scored parameters
 3.3e-10). Counterterm widths follow 0.5/k_max^2 at every cut. The
-baseline scenario is the baseline prior with model B; the pessimistic
-scenario is the pessimistic prior with model B + tilts.
+baseline scenario is the baseline prior with the variant without
+tilts; the pessimistic scenario is the pessimistic prior with the
+reference model.
 
 **FoM(w0, wa)** in the two scenarios:
 
-| k_max | pessimistic scenario (model B + tilts) | baseline scenario (model B) |
+| k_max | pessimistic scenario (the reference model) | baseline scenario (without tilts) |
 |---|---|---|
 | 0.075 | 0.407 / 0.237 / 0.155 / 0.0426 | 0.595 / 0.488 / 0.252 / 0.0676 |
 | 0.1 | 1.29 / 1.48 / 0.503 / 0.101 | 1.78 / 2.01 / 0.707 / 0.162 |
 | 0.15 | 4.80 / 5.14 / 1.68 / 0.229 | 5.66 / 6.43 / 1.99 / 0.347 |
 | 0.2 | 7.53 / 8.42 / 2.45 / 0.300 | 8.46 / 9.91 / 2.77 / 0.478 |
 
-- Model B + tilts lies below model B at every cut, and every FoM(w0, wa)
-  stays below LSST Y1 3x2pt (17.26). FoM(Omega_m, 10^9 A_s) of model B
+- The reference model lies below its variant without tilts at every
+  cut, and every FoM(w0, wa)
+  stays below LSST Y1 3x2pt (17.26). FoM(Omega_m, 10^9 A_s) of the
+  variant without tilts
   stays below 214.9 at every cut (at most 67.5 at 0.2).
 
-**Where model B breaks.** The fixed truths, each at one prior width and
+**Where the variant without tilts breaks.** The fixed truths, each at
+one prior width and
 the same in every bin or a drift across each group: (a) alpha_2 at
-+-1 sigma of model B's prior, 0.5/k_max^2; (b) SN2 = +-5 units; (c) the
++-1 sigma of its prior, 0.5/k_max^2; (b) SN2 = +-5 units; (c) the
 offsets at +-(2, 1); (d) the calibration drift, Delta_2 and Delta_s
 linear in redshift across each group with zero mean, changing by 1 and
-0.5 from its first bin to its last (the tilts of model B + tilts absorb
+0.5 from its first bin to its last (the reference model's tilts absorb
 it exactly; its alpha_0 and alpha_2 tilts are not exercised). (a)-(c)
 lie inside the prior and are reported; (d) is tested. The shift is
 exact for (a) and (b) and first order for (c) and (d); +- truths score
 identically. A model holds at a cut while every score of every tested
 truth stays below sigma/3, there and at every smaller fitted cut:
 
-| layout | baseline scenario: model B | pessimistic scenario: model B + tilts |
+| layout | baseline scenario: without tilts | pessimistic scenario: the reference model |
 |---|---|---|
 | Delta d_com = 62 Mpc | 0.075; at 0.1 the drift moves (w0, wa) by 0.82 sigma | every cut to 0.2 |
 | Delta z = 0.02 | 0.075; at 0.1 the drift moves (w0, wa) by 0.86 | every cut to 0.2 |
@@ -199,11 +209,11 @@ diagnostics) left the notebook with the rest of its model A content on
 EXAMPLE_EVALUATE_FISHER_MODEL_B.ipynb of commit 567751f and in the git
 history of this file.
 
-## 4. The paper model
+## 4. The fiducial model
 
-Model B + tilts without alpha_2 (its group values and tilts fixed at 0)
-and every sigma_v prior width x6, on the pessimistic prior: the example
-yamls EXAMPLE_EVALUATE1-4 and the variant 'B tilts noA2 sv x6'. Source:
+alpha_2 fixed at 0 in every bin (its group values and tilts) and every
+sigma_v prior width x6, on the pessimistic prior: the example
+yamls EXAMPLE_EVALUATE1-4 and the data key 'B tilts noA2 sv x6'. Source:
 EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, section 9;
 `notes/bias_model_summary/plots/summary_fom_kmax/data.json` and
 `summary_fom_untied/data.json`.
@@ -217,9 +227,33 @@ EXAMPLE_EVALUATE_FISHER_MODEL.ipynb, section 9;
 - eta <= 1.030 (Omega_m on 62 Mpc at 0.175) under the known drifts plus
   the pessimistic scatter; coverage of the 1 sigma region at least 66.8%.
 - alpha_2 = +-12.5 h^-2 Mpc^2 moves no score by more than 0.327 sigma;
-  alpha_2 at one model B width breaks the model at 0.05 on 62 Mpc and
+  alpha_2 at one reference-model width, 0.5/k_max^2, breaks the model
+  at 0.05 on 62 Mpc and
   Delta z = 0.05 and below the smallest fitted cut on Delta z = 0.02
   (A_s 1.64 sigma at 0.075 on 62 Mpc, (w0, wa) 1.31 at 0.1 on
   Delta z = 0.02).
 - The in-prior truths (SN2 and the offsets) move a score by at most
   0.69 sigma, and by at most 0.42 sigma from 0.125 on.
+
+## 5. Pairs beyond the measured list
+
+The pair-axes study: `scripts/compute_pair_axes_fits.py` on the
+archived `model_*_<layout>_pairmax_final` caches, written to
+`chains/pair_axes_fits_<layout>.json` and read by the
+`make_pair_axes_*_data.py` generators of
+`notes/cross_correlations/plots/`. The note's sections "What would
+pairs beyond the list add?" and "Why the added pairs help: the free
+bias levels and slopes" hold the discussion; the summary is in
+`notes/bias_model_summary`.
+
+- On the three thinner layouts the pairs beyond the measured list raise
+  the fiducial model's FoM(w0, wa) by up to 55-59%; on Delta z = 0.2 by
+  at most 2%.
+- Attribution fits trace the gain to the free level and slope of each
+  group's bias amplitude beta_i = b_{1,i} D(zbar_i); with every
+  nuisance parameter held fixed the added pairs are worth only 2-8%.
+- Every bias prior that passes the accuracy test gives the same gain
+  within a few percent.
+- The paper keeps the standard data vector (the pairs with
+  blurred-kernel overlap O_ij >= 1e-6 at the fiducial sigma_v): the
+  longer lists are a comparison, not an open choice.

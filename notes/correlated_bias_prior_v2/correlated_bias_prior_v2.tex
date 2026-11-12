@@ -43,7 +43,7 @@
 \begin{center}
   {\LARGE The galaxy-bias ladder across thin redshift bins\par}
   \vspace{0.4em}
-  {\large A correlated linear-bias prior, the one-loop model B,\\
+  {\large A correlated linear-bias prior, the one-loop fiducial model,\\
     and the reach of DESI $C_\ell^{gg}$\par}
   \vspace{0.6em}
   {\large November 2026\par}
@@ -57,8 +57,10 @@ Thin redshift bins measure growth only if each bin's galaxy bias is
 tied to its neighbors.  For DESI angular band powers $C_\ell^{gg}$
 alone on four bin layouts (Section~\ref{sec:forecast}), this note sets
 how freely a thin bin's linear bias may move within its tracer group,
-fits the one-loop bias model B of \texttt{notes/higher\_order\_bias}
-with and without tilts, tests which choices recover the cosmology
+fits the one-loop fiducial bias model of
+\texttt{notes/higher\_order\_bias}
+with and without its tilts (here with $\alpha_2$ free and the
+exploration $\sigma_v$ widths), tests which choices recover the cosmology
 honestly, and gives the figure of merit (FoM) against the scale cut
 $\kmax$.
 
@@ -72,16 +74,18 @@ elsewhere, $L = 0.2$), pessimistic ($3\%$ everywhere, $L = 0.05$) and
 free (one free bias per bin).
 
 \paragraph{The bias model.}
-Model B adds to each bin's linear bias the one-loop terms: quadratic
+The fiducial model adds to each bin's linear bias the one-loop terms:
+quadratic
 and tidal biases on calibrations plus one offset per group, the
 counterterms $\alpha_0$ and $\alpha_2$, and the stochastic terms
 $\SNz$ and $\SNt\,k^2\mu^2$ (Section~\ref{sec:biasmodel}).  Every
 per-group quantity carries the same structure as the linear bias: a
-group value, a straight line in redshift (free in model B + tilts),
+group value, a straight line in redshift (free when the tilts are
+fitted),
 and, for $b_1$ alone, a correlated per-bin residual.
 
 \paragraph{The accuracy test.}
-At every cut, model B + tilts fits truths that carry the known drifts
+At every cut, the fiducial model fits truths that carry the known drifts
 plus a residual drawn from the pessimistic prior
 (Section~\ref{sec:accuracy}).  On the pessimistic prior its error bars
 stay honest, $\chidof \le 1.03$ in every score.  On the growth-tied
@@ -91,9 +95,10 @@ $\kmax = 0.2\hMpc$ the $\Omega_m$ error bar covers the truth in
 $2.5$--$10\%$ of universes instead of $68\%$.  The growth-tied prior
 is discarded and gets no FoM.
 
-\paragraph{Model B against $\kmax$ and the result.}
-Two scenarios pair the baseline prior with model B and the pessimistic
-prior with model B + tilts, fitted against $\kmax$ to truths that
+\paragraph{The fiducial model against $\kmax$ and the result.}
+Two scenarios pair the baseline prior with the fiducial model without
+tilts and the pessimistic
+prior with the fiducial model, fitted against $\kmax$ to truths that
 carry $\alpha_2$, $\SNt$, the offsets at one prior width, or the
 calibration drift; a truth inside the fitted model's own prior is
 reported, one outside it is held to $\sigma/3$
@@ -106,7 +111,7 @@ $0.98\sigma$ at $0.075$ on $\Delta d_{\rm com} = 62$~Mpc and
 $1.10\sigma$ at $0.1$ on $\Delta z = 0.02$, mostly through $\alpha_2$,
 and $0.33$--$0.73\sigma$ from $0.125$ on on the three thinner
 layouts.  These shifts estimate how safely an MCMC with the model
-would run on real data.  Model B + tilts on the pessimistic prior
+would run on real data.  The fiducial model on the pessimistic prior
 gives ${\rm FoM}(w_0, w_a) = 0.407$, $0.237$, $0.155$ and $0.0426$ at
 $0.075$ and $7.53$, $8.42$, $2.45$ and $0.300$ at $0.2$ (layout
 order); the baseline scenario gives $1.12$ and $1.18$ times its
@@ -177,8 +182,8 @@ $b_{2,i} = b_2^{\rm L}(b_{1,i}) + \Delta_{2,g}$ and
 $b_{s^2,i} = -\tfrac{4}{7}(b_{1,i} - 1) + \Delta_{s,g}$
 (Eq.~\eqref{eq:calibrations}); $b_3 = 0$.  Every offset, tilt,
 counterterm and stochastic amplitude is zero at the fiducial, so $b_2$
-and $\bstwo$ sit on their calibrations.  The prior widths are those of
-model B (Section~\ref{sec:biasmodel}): $2$ on $\Delta_2$, $1$ on
+and $\bstwo$ sit on their calibrations.  The prior widths are the
+fiducial model's (Section~\ref{sec:biasmodel}): $2$ on $\Delta_2$, $1$ on
 $\Delta_s$, $2$ on $\SNz$, $5$ on $\SNt$, and $0.5/\kmax^2$ on
 $\alpha_0$ and $\alpha_2$ at each cut of the scan.  The $\SNt$ unit
 $f_{\rm sat}\sigma_{\rm sat}^2$ is $6.084\,({\rm Mpc}/h)^2$ for BGS and
@@ -300,7 +305,8 @@ The band-power covariance is Gaussian, computed for $14{,}000$ square
 degrees with its inverse rescaled to the survey's $12{,}300$, at the
 one-loop fiducial (Section~\ref{sec:biasmodel}):
 $b_{1,i} = B_g/D(\bar{z}_i)$, $b_2$ and $\bstwo$ on their calibrations,
-every other term zero.  Model B shares this fiducial with every
+every other term zero.  The model shares this fiducial point with
+every
 one-loop variant of \texttt{notes/higher\_order\_bias}, so one
 covariance serves them all.  Its one-loop terms come from CosmoLike's
 C-FAST-PT tables, through the data vector's pair formula, in the
@@ -411,9 +417,9 @@ features nobody has measured.
 Linear bias alone is not enough beyond $\kmax = 0.05\hMpc$: a
 linear-bias fit to a one-loop truth is biased at $0.075$ on every
 layout and under every prior (\texttt{notes/linear\_bias\_kmax}).  The
-forecast therefore uses the one-loop bias model B of
+forecast therefore uses the one-loop fiducial bias model of
 \texttt{notes/higher\_order\_bias}, which defines it in full and
-validates every term; this section states it briefly.  Model B keeps
+validates every term; this section states it briefly.  The model keeps
 the per-bin linear bias of Eq.~\eqref{eq:summodel}, and the real-space
 galaxy power spectrum of bin $i$ is
 \begin{equation}
@@ -499,10 +505,12 @@ a per-bin residual,
   \label{eq:xstructure}
 \end{equation}
 with $t_{X,g}$ the tilt of $X$ in group $g$.  Table~\ref{tab:xcarries}
-lists what each quantity carries.  \textbf{Model B} fixes every tilt
+lists what each quantity carries.  \textbf{Without tilts}, every tilt
+is fixed
 to zero: one $\Delta_2$, $\Delta_s$, $\alpha_0$, $\alpha_2$, $\SNz$
-and $\SNt$ per group, $36$ parameters.  \textbf{Model B + tilts} frees
-the tilts of $\Delta_2$, $\Delta_s$, $\alpha_0$ and $\alpha_2$, with
+and $\SNt$ per group, $36$ parameters.  \textbf{With tilts}, the
+tilts of $\Delta_2$, $\Delta_s$, $\alpha_0$ and $\alpha_2$ are free,
+with
 flat priors, in every group of more than one bin: up to $60$
 parameters.  $\SNz$ and $\SNt$ never tilt: their Poisson part is known
 bin by bin.  The Gaussian priors are centered on zero, with the DESI
@@ -532,8 +540,9 @@ Appendix~\ref{app:impl} gives the implementation.
   \caption{What each quantity of Eq.~\eqref{eq:xstructure} carries.
     The $b_2$ and $\bstwo$ group values are the calibrations of
     Eq.~\eqref{eq:calibrations} plus one Gaussian offset per group.
-    Every tilt is fixed to zero in model B and free (flat prior) in
-    model B + tilts, except for $\SNz$ and $\SNt$, which never tilt.}
+    Every tilt is fixed to zero in the fit without tilts and free
+    (flat prior) in
+    the fit with tilts, except for $\SNz$ and $\SNt$, which never tilt.}
   \label{tab:xcarries}
 \end{table}
 
@@ -550,7 +559,7 @@ Each truth sets every bin's linear bias to its group's known drift
 elsewhere; Appendix~\ref{sec:driftlaws}) plus a residual drawn from
 the pessimistic prior, with $b_2$ and $\bstwo$ following $b_1$ through
 Eq.~\eqref{eq:calibrations}.  The truths are fitted with
-model B + tilts, centered on the growth-tied shape, under the
+the fiducial model, centered on the growth-tied shape, under the
 growth-tied prior and under the pessimistic prior, to first order in
 the truth; the average over the truths and the data noise is exact
 (Appendix~\ref{app:bias}).
@@ -594,7 +603,7 @@ and gives exactly $1$ (Appendix~\ref{sec:inflation}).
   \includegraphics{plots/growth_tied_kmax/growth_tied_kmax.pdf}
   \caption{The accuracy test at every cut: $\eta = \chidof$ of
     $(w_0, w_a)$, $\Omega_m$ and $A_s$ (one panel each, one shared
-    logarithmic scale) for model B + tilts fitted with the growth-tied
+    logarithmic scale) for the fiducial model fitted with the growth-tied
     prior (solid, filled markers) and with the correlated prior, here
     the pessimistic prior (thin dashed, open markers), to truths that
     carry the known drifts plus a residual drawn from the pessimistic
@@ -604,15 +613,16 @@ and gives exactly $1$ (Appendix~\ref{sec:inflation}).
   \label{fig:gtkmax}
 \end{figure}
 
-\section{Model B against $\kmax$}
+\section{The fiducial model against $\kmax$}
 \label{sec:modelb}
 
 \paragraph{The scenarios and the truths.}
 Two scenarios are carried side by side with equal weight: the baseline
-prior with model B, and the pessimistic prior with model B + tilts.
+prior with the fiducial model without tilts, and the pessimistic
+prior with the fiducial model.
 Each fit is given a truth that carries one term at one prior width,
 the same in every bin, or a drift across each group:
-$\alpha_2$ at model B's own width, $\pm 0.5/\kmax^2$; $\SNt = \pm 5$;
+$\alpha_2$ at its own prior width, $\pm 0.5/\kmax^2$; $\SNt = \pm 5$;
 the offsets $(\Delta_2, \Delta_s)$ at one prior width, $\pm(2, 1)$; or
 the calibration drift, which moves $\Delta_2$ and $\Delta_s$ linearly
 across each group, by $1$ and $0.5$ from its first bin to its last
@@ -639,7 +649,7 @@ free priors.
     $0.2$ ($0.35$ and $0.36\sigma$ at $0.075$).  From $0.1$ on its
     largest tested shift is $0.53$--$2.8\sigma$.
   \item The pessimistic scenario passes every cut by construction: the
-    tilts of model B + tilts have the drift's shape and absorb it
+    fiducial model's tilts have the drift's shape and absorb it
     exactly (shifts of order $10^{-12}\sigma$), so the pass carries no
     information on its own.  Its accuracy rests on its honest error
     bars (Section~\ref{sec:accuracy}) and on the reported in-prior
@@ -656,14 +666,16 @@ $0.26\sigma$ at any cut, in either scenario.
   \centering
   \includegraphics[width=\linewidth]{plots/fom_kmax_models/fom_kmax_models.pdf}
   \caption{DESI $C_\ell^{gg}$ alone against $\kmax$ in two scenarios:
-    the baseline prior with model B (top row) and the pessimistic
-    prior with model B + tilts (bottom row), named at the right.
+    the baseline prior with the fiducial model without tilts (top
+    row) and the pessimistic
+    prior with the tilts free (bottom row), named at the right.
     (a)~${\rm FoM}(w_0, w_a)$; (b)~${\rm FoM}(\Omega_m, 10^9 A_s)$;
     (c)~the largest shift of a fit over $(w_0, w_a)$, $\Omega_m$ and
     $A_s$ and over the truths outside its prior (the calibration
     drift), with the $\sigma/3$ line (dotted); the shifts of the
     truths inside the prior are in the folder's \texttt{data.json},
-    not drawn.  Color, line width and marker: the layouts; model B is
+    not drawn.  Color, line width and marker: the layouts; every
+    curve is
     solid with filled markers.  The text in the top panels of (a) and
     (b) quotes the LSST Y1 3x2pt reference.  The bottom row of (c)
     carries no curve: the tilts absorb the calibration drift exactly,
@@ -682,7 +694,8 @@ scenario gives the larger FoMs at every cut,
 ${\rm FoM}(w_0, w_a) = 8.46$ and $9.91$ on the thin layouts at
 $0.2\hMpc$, $1.12$ and $1.18$ times the $7.53$ and $8.42$ of the
 pessimistic scenario, with ${\rm FoM}(\Omega_m, 10^9 A_s)$ at most
-$67.5$, but the calibration drift moves it by more than $\sigma/3$ from $0.075$ on.  Model B + tilts
+$67.5$, but the calibration drift moves it by more than $\sigma/3$
+from $0.075$ on.  The fiducial model
 on the pessimistic prior gives ${\rm FoM}(w_0, w_a) = 0.407$, $0.237$,
 $0.155$ and $0.0426$ at $0.075$ and $7.53$, $8.42$, $2.45$ and $0.300$
 at $0.2$ (layout order), and ${\rm FoM}(\Omega_m, 10^9 A_s) = 56.0$,
@@ -706,12 +719,18 @@ The project likelihood (\texttt{likelihood/desi\_cl.py}) has two bias
 options, \texttt{higher\_order\_bias}: $0$ is linear bias, and $1$ the
 one-loop model with every term per bin ($b_{1,i}$, $\Delta_2$,
 $\Delta_s$, $\alpha_0$, $\alpha_2$, $\SNz$, $\SNt$; $b_3 = 0$), in
-which a zero amplitude switches a term off at no cost.  Model B and
-model B + tilts are parameter files of option $1$, which state the
-grouping (\texttt{scripts/make\_desi\_params.py --model-b}); the paper
+which a zero amplitude switches a term off at no cost.  The fiducial
+model is one
+parameter file of option $1$ per layout, which states the
+grouping, frees the tilts and fixes $\alpha_2 = 0$ in every bin
+(\texttt{scripts/make\_desi\_params.py --model-b};
+``model b'' in the script flag and the file names is the historical
+key of the fiducial widths; a fit without tilts holds the tilt
+parameters fixed); the paper
 yamls \texttt{EXAMPLE\_EVALUATE1}--\texttt{4.yaml} run the four
-layouts, in layout order, and the exploration yamls keep model A,
-which \texttt{notes/higher\_order\_bias} defines alongside model B.
+layouts, in layout order.  A narrower one-loop variant built for
+$\kmax = 0.075\hMpc$, which \texttt{notes/higher\_order\_bias}
+records as the motivation for the fiducial widths, is not shipped.
 The likelihood computes $b_{2,i}$ and $b_{s^2,i}$ from $b_{1,i}$ with
 Eq.~\eqref{eq:calibrations} and passes them to CosmoLike per bin.
 \begin{itemize}
@@ -795,7 +814,7 @@ higher-order columns of group $g$ are sums over its bins,
   \label{eq:hocolumns}
 \end{equation}
 and likewise for the other terms, with $t_{2,g}$ the tilt of
-$\Delta_2$ in group $g$.  Model B + tilts adds the tilt columns of
+$\Delta_2$ in group $g$.  The fit with tilts adds the tilt columns of
 $\Delta_2$, $\Delta_s$, $\alpha_0$ and $\alpha_2$, with flat priors,
 in every group of more than one bin: the free straight line in
 redshift that $s_g$ gives the linear bias.
@@ -886,8 +905,8 @@ and the PDF.  The data come from the notebook
     nuisance combinations.
   \item \textbf{The $\sigma_v$ priors.}  The widths stored in the
     derivative caches (the paper yamls') are exactly six times the
-    exploration widths of Table~\ref{tab:sigv} that model B and
-    model B + tilts use.
+    exploration widths of Table~\ref{tab:sigv} that this note's
+    $\alpha_2$-free fits use.
   \item \textbf{The loop templates.}  With $b_3 = 0$, CosmoLike's
     C-FAST-PT loop templates and Python FAST-PT agree on the
     $\Delta d_{\rm com} = 62$~Mpc vector, pairs included, to

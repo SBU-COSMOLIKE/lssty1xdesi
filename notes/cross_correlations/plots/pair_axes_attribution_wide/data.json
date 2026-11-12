@@ -1,0 +1,794 @@
+{
+ "about": "FoM(w0, wa) and FoM(Omega_m, 10^9 A_s) of the fiducial model (the paper model, pessimistic linear-bias prior, sigma_v fitted) along the gap axis with blocks of nuisance parameters held at the fiducial (deleted from the Fisher matrix before the inversion), over the same figure of merit of the Delta z = 0.2 layout on its current pair list with the same block held fixed, at the same k_max. Written by notes/cross_correlations/plots/make_pair_axes_attribution_wide_data.py from the per-layout fits of scripts/compute_pair_axes_fits.py. k_max is the z = 0 value of a per-bin cut at k_max/D(zbar_i).",
+ "kmax_h_per_Mpc": [
+  "0.075",
+  "0.1",
+  "0.2"
+ ],
+ "blocks": [
+  "all free",
+  "b1 residuals fixed (level, slope free)",
+  "b2 bs2 fixed",
+  "b1 level and slope fixed (residuals free)",
+  "all nuisance fixed"
+ ],
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 12.617147047153539,
+       "fom_om_as_ratio_to_wide": 7.613307900505356
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 13.156122804285,
+       "fom_om_as_ratio_to_wide": 7.815588731234797
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 12.401138489838424,
+       "fom_om_as_ratio_to_wide": 7.321086160633392
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 4.43538618641977,
+       "fom_om_as_ratio_to_wide": 3.381010476888941
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.6223763833852316,
+       "fom_om_as_ratio_to_wide": 1.2847258627734497
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 12.274520597024633,
+       "fom_om_as_ratio_to_wide": 8.010007399484431
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 12.89360988352098,
+       "fom_om_as_ratio_to_wide": 8.384446317721139
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 13.685848200565447,
+       "fom_om_as_ratio_to_wide": 8.719245262114512
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 4.140369386173039,
+       "fom_om_as_ratio_to_wide": 3.358662996448392
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 3.6830306141267175,
+       "fom_om_as_ratio_to_wide": 3.584685584297899
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 21.829339271731197,
+       "fom_om_as_ratio_to_wide": 15.71785567640156
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 22.54915857979508,
+       "fom_om_as_ratio_to_wide": 16.224213159315163
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 22.75946516983877,
+       "fom_om_as_ratio_to_wide": 14.34669832387977
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 6.613962123436049,
+       "fom_om_as_ratio_to_wide": 6.38695006352168
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 6.922189153780969,
+       "fom_om_as_ratio_to_wide": 7.632253574908158
+      }
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 17.046248023883344,
+       "fom_om_as_ratio_to_wide": 9.486432137198975
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 17.62926500840861,
+       "fom_om_as_ratio_to_wide": 9.706481630227485
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 15.565967495730808,
+       "fom_om_as_ratio_to_wide": 8.724428702980585
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 5.31951159273644,
+       "fom_om_as_ratio_to_wide": 4.215176423998182
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.7122829492811007,
+       "fom_om_as_ratio_to_wide": 1.410883869249789
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 17.094206931431845,
+       "fom_om_as_ratio_to_wide": 10.06974865820496
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 17.688800951398836,
+       "fom_om_as_ratio_to_wide": 10.421570792695594
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 16.317733071052082,
+       "fom_om_as_ratio_to_wide": 9.83949296136541
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 4.868092433082946,
+       "fom_om_as_ratio_to_wide": 3.98520956109616
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 3.827610851536023,
+       "fom_om_as_ratio_to_wide": 3.6877829272403377
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 27.102920632838917,
+       "fom_om_as_ratio_to_wide": 17.281789632907653
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 27.8177021509169,
+       "fom_om_as_ratio_to_wide": 17.74358112960343
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 25.419427770008078,
+       "fom_om_as_ratio_to_wide": 14.905539438951392
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 7.087889182943512,
+       "fom_om_as_ratio_to_wide": 6.808094942725524
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 7.10425961634702,
+       "fom_om_as_ratio_to_wide": 7.726108376655107
+      }
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 18.65479990311965,
+       "fom_om_as_ratio_to_wide": 10.447428585499056
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 19.27599219369618,
+       "fom_om_as_ratio_to_wide": 10.68484070187848
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 16.73005184577708,
+       "fom_om_as_ratio_to_wide": 9.429103959504605
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 5.629392722434262,
+       "fom_om_as_ratio_to_wide": 4.463801697336306
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.748745999347959,
+       "fom_om_as_ratio_to_wide": 1.4428608102459926
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 17.9345646644241,
+       "fom_om_as_ratio_to_wide": 10.57333174735611
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 18.53493060685033,
+       "fom_om_as_ratio_to_wide": 10.928506532995872
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 16.767182232339536,
+       "fom_om_as_ratio_to_wide": 10.11341098107388
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 4.999954805741884,
+       "fom_om_as_ratio_to_wide": 4.095833364484149
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 3.851615834049139,
+       "fom_om_as_ratio_to_wide": 3.7124967315980046
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 27.673217005317245,
+       "fom_om_as_ratio_to_wide": 17.592649066792656
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 28.39502362087364,
+       "fom_om_as_ratio_to_wide": 18.057015760021173
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 25.7674254397491,
+       "fom_om_as_ratio_to_wide": 15.065339234890576
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 7.192092654041928,
+       "fom_om_as_ratio_to_wide": 6.896871160977139
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 7.140247414031558,
+       "fom_om_as_ratio_to_wide": 7.738596703072105
+      }
+     }
+    },
+    {
+     "g": 3,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 19.50249049915922,
+       "fom_om_as_ratio_to_wide": 10.858485428507088
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 20.135033221322324,
+       "fom_om_as_ratio_to_wide": 11.097132608809176
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 17.350078815113253,
+       "fom_om_as_ratio_to_wide": 9.724983077856098
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 5.7308961841588,
+       "fom_om_as_ratio_to_wide": 4.55290533557238
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.7591293866235942,
+       "fom_om_as_ratio_to_wide": 1.453691511646748
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 18.532980688132277,
+       "fom_om_as_ratio_to_wide": 10.869930721939399
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 19.140090363217407,
+       "fom_om_as_ratio_to_wide": 11.228625529890556
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 17.106417411055304,
+       "fom_om_as_ratio_to_wide": 10.273932174653334
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 5.0486058125107585,
+       "fom_om_as_ratio_to_wide": 4.142571015833211
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 3.857778628464821,
+       "fom_om_as_ratio_to_wide": 3.720206146947735
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 28.124383735595252,
+       "fom_om_as_ratio_to_wide": 17.770077486404073
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 28.850546580185142,
+       "fom_om_as_ratio_to_wide": 18.234829348240396
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 26.004051943061484,
+       "fom_om_as_ratio_to_wide": 15.13798379801431
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 7.219493235136408,
+       "fom_om_as_ratio_to_wide": 6.9243732705366074
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 7.14577587769856,
+       "fom_om_as_ratio_to_wide": 7.741915995447609
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 7.879303500925994,
+       "fom_om_as_ratio_to_wide": 3.8543807887498414
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 8.463651059765994,
+       "fom_om_as_ratio_to_wide": 4.103830280616125
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 8.840106482918014,
+       "fom_om_as_ratio_to_wide": 4.19748981658861
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 4.6289455983417325,
+       "fom_om_as_ratio_to_wide": 2.628603485316898
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.4481812838138053,
+       "fom_om_as_ratio_to_wide": 0.6876826673533457
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 14.33470202973658,
+       "fom_om_as_ratio_to_wide": 7.23183211574395
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 14.871825366431956,
+       "fom_om_as_ratio_to_wide": 7.4960727280560615
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 18.03031000139866,
+       "fom_om_as_ratio_to_wide": 8.907288620344072
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 5.36545628968915,
+       "fom_om_as_ratio_to_wide": 3.8453979920530768
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 4.1032139147237014,
+       "fom_om_as_ratio_to_wide": 3.619764700159224
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 25.898166179103892,
+       "fom_om_as_ratio_to_wide": 16.628861019319572
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 26.587879790625205,
+       "fom_om_as_ratio_to_wide": 17.09527658137322
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 28.72858048556612,
+       "fom_om_as_ratio_to_wide": 16.311299695148733
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 8.496811567594845,
+       "fom_om_as_ratio_to_wide": 7.8619813321873915
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 8.235098567260826,
+       "fom_om_as_ratio_to_wide": 8.85369614474386
+      }
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 7.879303500925994,
+       "fom_om_as_ratio_to_wide": 3.8543807887498414
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 8.463651059765994,
+       "fom_om_as_ratio_to_wide": 4.103830280616125
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 8.840106482918014,
+       "fom_om_as_ratio_to_wide": 4.19748981658861
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 4.6289455983417325,
+       "fom_om_as_ratio_to_wide": 2.628603485316898
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.4481812838138053,
+       "fom_om_as_ratio_to_wide": 0.6876826673533457
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 21.430954525477894,
+       "fom_om_as_ratio_to_wide": 10.85783395836923
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 21.903543922418557,
+       "fom_om_as_ratio_to_wide": 11.089095674471224
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 21.47309027507226,
+       "fom_om_as_ratio_to_wide": 10.818398542035219
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 5.886147263743024,
+       "fom_om_as_ratio_to_wide": 4.291269141564362
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 4.1825375712236905,
+       "fom_om_as_ratio_to_wide": 3.6963070241466434
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 34.97299171090909,
+       "fom_om_as_ratio_to_wide": 21.03770573512936
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 35.77735529753378,
+       "fom_om_as_ratio_to_wide": 21.543141611782474
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 31.876590246013564,
+       "fom_om_as_ratio_to_wide": 17.56380384821908
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 8.911145158728788,
+       "fom_om_as_ratio_to_wide": 8.27061077762533
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 8.454528874074795,
+       "fom_om_as_ratio_to_wide": 9.019605837953083
+      }
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 8.252035668055868,
+       "fom_om_as_ratio_to_wide": 4.346164486096527
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 8.837147341257385,
+       "fom_om_as_ratio_to_wide": 4.618696493512313
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 9.214628442746402,
+       "fom_om_as_ratio_to_wide": 4.7656722201556665
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 4.788421300357056,
+       "fom_om_as_ratio_to_wide": 2.8916485108447763
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.4971875399791363,
+       "fom_om_as_ratio_to_wide": 0.7713654496571699
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 22.624607908554395,
+       "fom_om_as_ratio_to_wide": 11.347559007659733
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 23.10217074135482,
+       "fom_om_as_ratio_to_wide": 11.579559050920144
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 22.169844487582726,
+       "fom_om_as_ratio_to_wide": 11.109353509328235
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 6.177799721574961,
+       "fom_om_as_ratio_to_wide": 4.602446457272234
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 4.24596837615028,
+       "fom_om_as_ratio_to_wide": 3.7548186598319404
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 37.23686539068986,
+       "fom_om_as_ratio_to_wide": 21.533653301290713
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 38.055751187740974,
+       "fom_om_as_ratio_to_wide": 22.030895145973485
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 33.322089233618044,
+       "fom_om_as_ratio_to_wide": 17.815214760432124
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 9.20539522619401,
+       "fom_om_as_ratio_to_wide": 8.525081962004867
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 8.59445801721426,
+       "fom_om_as_ratio_to_wide": 9.068770243774589
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 3.8742276228760137,
+       "fom_om_as_ratio_to_wide": 3.00538064151612
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 4.20689627200466,
+       "fom_om_as_ratio_to_wide": 3.2103592945180557
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 4.765336767900299,
+       "fom_om_as_ratio_to_wide": 3.6540074330294288
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 3.5169601711792304,
+       "fom_om_as_ratio_to_wide": 3.055522437538687
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.6506217607045564,
+       "fom_om_as_ratio_to_wide": 1.6489473586166472
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 4.9827810398415995,
+       "fom_om_as_ratio_to_wide": 3.982441191735592
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 5.25629217424889,
+       "fom_om_as_ratio_to_wide": 4.178663723755611
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 5.5311677263967365,
+       "fom_om_as_ratio_to_wide": 4.381248856564127
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 2.8142851678151857,
+       "fom_om_as_ratio_to_wide": 2.5801634781814724
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.8094843253100907,
+       "fom_om_as_ratio_to_wide": 2.108699659384965
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 7.61393298726811,
+       "fom_om_as_ratio_to_wide": 6.217837666430962
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 7.855818177547575,
+       "fom_om_as_ratio_to_wide": 6.398726004088097
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 7.182539088565872,
+       "fom_om_as_ratio_to_wide": 5.408240023983613
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 3.2106710315772853,
+       "fom_om_as_ratio_to_wide": 3.2349390626720043
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 2.752635203336778,
+       "fom_om_as_ratio_to_wide": 3.239341901709139
+      }
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 5.451172473838466,
+       "fom_om_as_ratio_to_wide": 3.9726568030744414
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 5.771863827675322,
+       "fom_om_as_ratio_to_wide": 4.15408505616848
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 5.858478713065327,
+       "fom_om_as_ratio_to_wide": 4.257685133386877
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 3.7204257622555037,
+       "fom_om_as_ratio_to_wide": 3.260611035369706
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.6822515736185393,
+       "fom_om_as_ratio_to_wide": 1.6880855742848464
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 5.705017111323105,
+       "fom_om_as_ratio_to_wide": 4.4423732602417685
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 5.982676891419445,
+       "fom_om_as_ratio_to_wide": 4.63670073258223
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 5.954466903516613,
+       "fom_om_as_ratio_to_wide": 4.623715235830277
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 2.9107338600220745,
+       "fom_om_as_ratio_to_wide": 2.681655923189347
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.8211976291827,
+       "fom_om_as_ratio_to_wide": 2.1273200218294965
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 7.977279831982855,
+       "fom_om_as_ratio_to_wide": 6.448266636163304
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 8.224321423414088,
+       "fom_om_as_ratio_to_wide": 6.631407389337057
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 7.371876958091952,
+       "fom_om_as_ratio_to_wide": 5.513611490470624
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 3.254304171947319,
+       "fom_om_as_ratio_to_wide": 3.2910548249679623
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 2.759863363188505,
+       "fom_om_as_ratio_to_wide": 3.2457388691214617
+      }
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 6.029427676721669,
+       "fom_om_as_ratio_to_wide": 4.265203687627839
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 6.353622486025366,
+       "fom_om_as_ratio_to_wide": 4.443560158288359
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 6.2839752030355935,
+       "fom_om_as_ratio_to_wide": 4.444823202125361
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 3.7680560166779937,
+       "fom_om_as_ratio_to_wide": 3.303882731166494
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.688614697418315,
+       "fom_om_as_ratio_to_wide": 1.696878638502795
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 6.032101925907746,
+       "fom_om_as_ratio_to_wide": 4.628463060107354
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 6.310313439649043,
+       "fom_om_as_ratio_to_wide": 4.820893663111808
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 6.150384688332664,
+       "fom_om_as_ratio_to_wide": 4.715665927320387
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 2.9295276111766513,
+       "fom_om_as_ratio_to_wide": 2.7012267085396204
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.8230626709529598,
+       "fom_om_as_ratio_to_wide": 2.13109008440115
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 8.117557574405225,
+       "fom_om_as_ratio_to_wide": 6.532132768018614
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 8.36577564679284,
+       "fom_om_as_ratio_to_wide": 6.715659153548525
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 7.443274432083185,
+       "fom_om_as_ratio_to_wide": 5.54950693294875
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 3.2631246265398794,
+       "fom_om_as_ratio_to_wide": 3.3035498923559694
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 2.7602084470982335,
+       "fom_om_as_ratio_to_wide": 3.2468902211967774
+      }
+     }
+    },
+    {
+     "g": 3,
+     "0.075": {
+      "all free": {
+       "fom_ratio_to_wide": 6.165252503500407,
+       "fom_om_as_ratio_to_wide": 4.339977371324
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 6.491703259785968,
+       "fom_om_as_ratio_to_wide": 4.518595094564752
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 6.382863814070249,
+       "fom_om_as_ratio_to_wide": 4.494273577202847
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 3.7808087528460383,
+       "fom_om_as_ratio_to_wide": 3.3164141155842497
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.6904627249229047,
+       "fom_om_as_ratio_to_wide": 1.6996402151091843
+      }
+     },
+     "0.1": {
+      "all free": {
+       "fom_ratio_to_wide": 6.11265462533753,
+       "fom_om_as_ratio_to_wide": 4.677806576874419
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 6.391598201506591,
+       "fom_om_as_ratio_to_wide": 4.8702976545342045
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 6.196773780979727,
+       "fom_om_as_ratio_to_wide": 4.740380904273834
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 2.935159136777349,
+       "fom_om_as_ratio_to_wide": 2.707545161390474
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 1.8235419122368066,
+       "fom_om_as_ratio_to_wide": 2.1323603139955583
+      }
+     },
+     "0.2": {
+      "all free": {
+       "fom_ratio_to_wide": 8.15197909638764,
+       "fom_om_as_ratio_to_wide": 6.557061725877628
+      },
+      "b1 residuals fixed (level, slope free)": {
+       "fom_ratio_to_wide": 8.400849798466503,
+       "fom_om_as_ratio_to_wide": 6.740978303327009
+      },
+      "b2 bs2 fixed": {
+       "fom_ratio_to_wide": 7.459304562540199,
+       "fom_om_as_ratio_to_wide": 5.560268281063127
+      },
+      "b1 level and slope fixed (residuals free)": {
+       "fom_ratio_to_wide": 3.2655944520102382,
+       "fom_om_as_ratio_to_wide": 3.307549584849972
+      },
+      "all nuisance fixed": {
+       "fom_ratio_to_wide": 2.7602734850886255,
+       "fom_om_as_ratio_to_wide": 3.2472982690083034
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

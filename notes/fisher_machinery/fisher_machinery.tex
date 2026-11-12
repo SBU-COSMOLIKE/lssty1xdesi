@@ -73,7 +73,8 @@
 
 \paragraph{The question.}
 The project's Fisher notebooks report figures of merit (FoMs),
-parameter errors and parameter shifts for four bias models, up to four
+parameter errors and parameter shifts for the linear-bias and one-loop
+bias models, up to four
 linear-bias priors, seven scale cuts and four bin layouts, under dozens
 of assumed truths.  One evaluation of the data vector runs CAMB, the
 code that computes the matter power spectrum, and CosmoLike, the code
@@ -209,7 +210,8 @@ around each group's free line (Section~\ref{sec:cuts}).
 \paragraph{The velocity dispersions.}
 Seven $\sigma_v$ groups (BGS split at $\bar{z} = 0.255$), each with a
 Gaussian prior centered on its fiducial; the paper widths are six
-times the exploration widths that model B and model B + tilts use:
+times the exploration widths that the $\alpha_2$-free exploration
+fits use:
 \begin{center}
   \begin{tabular}{lccccccc}
     \hline
@@ -228,10 +230,12 @@ centered on the fiducial; these widths are what the derivative caches
 store.
 
 \paragraph{The model variants on this point.}
-The paper model is model B + tilts without $\alpha_2$, on the paper
-$\sigma_v$ widths.  Model B and model B + tilts (the variants of the
-$\kmax$ scan) use the exploration $\sigma_v$ widths, free
-$\alpha_{2,g}$ per group, and the Gaussian widths $2$ ($\Delta_{2,g}$),
+The paper model is the fiducial model: per-group offsets and tilts,
+$\alpha_2 = 0$ in every bin, the paper
+$\sigma_v$ widths.  The variants of the
+$\kmax$ scan fit it with $\alpha_2$ free, with and without the
+tilts, on the exploration $\sigma_v$ widths, with free
+$\alpha_{2,g}$ per group and the Gaussian widths $2$ ($\Delta_{2,g}$),
 $1$ ($\Delta_{s,g}$), $2$ (${\rm SN}_{0,g}$) and $5$
 (${\rm SN}_{2,g}$); the counterterm widths are $0.5/\kmax^2$ at each
 cut, and every tilt is flat.  All variants run under the baseline
@@ -449,7 +453,7 @@ cosmological parameter, each velocity dispersion, and, separately in
 every thin bin, each of the six bias quantities of
 Section~\ref{sec:model} plus the redshift-space counterterm
 $\alpha_{2,i}$ -- seven per-bin families in all.  The paper model
-fixes $\alpha_{2,i} = 0$, but model B frees it and the shift tests of
+fixes $\alpha_{2,i} = 0$, but the exploration fits free it and the shift tests of
 Section~\ref{sec:downstream} assume truths with it, so the base
 carries its columns too.  For each knob, the code computes how every
 band power changes when that
@@ -1423,7 +1427,8 @@ The columns are taken in the batches of
 Section~\ref{sec:operators}, two evaluations per batch, and the
 forward and backward differences check the linearity: they agree to at
 most $1.6\times10^{-10}$ of the column over the four layouts.  The
-paper model fixes $\alpha_{2,i} = 0$; the columns serve model B and
+paper model fixes $\alpha_{2,i} = 0$; the columns serve the fits
+that free it and
 the shift tests of Section~\ref{sec:downstream}.
 
 \paragraph{Terms 3 and 4: the stochastic templates, added outside
@@ -1606,10 +1611,12 @@ docstring holds the cache rules and the parallel layout.
 \subsection{More cross spectra: how many batches, and at what cost}
 \label{sec:morepairs}
 
-Every count above assumes today's pair lists.  Two prospective changes
-would lengthen them: measuring the spectra of bins two apart within a
+Every count above assumes the current pair lists.  Two changes
+lengthen them: measuring the spectra of bins two apart within a
 sample, $C^{i,i+2}$, and rebuilding the lists at the larger dispersions
-$\sigma_v$ that the paper priors allow (both below).  The price of a
+$\sigma_v$ that the paper priors allow (both below;
+\texttt{notes/cross\us correlations} forecasts what those pairs
+add).  The price of a
 longer list is set by Eq.~\eqref{eq:neval}: with $N_{\rm fam} = 4$ and
 $N_{\rm stencil} = 20$ fixed,
 \begin{equation*}
@@ -1728,6 +1735,37 @@ $\Delta z = 0.05$ ($N_{\rm eval} = 190$, $36$ evaluations above the
 floor) and four on $\Delta z = 0.2$, whose two ELG1 bins see fewer
 partners.
 
+Figure~\ref{fig:pairdegree} draws this on every layout.  The bins
+with the most partners sit in the shared LRG3--ELG1 volume: seven
+partners each on the three thin layouts (the bin's two neighbours on
+each side in its own sample, plus three bins of the other sample).
+What sets the greedy count is not that total but the number of
+partners already colored when greedy reaches the bin.  An LRG3 bin is
+reached before every ELG1 bin, so only its two predecessors count, and
+it lands in batch $1$, $2$ or $3$; an ELG1 bin is reached after all of
+them, with up to five colored partners, and needs batch $4$, $5$ or
+$6$.  Greedy therefore uses at most one batch more than the largest
+number of earlier partners -- five, hence six batches -- not one more
+than the largest number of partners, which would allow eight.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth,height=0.80\textheight,keepaspectratio]{plots/pair_graph_bandwidth2/pair_graph_bandwidth2.pdf}
+  \caption{The pair graph of the four DESI layouts with every pair of
+    bins two apart in one sample, $C^{i,i+2}$, added to today's cross
+    pairs.  Upper part: the raw $n(z)$ of each layout at unit peak and
+    its pair graph; thin dark segments are today's pairs, vermillion
+    dash-dotted arcs the added ones, drawn above the BGS/LRG row and
+    below the ELG row.  Black dots mark the bins with the most
+    partners; the texts give that number and how many of those
+    partners come earlier in bin order.  Lower part: the LRG3/ELG1
+    volume magnified, with each bin's batch in the greedy coloring in
+    bin order written in its dot (LRG3 cycles through $1$--$3$, ELG1
+    through $4$--$6$).  The gray band marks where LRG3 and ELG1
+    observe the same volume.}
+  \label{fig:pairdegree}
+\end{figure}
+
 A four-batch coloring exists on every layout, and the exact search
 produces one: inside each sample it cycles with period $3$, the toy's
 pattern, and in the LRG3--ELG1 shared volume both groups cycle with
@@ -1843,9 +1881,9 @@ truth.  On the $28$-pair list the largest clique and the minimum stay
 at four batches; the greedy rule needs five ($N_{\rm eval} = 172$),
 and DSATUR finds the four.  These are linear-response estimates
 extrapolated over $100$--$200$~km/s -- the blur is not linear in
-$\sigma_v$ -- and the wider question, a chain exploring the full
-widened priors, is the rebuild at the prior edge queued in the
-Fingers-of-God note (its appendix ``Open issues'').
+$\sigma_v$ -- and the wider question, what the lists at the prior
+edge measure, is answered by the forecasts of
+\texttt{notes/cross\us correlations} (its $\sigma_v$ axis).
 
 \paragraph{The cost.}
 A longer pair list is a new data vector, so a layout needs its pair
@@ -1894,8 +1932,8 @@ $2.1$ today.
 The code keeps the greedy coloring in bin order: it is simple to
 explain and to check, and on today's lists it already reaches the
 minimum.  On the extended lists with every within-sample $C^{i,i+2}$
-measured -- the case studied next if the $\sigma_v = 600$~km/s runs
-show that the extra pairs carry information -- it overshoots the
+measured -- the first chain of the gap axis that
+\texttt{notes/cross\us correlations} forecasts -- it overshoots the
 four-batch minimum with six batches, $190$ evaluations per base
 against $154$, an accepted cost of $18$ evaluations per extra batch.
 On the $\sigma_v = 600$~km/s list of $\Delta z = 0.02$, the greedy
@@ -1986,7 +2024,7 @@ the comparison point of the information test below.
 $F_{\rm prior}$ adds precision and needs no data.  The diagonal Gaussian
 priors, all centered on zero, sit on $\sigma_v$ and on the model's
 group parameters (Section~\ref{sec:fiducial}): the $\sigma_v$ widths
-are the exploration fits' for model B and model B + tilts, and six
+are the exploration fits' for the $\alpha_2$-free variants, and six
 times them for the paper model, the paper yaml's own widths.  The
 counterterm widths,
 $0.5/\kmax^2$, change with the cut, so the diagonal is rebuilt for each
@@ -2130,13 +2168,15 @@ Each $\mG_m$ costs one Cholesky factorization of at most $7{,}621$
 rows, about $n_K^3/3 \approx 1.5\times10^{11}$ floating-point
 operations, and one triangular solve, eight times per layout.  A Fisher
 system then costs $\mM\T\mG_m\mM$, with $\nbase \le 645$ and
-$\npar \le 164$ (model B + tilts on $\Delta z = 0.02$), about
+$\npar \le 164$ (the fiducial model with $\alpha_2$ free on
+$\Delta z = 0.02$), about
 $2\,\nbase^2 \npar \approx 1.4\times10^{8}$ operations, plus the
 diagonalization of an $\npar \times \npar$ matrix: a fraction of a
 second.
 
 The $\kmax$ scan of the notebook has $168$ systems (four
-layouts, seven cuts, model B and model B + tilts, and the baseline,
+layouts, seven cuts, the fiducial model with $\alpha_2$ free, with
+and without the tilts, and the baseline,
 pessimistic and
 free priors; the growth-tied prior fails the accuracy test and is left
 out), $162$ with a fit and $6$ without any band.  In operations, all of
@@ -2263,8 +2303,9 @@ scored from the study's derivatives on the paper-fiducial cuts (the
 \texttt{data.json} behind Figure~\ref{fig:convergence}).  The error
 and shift stabilities, and the offsets of the other controls (CAMB's
 boost among them), are
-scored on the study's own system, model B + tilts with $\alpha_2$ free
-and the exploration $\sigma_v$ widths; the text marks each such number.
+scored on the study's own system, the fiducial model with $\alpha_2$
+free and the exploration $\sigma_v$ widths; the text marks each such
+number.
 The derivative columns do not
 depend on the model, so both scorings test the same columns
 (Appendix~\ref{sec:open}).
@@ -4256,17 +4297,20 @@ confirms, bit for bit, that no step survives its evaluation.
     $1.6\%$ of the errors and $0.007\sigma$ at the final settings,
     DerivKit's $2.2\%$ and $0.006\sigma$), the CAMB-boost and
     other-control offsets and the column-swap attribution are scored
-    on model B + tilts with $\alpha_2$ free and the exploration
+    on the fiducial model with $\alpha_2$ free and the exploration
     $\sigma_v$ widths, the convergence study's own system; only the
     FoMs were rescored for the paper model on the paper-fiducial cuts.
     The derivative columns are shared, so a rescoring would change the
     quoted stabilities, not the chosen settings.
-  \item \textbf{The extra cross pairs, and DSATUR.}  If the
-    $\sigma_v = 600$~km/s runs show that the pairs of bins two apart
-    carry information, the next study measures every within-sample
-    $C^{i,i+2}$: new pair lists, masks, covariances, scale cuts and
-    bases on all four layouts, cached next to today's caches so the
-    figures of merit can be compared (Section~\ref{sec:morepairs}).
+  \item \textbf{The extra cross pairs, and DSATUR.}  The pairs of
+    bins two apart do carry information:
+    \texttt{notes/cross\us correlations} forecasts the extended
+    lists (new pair lists, masks, covariances, scale cuts and bases,
+    cached next to the current caches; Section~\ref{sec:morepairs})
+    and attributes the gain to the free bias levels and slopes
+    rather than to line-of-sight information of their own.  The
+    analysis keeps the current list; the extended lists are a
+    comparison against it.
     The code keeps the greedy coloring in bin order because it is
     simple to explain and to check; on those extended lists it uses
     six batches where four suffice, $18$ extra evaluations per batch,

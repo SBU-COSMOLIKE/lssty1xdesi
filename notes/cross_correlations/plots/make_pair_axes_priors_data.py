@@ -10,12 +10,17 @@ The priors act on the per-bin amplitudes beta_i = b_1,i D(zbar_i):
   exp(-|z_i - z_j|/L), L = 0.2;
 - pessimistic (the paper prior): the same with 3% in every group and L = 0.05;
 - free: every beta_i free, no prior.
-Every point is a row selection from the layout's largest derivative base (the
-pair-axes study), sigma_v fitted and fixed, k_max = 0.075, 0.1, 0.2 h/Mpc
-(z = 0 value of a per-bin cut at k_max/D(zbar_i)).
+Every point is a row selection from the layout's largest derivative base
+(scripts/compute_pair_axes_fits.py, its prior fits), sigma_v fitted and
+fixed, k_max = 0.075, 0.1, 0.2 h/Mpc (z = 0 value of a per-bin cut at
+k_max/D(zbar_i)).
 
-    python make_pair_axes_priors_data.py <prior_gain_dcom62.json> \
-        <prior_gain_dz0p02.json> <prior_gain_dz0p05.json>
+    python make_pair_axes_priors_data.py <pair_axes_fits_dcom62.json> \
+        <pair_axes_fits_dz0p02.json> <pair_axes_fits_dz0p05.json>
+
+The three files are the chains/pair_axes_fits_<layout>.json that
+scripts/compute_pair_axes_fits.py writes; they may come in any order, and
+the figure draws the layouts in the order of LABELS.
 """
 import json
 import os
@@ -30,13 +35,49 @@ LABELS = {
 PRIORS = ['baseline', 'pessimistic', 'free']
 
 
-def main(paths):
-    layouts = []
-    cuts = None
+def read_fits(paths):
+    """Read the fits files and return them in the order of LABELS.
+
+    Arguments:
+      paths = the chains/pair_axes_fits_<layout>.json files of the LABELS
+              layouts.
+
+    Returns:
+      list of the files' contents, one per LABELS layout, in LABELS order.
+
+    Raises:
+      RuntimeError when a file's layout is not in LABELS, is given twice, or
+      a LABELS layout has no file.
+    """
+    by_layout = {}
     for path in paths:
         with open(path) as f:
-            fit = json.load(f)
-        label, color = LABELS[fit['layout']]
+            content = json.load(f)
+        layout = content['layout']
+        if layout not in LABELS:
+            raise RuntimeError(f'{path} holds the layout {layout!r}; the figure draws '
+                               f'{list(LABELS)}')
+        if layout in by_layout:
+            raise RuntimeError(f'{path}: the layout {layout!r} is given twice')
+        by_layout[layout] = content
+    ordered = []
+    for layout in LABELS:
+        if layout not in by_layout:
+            raise RuntimeError(f'no fits file of the layout {layout!r} among {paths}')
+        ordered.append(by_layout[layout])
+    return ordered
+
+
+def main(paths):
+    """Write pair_axes_priors/data.json from the fits files of paths.
+
+    Side effects: writes the data.json file next to this script.
+    """
+    layouts = []
+    cuts = None
+    for content in read_fits(paths):
+        fit = content['priors']
+        label, color = LABELS[content['layout']]
         cuts = list(fit['cuts'])
         points = {}
         for cut, entry in fit['cuts'].items():
@@ -56,7 +97,7 @@ def main(paths):
                                      priors[prior][sv]['fom_om_as']/today[prior][sv]['fom_om_as']}
                             for sv in ('sigma_v free', 'sigma_v fixed')}
                     for prior in PRIORS}
-        layouts.append({'name': fit['layout'], 'label': label, 'color': color,
+        layouts.append({'name': content['layout'], 'label': label, 'color': color,
                         'points': [points[g] for g in sorted(points)]})
     data = {
         'about': (
@@ -64,11 +105,12 @@ def main(paths):
             'axis under the baseline, pessimistic and free linear-bias priors, absolute '
             'and over the same prior\'s fit on the current pair list. The growth-tied '
             'prior fails the accuracy test of notes/correlated_bias_prior_v2 and is not '
-            'included. Row selection from each layout\'s largest derivative base (the '
-            'pair-axes study); the pessimistic ratios equal those of plots/pair_axes_gap. '
-            'Written by notes/cross_correlations/plots/make_pair_axes_priors_data.py from '
-            'the study\'s prior_gain_<layout>.json files. k_max is the z = 0 value of a '
-            'per-bin cut at k_max/D(zbar_i).'),
+            'included. Row selection from each layout\'s largest derivative base '
+            '(scripts/compute_pair_axes_fits.py); the pessimistic ratios equal those of '
+            'plots/pair_axes_gap. Written by '
+            'notes/cross_correlations/plots/make_pair_axes_priors_data.py from the prior '
+            'fits of scripts/compute_pair_axes_fits.py (chains/pair_axes_fits_<layout>'
+            '.json). k_max is the z = 0 value of a per-bin cut at k_max/D(zbar_i).'),
         'kmax_h_per_Mpc': cuts,
         'priors': PRIORS,
         'layouts': layouts,
@@ -81,6 +123,6 @@ def main(paths):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 1 + len(LABELS):
         raise SystemExit(__doc__)
     main(sys.argv[1:])

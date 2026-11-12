@@ -73,11 +73,11 @@ flowchart TB
   A --> E["EXAMPLE_NAUTILUS1.py: nested sampling"]
   A --> F["EXAMPLE_EVALUATE_COVARIANCE.ipynb: covariance terms"]
   F --> G["covariance/compute_covariance.py: production covariance"]
-  B --> H["EXAMPLE_EVALUATE_FISHER_MODEL.ipynb: the paper model's Fisher forecast"]
+  B --> H["EXAMPLE_EVALUATE_FISHER_MODEL.ipynb: the fiducial model's Fisher forecast"]
 ```
 
 - `EXAMPLE_EVALUATE1.yaml` evaluates the fiducial point of the
-  $`\Delta d_\mathrm{com} = 62`$ Mpc comoving binning with the paper
+  $`\Delta d_\mathrm{com} = 62`$ Mpc comoving binning with the fiducial
   model ([one-loop bias](#higher_order_bias)); a commented
   `bfmt` theory block shows how to turn each baryonic-feedback model on
   ([baryonic feedback](#baryonic_feedback)).
@@ -85,17 +85,16 @@ flowchart TB
   DESI DR1 binnings of fixed width in redshift with the same model, and
   `EXAMPLE_EVALUATE5.yaml` the LSST Y1 3×2pt case
   ([Δz cases](#dz_cases), [LSST case](#lsst_case)).
-- [exploration/](exploration/README.md) holds the examples of the other
-  bias models, on the linear data vectors: the growth-tied linear bias
-  (`EXAMPLE_EVALUATE_LINEAR1.yaml` to `EXAMPLE_EVALUATE_LINEAR4.yaml`),
-  model A, and model B on the growth-tied linear bias.
-- `EXAMPLE_MCMC1.yaml` samples the paper model on the
+- [exploration/](exploration/README.md) holds the growth-tied
+  linear-bias examples, on the linear data vectors
+  (`EXAMPLE_EVALUATE_LINEAR1.yaml` to `EXAMPLE_EVALUATE_LINEAR4.yaml`).
+- `EXAMPLE_MCMC1.yaml` samples the fiducial model on the
   $`\Delta d_\mathrm{com} = 62`$ Mpc layout, from the Fisher proposal
   covariance `EXAMPLE_MCMC1.covmat`.
 - `EXAMPLE_NAUTILUS1.py` runs the Nautilus nested sampler on the model
   of `EXAMPLE_EVALUATE1.yaml` ([Nautilus](#nautilus)). The linear-bias
   MCMC is in [exploration/](exploration/README.md).
-- `EXAMPLE_EVALUATE_FISHER_MODEL.ipynb` forecasts the paper model on
+- `EXAMPLE_EVALUATE_FISHER_MODEL.ipynb` forecasts the fiducial model on
   every DESI layout; the linear-bias Fisher notebooks run on the
   exploration examples ([running Fisher](#fisher)).
 - The covariance notebook and the production CLI need the optional
@@ -237,7 +236,7 @@ of fixed width $`\Delta z`$ in redshift instead of fixed comoving
 width. Three widths are separate cases of the same likelihood, each
 with its own data files (`data/lssty1xdesi_desi_dr1_dz0pXX*`),
 likelihood classes (`likelihood/desi_cl_dr1_dz0pXX[_model_b].py`),
-parameter files and EXAMPLE yaml (the paper model; the linear one is
+parameter files and EXAMPLE yaml (the fiducial model; the linear one is
 `exploration/EXAMPLE_EVALUATE_LINEAR<N>.yaml`, same number):
 
 | Case | $`\Delta z`$ | Lens bins | Cross pairs | Entries | Unmasked | `accuracyboost` | `nonlimber_accuracyboost` | EXAMPLE |
@@ -362,16 +361,14 @@ Zero amplitudes switch a term off at no cost per evaluation.
 derives the model, its thin-bin projections and why
 $`\mathrm{SN}_2`$ is required.
 
-Models A and B of the note are parameter files of this one option;
-both live in [exploration/](exploration/README.md). **Model A**, for
-$`k_\mathrm{max} = 0.075\,h\,\mathrm{Mpc}^{-1}`$, fixes $`\alpha_2 = 0`$.
-**Model B**, for the shipped masks ($`k = 0.1185\ \mathrm{Mpc}^{-1}`$
-$`\approx 0.176\,h\,\mathrm{Mpc}^{-1}`$ in every bin), frees
-$`\alpha_2`$ and widens the offset priors to the DESI DR1 widths.
-
-**The paper model** is model B + tilts with $`\alpha_2`$ fixed to 0 in
-every bin: $`\alpha_2`$ is about 99% degenerate with the velocity
-dispersions $`\sigma_v`$
+**The fiducial model**, the model the paper forecasts, is a parameter
+file of this one option, made for the shipped masks
+($`k = 0.1185\ \mathrm{Mpc}^{-1}`$
+$`\approx 0.176\,h\,\mathrm{Mpc}^{-1}`$ in every bin): the offset
+priors take the DESI DR1 widths, each offset of $`b_2`$, $`b_{s^2}`$
+and $`\alpha_0`$ gains a free tilt in redshift, and $`\alpha_2`$ is
+fixed to 0 in every bin, because $`\alpha_2`$ is about 99% degenerate
+with the velocity dispersions $`\sigma_v`$
 ([the FoG degeneracy note](notes/fog_parameter_degeneracy_study/fog_parameter_degeneracy_study.pdf)).
 In exchange, every $`\sigma_v`$ prior is widened by a factor 6
 (`PAPER_SIGV_WIDTH_FACTOR` in `scripts/make_desi_params.py`), wide
@@ -392,9 +389,9 @@ leader per velocity-dispersion group:
 The likelihood reads one value per bin (`DESI_A2_<n>` and so on, with
 $`n`$ counting the bins from 1); the parameter files tie the bins of a
 sample group $`g`$ (BGS, LRG1-3, ELG1-2) to one sampled offset per
-group, and "+ tilts" adds to each offset a free straight line in
-redshift per group. The paper model's parameters, every offset prior a
-Gaussian centered on zero:
+group, and the tilt adds to each offset a free straight line in
+redshift per group. The fiducial model's parameters, every offset prior
+a Gaussian centered on zero:
 
 | Parameter | Meaning | Unit | Prior |
 |---|---|---|---|
@@ -406,16 +403,20 @@ Gaussian centered on zero:
 | `DESI_SN2_<g>` | line-of-sight noise $`\mathrm{SN}_2`$ | $`f_\mathrm{sat}\sigma_\mathrm{sat}^2/\bar n_i`$ | width 5 |
 
 The $`\alpha_0`$ width is the DESI rule $`0.5/k_\mathrm{max}^2 = 16.1`$
-at the mask's $`0.176\,h\,\mathrm{Mpc}^{-1}`$ (model A: 88.9 at
-$`0.075`$). The stochastic amplitudes never tilt. In the units,
+at the mask's $`0.176\,h\,\mathrm{Mpc}^{-1}`$. The stochastic
+amplitudes never tilt. In the units,
 $`\bar n_i`$ is the bin's number density ($`1/\bar n_i`$ its Poisson
 power), $`f_\mathrm{sat}`$ the satellite fraction and
 $`\sigma_\mathrm{sat}`$ the satellites' dispersion in
 $`h^{-1}\,\mathrm{Mpc}`$, not the sampled $`\sigma_v`$: 0.1 and 7.8
 for BGS and LRG, 0.1 and 2.9 for ELG.
 
-The paper model runs on the pessimistic linear-bias prior. Each layout
-has one likelihood class and one example of it:
+The fiducial model runs on the pessimistic linear-bias prior. The
+companion notes under [notes/](notes/) also fit the reference model,
+the fiducial model with $`\alpha_2`$ free (prior width
+$`0.5/k_\mathrm{max}^2`$ per cut) at their exploration $`\sigma_v`$
+widths. Each layout has one likelihood class and one example of it (the
+class and parameter-file names keep the development name "model B"):
 
 | Layout | Example | Likelihood class |
 |---|---|---|
@@ -428,7 +429,7 @@ Each class sets `higher_order_bias: 1` and reads two parameter files
 (cobaya takes a likelihood's parameters from its class):
 
 - `likelihood/params_desi[_<case>]_model_b_tilts.yaml`, the one-loop
-  fragment of the paper model: the offsets of $`b_2`$, $`b_{s^2}`$ and
+  fragment of the fiducial model: the offsets of $`b_2`$, $`b_{s^2}`$ and
   $`\alpha_0`$ with their tilts (`DESI_TB2_<g>`, `DESI_TBS_<g>`,
   `DESI_TA0_<g>`), the stochastic amplitudes without tilts, and
   $`\alpha_2`$ fixed to 0 in every bin.
@@ -446,11 +447,10 @@ The examples run as in the
 tilt and residual at zero, and evaluate to $`\chi^2 \approx 0`$
 (1.0e-11, 1.1e-11, 4.1e-12 and 7.0e-13 in layout order).
 
-The linear, model A and model B examples and classes are in
-`likelihood/exploration/` and [exploration/](exploration/README.md).
+The linear examples are in [exploration/](exploration/README.md).
 `scripts/make_desi_params.py` writes the parameter files
-(`--bias-pessimistic`, `--model-a` or `--model-b`, with
-`--case <name>` for a $`\Delta z`$ layout).
+(`--bias-pessimistic` or `--model-b`, a flag that keeps its historical
+name, with `--case <name>` for a $`\Delta z`$ layout).
 
 # Baryonic feedback on EXAMPLE_EVALUATE1 <a name="baryonic_feedback"></a>
 
@@ -501,7 +501,7 @@ theory block and select the model:
 # Nested sampling with Nautilus <a name="nautilus"></a>
 
 `EXAMPLE_NAUTILUS1.py` samples the model of `EXAMPLE_EVALUATE1.yaml`
-(the paper model on the $`\Delta d_\mathrm{com} = 62`$ Mpc layout,
+(the fiducial model on the $`\Delta d_\mathrm{com} = 62`$ Mpc layout,
 with CAMB) with the Nautilus nested sampler: Bayesian evidence and
 weighted posterior samples. Every MPI rank builds its own model; the
 model samples 151 parameters. A run that reaches `--maxfeval` stops
@@ -572,7 +572,7 @@ differentiates exactly the data vector the likelihood scores.
 explains the construction. Three notebooks use it:
 
 - [EXAMPLE_EVALUATE_FISHER_MODEL.ipynb](EXAMPLE_EVALUATE_FISHER_MODEL.ipynb):
-  the paper model's forecast ([below](#fisher_model)).
+  the fiducial model's forecast ([below](#fisher_model)).
 - [EXAMPLE_EVALUATE_FISHER.ipynb](EXAMPLE_EVALUATE_FISHER.ipynb):
   linear-bias forecasts of DESI clustering, LSST Y1 3×2pt and their
   combination on every layout (as independent data sets: no LSST×DESI
@@ -584,10 +584,13 @@ explains the construction. Three notebooks use it:
   $`k_\mathrm{max}`$, for the four linear-bias priors.
 
 The two linear-bias notebooks run on the examples of
-[exploration/](exploration/README.md). Each notebook's export cells
+[exploration/](exploration/README.md); the k_max notebook builds its
+one-loop truth vectors from the paper yamls `EXAMPLE_EVALUATE1.yaml` to
+`EXAMPLE_EVALUATE4.yaml`, with the linear vector's own settings, which
+point each layout at its paper data set. Each notebook's export cells
 write its figures into the notes under [notes/](notes/);
 [the summary note](notes/bias_model_summary/bias_model_summary.pdf)
-presents the paper model's results.
+presents the fiducial model's results.
 
 > [!WARNING]
 > The forecasts need CAMB installed with
@@ -596,17 +599,17 @@ presents the paper model's results.
 > between nearby cosmologies, so stencil derivatives depend on the
 > step size.
 
-## The paper model's forecast <a name="fisher_model"></a>
+## The fiducial model's forecast <a name="fisher_model"></a>
 
 [EXAMPLE_EVALUATE_FISHER_MODEL.ipynb](EXAMPLE_EVALUATE_FISHER_MODEL.ipynb)
-forecasts the paper model ([one-loop bias](#higher_order_bias)) on the
-pessimistic linear-bias prior, built from the paper yamls
+forecasts the fiducial model ([one-loop bias](#higher_order_bias)) on
+the pessimistic linear-bias prior, built from the paper yamls
 `EXAMPLE_EVALUATE1.yaml` to `EXAMPLE_EVALUATE4.yaml` on every DESI
-layout. For the correlated-prior note it also forecasts model B and
-model B + tilts on the three linear-bias priors against the scale cut.
-In order, the notebook:
+layout. For the correlated-prior note it also forecasts the reference
+model, with and without its tilts, on the three linear-bias priors
+against the scale cut. In order, the notebook:
 
-- computes the UV-fraction scale cuts on the paper model's fiducial
+- computes the UV-fraction scale cuts on the fiducial model
   (its section 3; [below](#scale_cut));
 - builds the derivative base of each layout (section 4):
   five-point-stencil derivatives of the 20 sampled
@@ -642,6 +645,19 @@ caches:
 | `model_templates_<layout>_final.npz` | the $`\alpha_2`$ columns and the $`\mathrm{SN}_0`$ and $`\mathrm{SN}_2`$ templates |
 | `model_scale_cuts_final.npz` | the UV-fraction scale cuts on the paper fiducial |
 
+The archive also keeps the twelve `model_*_<layout>_pairmax_final.npz`
+caches of the pair-axes study of
+[the cross-correlation note](notes/cross_correlations/cross_correlations.pdf):
+the same three kinds of cache on each layout's maximal pair list
+(`EXAMPLE_EVALUATE<n>_PAIRMAX.yaml` and the `data/*_pairmax.*` files).
+`scripts/compute_pair_axes_fits.py` reads them and writes
+`chains/pair_axes_fits_<layout>.json`, from which the
+`make_pair_axes_*_data.py` generators of
+`notes/cross_correlations/plots/` write the figures' data; its
+docstring holds the usage and the prerequisites. The paper keeps the
+standard data vector: the pairs beyond the measured list are a
+comparison, not an open choice.
+
 Copying from the archive, reading, computing, writing and archiving
 are each an explicit call in its own cell. A cache whose settings or
 fingerprint (the sha256 of the resolved model input) differ from the
@@ -667,11 +683,11 @@ $`h\,\mathrm{Mpc}^{-1}`$ at $`z = 0`$.
 explains the criterion.
 
 The cut depends on the spectra it splits: the paper notebook computes
-it on the paper model's fiducial, the linear-bias notebooks on the
+it on the fiducial model, the linear-bias notebooks on the
 linear-bias fiducial.
 [The scale-cut note](notes/scale_cut_fiducial_dependence/scale_cut_fiducial_dependence.pdf)
-compares the two: the difference moves the figures of merit by at most
-a few percent.
+compares the two: the difference moves the figures of merit by a few
+percent on the main layouts, up to about 6% at single points.
 
 ## The amplitude cut <a name="amplitude_cut"></a>
 
@@ -868,7 +884,7 @@ jupyter notebook --no-browser --port=8888
 | [EXAMPLE_EVALUATE_COVARIANCE.ipynb](EXAMPLE_EVALUATE_COVARIANCE.ipynb) | The covariance terms of the $`\Delta d_\mathrm{com} = 62`$ Mpc layout and matrix diagnostics; needs the covariance build ([covariance guide](covariance/README.md#running)). |
 | [EXAMPLE_EVALUATE_FISHER.ipynb](EXAMPLE_EVALUATE_FISHER.ipynb) | Linear-bias Fisher forecasts of DESI clustering, LSST Y1 3×2pt and their combination on every DESI layout, the Fisher biases of the projection approximations, and the amplitude cut against the forecast contours ([running Fisher](#fisher)). |
 | [EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb](EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb) | Linear-bias fits to one-loop truths against the scale cut $`k_\mathrm{max}`$, for the four linear-bias priors ([running Fisher](#fisher)). |
-| [EXAMPLE_EVALUATE_FISHER_MODEL.ipynb](EXAMPLE_EVALUATE_FISHER_MODEL.ipynb) | The paper model's Fisher forecast on every DESI layout, against the scale cut ([the paper model's forecast](#fisher_model)). |
+| [EXAMPLE_EVALUATE_FISHER_MODEL.ipynb](EXAMPLE_EVALUATE_FISHER_MODEL.ipynb) | The fiducial model's Fisher forecast on every DESI layout, against the scale cut ([the fiducial model's forecast](#fisher_model)). |
 
 Choose the Python kernel from the activated Cocoa environment and
 restart it after recompiling.

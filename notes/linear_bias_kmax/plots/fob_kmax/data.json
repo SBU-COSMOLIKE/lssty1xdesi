@@ -1,5 +1,5 @@
 {
- "about": "figure of bias of a linear-bias fit to a one-loop (model A) truth against the UV-fraction cut k_max, per layout and linear-bias prior: (w0, wa) in its ellipse, Omega_m and A_s in their own marginalized sigma. Written by EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb.",
+ "about": "figure of bias of a linear-bias fit to a one-loop (fiducial-model) truth against the UV-fraction cut k_max, per layout and linear-bias prior: (w0, wa) in its ellipse, Omega_m and A_s in their own marginalized sigma. Written by EXAMPLE_EVALUATE_FISHER_LINEAR_KMAX.ipynb.",
  "kmax_h_per_Mpc": [
   0.05,
   0.075,

@@ -47,7 +47,8 @@ from a failure it prevents.
   its prior edge (0.8), so the h = 0.05 stencil leaves the prior. A
   non-finite loglike raises.
 - **`cached=False`.** A cached point returns without recomputing, and
-  the interface vector would again be stale. The price is a CAMB run
+  the interface vector would again be out of date. The price is a CAMB
+  run
   for every nuisance step.
 - **Read the likelihood's vector.** The compiled interface's vector
   lacks the stochastic templates the one-loop likelihood adds in
@@ -105,10 +106,11 @@ from a failure it prevents.
   along which `np.linalg.inv` produced a spurious 2 sigma shift.
 - **Wrap setters, do not call them directly.** The likelihood sets
   every nuisance at every point (alpha_2 included, with zeros under
-  linear bias and model A), so a derivative step written into the compiled
+  linear bias and under the fiducial model, whose alpha_2 is fixed), so
+  a derivative step written into the compiled
   interface before an evaluation is overwritten. The notebooks wrap
   the setter the likelihood calls (`ci.set_nuisance_bias` for the
-  linear per-bin columns, `set_nuisance_bias_tidal` for the model A
+  linear per-bin columns, `set_nuisance_bias_tidal` for the one-loop
   operators, `set_nuisance_bias_alpha2` for the alpha_2 columns), add
   the step to the values the likelihood passes, restore the original
   setter afterwards, and check that the vector after the steps equals
@@ -247,7 +249,7 @@ default and reset in initial_setup. The linear notebook caches its cuts,
 on the linear-bias spectra, in `chains/linear_scale_cuts_final.npz`
 (the k_max and paper notebooks read them) and the FoM scan in
 `chains/linear_fom_scale_cuts_final.npz`; both are archived. The Fisher
-notebook of the paper model, EXAMPLE_EVALUATE_FISHER_MODEL.ipynb,
+notebook of the fiducial model, EXAMPLE_EVALUATE_FISHER_MODEL.ipynb,
 computes its own cuts on the paper fiducial (EXAMPLE_EVALUATE<n>.yaml
 at the final derivative settings, those of the derivative base) and
 caches them in `chains/model_scale_cuts_final.npz`, with the same

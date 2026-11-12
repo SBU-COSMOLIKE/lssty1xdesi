@@ -1,0 +1,346 @@
+{
+ "about": "FoM(w0, wa) and FoM(Omega_m, 10^9 A_s) of the fiducial model (the paper model: B tilts noA2 sv x6, pessimistic linear-bias prior, sigma_v fitted) along the gap axis of each layout, over the same figure of merit of the Delta z = 0.2 layout on its current pair list at the same k_max (the wide-bin reference). Written by notes/cross_correlations/plots/make_pair_axes_wide_ratio_data.py from the per-layout fits of scripts/compute_pair_axes_fits.py. k_max is the z = 0 value of a per-bin cut at k_max/D(zbar_i).",
+ "kmax_h_per_Mpc": [
+  "0.075",
+  "0.1",
+  "0.2"
+ ],
+ "reference_fom": {
+  "0.075": {
+   "fom": 0.04468222230971143,
+   "fom_om_as": 0.3811272988160374
+  },
+  "0.1": {
+   "fom": 0.10696808782660469,
+   "fom_om_as": 0.9545546635836889
+  },
+  "0.2": {
+   "fom": 0.3068103868731021,
+   "fom_om_as": 3.1985855470545905
+  }
+ },
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "color": "#0072B2",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "fom": 0.5637621693343988,
+      "fom_om_as": 2.9016394754266646,
+      "fom_ratio_to_wide": 12.617147048477673,
+      "fom_om_as_ratio_to_wide": 7.613307901167238
+     },
+     "0.1": {
+      "fom": 1.3129819969928143,
+      "fom_om_as": 7.6459899171070305,
+      "fom_ratio_to_wide": 12.274520594601622,
+      "fom_om_as_ratio_to_wide": 8.01000739800658
+     },
+     "0.2": {
+      "fom": 6.697468026441202,
+      "fom_om_as": 50.27490598965518,
+      "fom_ratio_to_wide": 21.82933926944038,
+      "fom_om_as_ratio_to_wide": 15.717855674034013
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "fom": 0.7616642436841496,
+      "fom_om_as": 3.6155382553069213,
+      "fom_ratio_to_wide": 17.04624802241777,
+      "fom_om_as_ratio_to_wide": 9.486432135768029
+     },
+     "0.1": {
+      "fom": 1.8285346275228023,
+      "fom_om_as": 9.612125538221543,
+      "fom_ratio_to_wide": 17.094206923534593,
+      "fom_om_as_ratio_to_wide": 10.069748653403144
+     },
+     "0.2": {
+      "fom": 8.315457563128817,
+      "fom_om_as": 55.27728253427466,
+      "fom_ratio_to_wide": 27.102920627547466,
+      "fom_om_as_ratio_to_wide": 17.281789628911632
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "fom": 0.8335379163762245,
+      "fom_om_as": 3.9818002359110336,
+      "fom_ratio_to_wide": 18.65479990226582,
+      "fom_om_as_ratio_to_wide": 10.447428584308703
+     },
+     "0.1": {
+      "fom": 1.9184260879152477,
+      "fom_om_as": 10.09282312808976,
+      "fom_ratio_to_wide": 17.93456466217305,
+      "fom_om_as_ratio_to_wide": 10.573331746343607
+     },
+     "0.2": {
+      "fom": 8.490430414574078,
+      "fom_om_as": 56.2715930331718,
+      "fom_ratio_to_wide": 27.673217002544806,
+      "fom_om_as_ratio_to_wide": 17.59264906483097
+     }
+    },
+    {
+     "g": 3,
+     "0.075": {
+      "fom": 0.8714146158690856,
+      "fom_om_as": 4.138465219253251,
+      "fom_ratio_to_wide": 19.502490494517964,
+      "fom_om_as_ratio_to_wide": 10.858485424972947
+     },
+     "0.1": {
+      "fom": 1.9824375055619325,
+      "fom_om_as": 10.375943061833743,
+      "fom_ratio_to_wide": 18.532980684626843,
+      "fom_om_as_ratio_to_wide": 10.869930720236903
+     },
+     "0.2": {
+      "fom": 8.628853053933755,
+      "fom_om_as": 56.839113013658874,
+      "fom_ratio_to_wide": 28.124383733796734,
+      "fom_om_as_ratio_to_wide": 17.77007748503054
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "color": "#E69F00",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "fom": 0.35206479093604576,
+      "fom_om_as": 1.4690097397992912,
+      "fom_ratio_to_wide": 7.879303506789242,
+      "fom_om_as_ratio_to_wide": 3.8543807918318467
+     },
+     "0.1": {
+      "fom": 1.5333556657434577,
+      "fom_om_as": 6.903179072908612,
+      "fom_ratio_to_wide": 14.334702030282413,
+      "fom_om_as_ratio_to_wide": 7.23183211634206
+     },
+     "0.2": {
+      "fom": 7.945826384847109,
+      "fom_om_as": 53.188834521661995,
+      "fom_ratio_to_wide": 25.898166179535284,
+      "fom_om_as_ratio_to_wide": 16.62886101972192
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "fom": 0.35206479093604576,
+      "fom_om_as": 1.4690097397992912,
+      "fom_ratio_to_wide": 7.879303506789242,
+      "fom_om_as_ratio_to_wide": 3.8543807918318467
+     },
+     "0.1": {
+      "fom": 2.2924282261936235,
+      "fom_om_as": 10.364396043369142,
+      "fom_ratio_to_wide": 21.430954528322975,
+      "fom_om_as_ratio_to_wide": 10.857833960454442
+     },
+     "0.2": {
+      "fom": 10.730077117305102,
+      "fom_om_as": 67.29090151085067,
+      "fom_ratio_to_wide": 34.97299171211926,
+      "fom_om_as_ratio_to_wide": 21.037705736154322
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "fom": 0.36871929204144976,
+      "fom_om_as": 1.6564419297480002,
+      "fom_ratio_to_wide": 8.252035663886634,
+      "fom_om_as_ratio_to_wide": 4.346164483346368
+     },
+     "0.1": {
+      "fom": 2.4201110454994,
+      "fom_om_as": 10.831865370128048,
+      "fom_ratio_to_wide": 22.624607905699886,
+      "fom_om_as_ratio_to_wide": 11.347559006691064
+     },
+     "0.2": {
+      "fom": 11.424657076039093,
+      "fom_om_as": 68.87723222212291,
+      "fom_ratio_to_wide": 37.23686538932065,
+      "fom_om_as_ratio_to_wide": 21.533653300455992
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "color": "#CC79A7",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "fom": 0.1731090999928433,
+      "fom_om_as": 1.1454326062799982,
+      "fom_ratio_to_wide": 3.8742276244218723,
+      "fom_om_as_ratio_to_wide": 3.005380642736053
+     },
+     "0.1": {
+      "fom": 0.5329985598874044,
+      "fom_om_as": 3.8014578121959737,
+      "fom_ratio_to_wide": 4.982781039812503,
+      "fom_om_as_ratio_to_wide": 3.9824411919209983
+     },
+     "0.2": {
+      "fom": 2.3360337255371566,
+      "fom_om_as": 19.888285694959976,
+      "fom_ratio_to_wide": 7.613932987553478,
+      "fom_om_as_ratio_to_wide": 6.217837666800581
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "fom": 0.24357050014967638,
+      "fom_om_as": 1.5140879550846666,
+      "fom_ratio_to_wide": 5.451172469922959,
+      "fom_om_as_ratio_to_wide": 3.972656799416215
+     },
+     "0.1": {
+      "fom": 0.6102547714497525,
+      "fom_om_as": 4.240488113483391,
+      "fom_ratio_to_wide": 5.705017111635908,
+      "fom_om_as_ratio_to_wide": 4.442373260807618
+     },
+     "0.2": {
+      "fom": 2.4475123116045876,
+      "fom_om_as": 20.62533246794737,
+      "fom_ratio_to_wide": 7.977279832500872,
+      "fom_om_as_ratio_to_wide": 6.44826663677642
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "fom": 0.2694082278870642,
+      "fom_om_as": 1.6255855604917713,
+      "fom_ratio_to_wide": 6.029427677515266,
+      "fom_om_as_ratio_to_wide": 4.265203687958362
+     },
+     "0.1": {
+      "fom": 0.6452424087039074,
+      "fom_om_as": 4.418121000407423,
+      "fom_ratio_to_wide": 6.032101926977002,
+      "fom_om_as_ratio_to_wide": 4.628463061319559
+     },
+     "0.2": {
+      "fom": 2.490550979999654,
+      "fom_om_as": 20.8935854649505,
+      "fom_ratio_to_wide": 8.117557574834503,
+      "fom_om_as_ratio_to_wide": 6.532132768557748
+     }
+    },
+    {
+     "g": 3,
+     "0.075": {
+      "fom": 0.2754771828632565,
+      "fom_om_as": 1.654083851652351,
+      "fom_ratio_to_wide": 6.165252501404414,
+      "fom_om_as_ratio_to_wide": 4.339977369216852
+     },
+     "0.1": {
+      "fom": 0.6538589766701368,
+      "fom_om_as": 4.465222082431786,
+      "fom_ratio_to_wide": 6.112654623966378,
+      "fom_om_as_ratio_to_wide": 4.67780657596704
+     },
+     "0.2": {
+      "fom": 2.501111860285845,
+      "fom_om_as": 20.973322866864606,
+      "fom_ratio_to_wide": 8.15197909619766,
+      "fom_om_as_ratio_to_wide": 6.557061725667409
+     }
+    }
+   ]
+  },
+  {
+   "name": "Delta z = 0.2",
+   "label": "$\\Delta z = 0.2$",
+   "color": "#56B4E9",
+   "points": [
+    {
+     "g": 0,
+     "0.075": {
+      "fom": 0.04468222230971143,
+      "fom_om_as": 0.3811272988160374,
+      "fom_ratio_to_wide": 1.0,
+      "fom_om_as_ratio_to_wide": 1.0
+     },
+     "0.1": {
+      "fom": 0.10696808782660469,
+      "fom_om_as": 0.9545546635836889,
+      "fom_ratio_to_wide": 1.0,
+      "fom_om_as_ratio_to_wide": 1.0
+     },
+     "0.2": {
+      "fom": 0.3068103868731021,
+      "fom_om_as": 3.1985855470545905,
+      "fom_ratio_to_wide": 1.0,
+      "fom_om_as_ratio_to_wide": 1.0
+     }
+    },
+    {
+     "g": 1,
+     "0.075": {
+      "fom": 0.04532294536643535,
+      "fom_om_as": 0.3870355629556788,
+      "fom_ratio_to_wide": 1.0143395521440899,
+      "fom_om_as_ratio_to_wide": 1.015502075443022
+     },
+     "0.1": {
+      "fom": 0.10788083642216638,
+      "fom_om_as": 0.9650034081346979,
+      "fom_ratio_to_wide": 1.0085329055992966,
+      "fom_om_as_ratio_to_wide": 1.0109461982111965
+     },
+     "0.2": {
+      "fom": 0.3085653205343669,
+      "fom_om_as": 3.2220476206332145,
+      "fom_ratio_to_wide": 1.0057199291039345,
+      "fom_om_as_ratio_to_wide": 1.0073351402466721
+     }
+    },
+    {
+     "g": 2,
+     "0.075": {
+      "fom": 0.04533382842194155,
+      "fom_om_as": 0.3872760401261609,
+      "fom_ratio_to_wide": 1.0145831178161544,
+      "fom_om_as_ratio_to_wide": 1.0161330383030143
+     },
+     "0.1": {
+      "fom": 0.10791280872626786,
+      "fom_om_as": 0.9656227010795844,
+      "fom_ratio_to_wide": 1.0088318013237234,
+      "fom_om_as_ratio_to_wide": 1.0115949750371998
+     },
+     "0.2": {
+      "fom": 0.3086364202828796,
+      "fom_om_as": 3.223484364194368,
+      "fom_ratio_to_wide": 1.0059516675050926,
+      "fom_om_as_ratio_to_wide": 1.007784321154926
+     }
+    }
+   ]
+  }
+ ]
+}

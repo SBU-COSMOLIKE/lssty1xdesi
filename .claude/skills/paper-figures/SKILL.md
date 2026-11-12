@@ -103,9 +103,10 @@ matplotlib.rcParams['savefig.format'] = 'pdf'
   | Delta z = 0.05 | 1.3 | diamond `D` |
   | Delta z = 0.2 | 0.9 | triangle `^` |
 
-  Model A solid, model B dashed, with a dash pattern visible at the
-  thinnest width. Check: the PNG converted to grayscale still lets
-  every line be identified.
+  The fiducial model solid, its comparison variants (the reference
+  model, the variant without tilts) dashed, with a dash pattern visible
+  at the thinnest width. Check: the PNG converted to grayscale still
+  lets every line be identified.
 
 ## Legends, labels and references
 
@@ -128,7 +129,8 @@ matplotlib.rcParams['savefig.format'] = 'pdf'
   point) is not drawn on a stretched axis: an in-panel text such as
   "LSST Y1 3x2pt: 215" quotes it instead, included in the bounding-box
   check.
-- Legend labels name the model plainly ("model A", "model B"); a
+- Legend labels name the model plainly ("the fiducial model", "the
+  reference model", "without tilts"); a
   variant is stated once in the caption when the figure draws only
   one, so it does not clash with the prior names in the panels.
 

@@ -5,7 +5,8 @@ derivations and literature are in
 `notes/higher_order_bias/higher_order_bias.tex` (sections "The model as
 implemented", "Projection to thin-bin angular spectra", "Validation")
 and in `notes/correlated_bias_prior_v2/correlated_bias_prior_v2.tex`
-(section "Model A", "Model B and the reach of model A", appendix
+(sections "The bias model", "The fiducial model against k_max",
+appendix
 "Implementation and the Fisher construction"). When this file and a
 note disagree on physics, the note is right and this file is fixed.
 
@@ -22,10 +23,11 @@ note disagree on physics, the note is right and this file is fixed.
   (DESI_SN0_i); SN2 (DESI_SN2_i). Every per-bin parameter must be
   declared; a missing one raises by name.
 
-A third option (`higher_order_bias: 2`, a separate model B) existed
-briefly and was merged into option 1: models A and B are two parameter
-files of the one option. Checks of the merge: model A at SN2 = 0 and
-option 1 with the model B file are bitwise identical to the previous
+A third option (`higher_order_bias: 2`, a separate model) existed
+briefly and was merged into option 1: the model variants are parameter
+files of the one option. Checks of the merge, made with the
+development's models A and B: model A at SN2 = 0 and
+option 1 with the model B file were bitwise identical to the previous
 model A and model B, at the fiducial and with nonzero offsets,
 alpha_2 and SN2.
 
@@ -35,28 +37,29 @@ cosmolike b2, bs2, b3 = 0 and bK per bin, and bias code 1 of b3
 bin densities from `<stem>_ngal.txt` beside `<stem>_bins.txt` and the
 tracer sample of each bin from the bin table.
 
-**Groups are yaml.** `scripts/make_desi_params.py --model-a` and
-`--model-b` write `likelihood/params_desi[_<case>]_model_{a,b}.yaml`
-(model A, model B) and `..._model_{a,b}_tilts.yaml` (model A + tilts,
-model B + tilts; the files were named `_pessimistic` before the
-variants were renamed): one sampled offset per group and family
-(DESI_DB2_<g>, DESI_DBS_<g>, DESI_A0_<g>, DESI_A2_<g>, DESI_SN0_<g>,
-DESI_SN2_<g>) and, for the tilted families, a tilt (DESI_TB2_<g>,
-DESI_TBS_<g>, DESI_TA0_<g>, DESI_TA2_<g>) fixed at zero in model A and
-model B and free with a flat prior in the + tilts variants, a straight
-line in redshift per group like the linear bias's s_g; every bin n of
+**Groups are yaml.** `scripts/make_desi_params.py --model-b` (the flag
+keeps its historical name) writes
+`likelihood/params_desi[_<case>]_model_b_tilts.yaml`, the fiducial
+model's higher-order fragment: one sampled offset per group and family
+(DESI_DB2_<g>, DESI_DBS_<g>, DESI_A0_<g>, DESI_SN0_<g>,
+DESI_SN2_<g>), free tilts with flat priors for b2, bs2 and alpha_0
+(DESI_TB2_<g>, DESI_TBS_<g>, DESI_TA0_<g>), a straight
+line in redshift per group like the linear bias's s_g, and DESI_A2
+fixed to 0 in every bin; every bin n of
 group g takes
 DESI_X_<n> = DESI_X_<g> + DESI_TX_<g> (z_n - zbar_g), with zbar_g the
 mean of the group's bin redshifts. Flat tilt ranges per unit redshift:
-model A 50 (TB2, TBS) and 5000 (TA0); model B 100 (TB2, TBS) and 1000
-(TA0, TA2). Model A fixes DESI_A2 to 0 in every bin. "Group" is one of
+100 (TB2, TBS) and 1000 (TA0). The reference model's free alpha_2 is a
+construction of the Fisher notebook (exact per-bin templates and the
+0.5/k_max^2 prior in code), not a parameter file. "Group" is one of
 BGS, LRG1, LRG2, LRG3, ELG1, ELG2 (the code and file names keep
 "chunk").
 
-The thin classes `desi_cl[_dr1_dz0p0x]_model_a` and `_model_b` name the
-files; the examples EXAMPLE_EVALUATE_MODEL_A1-A4 and B1-B4 run them on
-the four layouts in layout order (62 Mpc, Delta z = 0.02, 0.05, 0.2).
-Their chi2 is not near 0: the shipped data vectors are linear bias.
+The classes `desi_cl[_dr1_dz0p0x]_model_b` name the file; the paper
+examples EXAMPLE_EVALUATE1-4 run them on
+the four layouts in layout order (62 Mpc, Delta z = 0.02, 0.05, 0.2)
+and evaluate to chi2 ~ 0: the shipped data vectors hold the fiducial
+model at its fiducial point.
 
 ## 2. Terms, units and conventions
 
@@ -68,7 +71,7 @@ Their chi2 is not near 0: the shipped data vectors are linear bias.
   b_{1,i}, deviations included: a deviation is a real change of the
   halos a selection reaches, and the calibrations map populations at
   given b1. Near b1 ~ 2 the Lazeyras slope is ~1.7, so a 3% residual
-  moves b2 by ~0.10, a tenth of model A's offset width.
+  moves b2 by ~0.10, a twentieth of the offset width.
 - **b3 = 0**, DESI's baseline. C-FASTPT's b3 template (`tab_d1d3` in
   `pt_cfastpt.h`) is a fixed, cosmology-independent table that
   disagrees with Python FAST-PT (Sec. 5); the discarded co-evolution
@@ -76,13 +79,13 @@ Their chi2 is not near 0: the shipped data vectors are linear bias.
 - **alpha_0** [h^-2 Mpc^2] rides cosmolike's derivative-bias slot
   2 b1 bK k^2 P_nl. cosmolike measures k in units of H0/c, so the
   likelihood sets bK = alpha_0/[2 b1 (c/H0)^2], c/H0 = 2997.92 Mpc/h
-  (`C_OVER_H0`); the model A width 88.9 h^-2 Mpc^2 is 2 b1 bK = 9.9e-6
+  (`C_OVER_H0`); the yaml width 16.1 h^-2 Mpc^2 is 2 b1 bK = 1.8e-6
   in cosmolike units. alpha_0 multiplies the nonlinear P_nl, where
   DESI's multiplies (b1 + f mu^2) b1 P_lin: the coefficients differ by
   b1^2 and by P_nl/P_lin <= 1.16 at k <= 0.2 h/Mpc. At bin i's own cut
   the width 0.5/k_max^2 is a correction of 0.5/B_g^2 of the linear
   galaxy power, the same in every bin of a group: 28% BGS, 17% LRG,
-  71% ELG at model A's cut.
+  71% ELG at k_max = 0.075.
 - **alpha_2** [h^-2 Mpc^2], the DESI DR1 field convention (Maus et al.,
   arXiv:2404.07312): the galaxy density gains (1/2) f mu^2 alpha_2 k^2
   delta_L, so the power gains P_CT = (b1 + f mu^2) f alpha_2 mu^2 k^2
@@ -124,23 +127,25 @@ Their chi2 is not near 0: the shipped data vectors are linear bias.
   sampled FoG convolution of each bin's n(z), a positive damping of
   fixed form that is only partly degenerate with alpha_2.
 
-## 3. The model A / model B prior widths
+## 3. The prior widths
 
 All Gaussian, centered on zero, per group:
 
-| family | model A | model B |
+| family | the fiducial model | the reference model |
 |---|---|---|
-| Delta_2 / Delta_s | 1.0 / 0.5 | 2.0 / 1.0 |
-| alpha_0 [h^-2 Mpc^2] | 0.5/k_max^2 (88.9 at 0.075) | 0.5/k_max^2 (yaml: 16.1 at the shipped mask's 0.176 h/Mpc; per cut in the Fisher scan) |
+| Delta_2 / Delta_s | 2.0 / 1.0 | the same |
+| alpha_0 [h^-2 Mpc^2] | 0.5/k_max^2 (yaml: 16.1 at the shipped mask's 0.176 h/Mpc; per cut in the Fisher scan) | the same |
 | alpha_2 [h^-2 Mpc^2] | fixed to 0 | 0.5/k_max^2 |
 | SN0 [P_Pois] | 2 | 2 |
 | SN2 [f_sat sigma_sat^2 P_Pois] | 5 | 5 |
-| tilted (+ tilts variant) | Delta_2, Delta_s, alpha_0 | Delta_2, Delta_s, alpha_0, alpha_2 |
-| per group, without / with tilts | 5 / 8 | 6 / 10 |
+| sigma_v widths | the measured priors x6 | the measured priors |
+| tilted | Delta_2, Delta_s, alpha_0 | Delta_2, Delta_s, alpha_0, alpha_2 (none in 'B') |
+| per group | 8 | 10; without tilts 6 |
 
-Sources: the offsets cover the scatter of the Lazeyras fit and the 30%
-spread between co-evolution and excursion-set bs2 at LRG biases; model
-B doubles them, demoting the calibrations to prior centers for cuts
+Sources: the DESI DR1 offset widths are twice the calibration scatter
+(the scatter of the Lazeyras fit and the 30%
+spread between co-evolution and excursion-set bs2 at LRG biases),
+demoting the calibrations to prior centers for cuts
 where the loops reach 15% of P_gg. The counterterms take the DESI rule
 of a 50% correction at the cut; the stochastic widths are DESI DR1's.
 SN0 and SN2 never tilt (their Poisson part is known bin by bin).
@@ -149,20 +154,21 @@ The bias-sector budget on Delta d_com = 62 Mpc (76 bins, six groups;
 the 64 residuals are the 76 per-bin deviations minus the free amplitude
 and tilt of each group):
 
-| | model A | model A + tilts | model B | model B + tilts |
-|---|---:|---:|---:|---:|
-| linear tilts s_g | 6 | 6 | 6 | 6 |
-| residuals held by the kernel prior | 64 | 64 | 64 | 64 |
-| Delta_2, Delta_s | 12 | 24 | 12 | 24 |
-| alpha_0 / alpha_2 | 6 / - | 12 / - | 6 / 6 | 12 / 12 |
-| SN0 / SN2 | 6 / 6 | 6 / 6 | 6 / 6 | 6 / 6 |
-| new parameters | 100 | 118 | 106 | 130 |
-| without a tight prior, incl. the 6 B_g | 42 | 60 | 48 | 72 |
+| | the fiducial model | the reference model ('B tilts') | without tilts ('B') |
+|---|---:|---:|---:|
+| linear tilts s_g | 6 | 6 | 6 |
+| residuals held by the kernel prior | 64 | 64 | 64 |
+| Delta_2, Delta_s | 24 | 24 | 12 |
+| alpha_0 / alpha_2 | 12 / - | 12 / 12 | 6 / 6 |
+| SN0 / SN2 | 6 / 6 | 6 / 6 | 6 / 6 |
+| new parameters | 118 | 130 | 106 |
+| without a tight prior, incl. the 6 B_g | 60 | 72 | 48 |
 
 DESI DR1 full shape uses seven nuisances per tracer, 42 in total at
-k_max = 0.2 h/Mpc (arXiv:2411.12021, 2411.12022); model B is that
+k_max = 0.2 h/Mpc (arXiv:2411.12021, 2411.12022); the variant without
+tilts is that
 budget plus one b1 tilt per group. (Tilts exist only in groups of more
-than one bin, so the + tilts counts are upper limits on the wide
+than one bin, so the tilted counts are upper limits on the wide
 layouts.)
 
 ## 4. Projections and their checks
@@ -233,10 +239,10 @@ layouts.)
   comes from k_par above its own cut at 0.075 (0.58 BGS bin 10, 0.46
   LRG bin 34, 0.51 ELG bin 63; 0.18 / 0.09 / 0.12 at 0.2).
 - **Notebook columns.** The Fisher notebooks build per-bin operator
-  columns dm/db1_i, dm/db2_i, dm/dbs2_i, dm/dalpha0_i (and dm/dalpha2_i
-  for model B) by central differences through the wrapped setters, on
+  columns dm/db1_i, dm/db2_i, dm/dbs2_i, dm/dalpha0_i (and the per-bin
+  dm/dalpha2_i) by central differences through the wrapped setters, on
   the coloring of the cross-pair graph (steps: 1% of b1, 0.02 in b2 and
-  bs2, 5 h^-2 Mpc^2 in alpha_0); the model A column of a bin's b1 is
+  bs2, 5 h^-2 Mpc^2 in alpha_0); the one-loop column of a bin's b1 is
   the chain-rule sum dm/db1 + b2_L'(b1) dm/db2 - (4/7) dm/dbs2, and
   summed over a group with weights 1/D(zbar_i) it reproduces the
   stencil derivative of B_g to 1e-8-1e-7 of the column. A step of
@@ -279,11 +285,11 @@ the Poisson power in the forecast's BGS bins (1/nbar = 33-170
 k > 1.5 h/Mpc. BGS one-loop P_gg turns negative near k ~ 0.3 h/Mpc at
 the calibrations and from k ~ 0.15 h/Mpc for Delta_2 = -1 (figure
 `notes/higher_order_bias/plots/k_neg`; only negative offsets matter,
-since b2 + 2 bs2/3 vanishes near Delta_2 ~ +0.9). One model A width
-below the calibrations, the exact treatment shows negative C_ell in the
+since b2 + 2 bs2/3 vanishes near Delta_2 ~ +0.9). At Delta_2 = -1 (one
+unit below the calibrations), the exact treatment shows negative C_ell in the
 lowest BGS bins beyond k ~ 0.15 h/Mpc on the shipped mask (-29 times
 the shot noise at ell = 50; -25 with FKEM), which a floor would hide.
-At the model A cut every kept C_ell stays positive (moved by at most
+At k_max = 0.075 every kept C_ell stays positive (moved by at most
 0.27 of the shot noise), and the region beyond k_neg carries at most
 0.34% of a BGS bin's white-noise projection.
 
@@ -293,8 +299,9 @@ enter, and DR1 is sparse (BGS 1/nbar ~ 3e3 (Mpc/h)^3), so the constant
 is about Poisson-sized and fits the SN0 prior in either convention. The
 forecast's BGS is 20-100 times denser.
 
-**Negative alpha_0.** At alpha_0 = -88.9 h^-2 Mpc^2 (one model A width
-below zero) P_gg - P_inf turns negative above k ~ b1/sqrt(|alpha_0|)
+**Negative alpha_0.** At alpha_0 = -88.9 h^-2 Mpc^2 (one 0.5/k_max^2
+width at k_max = 0.075)
+P_gg - P_inf turns negative above k ~ b1/sqrt(|alpha_0|)
 ~ 0.14 h/Mpc on 47% of the engine's grid, the engine floors it, and
 the vector curves in alpha_0 (delta chi2 18.9 of nonlinearity over
 +-1 sigma) while FKEM's stays linear. Harmless for the Fisher forecast
@@ -311,8 +318,8 @@ fixes the sign.
 ## 7. Prior choices that were not adopted
 
 - **DESI DR1's agnostic priors** b2 sigma8^2, bs sigma8^2 ~ N(0, 5^2)
-  (Lagrangian; widths of order 10-25 in this b2) are not adopted for
-  model A: at k_max = 0.075 the data barely measure b2, and for the
+  (Lagrangian; widths of order 10-25 in this b2) are not adopted: at
+  low cuts the data barely measure b2, and for the
   dense BGS a low b2 drives P_gg negative. A DESI-like variant is only
   an optional bound.
 - **No DESI chain values as fiducials.** Fiducial higher-order values

@@ -10,7 +10,8 @@ the time (the rebuilt F matched the pickles to better than 7e-16) and
 from counterfactual covariances built on the fiducial data vector. Its
 covariance finding is fixed (Sec. 3); numbers marked "pre-fix" are
 relative statements, and "corrected" numbers use the linear-bias
-covariance with the per-bin bias; the current covariance on the model A
+covariance with the per-bin bias; the current covariance on the
+one-loop
 fiducial raises the shipped-mask linear-bias FoMs by a further 3-10%
 (`covariance.md`, Sec. 1).
 

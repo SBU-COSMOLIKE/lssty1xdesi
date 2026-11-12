@@ -314,8 +314,8 @@
 \newcommand{\BGSzeroMean}{847}
 % ---------------------------------------------------------------------
 % Part 3: the Fisher machinery and its convergence (notes/fisher_machinery,
-% sections "The base", "Derivative accuracy", "A scale cut is a set of
-% rows").  These values come from the convergence study
+% sections "The base, and every model as a matrix on it", "Derivative
+% accuracy", "A scale cut is a set of rows").  These values come from the convergence study
 % (tests/studies/run_fisher_derivatives.py) and the builders; the ones
 % marked \refresh are the paper model's FoM ratios of
 % plots/fom_convergence/data.json (the study's derivatives rescored on
@@ -442,7 +442,8 @@ free bin by bin; tying the bins too tightly instead turns assumptions
 about the bias into cosmology.
 
 \paragraph{The model.}
-The galaxy power spectrum is one-loop, with seven bias quantities per
+The fiducial model's galaxy power spectrum is one-loop, with seven
+bias quantities per
 bin: the linear, quadratic and tidal biases, the counterterms
 $\alpha_0$ and $\alpha_2$, and the stochastic terms $\SNz$ and $\SNt$.
 Each of them is its group's value, which follows calibrations where
@@ -474,8 +475,9 @@ on the thin layouts (Section~\ref{sec:pairs}).  The gain rests on the
 freedom the prior grants: each group's free bias level and slope
 mimic the growth history in the auto spectra, the added cross
 spectra separate the two, and with that level and slope held fixed
-most of the gain goes.  Open are a finite prior on the levels and
-slopes, and which pair list the analysis adopts.
+most of the gain goes.  The analysis keeps the current data vector;
+the longer lists are a comparison against it.  Open is a finite
+prior on the levels and slopes.
 
 \paragraph{What the grouping is worth.}
 A per-bin prior that looks looser than the model gains information by
@@ -655,7 +657,8 @@ and within the shipped mask, which stops every bin at $\kMask\hMpc$.
 The cut is computed on the model's own fiducial
 (Section~\ref{sec:fiducial}), at the final derivative tier, the
 settings of the derivative base.  Computing it on linear-bias spectra
-instead moves the figures of merit by at most a few percent
+instead moves the figures of merit by at most a few percent on the
+main layouts
 (\texttt{notes/scale\_cut\_fiducial\_dependence}).  The forecasts scan
 $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$.
 
@@ -736,8 +739,9 @@ $\Delta d_{\rm com} = 62$~Mpc no pair joins until
 $s = \SvJoinCom$~km/s, on $\Delta z = 0.05$ none until
 $\SvJoinFive$, and on $\Delta z = 0.2$ none ever; only
 $\Delta z = 0.02$ grows already at $s = \SvJoinTwo$.  On the three
-thinner layouts the added pairs are worth much: at its best cut and
-largest list each layout gains a factor of \PairGainCom{},
+thinner layouts the added pairs are worth much: at its largest list,
+at the better of the two cuts the figure draws,
+each layout gains a factor of \PairGainCom{},
 \PairGainTwo{} and \PairGainFive{} of ${\rm FoM}(w_0, w_a)$, in
 layout order, and up to \PairGainOm{} of
 ${\rm FoM}(\Omega_m, 10^9 A_s)$, with most of the gain in the first
@@ -828,10 +832,10 @@ All three leave every level and slope free, and the gain agrees
 across them within about \PairPriorSpread{} of the ratio.  The
 growth-tied prior -- one amplitude per group, with no slope and no
 residuals -- fails that test, so no figure of merit is quoted for
-it.  Open are a finite prior on the levels and slopes, which no
-passing prior imposes and which would keep only part of the gain,
-and which pair list the analysis adopts: that choice is the
-authors', and this note does not make it.  The templates, tables and
+it.  The analysis keeps the current data vector; the longer lists
+are a comparison against it.  Open is a finite prior on the levels
+and slopes, which no passing prior imposes and which would keep only
+part of the gain.  The templates, tables and
 checks behind these statements are in
 \texttt{notes/cross\_correlations}, in its sections on what pairs
 beyond the list would add and on the free bias levels and slopes.
@@ -1363,7 +1367,8 @@ Against the converged value they give ${\rm FoM}(w_0, w_a)$
 $0.2\hMpc$ (${\rm FoM}(\Omega_m, 10^9 A_s)$ \ConvFoMoLow{} and
 \ConvFoMoHigh{}), marginalized errors within \ConvSigma{} and shifts
 within $\ConvShift\sigma$.  From step $h/2$ to $3h$ both FoMs stay
-within \ConvStep{} on $\Delta z = 0.05$ and within \ConvStepCom{} on
+within \ConvStep{} on $\Delta z = 0.05$, and from $h/2$ to $2h$ within
+\ConvStepCom{} on
 $\Delta d_{\rm com} = 62$~Mpc.  Two cross-checks agree.  DerivKit,
 which fits a polynomial through at least \DkitPoints{} evaluations
 around the fiducial point, matches the stencils within \DkitAgree{}.

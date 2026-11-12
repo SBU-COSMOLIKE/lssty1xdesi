@@ -33,19 +33,20 @@ the linear part only. SSC and cNG keep their linear-bias halo-model
 galaxies. The Python driver takes optional per-bin `bias2` and
 `bias_s2` settings; zeros keep the linear call bitwise.
 
-Models A and B share this fiducial (every higher-order fiducial is
-zero), so one covariance serves both. The LSST Y1 3x2pt case keeps
+Every one-loop variant shares this fiducial (every higher-order
+fiducial is
+zero), so one covariance serves them all. The LSST Y1 3x2pt case keeps
 linear bias on its own lens sample.
 
 **Checks of the one-loop increment** (2026-11-08): with b2 = bs2 = 0
 every covariance is bitwise unchanged; the C increment equals an
 independent evaluation of the data-vector formula to 1.5e-13 (gg) and
 3.2e-12 (gs); 1 and 8 threads are bitwise identical; an -O0 UBSan
-build is clean. The covariance's mean signal divided by the model A
+build is clean. The covariance's mean signal divided by the one-loop
 data vector is flat at 1.03 on the kept autos at every redshift, the
 offset of the covariance's massless neutrinos (the halo forecast behind
 SSC runs at m_nu = 0; the data vector at 0.06 eV). Against the
-linear-bias covariance the model A FoMs at k_max = 0.075 move by -0.4%
+linear-bias covariance the one-loop FoMs at k_max = 0.075 move by -0.4%
 to +1.2%. The one-loop signal matters more at high k: rerun on this
 covariance, the growth-tied linear-bias FoM(w0, wa) on the shipped mask
 rises from 41.2 / 50.2 / 12.6 / 2.22 to 43.4 / 51.8 / 13.2 / 2.43

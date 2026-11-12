@@ -85,7 +85,10 @@ first two are the thin layouts.  This note answers three questions:
 A further forecast measures what the pairs outside this rule would
 add, along two axes: pairs whose raw ranges are up to three bin widths
 apart, and pair lists selected with every dispersion raised to a
-common test value (Section~\ref{sec:axes}).  On the three thinner
+common test value (Section~\ref{sec:axes}).  Those pairs have no
+kernel overlap; their signal is the low-$\ell$ correlation that
+survives only outside the Limber approximation
+(Section~\ref{sec:limber}).  On the three thinner
 layouts those pairs raise the paper model's ${\rm FoM}(w_0, w_a)$ by
 up to $55$--$59\%$, on $\Delta z = 0.2$ by at most $2\%$.  Attribution
 fits trace the gain to the free level and slope of each sample
@@ -100,8 +103,9 @@ parameter held fixed they are worth only $2$--$8\%$
 (Section~\ref{sec:bias}).  Every bias prior that passes the
 project's accuracy test gives the same gain within a few percent;
 under a prior on the bias levels and slopes themselves it would be
-smaller, by an amount not yet computed, and whether any longer list
-is adopted is the authors' choice.
+smaller, by an amount not yet computed.  The analysis keeps the
+current list; the longer lists are a comparison against that
+standard choice.
 
 \section{Fiducial model and parameter values}
 \label{sec:fiducial}
@@ -109,7 +113,12 @@ is adopted is the authors' choice.
 Three of this note's figures (Figures~\ref{fig:fog},
 \ref{fig:layouts} and~\ref{fig:zoom}) depend only on the shipped
 redshift distributions, the pair lists and the default velocity
-dispersions: no scale cut and no bias value enters them.  Only the
+dispersions: no scale cut and no bias value enters them.  The toy of
+Figure~\ref{fig:limbertoy} uses stand-in numbers of its own, stated
+in Section~\ref{sec:limber}; the measured curves of
+Figure~\ref{fig:limberreal} are the fiducial spectra of the
+pair-axes forecasts and one Limber evaluation of the same model.
+Only the
 Fisher forecasts of Sections~\ref{sec:threshold} and~\ref{sec:axes}
 run a fit.  This section freezes the values behind both, so the record
 does not depend on configuration files that can change.
@@ -152,7 +161,8 @@ with $B_g = 1.34$ (BGS), $1.70$ (LRG1--LRG3) and $0.84$ (ELG1, ELG2),
 under the pessimistic prior ($3\%$ correlated residuals, $L = 0.05$,
 a free amplitude and tilt per group;
 \texttt{notes/correlated\us bias\us prior\us v2}).  The higher-order
-terms are model B + tilts (\texttt{notes/higher\us order\us bias}):
+terms are those of the fiducial model
+(\texttt{notes/higher\us order\us bias}):
 offsets $\Delta_2$ and $\Delta_s$ of widths $2$ and $1$, counterterms
 $\alpha_0$ and $\alpha_2$ of width $0.5/k_{\rm max}^2$ at each cut,
 stochastic amplitudes ${\rm SN}_0$ and ${\rm SN}_2$ of widths $2$ and
@@ -164,7 +174,8 @@ prior sixfold.  The pair-axes forecasts of Section~\ref{sec:axes} run
 the same cosmology and scale cut with the paper model.
 
 \paragraph{Scale cut and covariance of the fit.}
-The fit keeps the bands of the UV-fraction cut computed on the paper
+The fit keeps the bands of the non-Limber UV-fraction cut of
+Saraivanov et al.~\cite{Saraivanov2026}, computed on the paper
 model's fiducial at the final derivative tier
 (\texttt{chains/model\us scale\us cuts\us final.npz}; a band is kept
 while less than $5\%$ of it comes
@@ -223,6 +234,8 @@ the approximation fails for thin shells: modes with a component along
 the line of sight longer than the shell depth connect shells that do
 not touch.  The forecast computes every spectrum without the Limber
 approximation, so it keeps that low-$\ell$ correlation.
+Section~\ref{sec:limber} works the difference out step by step on
+bins with zero overlap.
 
 \paragraph{Where the radial information sits.}
 Slicing a sample into thin shells keeps information along the line of
@@ -778,6 +791,361 @@ fixed-$\Delta z$ layouts the second step changes nothing: every pair
 whose blurred $n(z)$ overlap already touches in raw $n(z)$, and every
 measured pair overlaps by at least $0.003$ once blurred.
 
+\section{Why bins with zero overlap still correlate}
+\label{sec:limber}
+
+\paragraph{The question.}
+The pair rule of Section~\ref{sec:rule} keeps a cross spectrum when
+the two bins' $n(z)$ overlap, raw or blurred.  That invites a
+question: if two bins share no redshift at all, not even blurred,
+how can their maps be correlated?  In the Limber approximation,
+Eq.~\eqref{eq:limber}, they cannot: the integrand holds the product
+$W_i W_j$, which is zero at every $\chi$.  But the forecast computes
+its spectra without that approximation (Section~\ref{sec:why}), and
+the exact cross spectrum of two separated bins is small but not
+zero.  This section builds the difference step by step, first on a
+toy with explicit numbers (Figure~\ref{fig:limbertoy}), then on a
+measured pair of the $\Delta z = 0.02$ layout
+(Figure~\ref{fig:limberreal}).
+
+\paragraph{Separated shells still hold galaxy pairs.}
+The configuration-space version of the cross spectrum makes the
+physics plain.  Let $\xi(r)$ be the correlation function of the
+galaxy density: the average product of the density contrast at two
+points a three-dimensional distance $r$ apart, positive where
+structures of that size are common.  The angular correlation of the
+maps of bins $i$ and $j$, at separation $\theta$ on the sky, sums
+$\xi$ over every pair of one point in each shell:
+\begin{equation}
+  w_{ij}(\theta) = \int d\chi \int d\chi'\,
+  n_i(\chi)\, n_j(\chi')\, \xi(r),
+  \qquad
+  r = \sqrt{\chi^2 + \chi'^2 - 2\chi\chi' \cos\theta},
+  \label{eq:wtheta}
+\end{equation}
+with $n_i(\chi)$ the bin's kernel per unit comoving distance.  Two
+shells whose centres are $110$~Mpc apart hold pairs at
+$r = 110$~Mpc and beyond, and $\xi$ is not zero there.  Nothing in
+the exact expression asks the shells to overlap.  The overlap only
+takes over when $\xi$ is treated as so short-ranged that only the
+pairs with $\chi = \chi'$ count.
+
+\paragraph{The exact projection.}
+In harmonic space the same statement reads
+\begin{equation}
+  C^{ij}_\ell = \frac{2}{\pi} \int dk\, k^2\, P(k)\,
+  W^\ell_i(k)\, W^\ell_j(k),
+  \qquad
+  W^\ell_i(k) = \int d\chi\, n_i(\chi)\, b_i\, D(\chi)\,
+  j_\ell(k\chi),
+  \label{eq:exact}
+\end{equation}
+with $P(k)$ the matter power spectrum today, $b_i$ the linear bias
+of bin $i$ and $D(\chi)$ the linear growth factor ($D = 1$ today),
+which carry the matter clustering to the galaxies at the shell's
+epoch, and $j_\ell$ the spherical Bessel function, the radial
+oscillation that a plane wave of wavenumber $k$ shows when expanded
+in spherical harmonics around the observer.  The kernel
+$W^\ell_i(k)$ says how strongly a Fourier mode of wavenumber $k$
+imprints on the map of bin $i$.  Two separated shells respond to
+the same long mode, so the product $W^\ell_i W^\ell_j$ need not
+vanish anywhere.
+
+\paragraph{The toy.}
+Figure~\ref{fig:limbertoy} works this out for the simplest case:
+two top-hat shells of width $w = 55$~Mpc at comoving distance
+$\chi = 3200$~Mpc, the size and distance of one $\Delta z = 0.02$
+ELG bin at $z = 0.93$, with the smooth BBKS power
+spectrum~\cite{Bardeen1986} of shape $\Gamma = \Omega_m h$
+($\Omega_m = 0.315$, $h = 0.674$, $n_s = 1$, no baryon features).
+The toy is flat-sky, so it is inexact below $\ell \approx 10$, and
+its sharp edges and smooth spectrum are idealizations; the measured
+pair below needs none of them.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/limber_toy/limber_toy.pdf}
+  \caption{The toy of Section~\ref{sec:limber}: two top-hat shells
+    of width $55$~Mpc at $\chi = 3200$~Mpc with the BBKS power
+    spectrum.  (a)~The shells two bins apart (gray bands, centres
+    $d = 110$~Mpc apart) and three line-of-sight modes
+    $\cos(k_\parallel \chi)$: $k_\parallel = 0$ and $2\pi/d$ take
+    the same value in both shells, $\pi/d$ opposite values.
+    (b)~The power a mode carries over the one power the Limber
+    approximation gives every mode, at $\ell = 20$ and $200$;
+    shaded: the $k_\parallel$ where the weight of
+    Eq.~\eqref{eq:weight} is negative; gray: the Limber value, one.
+    (c)~The correlation coefficient $r_\ell$ of touching shells and
+    of shells two and three bins apart, in real space (solid,
+    filled markers) and with the linear Kaiser distortion (dashed,
+    open); color and marker: the separation; gray: the Limber
+    value, zero for all three, since no pair of shells overlaps.}
+  \label{fig:limbertoy}
+\end{figure}
+
+\paragraph{The flat-sky form.}
+On a flat sky each Fourier mode splits into a transverse wavenumber
+$k_\perp$, seen on the sky at multipole $\ell = k_\perp \chi$, and
+a line-of-sight wavenumber $k_\parallel$.  Up to a factor common to
+every spectrum,
+\begin{equation}
+  C^{ij}(\ell) \propto \int_{-\infty}^{\infty}
+  \frac{dk_\parallel}{2\pi}\,
+  P_s(k_\perp, k_\parallel)\,
+  {\rm Re}\!\left[ W_i(k_\parallel)\, W_j^*(k_\parallel) \right],
+  \qquad k_\perp = \frac{\ell}{\chi},
+  \label{eq:flatsky}
+\end{equation}
+where $W_i(k_\parallel) = \int d\chi\, n_i(\chi)\,
+e^{i k_\parallel \chi}$ is the Fourier transform of the shell
+profile along the line of sight and $P_s(k_\perp, k_\parallel)$ is
+the power of the mode: in real space $P(k)$ with
+$k = \sqrt{k_\perp^2 + k_\parallel^2}$, in redshift space the
+direction-dependent form below.  For two top-hat shells of width
+$w$ whose centres are a distance $d$ apart the weight is
+\begin{equation}
+  {\rm Re}\!\left[ W_i W_j^* \right]
+  = \cos(k_\parallel d)\, {\rm sinc}^2\!\left(\frac{k_\parallel w}{2}\right),
+  \qquad {\rm sinc}\,x = \frac{\sin x}{x}.
+  \label{eq:weight}
+\end{equation}
+
+\paragraph{The line-of-sight modes, one by one.}
+Equation~\eqref{eq:flatsky} is a sum over line-of-sight modes, each
+with the weight of Eq.~\eqref{eq:weight}.  Panel~(a) of
+Figure~\ref{fig:limbertoy} draws three modes across two shells two
+bins apart, $d = 110$~Mpc.  The mode $k_\parallel = 0$ is constant
+along the line of sight: it takes the same value in both shells,
+weight $+1$.  So does $k_\parallel = 2\pi/d$, one full wavelength
+from centre to centre.  The mode $k_\parallel = \pi/d$ puts a crest
+in one shell and a trough in the other, weight $-1$: where that
+mode makes one shell overdense it makes the other underdense.
+Without overlap the positive and negative weights balance exactly,
+\begin{equation}
+  \int_{-\infty}^{\infty} \frac{dk_\parallel}{2\pi}\,
+  {\rm Re}\!\left[ W_i W_j^* \right]
+  = \int d\chi\, n_i(\chi)\, n_j(\chi) = 0
+  \label{eq:parseval}
+\end{equation}
+(Parseval's theorem; the right-hand side is the unnormalized
+overlap of the two kernels).
+
+\paragraph{What Limber assumes, and why it gives zero.}
+The Limber approximation~\cite{Limber1953,LoVerde2008} treats the
+power as constant across the $k_\parallel$ range where the weight
+lives: it gives every line-of-sight mode the power of the
+$k_\parallel = 0$ mode, $P(k_\perp)$.  The power then leaves the
+integral, and Eq.~\eqref{eq:parseval} finishes the calculation:
+\begin{equation}
+  C^{ij}_{\rm Limber}(\ell) \propto P(k_\perp)
+  \int_{-\infty}^{\infty} \frac{dk_\parallel}{2\pi}\,
+  {\rm Re}\!\left[ W_i W_j^* \right]
+  = P(k_\perp) \int d\chi\, n_i(\chi)\, n_j(\chi).
+  \label{eq:limberflat}
+\end{equation}
+This is the flat-sky version of Eq.~\eqref{eq:limber}: the cross
+spectrum collapses to the kernel overlap times the power.  For two
+separated shells it is zero at every $\ell$ -- not because no mode
+connects the shells, but because every mode is given the same power
+and the balanced weights then cancel exactly.  The overlap $O_{ij}$
+of Eq.~\eqref{eq:overlap} is therefore a Limber-level quantity: it
+decides the Limber cross spectrum, not the exact one.
+
+\paragraph{The exact integral does not cancel.}
+Away from the approximation each mode carries its own power,
+$P(\sqrt{k_\perp^2 + k_\parallel^2})$.  Panel~(b) of
+Figure~\ref{fig:limbertoy} draws that power over the single power
+Limber assigns, at two multipoles, with the $k_\parallel$ of
+negative weight shaded.  At $\ell = 20$ the ratio rises to about
+$1.27$ inside the first shaded band: the anticorrelated modes carry
+about a quarter more power than the correlated ones, the
+cancellation fails, and the sum comes out negative.  At $\ell = 200$
+the ratio stays close to one across the first bands, the
+cancellation nearly succeeds, and the exact cross spectrum is tiny:
+there Limber is accurate even for separated shells.
+
+\paragraph{The scale below which the shells correlate.}
+The weight of Eq.~\eqref{eq:weight} lives at $k_\parallel$ up to a
+few times $1/d$.  The power varies appreciably across that range
+only while $k_\perp$ is not much larger than $1/d$, that is, for
+\begin{equation}
+  \ell \;\lesssim\; \frac{\chi}{d}.
+  \label{eq:limberscale}
+\end{equation}
+At $\chi = 3200$~Mpc with shells of $w \approx 55$~Mpc: bins two
+apart have $d = 2w = 110$~Mpc, so in real space they correlate
+below $\ell \approx 29$; bins three apart have $d = 165$~Mpc and
+$\ell \approx 19$.  Touching neighbours have $d = w = 55$~Mpc and
+$\ell \approx 58$ -- and they also hold galaxy pairs at arbitrarily
+small separation, which carry their correlation far beyond that
+scale (Table~\ref{tab:limber}).
+
+\paragraph{Why the low-$\ell$ sign is negative.}
+At $\ell = 20$ the transverse wavenumber is $k_\perp = \ell/\chi
+\approx 0.006$~Mpc$^{-1}$, below the peak of the power spectrum
+(near $k = 0.013$~Mpc$^{-1}$ in the toy's BBKS fit).  Adding a
+line-of-sight component moves a mode toward the peak, so it gains
+power, and the modes that gain most within the first lobes of the
+weight sit near $k_\parallel = \pi/d$: the opposite-sign modes.
+The negative weights win, so the cross spectrum of separated thin
+shells is negative at low $\ell$ -- the connecting modes have about
+twice the centre separation for a wavelength, a crest in one shell
+and a trough in the other.  Panel~(c) carries the numbers, as the
+correlation coefficient $r_\ell = C^{ij}_\ell/\sqrt{C^{ii}_\ell
+C^{jj}_\ell}$ of Section~\ref{sec:overlap}: in real space the
+shells two apart have $r_\ell = -0.031$ at $\ell = 20$, cross zero
+near $\ell = 40$ and reach $+0.008$ at $\ell = 100$; the touching
+shells hold $r_\ell \approx +0.19$ at both multipoles.
+
+\paragraph{What redshift-space distortions add.}
+The bins are cut in measured redshift, and the coherent infall of
+galaxies toward large structures shifts those redshifts: the Kaiser
+distortion of Section~\ref{sec:fog}.  In linear
+theory~\cite{Kaiser1987} the power of a mode becomes
+\begin{equation}
+  P_s(k_\perp, k_\parallel) = (b + f\mu^2)^2\, P(k),
+  \qquad
+  \mu = \frac{k_\parallel}{k},
+  \label{eq:kaiser}
+\end{equation}
+with $b$ the linear bias, $f = d\ln D/d\ln a$ the growth rate ($a$
+the scale factor) and $\mu$ the cosine between the mode and the
+line of sight; the toy takes $b = 1.5$ and $f = 0.8$, roughly an
+ELG bin at $z \approx 0.9$.  The power now depends on direction:
+$\mu^2 = k_\parallel^2/(k_\perp^2 + k_\parallel^2)$ varies across
+$k_\parallel$ on a scale set by $k_\perp$ itself, whatever the gap,
+so the Limber cancellation fails up to much higher $\ell$.  The
+physical picture matches: infall moves galaxies across bin edges in
+redshift, so the velocities themselves couple separated shells.
+The dashed curves of panel~(c) show it: the shells two apart reach
+$r_\ell = -0.107$ at $\ell = 20$ and still $-0.038$ at
+$\ell = 100$, three times the real-space value at the lowest
+multipoles and persisting where the real-space curve has already
+crossed zero.
+
+\paragraph{A measured pair of the forecast.}
+Figure~\ref{fig:limberreal} repeats the comparison on the forecast
+itself, with nothing idealized.  The bins are $56$ to $59$ of
+$\Delta z = 0.02$ (ELG1, $\bar{z} = 0.930$, $0.950$, $0.970$ and
+$0.990$).  The exact curves are the fiducial data vector of the
+layout's pair-axes derivative base (Section~\ref{sec:axes}),
+computed without the Limber approximation, with redshift-space
+distortions and the Fingers-of-God blur.  The Limber curves are one
+evaluation of the same model with every clustering spectrum, auto
+and cross, in the Limber approximation.  Both are the signal alone;
+a cross spectrum has no shot noise anyway
+(Section~\ref{sec:groups}).  Table~\ref{tab:limber} compares the
+lowest band.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=3.5in]{plots/limber_real/limber_real.pdf}
+  \caption{The correlation coefficient $r_\ell$ of
+    $\Delta z = 0.02$ bin $56$ with bin $57$ (neighbours), $58$
+    (two apart) and $59$ (three apart): the forecast's exact
+    non-Limber spectra (black solid, circles) and the Limber
+    approximation of the same model (vermillion dashed, squares),
+    signal only; gray: zero.  Dotted vertical lines: the last band
+    the UV-fraction cut keeps at $k_{\rm max} = 0.1$ (thin) and
+    $0.2\,h$/Mpc (thick).  $k_{\rm max}$ quoted at $z = 0$; each
+    bin is cut at $k_{\rm max}/D(\bar{z}_i)$.}
+  \label{fig:limberreal}
+\end{figure}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lccccc}
+    \hline
+    pair & bins & $d$ [Mpc] & $\chi/d$
+      & exact $r_\ell$ & Limber $r_\ell$ \\
+    \hline
+    neighbours & $56 \times 57$ & $55$ & $58$ & $+0.265$ & $+0.06$ \\
+    two apart & $56 \times 58$ & $110$ & $29$ & $-0.050$ & $-0.002$ \\
+    three apart & $56 \times 59$ & $165$ & $19$ & $-0.091$ & $-0.055$ \\
+    \hline
+  \end{tabular}
+  \caption{The correlation coefficient of the lowest band
+    ($\ell = 20$) of $\Delta z = 0.02$ bin $56$ with its three
+    partners, exact and in the Limber approximation
+    (Figure~\ref{fig:limberreal}); $d$ is the approximate comoving
+    separation of the bin centres and $\chi/d$ the multipole scale
+    of Eq.~\eqref{eq:limberscale}.}
+  \label{tab:limber}
+\end{table}
+
+For the neighbours the exact coefficient at the lowest band is
+$0.265$ against Limber's $0.06$: Limber underestimates the
+neighbour correlation by a factor of about four there, and only
+above $\ell \approx 200$ do the two settle together near $0.06$,
+the high-$\ell$ value the blurred overlap of
+Section~\ref{sec:overlap} predicts.  For the pair two apart the
+exact coefficient is $-0.05$ to $-0.07$ from the lowest band out to
+$\ell \approx 110$ and is gone above $\ell \approx 170$; three
+apart it starts at $-0.091$ and is gone above $\ell \approx 80$.
+The two-apart correlation persists well beyond the real-space scale
+$\chi/d \approx 29$, exactly like the toy's Kaiser curves:
+redshift-space distortions carry it there.
+
+\paragraph{Why the Limber curves are not exactly zero.}
+The Limber curves of the two separated pairs are not quite zero at
+the lowest bands, although Eq.~\eqref{eq:limberflat} says they
+should be.  The density term is: with no kernel overlap it
+vanishes.  What remains is the redshift-space term, which the code
+evaluates in an extended-Limber form whose kernel samples each
+bin's $n(z)$ at two line-of-sight points, $\chi = \ell/k$ and
+$\chi' = (\ell + 1)/k$, a distance $\chi/\ell$ apart
+(\texttt{W\us RSD} in \texttt{cosmolike/radial\us weights.c}).  At
+$z \approx 0.95$ that distance is about $110$~Mpc at
+$\ell \approx 30$ and $165$~Mpc at $\ell \approx 20$: just the
+separations of the bins two and three apart.  So at the lowest
+multipoles even the Limber redshift-space term couples
+non-overlapping bins; as $\ell$ grows, $\chi/\ell$ shrinks below
+the gap and the Limber curves drop to zero.
+
+\paragraph{The kept bands sit where the signal lives.}
+The dotted lines of Figure~\ref{fig:limberreal} mark the scale cut
+of the forecasts (Section~\ref{sec:threshold}).  At
+$k_{\rm max} = 0.1\,h$/Mpc the cut keeps $13$ bands of the
+two-apart pair, out to $\ell = 140$, and $7$ of the three-apart
+pair, out to $\ell = 80$; at $0.2\,h$/Mpc, $16$ (to $170$) and $21$
+(to $220$).  Those are the multipoles where the exact correlation
+lives.  When the larger pair lists of Section~\ref{sec:axes} add
+such a pair, the bands that survive the cut are the low-$\ell$
+bands that carry its non-Limber signal.
+
+\paragraph{What this means for the rest of the note.}
+The pair rule selects by kernel overlap, a Limber-level criterion;
+the forecast is non-Limber, so the pairs the rule excludes still
+carry a few percent of correlation at the lowest bands.  And that
+correlation is a special measurement: the cross spectrum scales as
+$b_i b_j$ and the two autos as $b_i^2$ and $b_j^2$, so the linear
+biases divide out of $r_\ell$ at linear order.  The larger pair
+lists of Section~\ref{sec:axes} add exactly this bias-free record
+of how clustering continues from shell to shell, which is why their
+gain flows through the free bias levels and slopes
+(Section~\ref{sec:bias}).  The analysis keeps the current list; the
+larger lists are a comparison against it.
+
+\paragraph{What to remember.}
+\begin{itemize}
+  \item The Limber approximation gives every line-of-sight mode the
+    power of the purely transverse one.  Without kernel overlap the
+    mode weights then cancel exactly, so Limber predicts a zero
+    cross spectrum for separated bins at every $\ell$: the overlap
+    $O_{ij}$ is a Limber-level criterion.
+  \item The exact projection weights each mode by its own power, so
+    the cancellation fails at $\ell \lesssim \chi/d$; redshift-space
+    distortions carry the correlation to higher multipoles still.
+  \item At the lowest bands the correlation of separated thin
+    shells is negative and of a few percent: the connecting modes
+    put a crest in one shell and a trough in the other, and at
+    these scales those modes carry the most power.
+  \item The linear biases divide out of the correlation coefficient
+    of two separated bins, so the pairs outside the standard list
+    measure clustering growth with no bias in the way
+    (Sections~\ref{sec:axes} and~\ref{sec:bias}).
+\end{itemize}
+
 \section{What is not measured, and why that is a choice}
 \label{sec:notmeasured}
 
@@ -785,9 +1153,11 @@ measured pair overlaps by at least $0.003$ once blurred.
 Two thin bins one apart share no galaxies and, even blurred, no
 redshift range, so their cross spectrum vanishes in the Limber regime.
 At low $\ell$ it does not vanish: modes longer than a bin along the
-line of sight connect the two shells (Section~\ref{sec:why}), so their
-non-Limber cross spectrum is small but nonzero.  The same holds for any
-pair beyond.  After the second step of the rule no unmeasured pair of
+line of sight connect the two shells (Section~\ref{sec:limber}), so
+their non-Limber cross spectrum is small but nonzero -- a few
+percent of correlation at the lowest bands, negative, gone above
+$\ell \approx \chi/d$ for shells a distance $d$ apart.  The same
+holds for any pair beyond.  After the second step of the rule no unmeasured pair of
 any layout has overlapping blurred kernels, so every unmeasured
 spectrum vanishes in the Limber regime and lives at low $\ell$ only.
 
@@ -813,8 +1183,8 @@ default dispersions reaches a floor, $O_{ij} \ge O_{\min}$
 (Eq.~\eqref{eq:overlap}), applied to \emph{every} measured pair, the
 DESI-imported ones included; the auto spectra are always kept, a kept
 pair keeps its bands, and the covariance is rebuilt on the kept rows.
-The fit is model B + tilts on the pessimistic linear-bias prior, with
-$\alpha_2$ free and the exploration $\sv$ widths
+The fit is the fiducial model on the pessimistic linear-bias prior,
+with $\alpha_2$ free and the exploration $\sv$ widths
 (Section~\ref{sec:fiducial}): the reference model of
 \texttt{notes/fog\us parameter\us degeneracy\us study}.  It is scored
 by the dark-energy figure of merit
@@ -906,7 +1276,9 @@ each step in $g$ adds the next chain of pairs, $C^{i,i+2}_\ell$ at
 $g = 1$, $C^{i,i+3}_\ell$ at $g = 2$, and so on, with the matching
 pairs across the sample boundaries.  On \dcom{} the list grows from
 $107$ pairs to $190$, $285$ and $378$ at $g = 1$, $2$ and $3$; the
-other layouts grow in the same way.
+other layouts grow in the same way.  Every added pair has zero
+kernel overlap, raw or blurred, so its whole signal is the
+low-$\ell$ non-Limber correlation of Section~\ref{sec:limber}.
 
 \paragraph{The $\sv$ axis.}
 The second family loosens the second step.  It reruns the
@@ -943,9 +1315,9 @@ the $s = 600$ point of $\Delta z = 0.02$ reproduces, to every digit,
 a separate forecast whose data vector, covariance and derivatives
 were built on exactly those pairs.
 
-The model is the paper model (Section~\ref{sec:fiducial}): model B +
-tilts with $\alpha_2$ fixed at zero in every bin and every $\sv$
-prior width six times the exploration width, on the pessimistic
+The model is the paper model (Section~\ref{sec:fiducial}): the
+fiducial model, with $\alpha_2$ fixed at zero in every bin and every
+$\sv$ prior width six times the exploration width, on the pessimistic
 linear-bias prior.  Each list is forecast twice: once with the seven
 $\sv$ fitted -- left free, so the quoted errors carry their
 uncertainty -- and once with them held at the fiducial values.  The
@@ -1338,7 +1710,8 @@ biases differently, as the product $b_i b_j$, and its ratio to the
 two auto spectra -- the correlation coefficient
 $C^{ij}_\ell/\sqrt{C^{ii}_\ell C^{jj}_\ell}$ of
 Section~\ref{sec:overlap} -- does not depend on the linear biases at
-all at linear order.  Each added pair is therefore one more
+all at linear order (Section~\ref{sec:limber}).  Each added pair is
+therefore one more
 measurement of the clustering shared by two shells that no bias
 line can reshape: it separates the bias line from the growth
 history.  This is also why the gain collapses when the levels and
@@ -1472,7 +1845,8 @@ of this note.
     measured, as the DESI forecast measures it, although its ranges are
     $0.010$ apart and its blurred kernels barely overlap
     ($3 \times 10^{-7}$, below the second step's threshold); its signal
-    is the low-$\ell$ non-Limber correlation alone.
+    is the low-$\ell$ non-Limber correlation alone
+    (Section~\ref{sec:limber}).
   \item \textbf{The list does not follow $\sv$.}  It is built at the
     default dispersions.  A sampled $\sv$ changes every kernel overlap
     but not which pairs are measured.  Within two prior widths of the
@@ -1486,11 +1860,10 @@ of this note.
     pair rule at the edges of the $\sv$ prior).  Those lists have now
     been forecast (Section~\ref{sec:axes}, the $\sv$ axis), and the
     gain is attributed to the free level and slope of each group's
-    bias amplitude (Section~\ref{sec:bias}).  What remains open: the
-    archiving of
-    the largest lists' derivative bases, and the choice of a pair
-    list for the paper, which is the authors' and is not made in
-    this note.
+    bias amplitude (Section~\ref{sec:bias}), and the largest lists'
+    derivative bases are archived in \texttt{fisher\us caches/}.
+    The analysis keeps the current list; the larger lists are a
+    comparison against it.
   \item \textbf{The gain under a prior on the bias levels and
     slopes.}  Every linear-bias prior that passes the accuracy test
     leaves each group's level and slope free, and all of them give
@@ -1509,21 +1882,35 @@ project's \texttt{data/} and \texttt{likelihood/} files and writes the
 number quoted for them here;
 \texttt{plots/pair\us threshold/data.json} is written by the Fisher
 notebook \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL.ipynb}
-(section 11, item 7).  \texttt{plots/make\us pair\us axes\us data.py}
-writes the \texttt{data.json} of \texttt{plots/pair\us axes\us gap}
-and \texttt{plots/pair\us axes\us sigv} from the pair-axes study's
-results file; they hold the full grids of Section~\ref{sec:axes},
-for the paper and the reference model both.
+(section 11, item 7).  The pair-axes figures start from the archived
+derivative, template and scale-cut caches of each layout's maximal
+pair list,
+\texttt{model\us \{derivatives,templates,scale\us cuts\}\us <layout>\us pairmax\us final.npz}
+in \texttt{fisher\us caches/} (\texttt{<layout>} = \texttt{dcom62},
+\texttt{dz0p02}, \texttt{dz0p05}, \texttt{dz0p20}), each copied to
+\texttt{chains/} with an explicit
+\texttt{fm.load\us fisher\us from\us cache} call, and from each
+layout's pair-list covariance, built with the project's covariance
+command on the
+\texttt{EXAMPLE\us EVALUATE\us COVARIANCE*\us PAIRMAX.yaml}
+examples.
+\texttt{scripts/compute\us pair\us axes\us fits.py --layout <layout>}
+then writes \texttt{chains/pair\us axes\us fits\us <layout>.json},
+the input of the three generators of \texttt{plots/}
+(\texttt{make\us pair\us axes\us data.py},
+\texttt{make\us pair\us axes\us attribution\us data.py},
+\texttt{make\us pair\us axes\us priors\us data.py}); the
+docstrings of the script and the generators state the exact
+prerequisites and arguments.
 \texttt{plots/make\us sv\us templates\us data.py} writes
-\texttt{plots/sv\us templates}' \texttt{data.json} from the study's
-$\Delta z = 0.02$ derivative base and data set, and
-\texttt{plots/make\us pair\us axes\us attribution\us data.py} writes
-\texttt{plots/pair\us axes\us attribution}'s from the study's
-attribution fits, one file per layout;
-\texttt{plots/make\us pair\us axes\us priors\us data.py} writes
-\texttt{plots/pair\us axes\us priors}' from the study's prior-gain
-fits, one file per layout; these inputs are outputs of the
-pair-axes study and sit outside the repository.
+\texttt{plots/sv\us templates}' \texttt{data.json} from the
+$\Delta z = 0.02$ pairmax derivative base and data set files.
+\texttt{plots/make\us limber\us toy\us data.py} writes
+\texttt{plots/limber\us toy}'s \texttt{data.json} with numpy alone,
+and \texttt{plots/make\us limber\us real\us data.py} writes
+\texttt{plots/limber\us real}'s from that same derivative base plus
+one CosmoLike evaluation of the same model in the Limber
+approximation (run from \texttt{Cocoa/} with the cocoa environment).
 Each folder's \texttt{plot\us <name>.py} redraws its figure from that
 file alone.
 
@@ -1534,6 +1921,16 @@ D.~N. Limber,
 ``The Analysis of Counts of the Extragalactic Nebulae in Terms of a
 Fluctuating Density Field'',
 ApJ 117, 134 (1953).
+
+\bibitem{LoVerde2008}
+M. LoVerde and N. Afshordi,
+``Extended Limber approximation'',
+Phys. Rev. D 78, 123506 (2008), arXiv:0809.5112.
+
+\bibitem{Bardeen1986}
+J.~M. Bardeen, J.~R. Bond, N. Kaiser and A.~S. Szalay,
+``The statistics of peaks of Gaussian random fields'',
+ApJ 304, 15 (1986).
 
 \bibitem{Seljak2009}
 U. Seljak,
@@ -1560,6 +1957,11 @@ H.~S. Grasshorn Gebhardt and D. Jeong,
 ``Nonlinear redshift-space distortions in the harmonic-space galaxy
 power spectrum'',
 Phys. Rev. D 102, 083521 (2020).
+
+\bibitem{Saraivanov2026}
+E.~Saraivanov, H.~Rubira, V.~Miranda and T.~Eifler,
+``Towards the Two-Loop EFTofLSS in Galaxy Lensing Surveys'',
+2026, arXiv:2603.13031.
 
 \end{thebibliography}
 

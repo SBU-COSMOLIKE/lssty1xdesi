@@ -69,7 +69,7 @@ line of sight, $b_1$ the bin's linear galaxy bias, $f = d\ln D/d\ln a$
 the linear growth rate ($D$ the linear growth factor, $a$ the scale
 factor), $P_{\rm lin}$ the linear matter power spectrum, and
 $\alpha_2$ in $h^{-2}\,{\rm Mpc}^2$, one value per group plus a free
-tilt in redshift in model B + tilts.  The leading effect of the blur
+tilt in redshift in the fits that free it.  The leading effect of the blur
 on the power spectrum is a damping $-\sigma_\chi^2 k_\parallel^2$ with
 $k_\parallel = k\mu$ and $\sigma_\chi = (1 + z)\,\sv/H(z)$ the
 dispersion in comoving distance: the same $k_\parallel^2$ shape as
@@ -78,9 +78,10 @@ whether the forecast pays twice for one effect: is $\alpha_2$
 degenerate with the $\sv$ already in the model?
 
 \paragraph{Two fits.}
-The study's reference is \emph{model B + tilts} on the pessimistic
-linear-bias prior, with $\alpha_2$ free and the exploration $\sv$
-prior widths of Table~\ref{tab:sigv} (the reference model).  The
+The study's reference is the fiducial bias model of
+\texttt{notes/higher\us order\us bias} on the pessimistic
+linear-bias prior, fitted with $\alpha_2$ free and the exploration
+$\sv$ prior widths of Table~\ref{tab:sigv} (the reference model).  The
 \emph{fit without $\alpha_2$} is the same model with $\alpha_2$ and
 its tilts fixed at zero.  The \emph{paper model} -- the configuration
 the paper yamls hold -- is the fit without $\alpha_2$ with all seven
@@ -150,8 +151,13 @@ $\sv$ prior widths multiplied by $s = 6$.
     sits at $0.34$ and $0.52$ of the widened width on the thin
     layouts, and at their $+2\sigma$ edge pairs of BGS bins two apart
     overlap at $7.1\times10^{-2}$ and $2.5\times10^{-2}$, far above
-    the threshold -- the reason a rebuild of the pair list at the
-    prior edge is queued (appendix ``Open issues'').
+    the threshold.  The lists selected at those larger dispersions
+    are forecast in \texttt{notes/cross\us correlations} (its
+    $\sv$ axis): the added pairs raise ${\rm FoM}(w_0, w_a)$ by up
+    to a factor of about $1.6$ on the three thinner layouts, by
+    separating each group's free bias level and slope from the
+    growth history rather than through line-of-sight information of
+    their own.
 \end{enumerate}
 Here $w_0$ and $w_a$ parameterize the dark-energy equation of state
 $w(a) = w_0 + w_a(1 - a)$; $\Omega_m$ is the matter density today in
@@ -226,7 +232,7 @@ uses the projected precision, which charges only the residuals and
 leaves the amplitude and the line flat.
 
 \paragraph{Higher-order terms.}
-The bias model is model B + tilts: per group, offsets $\Delta_2$ and
+The bias model is the fiducial model: per group, offsets $\Delta_2$ and
 $\Delta_s$ of $b_2$ and $b_{s^2}$ from their calibrations
 ($b_2$ from the Lazeyras et al.\ fit~\cite{Lazeyras2016},
 $b_{s^2} = -(4/7)(b_1 - 1)$, $b_3 = 0$), the counterterms $\alpha_0$
@@ -375,7 +381,8 @@ six bias groups.  Each prior is a Gaussian centred on the measured
 value and truncated at zero; its provenance is the section ``Where the
 velocity dispersions come from'' of
 \texttt{notes/cross\us correlations}.  The exploration widths, five
-times the measurement's per-bin error bar, are the priors of the
+times the median per-bin error bar of each group's measurement, are
+the priors of the
 reference model (the exploration files
 \texttt{likelihood/params\us desi*.yaml}) and the $s = 1$ point of the
 width scan of Section~\ref{sec:width}; the paper model widens every
@@ -424,8 +431,9 @@ To first order it is the fingerprint $p$ leaves on the data: the fit
 can distinguish two parameters only as far as their templates differ.
 Each parameter is measured in units of its prior width $\Delta_p$
 (written $\Delta$, never $\sigma$, since $\sv$ is itself a
-dispersion): here $\Delta\alpha_2 = 0.5/\kmax^2$, the model B prior
-width, quoted at $\kmax = 0.2\hMpc$ where it is $12.5\aunit$, and
+dispersion): here $\Delta\alpha_2 = 0.5/\kmax^2$, the reference
+model's prior width, quoted at $\kmax = 0.2\hMpc$ where it is
+$12.5\aunit$, and
 $\Delta\sigma_{v,g}$ each dispersion group's exploration width
 (Table~\ref{tab:sigv}).  Divided by each band's error
 $\sigma_\ell = \sqrt{\Cov_{ii}}$, the scaled template
@@ -579,8 +587,8 @@ freedom.
     is largest; this panel is built from the templates and the
     covariance alone and does not depend on any prior.  Second panel:
     the largest $|\rho|$ between an $\alpha_2$ parameter and a $\sv$
-    in the posterior of the reference model, model B + tilts on the
-    pessimistic linear-bias prior with $\alpha_2$ free and the
+    in the posterior of the reference model, the fiducial model on
+    the pessimistic linear-bias prior with $\alpha_2$ free and the
     exploration $\sv$ widths.  Third panel:
     ${\rm FoM}_{\alpha_2 = 0}/{\rm FoM}$, the ${\rm FoM}(w_0, w_a)$
     with $\alpha_2$ and its tilts fixed at zero over the reference
@@ -662,7 +670,7 @@ dispersion, whose prior is tightest), and with the Gaussian priors the
 total left, data residual plus prior penalty, is $14$.  Across the
 thin layouts at cuts of $0.075$ and above, the mimicking shift is
 $1.9$--$2.6$ prior widths ($56$--$78$~km/s).  The shifts scale
-linearly with the truth: a truth at one model B prior width
+linearly with the truth: a truth at one $\alpha_2$ prior width
 ($0.5/\kmax^2$, $88.9\aunit$ at $0.075$) gives $7.1$ times the
 $12.5\aunit$ shifts there.
 
@@ -715,8 +723,8 @@ values and the one-sample variants below are in that folder's
     its ellipse and the $\Omega_m$ and $A_s$ shifts in their own
     $\sigma$; dotted: $\sigma/3$.  Bottom panel:
     ${\rm FoM}_{\alpha_0\,{\rm only}}/{\rm FoM}$, that fit's
-    ${\rm FoM}(w_0, w_a)$ over the reference model's, model B + tilts
-    with $\alpha_2$ free and $\sv$ at $s = 1$; gray: one.  The paper
+    ${\rm FoM}(w_0, w_a)$ over the reference model's ($\alpha_2$
+    free, $\sv$ at $s = 1$); gray: one.  The paper
     model is this fit at $s = 6$.  \kmaxclause}
   \label{fig:sigvwidth}
 \end{figure}
@@ -760,7 +768,7 @@ criterion everywhere.  The largest interpolated passing threshold of
 the scan is $6.3$, on $\Delta z = 0.02$ at $\kmax = 0.1\hMpc$, between
 the scanned $s = 5$ and $10$ -- above the adopted $6$ -- and the
 $0.327\sigma$ sits on exactly that point, so the margin there is
-small.  The prior-width truth, $\alpha_2$ at one model B width
+small.  The prior-width truth, $\alpha_2$ at one prior width
 $0.5/\kmax^2$ in every group, is a stress test rather than a DESI-size
 estimate, and the widened dispersions do not absorb it at the smaller
 cuts: it moves $A_s$ by $1.6\sigma$ at $0.075$ on \dcom{} and
@@ -885,9 +893,11 @@ magnitude above the threshold, always a pair of BGS0 bins two apart.
 $\Delta z = 0.05$ crosses at $2.1$ widened widths and
 $\Delta z = 0.2$ never.  A chain with the paper priors that explores
 high BGS0 dispersions would therefore need cross spectra the data
-vector does not carry: rebuilding the pair list, the covariances and
-the derivative caches at the prior edge is queued (appendix ``Open
-issues'').
+vector does not carry.  What those lists measure is forecast in
+\texttt{notes/cross\us correlations} (its $\sv$ axis, with the gain
+attributed to the free bias levels and slopes); the analysis keeps
+the current list, and those larger lists are a comparison against
+it.
 
 \paragraph{What $\alpha_2$ asks of $\sv$.}
 Only a \emph{negative} $\alpha_2$ drives the dispersions up: a
@@ -954,15 +964,16 @@ at $0.125$).  In exchange the model no longer risks the absorption
 shift: the $\alpha_2 = \pm 12.5\aunit$ truth moves no score by more
 than $0.327\sigma$ anywhere -- a linear-response estimate of MCMC
 safety, not a test the Fisher-only paper performs on data -- though a
-truth at one model B prior width, a stress test, still shifts the
+truth at one $\alpha_2$ prior width, a stress test, still shifts the
 small cuts by up to $1.6\sigma$.
 
-Two costs of the widened priors are measured here and remain open
-elsewhere: the gain-free FoM now rests on priors six times wider than
-the measurement-based exploration widths, and the pair list is no
-longer complete at the widened prior's edge
-(Section~\ref{sec:pairs}), which is why the prior-edge rebuild is
-queued.
+Two costs of the widened priors are measured here: the gain-free FoM
+now rests on priors six times wider than the measurement-based
+exploration widths -- how defensible they are stays open (appendix
+``Open issues'') -- and the pair list is no longer complete at the
+widened prior's edge (Section~\ref{sec:pairs}); the lists selected
+there are forecast in \texttt{notes/cross\us correlations} as a
+comparison against the current list, which the analysis keeps.
 
 \appendix
 
@@ -1019,8 +1030,9 @@ backward differences agree) are listed with that notebook.
 
 \begin{itemize}
   \item \textbf{The basis of the $\sv$ priors.}  The exploration
-    widths are Gaussians five times as wide as the per-bin error bars
-    of the source forecast's measurement on simulated galaxies,
+    widths are Gaussians five times as wide as the median per-bin
+    error bar of the source forecast's measurement on simulated
+    galaxies,
     truncated at zero (\texttt{notes/cross\us correlations}); the
     paper widths are six times the exploration widths, a modeling
     choice justified by the absorption scan rather than by a
@@ -1037,10 +1049,15 @@ backward differences agree) are listed with that notebook.
   \item \textbf{The pair list at the $\sv$ prior edge.}  The paper
     model's widened priors cross the pair rule's threshold well
     inside one sigma on the thin layouts
-    (Section~\ref{sec:pairs}).  Building the pair list at the prior
-    edge adds the pairs of bins two apart; it needs new spectra, the
-    four covariances and new derivative caches, and is queued as an
-    overnight study.
+    (Section~\ref{sec:pairs}).  The lists selected at those
+    dispersions are forecast in
+    \texttt{notes/cross\us correlations} (its $\sv$ axis), with
+    spectra, covariances and derivative caches built on each
+    layout's largest list: the added pairs raise the figures of
+    merit by separating each group's free bias level and slope from
+    the growth history, not through line-of-sight information of
+    their own.  The analysis keeps the current list; those forecast
+    lists are a comparison against it.
 \end{itemize}
 
 \begin{thebibliography}{99}
