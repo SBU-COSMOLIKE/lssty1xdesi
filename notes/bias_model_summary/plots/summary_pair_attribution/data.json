@@ -1,0 +1,157 @@
+{
+ "about": "The paper model's FoM(w0, wa) with sigma_v fitted along the gap axis, over the same fit on the current pair list, with every parameter free, with each group's bias line (the free level and slope of beta_i = b_1,i D(zbar_i)) held fixed and with every nuisance parameter held fixed (their rows and columns deleted from the Fisher matrix before the inversion), at k_max = 0.075 and 0.2 h/Mpc (z = 0 value of a per-bin cut at k_max/D(zbar_i)). Copied by notes/bias_model_summary/plots/make_summary_pair_axes_data.py from notes/cross_correlations/plots/pair_axes_attribution.",
+ "kmax_h_per_Mpc": [
+  "0.075",
+  "0.2"
+ ],
+ "blocks": {
+  "all free": "every parameter free",
+  "b1 level and slope fixed (residuals free)": "bias line fixed",
+  "all nuisance fixed": "every nuisance parameter fixed"
+ },
+ "layouts": [
+  {
+   "name": "Delta d_com = 62 Mpc",
+   "label": "$\\Delta d_\\mathrm{com} = 62$ Mpc",
+   "g": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "0.075": {
+    "all free": [
+     1.0,
+     1.351038230764618,
+     1.4785275810293594,
+     1.5457131811393947
+    ],
+    "b1 level and slope fixed (residuals free)": [
+     1.0,
+     1.1993344816340183,
+     1.2692001295558641,
+     1.2920850503853785
+    ],
+    "all nuisance fixed": [
+     1.0,
+     1.0554165894034226,
+     1.0778916762206845,
+     1.084291786196379
+    ]
+   },
+   "0.2": {
+    "all free": [
+     1.0,
+     1.241582271247988,
+     1.2677074949837726,
+     1.2883754008998378
+    ],
+    "b1 level and slope fixed (residuals free)": [
+     1.0,
+     1.0716555448402312,
+     1.087410620111857,
+     1.0915534592426388
+    ],
+    "all nuisance fixed": [
+     1.0,
+     1.0263024396648572,
+     1.0315013437810325,
+     1.0323000020586646
+    ]
+   }
+  },
+  {
+   "name": "Delta z = 0.02",
+   "label": "$\\Delta z = 0.02$",
+   "g": [
+    0,
+    1,
+    2
+   ],
+   "0.075": {
+    "all free": [
+     1.0,
+     1.0,
+     1.0473052176611892
+    ],
+    "b1 level and slope fixed (residuals free)": [
+     1.0,
+     1.0,
+     1.0344518419210746
+    ],
+    "all nuisance fixed": [
+     1.0,
+     1.0,
+     1.0338398629460757
+    ]
+   },
+   "0.2": {
+    "all free": [
+     1.0,
+     1.3504041741429276,
+     1.4378186136103592
+    ],
+    "b1 level and slope fixed (residuals free)": [
+     1.0,
+     1.048763420000289,
+     1.0833940652869793
+    ],
+    "all nuisance fixed": [
+     1.0,
+     1.0266457413984489,
+     1.043637540828241
+    ]
+   }
+  },
+  {
+   "name": "Delta z = 0.05",
+   "label": "$\\Delta z = 0.05$",
+   "g": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "0.075": {
+    "all free": [
+     1.0,
+     1.407034641344025,
+     1.5562915408273696,
+     1.591350097009443
+    ],
+    "b1 level and slope fixed (residuals free)": [
+     1.0,
+     1.057852685607199,
+     1.0713957034704125,
+     1.0750217713094943
+    ],
+    "all nuisance fixed": [
+     1.0,
+     1.0191623627332296,
+     1.0230173487459304,
+     1.0241369435244465
+    ]
+   },
+   "0.2": {
+    "all free": [
+     1.0,
+     1.0477213084646697,
+     1.0661451299846305,
+     1.0706659895771662
+    ],
+    "b1 level and slope fixed (residuals free)": [
+     1.0,
+     1.0135900377026787,
+     1.0163372685792806,
+     1.01710652380539
+    ],
+    "all nuisance fixed": [
+     1.0,
+     1.0026259054752205,
+     1.002751270401641,
+     1.0027748979387419
+    ]
+   }
+  }
+ ]
+}

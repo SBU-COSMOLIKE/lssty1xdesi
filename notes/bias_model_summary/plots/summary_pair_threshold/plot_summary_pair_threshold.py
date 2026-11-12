@@ -5,10 +5,12 @@ when the data vector holds only the cross pairs whose Fingers-of-God-blurred
 kernels overlap by at least O_min at the fiducial sigma_v.
 
 One column of a two-column paper, two stacked panels against O_min on a log
-axis, with "all" (every listed pair, the current data vector) as a separate
-point at the left, past a thin gray separator:
+axis, with "current" (the current data vector: the pairs with O_ij >= 1e-6
+at the fiducial sigma_v, plus the BGS-LRG1 boundary pair of 62 Mpc, whose
+overlap is 3.4e-7) as a separate point at the left, past a thin gray
+separator:
 
-1. FoM(w0, wa) at O_min over FoM with every listed pair (FoM_all);
+1. FoM(w0, wa) at O_min over FoM of the current data vector (FoM_current);
 2. the same for FoM(Omega_m, 10^9 A_s).
 The y axis is shared; each panel's name is on its right.
 
@@ -167,7 +169,7 @@ for ax in axes:
 axes[-1].set_xlim(4.0e-9, 3.0e-2)
 axes[-1].xaxis.set_major_locator(FixedLocator([X_ALL, 1e-6, 1e-4, 1e-3, 1e-2]))
 axes[-1].xaxis.set_minor_locator(NullLocator())
-axes[-1].set_xticklabels(['all', r'$10^{-6}$', r'$10^{-4}$', r'$10^{-3}$', r'$10^{-2}$'])
+axes[-1].set_xticklabels(['current', r'$10^{-6}$', r'$10^{-4}$', r'$10^{-3}$', r'$10^{-2}$'])
 axes[-1].set_xlabel(r'$O_\mathrm{min}$: cross pairs kept if $O_{ij} \geq O_\mathrm{min}$',
                     fontsize=10)
 
@@ -198,7 +200,7 @@ fig.canvas.draw()
 tick_left = min(label.get_window_extent(renderer).x0 for ax in axes
                 for label in ax.get_yticklabels() if label.get_text())
 tick_left = inv.transform((tick_left, 0.0))[0]
-supylabel = fig.supylabel(r'$\mathrm{FoM}/\mathrm{FoM}_\mathrm{all}$', x=tick_left - 0.01,
+supylabel = fig.supylabel(r'$\mathrm{FoM}/\mathrm{FoM}_\mathrm{current}$', x=tick_left - 0.01,
                           ha='right', fontsize=10)
 check_clear(fig, list(axes), [style_legend, layout_legend, supylabel, axes[-1].xaxis.label,
                               *[ax.yaxis.label for ax in axes]])

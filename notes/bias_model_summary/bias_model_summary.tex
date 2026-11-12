@@ -72,7 +72,11 @@
 %   - in the bottom row of the untied figure the four versions that
 %     free b1 per bin sit exactly at 1, correlated residuals stay
 %     within EtaCorrMin-EtaCorrMax, and the model within EtaW
-%     (the section "What the grouping is worth").
+%     (the section "What the grouping is worth");
+%   - pairs beyond the list: the largest gains, their values with the
+%     bias line fixed and with every nuisance parameter fixed, and the
+%     agreement across the passing priors track the Pair* macros below
+%     (the section "The cross pairs and their overlaps").
 % ---------------------------------------------------------------------
 % The refresh switch: \numbersfinalfalse prints every \refresh value in
 % red and the note under the title; \numbersfinaltrue prints them plain.
@@ -180,6 +184,29 @@
 \newcommand{\ConstEvoHighMax}{\refresh{17}}
 \newcommand{\EtaCorrMin}{\refresh{0.99}}
 \newcommand{\EtaCorrMax}{\refresh{1.01}}
+% Pairs beyond the current list (the gap and sigma_v axes of
+% notes/cross_correlations).  PairGain*: the largest FoM(w0, wa) ratio
+% to the current data vector of each thinner layout, sigma_v fitted,
+% over the two cuts the figure draws (plots/summary_pair_axes/
+% data.json: 62 Mpc and Delta z = 0.05 at k_max = 0.075,
+% Delta z = 0.02 at 0.2); PairGainOm: the largest
+% FoM(Omega_m, 10^9 A_s) ratio (Delta z = 0.05 at 0.075);
+% PairGainTwentyMax bounds Delta z = 0.2 at every cut.  PairLine*: the
+% same ratios with each group's bias line (the level and slope of the
+% amplitudes beta) held fixed; PairNuisMax: the largest ratio anywhere
+% with every nuisance parameter held fixed (62 Mpc at 0.075; both from
+% plots/summary_pair_attribution/data.json).  PairPriorSpread: the
+% largest difference of the ratio across the three passing linear-bias
+% priors (notes/cross_correlations, plots/pair_axes_priors/data.json).
+\newcommand{\PairGainCom}{\refresh{1.55}}
+\newcommand{\PairGainTwo}{\refresh{1.44}}
+\newcommand{\PairGainFive}{\refresh{1.59}}
+\newcommand{\PairGainOm}{\refresh{1.44}}
+\newcommand{\PairGainTwentyMax}{\refresh{$2\%$}}
+\newcommand{\PairLineCom}{\refresh{1.29}}
+\newcommand{\PairLineFive}{\refresh{1.08}}
+\newcommand{\PairNuisMax}{\refresh{$8\%$}}
+\newcommand{\PairPriorSpread}{\refresh{$3\%$}}
 % ---------------------------------------------------------------------
 % Part 2: inputs and template properties (not moved by the recompute).
 %
@@ -256,23 +283,27 @@
 % notes/fog_parameter_degeneracy_study/plots/
 % fog_pair_overlap/data.json).  The overlaps depend only on the n(z)
 % and sigma_v, never on the derivatives; the FoM ratios are refreshed
-% with them.  OvEdge and OvEdgeThree: the largest unlisted overlap with
-% every dispersion 2 and 3 base widths (SigBase) above its fiducial;
-% OvCross: where it reaches OvThreshold.  PairCoarse*: the Delta z = 0.2
+% with them.  PairCoarse*: the Delta z = 0.2
 % FoM ratios at O_min = 1e-2, at k_max = 0.075 and 0.2 (the two cuts the
 % figure draws).
 \newcommand{\OvThreshold}{10^{-6}}
 \newcommand{\OvGapTop}{0.028}
 \newcommand{\OvBoundary}{3.4\times10^{-7}}
 \newcommand{\OvListGapTop}{3.4\times10^{-3}}
-\newcommand{\OvEdge}{7.6\times10^{-7}}
-\newcommand{\OvEdgeThree}{2.9\times10^{-5}}
-\newcommand{\OvCross}{2.1}
 \newcommand{\PairDropCost}{\refresh{$0.2\%$}}
 \newcommand{\PairCoarseMin}{\refresh{0.89}}
 \newcommand{\PairCoarseMax}{\refresh{0.95}}
 \newcommand{\PairCoarseOmMin}{\refresh{0.77}}
 \newcommand{\PairCoarseOmMax}{\refresh{0.87}}
+% The sigma_v axis of the pairs-beyond-the-list study selects its
+% lists with the same overlap criterion, every dispersion set to one
+% common value s: the s [km/s] at which the first pair beyond the
+% current data vector passes the threshold, per layout (the pair
+% counts of notes/cross_correlations, plots/pair_axes_sigv/data.json;
+% Delta z = 0.2 never adds a pair).
+\newcommand{\SvJoinTwo}{450}
+\newcommand{\SvJoinCom}{750}
+\newcommand{\SvJoinFive}{1200}
 % The Fingers-of-God dispersions (likelihood/params_desi*_bias_
 % pessimistic.yaml; the fiducial section holds the per-group table):
 % the base widths [km/s] (five times the median per-bin uncertainty of
@@ -435,6 +466,16 @@ A_s)$ stays below LSST Y1 as well (Section~\ref{sec:forecast}).  Over
 random bias histories, the known drifts plus scatter drawn from the
 prior, the quoted error bars are honest at every cut and on every
 layout (Section~\ref{sec:forecast}).
+
+\paragraph{Pairs beyond the list.}
+Cross spectra of bins further apart than the pair list measures
+would raise ${\rm FoM}(w_0, w_a)$ by up to a factor of \PairGainCom{}
+on the thin layouts (Section~\ref{sec:pairs}).  The gain rests on the
+freedom the prior grants: each group's free bias level and slope
+mimic the growth history in the auto spectra, the added cross
+spectra separate the two, and with that level and slope held fixed
+most of the gain goes.  Open are a finite prior on the levels and
+slopes, and which pair list the analysis adopts.
 
 \paragraph{What the grouping is worth.}
 A per-bin prior that looks looser than the model gains information by
@@ -643,7 +684,8 @@ $O_{ij} \ge \OvThreshold$ at the fiducial dispersions, which adds the
 $\Delta d_{\rm com} = 62$~Mpc whose raw redshift ranges just miss.  No
 unmeasured pair overlaps between $\OvThreshold$ and $\OvGapTop$, so
 the list does not depend on where in that window the threshold sits
-(\texttt{notes/cross\_correlations}).
+(\texttt{notes/cross\_correlations}).  This list is the current data
+vector, the reference of every ratio of this section.
 
 \paragraph{What an overlap floor shows.}
 Keeping only the pairs with $O_{ij} \ge O_{\min}$, measured ones
@@ -657,7 +699,7 @@ between those overlaps a pair begins to matter.  A small overlap does
 not mean little information: at $O_{\min} = 10^{-2}$ only
 $\Delta z = 0.2$ loses pairs, whose overlaps are all below $10^{-2}$,
 and its figures of merit fall to \PairCoarseMin{}--\PairCoarseMax{}
-of the full vector's for $(w_0, w_a)$ and
+of the current data vector's for $(w_0, w_a)$ and
 \PairCoarseOmMin{}--\PairCoarseOmMax{} for $(\Omega_m, 10^9 A_s)$.
 
 \begin{figure}[tbp]
@@ -665,8 +707,8 @@ of the full vector's for $(w_0, w_a)$ and
   \includegraphics[width=3.5in]{plots/summary_pair_threshold/summary_pair_threshold.pdf}
   \caption{The figures of merit with only the cross pairs whose
     overlap at the fiducial dispersions reaches $O_{\min}$, over the
-    full data vector's, against $O_{\min}$; ``all'', every measured
-    pair, sits left of the separator.  Upper panel:
+    current data vector's, against $O_{\min}$; ``current'', the
+    current data vector, sits left of the separator.  Upper panel:
     ${\rm FoM}(w_0, w_a)$; lower: ${\rm FoM}(\Omega_m, 10^9 A_s)$; the
     panels share the $y$ axis.  Color, line width and marker: the
     layout; solid, filled markers: $\kmax = 0.2\hMpc$; dashed, open:
@@ -674,25 +716,125 @@ of the full vector's for $(w_0, w_a)$ and
   \label{fig:pairthreshold}
 \end{figure}
 
-\paragraph{The dispersions and the list.}
+\paragraph{Pairs beyond the list.}
 The pair list and the covariance are built once, at the fiducial
-dispersions.  Raising every $\sigma_v$ widens every kernel, and the
-nearest pairs outside the list -- bins of one sample two apart --
-reach $\OvThreshold$ once every dispersion sits about $\OvCross$ base
-widths (Section~\ref{sec:fiducial}) above its fiducial, on
-$\Delta d_{\rm com} = 62$~Mpc, the earliest layout to cross: the
-largest unlisted overlap is $\OvEdge$ with every dispersion two base
-widths up, and $\OvEdgeThree$ at three.  The model's
-\SigVfactor-times-wider priors allow dispersions beyond that point, so
-a fit that carries them toward the upper edge of their priors would
-push such pairs over the threshold, and the pair list and the
-covariance would have to grow to match.  At the smaller cuts the data
-leave some dispersions prior-limited, while on the thin layouts at
-$\kmax = 0.2\hMpc$ every dispersion is measured at a third of its
-prior width or better; whether pairs
-that weak matter is what a queued study, which rebuilds the list at
-the prior edge, answers
-(\texttt{notes/fog\_parameter\_degeneracy\_study}).
+dispersions, while the model's \SigVfactor-times-wider priors allow
+fits in which the kernels blur further and unmeasured pairs would
+pass the overlap threshold.  Two families of longer lists measure
+what such pairs are worth (Figure~\ref{fig:pairaxes}); each contains
+the current data vector and grows along one axis.  The gap axis adds
+every pair of bins whose raw redshift ranges are at most $g$ bin
+widths apart: each step in $g$ adds the next chain of pairs, the
+spectra of bins two apart at $g = 1$, three apart at $g = 2$, and so
+on.  The $\sigma_v$ axis reruns the overlap criterion of
+Eq.~\eqref{eq:overlap} with every dispersion set to one common value
+$s$; $s$ only selects the pairs, while the model and the covariance
+keep the fiducial dispersions, so this axis prices exactly the lists
+that a fit carrying the dispersions toward the upper edge of their
+priors would require.  Those lists change late: on
+$\Delta d_{\rm com} = 62$~Mpc no pair joins until
+$s = \SvJoinCom$~km/s, on $\Delta z = 0.05$ none until
+$\SvJoinFive$, and on $\Delta z = 0.2$ none ever; only
+$\Delta z = 0.02$ grows already at $s = \SvJoinTwo$.  On the three
+thinner layouts the added pairs are worth much: at its best cut and
+largest list each layout gains a factor of \PairGainCom{},
+\PairGainTwo{} and \PairGainFive{} of ${\rm FoM}(w_0, w_a)$, in
+layout order, and up to \PairGainOm{} of
+${\rm FoM}(\Omega_m, 10^9 A_s)$, with most of the gain in the first
+added chain; on $\Delta z = 0.2$ the gain never exceeds
+\PairGainTwentyMax{}.  (At $\kmax = 0.075\hMpc$ the scale cut keeps
+almost no band of the pairs added on $\Delta z = 0.02$, so that
+layout gains at the larger cuts.)
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/summary_pair_axes/summary_pair_axes.pdf}
+  \caption{The figures of merit with pairs beyond the current data
+    vector, over the current data vector's, with the dispersions
+    fitted.  Left column: the gap axis, pairs whose raw redshift
+    ranges are at most $g$ bin widths apart; right: the $\sigma_v$
+    axis, the pairs selected by the overlap criterion with every
+    dispersion at the common value $s$, the model kept at the
+    fiducial dispersions (``fid.'': the current selection).  Top:
+    ${\rm FoM}(w_0, w_a)$; bottom: ${\rm FoM}(\Omega_m, 10^9 A_s)$;
+    the panels share the $y$ axis.  Color, line width and marker: the
+    layout; solid, filled markers: $\kmax = 0.2\hMpc$; dashed, open:
+    $0.075$; gray: one.  \kmaxclause}
+  \label{fig:pairaxes}
+\end{figure}
+
+\paragraph{Why the added pairs help.}
+Besides the seven cosmological parameters, the fit determines the
+nuisance parameters: the parameters that describe the galaxies
+rather than the universe -- the biases, counterterms, stochastic
+amplitudes and dispersions -- whose uncertainty the quoted errors
+include.  The decisive ones here form each group's bias line: under
+the prior of Section~\ref{sec:prior} the bias amplitudes
+$\beta_i = b_{1,i} D(\bar{z}_i)$ of a group's bins follow a straight
+line in redshift with a free level and a free slope -- the freedom
+of the wide sample -- plus the correlated residuals the prior
+charges.  The auto spectra alone cannot pin that line down.  A
+higher level raises every auto spectrum of the group through
+$b_{1,i}^2$ exactly as a larger clustering amplitude would, and a
+slope tilts the group's spectra against each other the way an
+evolving growth does -- and how growth evolves with redshift is what
+$w_0$ and $w_a$ control.  The bias line and the growth history are
+degenerate: they imprint nearly the same pattern on the auto
+spectra, so the fit measures only a combination of them.  The
+dispersions ride on the same degeneracy, since widening $\sigma_v$
+lowers an auto spectrum like a lower bias does, and like a change of
+$w_0$.  A cross spectrum breaks the pattern: it carries the biases
+as the product $b_{1,i}\,b_{1,j}$, and its correlation coefficient
+with the two auto spectra,
+$C_\ell^{ij}/\sqrt{C_\ell^{ii}\,C_\ell^{jj}}$, is free of the linear
+biases at linear order.  Each added pair is therefore one more
+measurement of the clustering two shells share that no bias line can
+reshape: it separates the bias line, and $\sigma_v$ with it, from
+the growth history.  Figure~\ref{fig:pairattribution} reads the
+mechanism off the forecasts.  With each group's level and slope held
+at the fiducial -- the bias line fixed -- most of the gain goes: at
+$\kmax = 0.075\hMpc$ the factor \PairGainFive{} of $\Delta z = 0.05$
+falls to \PairLineFive{}, and the \PairGainCom{} of
+$\Delta d_{\rm com} = 62$~Mpc to \PairLineCom{}; holding only the
+correlated residuals fixed instead leaves the gain almost unchanged.
+With every nuisance parameter fixed the added pairs keep at most
+\PairNuisMax{} anywhere: the line-of-sight clustering information
+the added spectra carry by themselves is worth little once the
+biases are known.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{plots/summary_pair_attribution/summary_pair_attribution.pdf}
+  \caption{${\rm FoM}(w_0, w_a)$ along the gap axis, over the current
+    data vector's, with the dispersions fitted, on the three layouts
+    whose gain is large.  Black solid, filled circles: every
+    parameter free; vermillion dashed, squares: each group's bias
+    line -- the level and the slope of
+    $\beta_i = b_{1,i} D(\bar{z}_i)$ -- held fixed; orange
+    long-dashed, triangles: every nuisance parameter held fixed.
+    Rows: $\kmax = 0.075$ and $0.2\hMpc$.  \kmaxclause}
+  \label{fig:pairattribution}
+\end{figure}
+
+\paragraph{What is robust, and what is open.}
+The gain is a property of the bias model, not of the residual prior.
+Three priors on the amplitudes pass the error-bar test of
+\texttt{notes/correlated\_bias\_prior\_v2}, the test of
+Section~\ref{sec:forecast} applied to each prior: this note's (the
+pessimistic prior), the
+baseline prior, whose residuals are smaller and correlated over a
+longer length, and the free prior, with no residual prior at all.
+All three leave every level and slope free, and the gain agrees
+across them within about \PairPriorSpread{} of the ratio.  The
+growth-tied prior -- one amplitude per group, with no slope and no
+residuals -- fails that test, so no figure of merit is quoted for
+it.  Open are a finite prior on the levels and slopes, which no
+passing prior imposes and which would keep only part of the gain,
+and which pair list the analysis adopts: that choice is the
+authors', and this note does not make it.  The templates, tables and
+checks behind these statements are in
+\texttt{notes/cross\_correlations}, in its sections on what pairs
+beyond the list would add and on the free bias levels and slopes.
 
 \section{The bias model}
 \label{sec:model}
@@ -1477,7 +1619,10 @@ most \EtaW{} (Section~\ref{sec:forecast}).
     convergence study, and the assembly of every Fisher matrix, shift
     and $\langle\chi^2\rangle$.
   \item \texttt{notes/cross\_correlations}: which thin-bin pairs the data
-    vector measures, and the Fingers-of-God blur.
+    vector measures, the Fingers-of-God blur, and the study of pairs
+    beyond the list -- the gap and $\sigma_v$ axes, the attribution of
+    the gain to the free bias levels and slopes, and the comparison
+    across the linear-bias priors.
   \item \texttt{notes/fog\_parameter\_degeneracy\_study}: the degeneracy
     of the line-of-sight counterterm $\alpha_2$ with the dispersions
     $\sigma_v$, the choice of their prior widths, and the
