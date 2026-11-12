@@ -1,0 +1,2713 @@
+{
+  "code_at_write": {
+    "PATCH_CAMB_HALOFIT_TOLERANCE": null,
+    "camb": {
+      "changed_count": 5,
+      "changed_files": [
+        "camb/_compilers.py",
+        "fortran/Makefile",
+        "fortran/Makefile_main",
+        "fortran/halofit.f90",
+        "forutils"
+      ],
+      "commit": "6c978c716e163157c95191ee1c089e8b36c8adb9",
+      "describe": "1.6.6-10-g6c978c7-dirty",
+      "dirty": true,
+      "folder": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa/external_modules/code/CAMB",
+      "halofit_tolerance_patch_in_source": true,
+      "library": {
+        "modified": "2026-11-04T21:20:29-05:00",
+        "newer_than_halofit": true,
+        "path": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa/external_modules/code/CAMB/camb/camblib.so"
+      },
+      "version": "1.6.7"
+    },
+    "cobaya": null,
+    "cocoa": {
+      "changed_count": 1,
+      "changed_files": [
+        "Cocoa/set_installation_options.sh"
+      ],
+      "commit": "a2ad694556a9ef0768847f020c036f88f9df4d52",
+      "describe": "v5.10-608-ga2ad6945-dirty",
+      "dirty": true,
+      "folder": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa"
+    },
+    "cosmolike_core": {
+      "changed_count": 0,
+      "changed_files": [],
+      "commit": "ea4537817da789420b78195c5b67c80aa1b07865",
+      "describe": "v4.11.3-421-gea45378",
+      "dirty": false,
+      "folder": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa/external_modules/code/cosmolike_core"
+    },
+    "lssty1xdesi": {
+      "changed_count": 7,
+      "changed_files": [
+        "covariance/lssty1xdesi_covariance.py",
+        "fisher_caches/README.md",
+        "fisher_caches/checksums.json",
+        "interface/cosmolike_lssty1xdesi_fisher.py",
+        "notes/fisher_machinery/fisher_machinery.pdf",
+        "notes/fisher_machinery/fisher_machinery.tex",
+        "scripts/compute_fisher_base_mpi.py"
+      ],
+      "commit": "5451b231e1b4f378c7cefdde85db50449b19dc1b",
+      "describe": "5451b23-dirty",
+      "dirty": true,
+      "folder": "/Users/vivianmiranda/data/COCOA/november2026/sbu_cosmolike/cocoa/Cocoa/projects/lssty1xdesi"
+    },
+    "numpy": "1.26.3",
+    "python": "3.11.12"
+  },
+  "fingerprints": {
+    "settings/fingerprint": "ba9447d008a0fbff463eef64d83dd3463e99c6416ec3ae6cdd21b4a9c4f39051",
+    "settings/tier": "final"
+  },
+  "format": "lssty1xdesi-fisher-provenance-1",
+  "models": {
+    "settings/fingerprint": {
+      "accuracy_boost": 1.0,
+      "camb_overrides": {
+        "AccuracyBoost": 2.0,
+        "k_per_logint": 30
+      },
+      "dataset_files": {
+        "lssty1xdesi.desi_cl_dr1_dz0p20_model_b": {
+          "dataset_file": {
+            "name": "lssty1xdesi_desi_dr1_dz0p20_pairmax.dataset",
+            "sha256": "0c04ac618bbb1eb12d50dd5a6e5646bf8c4bdaeb174086ab0d6b6311c0ea16f2"
+          },
+          "entries": {
+            "cov_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20_pairmax_cov",
+              "in_fingerprint": false,
+              "sha256": "77e8abe6cd5c658c69e02d4baf993428416053f968f8e86c674ade73d3e44b01"
+            },
+            "data_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20_pairmax_fid.datavector",
+              "in_fingerprint": false,
+              "sha256": "ae178e474e1880cdda1c52a964e5a350b26a4a9fef8d1d5251fd863b35efa8fc"
+            },
+            "ell_file": {
+              "file": "lssty1xdesi_desi_dr3_ells.txt",
+              "in_fingerprint": true,
+              "sha256": "9f9aac251d3eb27e0d96212b8ed6874d7d6d6e664cbb5c8f90741b87f11a2cca"
+            },
+            "gg_cross_pairs_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20_pairmax_pairs.txt",
+              "in_fingerprint": true,
+              "sha256": "2c268792c65255fe65753f733aedd5f18e094f464ed773bb6c640bba273de469"
+            },
+            "lens_bin_table": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20_bins.txt",
+              "in_fingerprint": true,
+              "sha256": "86108631c3161047db12eabb9ed764d70faad46964de8e8bcd0a935b3bc4baa3"
+            },
+            "lens_ntomo": {
+              "in_fingerprint": true,
+              "value": "10"
+            },
+            "mask_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20_pairmax.mask",
+              "in_fingerprint": true,
+              "sha256": "e3469b59b3a940ba74e96b56a83e37b62697b4bdb1f4cc34cb264dfe4487552e"
+            },
+            "nz_lens_file": {
+              "file": "lssty1xdesi_desi_dr1_dz0p20.nz",
+              "in_fingerprint": true,
+              "sha256": "9d07a04507212ce6a96e90439a9a6ad5114cf06ea60456ca6fbadeb924af86ef"
+            },
+            "nz_source_file": {
+              "file": "lssty1xdesi_source.nz",
+              "in_fingerprint": true,
+              "sha256": "de0bd0ee395ade11ca08af7fbee3b414528ff4c628fda8c56a1da76befe995f8"
+            },
+            "source_ntomo": {
+              "in_fingerprint": true,
+              "value": "5"
+            }
+          },
+          "path": "./external_modules/data/lssty1xdesi"
+        }
+      },
+      "fingerprint_check": "equal",
+      "fingerprint_of_the_files": "ba9447d008a0fbff463eef64d83dd3463e99c6416ec3ae6cdd21b4a9c4f39051",
+      "fingerprint_stored": "ba9447d008a0fbff463eef64d83dd3463e99c6416ec3ae6cdd21b4a9c4f39051",
+      "likelihood_overrides": {
+        "accuracyboost": 3.0,
+        "data_file": "lssty1xdesi_desi_dr1_dz0p20_pairmax.dataset",
+        "integration_accuracy": 1,
+        "kmax_boltzmann": 20.0,
+        "nonlimber_accuracyboost": 64.0
+      },
+      "resolved_input": {
+        "datasets": {
+          "lssty1xdesi.desi_cl_dr1_dz0p20_model_b": "4b74e645680779129b72148e9be25551f9adbf1001b2d1689441ff6b6f8718df"
+        },
+        "likelihood": {
+          "lssty1xdesi.desi_cl_dr1_dz0p20_model_b": {
+            "IA_code": 1,
+            "IA_model": 0,
+            "IA_redshift_evolution": 3,
+            "accuracyboost": 3.0,
+            "add_baryons_on_dv": false,
+            "adopt_limber_gg": 0,
+            "baryon_pca_select_sims": "antilles-2-99/antilles-101-378/antilles-380-400",
+            "bias_model": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "binning_space": "fourier",
+            "create_baryon_pca": false,
+            "debug": false,
+            "external_baryon_suppression": false,
+            "external_nz_modeling": 1,
+            "filename_baryon_pca": "./projects/lssty1xdesi/chains/pca.txt",
+            "ggl_exclude": "all",
+            "higher_order_bias": 1,
+            "include_HOD_GX": 0,
+            "include_halo_IA": 0,
+            "integration_accuracy": 1,
+            "internal_accuracyboost": 1.0,
+            "kmax_boltzmann": 20.0,
+            "lmax": 5000,
+            "lmax_nonlimber": 150,
+            "non_linear_emul": 2,
+            "nonlimber_accuracyboost": 64.0,
+            "nonlimber_lowrank_gg": 1,
+            "nonlimber_lowrank_lmax": 1000,
+            "nonlimber_lowrank_rank": 5,
+            "params": {
+              "DESI_A0_1": {
+                "value": "lambda DESI_A0_BGS, DESI_TA0_BGS: DESI_A0_BGS + DESI_TA0_BGS*(-0.07084750)"
+              },
+              "DESI_A0_10": {
+                "value": "lambda DESI_A0_ELG2, DESI_TA0_ELG2: DESI_A0_ELG2 + DESI_TA0_ELG2*(+0.09638753)"
+              },
+              "DESI_A0_2": {
+                "value": "lambda DESI_A0_BGS, DESI_TA0_BGS: DESI_A0_BGS + DESI_TA0_BGS*(+0.07084750)"
+              },
+              "DESI_A0_3": {
+                "value": "lambda DESI_A0_LRG1, DESI_TA0_LRG1: DESI_A0_LRG1 + DESI_TA0_LRG1*(+0.00000000)"
+              },
+              "DESI_A0_4": {
+                "value": "lambda DESI_A0_LRG2, DESI_TA0_LRG2: DESI_A0_LRG2 + DESI_TA0_LRG2*(+0.00000000)"
+              },
+              "DESI_A0_5": {
+                "value": "lambda DESI_A0_LRG3, DESI_TA0_LRG3: DESI_A0_LRG3 + DESI_TA0_LRG3*(-0.07785434)"
+              },
+              "DESI_A0_6": {
+                "value": "lambda DESI_A0_LRG3, DESI_TA0_LRG3: DESI_A0_LRG3 + DESI_TA0_LRG3*(+0.07785434)"
+              },
+              "DESI_A0_7": {
+                "value": "lambda DESI_A0_ELG1, DESI_TA0_ELG1: DESI_A0_ELG1 + DESI_TA0_ELG1*(-0.09604726)"
+              },
+              "DESI_A0_8": {
+                "value": "lambda DESI_A0_ELG1, DESI_TA0_ELG1: DESI_A0_ELG1 + DESI_TA0_ELG1*(+0.09604725)"
+              },
+              "DESI_A0_9": {
+                "value": "lambda DESI_A0_ELG2, DESI_TA0_ELG2: DESI_A0_ELG2 + DESI_TA0_ELG2*(-0.09638753)"
+              },
+              "DESI_A0_BGS": {
+                "latex": "\\alpha_{0}^{\\mathrm{BGS}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 16.137
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_A0_ELG1": {
+                "latex": "\\alpha_{0}^{\\mathrm{ELG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 16.137
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_A0_ELG2": {
+                "latex": "\\alpha_{0}^{\\mathrm{ELG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 16.137
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_A0_LRG1": {
+                "latex": "\\alpha_{0}^{\\mathrm{LRG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 16.137
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_A0_LRG2": {
+                "latex": "\\alpha_{0}^{\\mathrm{LRG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 16.137
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_A0_LRG3": {
+                "latex": "\\alpha_{0}^{\\mathrm{LRG3}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 16.137
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_A2_1": {
+                "value": 0.0
+              },
+              "DESI_A2_10": {
+                "value": 0.0
+              },
+              "DESI_A2_2": {
+                "value": 0.0
+              },
+              "DESI_A2_3": {
+                "value": 0.0
+              },
+              "DESI_A2_4": {
+                "value": 0.0
+              },
+              "DESI_A2_5": {
+                "value": 0.0
+              },
+              "DESI_A2_6": {
+                "value": 0.0
+              },
+              "DESI_A2_7": {
+                "value": 0.0
+              },
+              "DESI_A2_8": {
+                "value": 0.0
+              },
+              "DESI_A2_9": {
+                "value": 0.0
+              },
+              "DESI_B1_1": {
+                "value": "lambda DESI_B1_BGS, DESI_TB1_BGS: DESI_B1_BGS*(1.0 + DESI_TB1_BGS*(-7.084750000000001e-02))"
+              },
+              "DESI_B1_10": {
+                "value": "lambda DESI_B1_ELG2, DESI_TB1_ELG2: DESI_B1_ELG2*(1.0 + DESI_TB1_ELG2*(+9.638753000000011e-02))"
+              },
+              "DESI_B1_2": {
+                "value": "lambda DESI_B1_BGS, DESI_TB1_BGS: DESI_B1_BGS*(1.0 + DESI_TB1_BGS*(+7.084750000000001e-02))"
+              },
+              "DESI_B1_3": {
+                "value": "lambda DESI_B1_LRG1: DESI_B1_LRG1"
+              },
+              "DESI_B1_4": {
+                "value": "lambda DESI_B1_LRG2: DESI_B1_LRG2"
+              },
+              "DESI_B1_5": {
+                "value": "lambda DESI_B1_LRG3, DESI_TB1_LRG3: DESI_B1_LRG3*(1.0 + DESI_TB1_LRG3*(-7.785434499999999e-02))"
+              },
+              "DESI_B1_6": {
+                "value": "lambda DESI_B1_LRG3, DESI_TB1_LRG3: DESI_B1_LRG3*(1.0 + DESI_TB1_LRG3*(+7.785434499999999e-02))"
+              },
+              "DESI_B1_7": {
+                "value": "lambda DESI_B1_ELG1, DESI_TB1_ELG1: DESI_B1_ELG1*(1.0 + DESI_TB1_ELG1*(-9.604725500000011e-02))"
+              },
+              "DESI_B1_8": {
+                "value": "lambda DESI_B1_ELG1, DESI_TB1_ELG1: DESI_B1_ELG1*(1.0 + DESI_TB1_ELG1*(+9.604725500000000e-02))"
+              },
+              "DESI_B1_9": {
+                "value": "lambda DESI_B1_ELG2, DESI_TB1_ELG2: DESI_B1_ELG2*(1.0 + DESI_TB1_ELG2*(-9.638752999999989e-02))"
+              },
+              "DESI_B1_BGS": {
+                "latex": "B_\\mathrm{BGS}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.34,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_ELG1": {
+                "latex": "B_\\mathrm{ELG1}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.84,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_ELG2": {
+                "latex": "B_\\mathrm{ELG2}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.84,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_LRG1": {
+                "latex": "B_\\mathrm{LRG1}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.7,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_LRG2": {
+                "latex": "B_\\mathrm{LRG2}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.7,
+                  "scale": 0.02
+                }
+              },
+              "DESI_B1_LRG3": {
+                "latex": "B_\\mathrm{LRG3}",
+                "prior": {
+                  "max": 4.0,
+                  "min": 0.8
+                },
+                "proposal": 0.02,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 1.7,
+                  "scale": 0.02
+                }
+              },
+              "DESI_DB2_1": {
+                "value": "lambda DESI_DB2_BGS, DESI_TB2_BGS: DESI_DB2_BGS + DESI_TB2_BGS*(-0.07084750)"
+              },
+              "DESI_DB2_10": {
+                "value": "lambda DESI_DB2_ELG2, DESI_TB2_ELG2: DESI_DB2_ELG2 + DESI_TB2_ELG2*(+0.09638753)"
+              },
+              "DESI_DB2_2": {
+                "value": "lambda DESI_DB2_BGS, DESI_TB2_BGS: DESI_DB2_BGS + DESI_TB2_BGS*(+0.07084750)"
+              },
+              "DESI_DB2_3": {
+                "value": "lambda DESI_DB2_LRG1, DESI_TB2_LRG1: DESI_DB2_LRG1 + DESI_TB2_LRG1*(+0.00000000)"
+              },
+              "DESI_DB2_4": {
+                "value": "lambda DESI_DB2_LRG2, DESI_TB2_LRG2: DESI_DB2_LRG2 + DESI_TB2_LRG2*(+0.00000000)"
+              },
+              "DESI_DB2_5": {
+                "value": "lambda DESI_DB2_LRG3, DESI_TB2_LRG3: DESI_DB2_LRG3 + DESI_TB2_LRG3*(-0.07785434)"
+              },
+              "DESI_DB2_6": {
+                "value": "lambda DESI_DB2_LRG3, DESI_TB2_LRG3: DESI_DB2_LRG3 + DESI_TB2_LRG3*(+0.07785434)"
+              },
+              "DESI_DB2_7": {
+                "value": "lambda DESI_DB2_ELG1, DESI_TB2_ELG1: DESI_DB2_ELG1 + DESI_TB2_ELG1*(-0.09604726)"
+              },
+              "DESI_DB2_8": {
+                "value": "lambda DESI_DB2_ELG1, DESI_TB2_ELG1: DESI_DB2_ELG1 + DESI_TB2_ELG1*(+0.09604725)"
+              },
+              "DESI_DB2_9": {
+                "value": "lambda DESI_DB2_ELG2, DESI_TB2_ELG2: DESI_DB2_ELG2 + DESI_TB2_ELG2*(-0.09638753)"
+              },
+              "DESI_DB2_BGS": {
+                "latex": "\\Delta_{2}^{\\mathrm{BGS}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_DB2_ELG1": {
+                "latex": "\\Delta_{2}^{\\mathrm{ELG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_DB2_ELG2": {
+                "latex": "\\Delta_{2}^{\\mathrm{ELG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_DB2_LRG1": {
+                "latex": "\\Delta_{2}^{\\mathrm{LRG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_DB2_LRG2": {
+                "latex": "\\Delta_{2}^{\\mathrm{LRG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_DB2_LRG3": {
+                "latex": "\\Delta_{2}^{\\mathrm{LRG3}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_DBS_1": {
+                "value": "lambda DESI_DBS_BGS, DESI_TBS_BGS: DESI_DBS_BGS + DESI_TBS_BGS*(-0.07084750)"
+              },
+              "DESI_DBS_10": {
+                "value": "lambda DESI_DBS_ELG2, DESI_TBS_ELG2: DESI_DBS_ELG2 + DESI_TBS_ELG2*(+0.09638753)"
+              },
+              "DESI_DBS_2": {
+                "value": "lambda DESI_DBS_BGS, DESI_TBS_BGS: DESI_DBS_BGS + DESI_TBS_BGS*(+0.07084750)"
+              },
+              "DESI_DBS_3": {
+                "value": "lambda DESI_DBS_LRG1, DESI_TBS_LRG1: DESI_DBS_LRG1 + DESI_TBS_LRG1*(+0.00000000)"
+              },
+              "DESI_DBS_4": {
+                "value": "lambda DESI_DBS_LRG2, DESI_TBS_LRG2: DESI_DBS_LRG2 + DESI_TBS_LRG2*(+0.00000000)"
+              },
+              "DESI_DBS_5": {
+                "value": "lambda DESI_DBS_LRG3, DESI_TBS_LRG3: DESI_DBS_LRG3 + DESI_TBS_LRG3*(-0.07785434)"
+              },
+              "DESI_DBS_6": {
+                "value": "lambda DESI_DBS_LRG3, DESI_TBS_LRG3: DESI_DBS_LRG3 + DESI_TBS_LRG3*(+0.07785434)"
+              },
+              "DESI_DBS_7": {
+                "value": "lambda DESI_DBS_ELG1, DESI_TBS_ELG1: DESI_DBS_ELG1 + DESI_TBS_ELG1*(-0.09604726)"
+              },
+              "DESI_DBS_8": {
+                "value": "lambda DESI_DBS_ELG1, DESI_TBS_ELG1: DESI_DBS_ELG1 + DESI_TBS_ELG1*(+0.09604725)"
+              },
+              "DESI_DBS_9": {
+                "value": "lambda DESI_DBS_ELG2, DESI_TBS_ELG2: DESI_DBS_ELG2 + DESI_TBS_ELG2*(-0.09638753)"
+              },
+              "DESI_DBS_BGS": {
+                "latex": "\\Delta_{s}^{\\mathrm{BGS}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              },
+              "DESI_DBS_ELG1": {
+                "latex": "\\Delta_{s}^{\\mathrm{ELG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              },
+              "DESI_DBS_ELG2": {
+                "latex": "\\Delta_{s}^{\\mathrm{ELG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              },
+              "DESI_DBS_LRG1": {
+                "latex": "\\Delta_{s}^{\\mathrm{LRG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              },
+              "DESI_DBS_LRG2": {
+                "latex": "\\Delta_{s}^{\\mathrm{LRG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              },
+              "DESI_DBS_LRG3": {
+                "latex": "\\Delta_{s}^{\\mathrm{LRG3}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              },
+              "DESI_SIGV_1": {
+                "latex": "\\sigma_v^\\mathrm{BGS0}",
+                "prior": {
+                  "a": -0.426437,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 371.0,
+                  "scale": 870.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 371.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_10": {
+                "value": "lambda DESI_SIGV_9: DESI_SIGV_9"
+              },
+              "DESI_SIGV_2": {
+                "latex": "\\sigma_v^\\mathrm{BGS1}",
+                "prior": {
+                  "a": -0.568254,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 358.0,
+                  "scale": 630.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 358.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_3": {
+                "latex": "\\sigma_v^\\mathrm{LRG1}",
+                "prior": {
+                  "a": -0.85,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 357.0,
+                  "scale": 420.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 357.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_4": {
+                "latex": "\\sigma_v^\\mathrm{LRG2}",
+                "prior": {
+                  "a": -1.16,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 348.0,
+                  "scale": 300.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 348.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_5": {
+                "latex": "\\sigma_v^\\mathrm{LRG3}",
+                "prior": {
+                  "a": -1.143333,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 343.0,
+                  "scale": 300.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 343.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_6": {
+                "value": "lambda DESI_SIGV_5: DESI_SIGV_5"
+              },
+              "DESI_SIGV_7": {
+                "latex": "\\sigma_v^\\mathrm{ELG1}",
+                "prior": {
+                  "a": -1.266667,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 304.0,
+                  "scale": 240.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 304.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SIGV_8": {
+                "value": "lambda DESI_SIGV_7: DESI_SIGV_7"
+              },
+              "DESI_SIGV_9": {
+                "latex": "\\sigma_v^\\mathrm{ELG2}",
+                "prior": {
+                  "a": -1.605556,
+                  "b": Infinity,
+                  "dist": "truncnorm",
+                  "loc": 289.0,
+                  "scale": 180.0
+                },
+                "proposal": 5.0,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 289.0,
+                  "scale": 5.0
+                }
+              },
+              "DESI_SN0_1": {
+                "value": "lambda DESI_SN0_BGS: DESI_SN0_BGS"
+              },
+              "DESI_SN0_10": {
+                "value": "lambda DESI_SN0_ELG2: DESI_SN0_ELG2"
+              },
+              "DESI_SN0_2": {
+                "value": "lambda DESI_SN0_BGS: DESI_SN0_BGS"
+              },
+              "DESI_SN0_3": {
+                "value": "lambda DESI_SN0_LRG1: DESI_SN0_LRG1"
+              },
+              "DESI_SN0_4": {
+                "value": "lambda DESI_SN0_LRG2: DESI_SN0_LRG2"
+              },
+              "DESI_SN0_5": {
+                "value": "lambda DESI_SN0_LRG3: DESI_SN0_LRG3"
+              },
+              "DESI_SN0_6": {
+                "value": "lambda DESI_SN0_LRG3: DESI_SN0_LRG3"
+              },
+              "DESI_SN0_7": {
+                "value": "lambda DESI_SN0_ELG1: DESI_SN0_ELG1"
+              },
+              "DESI_SN0_8": {
+                "value": "lambda DESI_SN0_ELG1: DESI_SN0_ELG1"
+              },
+              "DESI_SN0_9": {
+                "value": "lambda DESI_SN0_ELG2: DESI_SN0_ELG2"
+              },
+              "DESI_SN0_BGS": {
+                "latex": "s_{0}^{\\mathrm{BGS}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_SN0_ELG1": {
+                "latex": "s_{0}^{\\mathrm{ELG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_SN0_ELG2": {
+                "latex": "s_{0}^{\\mathrm{ELG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_SN0_LRG1": {
+                "latex": "s_{0}^{\\mathrm{LRG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_SN0_LRG2": {
+                "latex": "s_{0}^{\\mathrm{LRG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_SN0_LRG3": {
+                "latex": "s_{0}^{\\mathrm{LRG3}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 2
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_SN2_1": {
+                "value": "lambda DESI_SN2_BGS: DESI_SN2_BGS"
+              },
+              "DESI_SN2_10": {
+                "value": "lambda DESI_SN2_ELG2: DESI_SN2_ELG2"
+              },
+              "DESI_SN2_2": {
+                "value": "lambda DESI_SN2_BGS: DESI_SN2_BGS"
+              },
+              "DESI_SN2_3": {
+                "value": "lambda DESI_SN2_LRG1: DESI_SN2_LRG1"
+              },
+              "DESI_SN2_4": {
+                "value": "lambda DESI_SN2_LRG2: DESI_SN2_LRG2"
+              },
+              "DESI_SN2_5": {
+                "value": "lambda DESI_SN2_LRG3: DESI_SN2_LRG3"
+              },
+              "DESI_SN2_6": {
+                "value": "lambda DESI_SN2_LRG3: DESI_SN2_LRG3"
+              },
+              "DESI_SN2_7": {
+                "value": "lambda DESI_SN2_ELG1: DESI_SN2_ELG1"
+              },
+              "DESI_SN2_8": {
+                "value": "lambda DESI_SN2_ELG1: DESI_SN2_ELG1"
+              },
+              "DESI_SN2_9": {
+                "value": "lambda DESI_SN2_ELG2: DESI_SN2_ELG2"
+              },
+              "DESI_SN2_BGS": {
+                "latex": "s_{2}^{\\mathrm{BGS}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 5
+                },
+                "proposal": 0.5,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.5
+                }
+              },
+              "DESI_SN2_ELG1": {
+                "latex": "s_{2}^{\\mathrm{ELG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 5
+                },
+                "proposal": 0.5,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.5
+                }
+              },
+              "DESI_SN2_ELG2": {
+                "latex": "s_{2}^{\\mathrm{ELG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 5
+                },
+                "proposal": 0.5,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.5
+                }
+              },
+              "DESI_SN2_LRG1": {
+                "latex": "s_{2}^{\\mathrm{LRG1}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 5
+                },
+                "proposal": 0.5,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.5
+                }
+              },
+              "DESI_SN2_LRG2": {
+                "latex": "s_{2}^{\\mathrm{LRG2}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 5
+                },
+                "proposal": 0.5,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.5
+                }
+              },
+              "DESI_SN2_LRG3": {
+                "latex": "s_{2}^{\\mathrm{LRG3}}",
+                "prior": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 5
+                },
+                "proposal": 0.5,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.5
+                }
+              },
+              "DESI_TA0_BGS": {
+                "latex": "t_{\\alpha_{0}}^{\\mathrm{BGS}}",
+                "prior": {
+                  "max": 1000,
+                  "min": -1000
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_TA0_ELG1": {
+                "latex": "t_{\\alpha_{0}}^{\\mathrm{ELG1}}",
+                "prior": {
+                  "max": 1000,
+                  "min": -1000
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_TA0_ELG2": {
+                "latex": "t_{\\alpha_{0}}^{\\mathrm{ELG2}}",
+                "prior": {
+                  "max": 1000,
+                  "min": -1000
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_TA0_LRG1": {
+                "value": 0.0
+              },
+              "DESI_TA0_LRG2": {
+                "value": 0.0
+              },
+              "DESI_TA0_LRG3": {
+                "latex": "t_{\\alpha_{0}}^{\\mathrm{LRG3}}",
+                "prior": {
+                  "max": 1000,
+                  "min": -1000
+                },
+                "proposal": 1.6137,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 1.6137
+                }
+              },
+              "DESI_TB1_BGS": {
+                "latex": "s_\\mathrm{BGS}",
+                "prior": {
+                  "max": 7.057,
+                  "min": -7.057
+                },
+                "proposal": 0.1411,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1411
+                }
+              },
+              "DESI_TB1_ELG1": {
+                "latex": "s_\\mathrm{ELG1}",
+                "prior": {
+                  "max": 5.206,
+                  "min": -5.206
+                },
+                "proposal": 0.1041,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1041
+                }
+              },
+              "DESI_TB1_ELG2": {
+                "latex": "s_\\mathrm{ELG2}",
+                "prior": {
+                  "max": 5.187,
+                  "min": -5.187
+                },
+                "proposal": 0.1037,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1037
+                }
+              },
+              "DESI_TB1_LRG3": {
+                "latex": "s_\\mathrm{LRG3}",
+                "prior": {
+                  "max": 6.422,
+                  "min": -6.422
+                },
+                "proposal": 0.1284,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1284
+                }
+              },
+              "DESI_TB2_BGS": {
+                "latex": "t_{\\Delta_{2}}^{\\mathrm{BGS}}",
+                "prior": {
+                  "max": 100,
+                  "min": -100
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_TB2_ELG1": {
+                "latex": "t_{\\Delta_{2}}^{\\mathrm{ELG1}}",
+                "prior": {
+                  "max": 100,
+                  "min": -100
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_TB2_ELG2": {
+                "latex": "t_{\\Delta_{2}}^{\\mathrm{ELG2}}",
+                "prior": {
+                  "max": 100,
+                  "min": -100
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_TB2_LRG1": {
+                "value": 0.0
+              },
+              "DESI_TB2_LRG2": {
+                "value": 0.0
+              },
+              "DESI_TB2_LRG3": {
+                "latex": "t_{\\Delta_{2}}^{\\mathrm{LRG3}}",
+                "prior": {
+                  "max": 100,
+                  "min": -100
+                },
+                "proposal": 0.2,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.2
+                }
+              },
+              "DESI_TBS_BGS": {
+                "latex": "t_{\\Delta_{s}}^{\\mathrm{BGS}}",
+                "prior": {
+                  "max": 100,
+                  "min": -100
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              },
+              "DESI_TBS_ELG1": {
+                "latex": "t_{\\Delta_{s}}^{\\mathrm{ELG1}}",
+                "prior": {
+                  "max": 100,
+                  "min": -100
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              },
+              "DESI_TBS_ELG2": {
+                "latex": "t_{\\Delta_{s}}^{\\mathrm{ELG2}}",
+                "prior": {
+                  "max": 100,
+                  "min": -100
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              },
+              "DESI_TBS_LRG1": {
+                "value": 0.0
+              },
+              "DESI_TBS_LRG2": {
+                "value": 0.0
+              },
+              "DESI_TBS_LRG3": {
+                "latex": "t_{\\Delta_{s}}^{\\mathrm{LRG3}}",
+                "prior": {
+                  "max": 100,
+                  "min": -100
+                },
+                "proposal": 0.1,
+                "ref": {
+                  "dist": "norm",
+                  "loc": 0.0,
+                  "scale": 0.1
+                }
+              }
+            },
+            "path": "./external_modules/data/lssty1xdesi",
+            "photoz_histogram_akima": 0,
+            "photoz_histogram_akima_factor": 3,
+            "photoz_interpolation_type": 0,
+            "photoz_zmid_convention": 1,
+            "pk_z_refinement": 1,
+            "print_datavector": false,
+            "print_datavector_file": "./projects/lssty1xdesi/chains/desi_dr1_dz0p20_pairmax_theory.modelvector",
+            "speed": 1,
+            "stop_at_error": false,
+            "type": [],
+            "use_baryon_pca": false,
+            "use_emulator": 0,
+            "version": null,
+            "which_bsims_add_on_dv": "antilles-2"
+          }
+        },
+        "params": {
+          "As": {
+            "derived": true,
+            "latex": "A_\\mathrm{s}",
+            "value": "lambda As_1e9: 1e-9 * As_1e9"
+          },
+          "As_1e9": {
+            "drop": true,
+            "latex": "10^9 A_\\mathrm{s}",
+            "prior": {
+              "max": 5,
+              "min": 0.5
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 2.1,
+              "scale": 0.2
+            },
+            "renames": "A"
+          },
+          "DESI_A0_1": {
+            "derived": true,
+            "value": "lambda DESI_A0_BGS, DESI_TA0_BGS: DESI_A0_BGS + DESI_TA0_BGS*(-0.07084750)"
+          },
+          "DESI_A0_10": {
+            "derived": true,
+            "value": "lambda DESI_A0_ELG2, DESI_TA0_ELG2: DESI_A0_ELG2 + DESI_TA0_ELG2*(+0.09638753)"
+          },
+          "DESI_A0_2": {
+            "derived": true,
+            "value": "lambda DESI_A0_BGS, DESI_TA0_BGS: DESI_A0_BGS + DESI_TA0_BGS*(+0.07084750)"
+          },
+          "DESI_A0_3": {
+            "derived": true,
+            "value": "lambda DESI_A0_LRG1, DESI_TA0_LRG1: DESI_A0_LRG1 + DESI_TA0_LRG1*(+0.00000000)"
+          },
+          "DESI_A0_4": {
+            "derived": true,
+            "value": "lambda DESI_A0_LRG2, DESI_TA0_LRG2: DESI_A0_LRG2 + DESI_TA0_LRG2*(+0.00000000)"
+          },
+          "DESI_A0_5": {
+            "derived": true,
+            "value": "lambda DESI_A0_LRG3, DESI_TA0_LRG3: DESI_A0_LRG3 + DESI_TA0_LRG3*(-0.07785434)"
+          },
+          "DESI_A0_6": {
+            "derived": true,
+            "value": "lambda DESI_A0_LRG3, DESI_TA0_LRG3: DESI_A0_LRG3 + DESI_TA0_LRG3*(+0.07785434)"
+          },
+          "DESI_A0_7": {
+            "derived": true,
+            "value": "lambda DESI_A0_ELG1, DESI_TA0_ELG1: DESI_A0_ELG1 + DESI_TA0_ELG1*(-0.09604726)"
+          },
+          "DESI_A0_8": {
+            "derived": true,
+            "value": "lambda DESI_A0_ELG1, DESI_TA0_ELG1: DESI_A0_ELG1 + DESI_TA0_ELG1*(+0.09604725)"
+          },
+          "DESI_A0_9": {
+            "derived": true,
+            "value": "lambda DESI_A0_ELG2, DESI_TA0_ELG2: DESI_A0_ELG2 + DESI_TA0_ELG2*(-0.09638753)"
+          },
+          "DESI_A0_BGS": {
+            "latex": "\\alpha_{0}^{\\mathrm{BGS}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 16.137
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_A0_ELG1": {
+            "latex": "\\alpha_{0}^{\\mathrm{ELG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 16.137
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_A0_ELG2": {
+            "latex": "\\alpha_{0}^{\\mathrm{ELG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 16.137
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_A0_LRG1": {
+            "latex": "\\alpha_{0}^{\\mathrm{LRG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 16.137
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_A0_LRG2": {
+            "latex": "\\alpha_{0}^{\\mathrm{LRG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 16.137
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_A0_LRG3": {
+            "latex": "\\alpha_{0}^{\\mathrm{LRG3}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 16.137
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_A2_1": {
+            "value": 0.0
+          },
+          "DESI_A2_10": {
+            "value": 0.0
+          },
+          "DESI_A2_2": {
+            "value": 0.0
+          },
+          "DESI_A2_3": {
+            "value": 0.0
+          },
+          "DESI_A2_4": {
+            "value": 0.0
+          },
+          "DESI_A2_5": {
+            "value": 0.0
+          },
+          "DESI_A2_6": {
+            "value": 0.0
+          },
+          "DESI_A2_7": {
+            "value": 0.0
+          },
+          "DESI_A2_8": {
+            "value": 0.0
+          },
+          "DESI_A2_9": {
+            "value": 0.0
+          },
+          "DESI_B1_1": {
+            "derived": true,
+            "value": "lambda DESI_B1_BGS, DESI_TB1_BGS: DESI_B1_BGS*(1.0 + DESI_TB1_BGS*(-7.084750000000001e-02))"
+          },
+          "DESI_B1_10": {
+            "derived": true,
+            "value": "lambda DESI_B1_ELG2, DESI_TB1_ELG2: DESI_B1_ELG2*(1.0 + DESI_TB1_ELG2*(+9.638753000000011e-02))"
+          },
+          "DESI_B1_2": {
+            "derived": true,
+            "value": "lambda DESI_B1_BGS, DESI_TB1_BGS: DESI_B1_BGS*(1.0 + DESI_TB1_BGS*(+7.084750000000001e-02))"
+          },
+          "DESI_B1_3": {
+            "derived": true,
+            "value": "lambda DESI_B1_LRG1: DESI_B1_LRG1"
+          },
+          "DESI_B1_4": {
+            "derived": true,
+            "value": "lambda DESI_B1_LRG2: DESI_B1_LRG2"
+          },
+          "DESI_B1_5": {
+            "derived": true,
+            "value": "lambda DESI_B1_LRG3, DESI_TB1_LRG3: DESI_B1_LRG3*(1.0 + DESI_TB1_LRG3*(-7.785434499999999e-02))"
+          },
+          "DESI_B1_6": {
+            "derived": true,
+            "value": "lambda DESI_B1_LRG3, DESI_TB1_LRG3: DESI_B1_LRG3*(1.0 + DESI_TB1_LRG3*(+7.785434499999999e-02))"
+          },
+          "DESI_B1_7": {
+            "derived": true,
+            "value": "lambda DESI_B1_ELG1, DESI_TB1_ELG1: DESI_B1_ELG1*(1.0 + DESI_TB1_ELG1*(-9.604725500000011e-02))"
+          },
+          "DESI_B1_8": {
+            "derived": true,
+            "value": "lambda DESI_B1_ELG1, DESI_TB1_ELG1: DESI_B1_ELG1*(1.0 + DESI_TB1_ELG1*(+9.604725500000000e-02))"
+          },
+          "DESI_B1_9": {
+            "derived": true,
+            "value": "lambda DESI_B1_ELG2, DESI_TB1_ELG2: DESI_B1_ELG2*(1.0 + DESI_TB1_ELG2*(-9.638752999999989e-02))"
+          },
+          "DESI_B1_BGS": {
+            "latex": "B_\\mathrm{BGS}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.34,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_ELG1": {
+            "latex": "B_\\mathrm{ELG1}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.84,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_ELG2": {
+            "latex": "B_\\mathrm{ELG2}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.84,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_LRG1": {
+            "latex": "B_\\mathrm{LRG1}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.7,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_LRG2": {
+            "latex": "B_\\mathrm{LRG2}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.7,
+              "scale": 0.02
+            }
+          },
+          "DESI_B1_LRG3": {
+            "latex": "B_\\mathrm{LRG3}",
+            "prior": {
+              "max": 4.0,
+              "min": 0.8
+            },
+            "proposal": 0.02,
+            "ref": {
+              "dist": "norm",
+              "loc": 1.7,
+              "scale": 0.02
+            }
+          },
+          "DESI_DB2_1": {
+            "derived": true,
+            "value": "lambda DESI_DB2_BGS, DESI_TB2_BGS: DESI_DB2_BGS + DESI_TB2_BGS*(-0.07084750)"
+          },
+          "DESI_DB2_10": {
+            "derived": true,
+            "value": "lambda DESI_DB2_ELG2, DESI_TB2_ELG2: DESI_DB2_ELG2 + DESI_TB2_ELG2*(+0.09638753)"
+          },
+          "DESI_DB2_2": {
+            "derived": true,
+            "value": "lambda DESI_DB2_BGS, DESI_TB2_BGS: DESI_DB2_BGS + DESI_TB2_BGS*(+0.07084750)"
+          },
+          "DESI_DB2_3": {
+            "derived": true,
+            "value": "lambda DESI_DB2_LRG1, DESI_TB2_LRG1: DESI_DB2_LRG1 + DESI_TB2_LRG1*(+0.00000000)"
+          },
+          "DESI_DB2_4": {
+            "derived": true,
+            "value": "lambda DESI_DB2_LRG2, DESI_TB2_LRG2: DESI_DB2_LRG2 + DESI_TB2_LRG2*(+0.00000000)"
+          },
+          "DESI_DB2_5": {
+            "derived": true,
+            "value": "lambda DESI_DB2_LRG3, DESI_TB2_LRG3: DESI_DB2_LRG3 + DESI_TB2_LRG3*(-0.07785434)"
+          },
+          "DESI_DB2_6": {
+            "derived": true,
+            "value": "lambda DESI_DB2_LRG3, DESI_TB2_LRG3: DESI_DB2_LRG3 + DESI_TB2_LRG3*(+0.07785434)"
+          },
+          "DESI_DB2_7": {
+            "derived": true,
+            "value": "lambda DESI_DB2_ELG1, DESI_TB2_ELG1: DESI_DB2_ELG1 + DESI_TB2_ELG1*(-0.09604726)"
+          },
+          "DESI_DB2_8": {
+            "derived": true,
+            "value": "lambda DESI_DB2_ELG1, DESI_TB2_ELG1: DESI_DB2_ELG1 + DESI_TB2_ELG1*(+0.09604725)"
+          },
+          "DESI_DB2_9": {
+            "derived": true,
+            "value": "lambda DESI_DB2_ELG2, DESI_TB2_ELG2: DESI_DB2_ELG2 + DESI_TB2_ELG2*(-0.09638753)"
+          },
+          "DESI_DB2_BGS": {
+            "latex": "\\Delta_{2}^{\\mathrm{BGS}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_DB2_ELG1": {
+            "latex": "\\Delta_{2}^{\\mathrm{ELG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_DB2_ELG2": {
+            "latex": "\\Delta_{2}^{\\mathrm{ELG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_DB2_LRG1": {
+            "latex": "\\Delta_{2}^{\\mathrm{LRG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_DB2_LRG2": {
+            "latex": "\\Delta_{2}^{\\mathrm{LRG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_DB2_LRG3": {
+            "latex": "\\Delta_{2}^{\\mathrm{LRG3}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_DBS_1": {
+            "derived": true,
+            "value": "lambda DESI_DBS_BGS, DESI_TBS_BGS: DESI_DBS_BGS + DESI_TBS_BGS*(-0.07084750)"
+          },
+          "DESI_DBS_10": {
+            "derived": true,
+            "value": "lambda DESI_DBS_ELG2, DESI_TBS_ELG2: DESI_DBS_ELG2 + DESI_TBS_ELG2*(+0.09638753)"
+          },
+          "DESI_DBS_2": {
+            "derived": true,
+            "value": "lambda DESI_DBS_BGS, DESI_TBS_BGS: DESI_DBS_BGS + DESI_TBS_BGS*(+0.07084750)"
+          },
+          "DESI_DBS_3": {
+            "derived": true,
+            "value": "lambda DESI_DBS_LRG1, DESI_TBS_LRG1: DESI_DBS_LRG1 + DESI_TBS_LRG1*(+0.00000000)"
+          },
+          "DESI_DBS_4": {
+            "derived": true,
+            "value": "lambda DESI_DBS_LRG2, DESI_TBS_LRG2: DESI_DBS_LRG2 + DESI_TBS_LRG2*(+0.00000000)"
+          },
+          "DESI_DBS_5": {
+            "derived": true,
+            "value": "lambda DESI_DBS_LRG3, DESI_TBS_LRG3: DESI_DBS_LRG3 + DESI_TBS_LRG3*(-0.07785434)"
+          },
+          "DESI_DBS_6": {
+            "derived": true,
+            "value": "lambda DESI_DBS_LRG3, DESI_TBS_LRG3: DESI_DBS_LRG3 + DESI_TBS_LRG3*(+0.07785434)"
+          },
+          "DESI_DBS_7": {
+            "derived": true,
+            "value": "lambda DESI_DBS_ELG1, DESI_TBS_ELG1: DESI_DBS_ELG1 + DESI_TBS_ELG1*(-0.09604726)"
+          },
+          "DESI_DBS_8": {
+            "derived": true,
+            "value": "lambda DESI_DBS_ELG1, DESI_TBS_ELG1: DESI_DBS_ELG1 + DESI_TBS_ELG1*(+0.09604725)"
+          },
+          "DESI_DBS_9": {
+            "derived": true,
+            "value": "lambda DESI_DBS_ELG2, DESI_TBS_ELG2: DESI_DBS_ELG2 + DESI_TBS_ELG2*(-0.09638753)"
+          },
+          "DESI_DBS_BGS": {
+            "latex": "\\Delta_{s}^{\\mathrm{BGS}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "DESI_DBS_ELG1": {
+            "latex": "\\Delta_{s}^{\\mathrm{ELG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "DESI_DBS_ELG2": {
+            "latex": "\\Delta_{s}^{\\mathrm{ELG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "DESI_DBS_LRG1": {
+            "latex": "\\Delta_{s}^{\\mathrm{LRG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "DESI_DBS_LRG2": {
+            "latex": "\\Delta_{s}^{\\mathrm{LRG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "DESI_DBS_LRG3": {
+            "latex": "\\Delta_{s}^{\\mathrm{LRG3}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "DESI_SIGV_1": {
+            "latex": "\\sigma_v^\\mathrm{BGS0}",
+            "prior": {
+              "a": -0.426437,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 371.0,
+              "scale": 870.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 371.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_10": {
+            "derived": true,
+            "value": "lambda DESI_SIGV_9: DESI_SIGV_9"
+          },
+          "DESI_SIGV_2": {
+            "latex": "\\sigma_v^\\mathrm{BGS1}",
+            "prior": {
+              "a": -0.568254,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 358.0,
+              "scale": 630.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 358.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_3": {
+            "latex": "\\sigma_v^\\mathrm{LRG1}",
+            "prior": {
+              "a": -0.85,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 357.0,
+              "scale": 420.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 357.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_4": {
+            "latex": "\\sigma_v^\\mathrm{LRG2}",
+            "prior": {
+              "a": -1.16,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 348.0,
+              "scale": 300.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 348.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_5": {
+            "latex": "\\sigma_v^\\mathrm{LRG3}",
+            "prior": {
+              "a": -1.143333,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 343.0,
+              "scale": 300.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 343.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_6": {
+            "derived": true,
+            "value": "lambda DESI_SIGV_5: DESI_SIGV_5"
+          },
+          "DESI_SIGV_7": {
+            "latex": "\\sigma_v^\\mathrm{ELG1}",
+            "prior": {
+              "a": -1.266667,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 304.0,
+              "scale": 240.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 304.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SIGV_8": {
+            "derived": true,
+            "value": "lambda DESI_SIGV_7: DESI_SIGV_7"
+          },
+          "DESI_SIGV_9": {
+            "latex": "\\sigma_v^\\mathrm{ELG2}",
+            "prior": {
+              "a": -1.605556,
+              "b": Infinity,
+              "dist": "truncnorm",
+              "loc": 289.0,
+              "scale": 180.0
+            },
+            "proposal": 5.0,
+            "ref": {
+              "dist": "norm",
+              "loc": 289.0,
+              "scale": 5.0
+            }
+          },
+          "DESI_SN0_1": {
+            "derived": true,
+            "value": "lambda DESI_SN0_BGS: DESI_SN0_BGS"
+          },
+          "DESI_SN0_10": {
+            "derived": true,
+            "value": "lambda DESI_SN0_ELG2: DESI_SN0_ELG2"
+          },
+          "DESI_SN0_2": {
+            "derived": true,
+            "value": "lambda DESI_SN0_BGS: DESI_SN0_BGS"
+          },
+          "DESI_SN0_3": {
+            "derived": true,
+            "value": "lambda DESI_SN0_LRG1: DESI_SN0_LRG1"
+          },
+          "DESI_SN0_4": {
+            "derived": true,
+            "value": "lambda DESI_SN0_LRG2: DESI_SN0_LRG2"
+          },
+          "DESI_SN0_5": {
+            "derived": true,
+            "value": "lambda DESI_SN0_LRG3: DESI_SN0_LRG3"
+          },
+          "DESI_SN0_6": {
+            "derived": true,
+            "value": "lambda DESI_SN0_LRG3: DESI_SN0_LRG3"
+          },
+          "DESI_SN0_7": {
+            "derived": true,
+            "value": "lambda DESI_SN0_ELG1: DESI_SN0_ELG1"
+          },
+          "DESI_SN0_8": {
+            "derived": true,
+            "value": "lambda DESI_SN0_ELG1: DESI_SN0_ELG1"
+          },
+          "DESI_SN0_9": {
+            "derived": true,
+            "value": "lambda DESI_SN0_ELG2: DESI_SN0_ELG2"
+          },
+          "DESI_SN0_BGS": {
+            "latex": "s_{0}^{\\mathrm{BGS}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_SN0_ELG1": {
+            "latex": "s_{0}^{\\mathrm{ELG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_SN0_ELG2": {
+            "latex": "s_{0}^{\\mathrm{ELG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_SN0_LRG1": {
+            "latex": "s_{0}^{\\mathrm{LRG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_SN0_LRG2": {
+            "latex": "s_{0}^{\\mathrm{LRG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_SN0_LRG3": {
+            "latex": "s_{0}^{\\mathrm{LRG3}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 2
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_SN2_1": {
+            "derived": true,
+            "value": "lambda DESI_SN2_BGS: DESI_SN2_BGS"
+          },
+          "DESI_SN2_10": {
+            "derived": true,
+            "value": "lambda DESI_SN2_ELG2: DESI_SN2_ELG2"
+          },
+          "DESI_SN2_2": {
+            "derived": true,
+            "value": "lambda DESI_SN2_BGS: DESI_SN2_BGS"
+          },
+          "DESI_SN2_3": {
+            "derived": true,
+            "value": "lambda DESI_SN2_LRG1: DESI_SN2_LRG1"
+          },
+          "DESI_SN2_4": {
+            "derived": true,
+            "value": "lambda DESI_SN2_LRG2: DESI_SN2_LRG2"
+          },
+          "DESI_SN2_5": {
+            "derived": true,
+            "value": "lambda DESI_SN2_LRG3: DESI_SN2_LRG3"
+          },
+          "DESI_SN2_6": {
+            "derived": true,
+            "value": "lambda DESI_SN2_LRG3: DESI_SN2_LRG3"
+          },
+          "DESI_SN2_7": {
+            "derived": true,
+            "value": "lambda DESI_SN2_ELG1: DESI_SN2_ELG1"
+          },
+          "DESI_SN2_8": {
+            "derived": true,
+            "value": "lambda DESI_SN2_ELG1: DESI_SN2_ELG1"
+          },
+          "DESI_SN2_9": {
+            "derived": true,
+            "value": "lambda DESI_SN2_ELG2: DESI_SN2_ELG2"
+          },
+          "DESI_SN2_BGS": {
+            "latex": "s_{2}^{\\mathrm{BGS}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 5
+            },
+            "proposal": 0.5,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.5
+            }
+          },
+          "DESI_SN2_ELG1": {
+            "latex": "s_{2}^{\\mathrm{ELG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 5
+            },
+            "proposal": 0.5,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.5
+            }
+          },
+          "DESI_SN2_ELG2": {
+            "latex": "s_{2}^{\\mathrm{ELG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 5
+            },
+            "proposal": 0.5,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.5
+            }
+          },
+          "DESI_SN2_LRG1": {
+            "latex": "s_{2}^{\\mathrm{LRG1}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 5
+            },
+            "proposal": 0.5,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.5
+            }
+          },
+          "DESI_SN2_LRG2": {
+            "latex": "s_{2}^{\\mathrm{LRG2}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 5
+            },
+            "proposal": 0.5,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.5
+            }
+          },
+          "DESI_SN2_LRG3": {
+            "latex": "s_{2}^{\\mathrm{LRG3}}",
+            "prior": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 5
+            },
+            "proposal": 0.5,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.5
+            }
+          },
+          "DESI_TA0_BGS": {
+            "latex": "t_{\\alpha_{0}}^{\\mathrm{BGS}}",
+            "prior": {
+              "max": 1000,
+              "min": -1000
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_TA0_ELG1": {
+            "latex": "t_{\\alpha_{0}}^{\\mathrm{ELG1}}",
+            "prior": {
+              "max": 1000,
+              "min": -1000
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_TA0_ELG2": {
+            "latex": "t_{\\alpha_{0}}^{\\mathrm{ELG2}}",
+            "prior": {
+              "max": 1000,
+              "min": -1000
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_TA0_LRG1": {
+            "value": 0.0
+          },
+          "DESI_TA0_LRG2": {
+            "value": 0.0
+          },
+          "DESI_TA0_LRG3": {
+            "latex": "t_{\\alpha_{0}}^{\\mathrm{LRG3}}",
+            "prior": {
+              "max": 1000,
+              "min": -1000
+            },
+            "proposal": 1.6137,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 1.6137
+            }
+          },
+          "DESI_TB1_BGS": {
+            "latex": "s_\\mathrm{BGS}",
+            "prior": {
+              "max": 7.057,
+              "min": -7.057
+            },
+            "proposal": 0.1411,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1411
+            }
+          },
+          "DESI_TB1_ELG1": {
+            "latex": "s_\\mathrm{ELG1}",
+            "prior": {
+              "max": 5.206,
+              "min": -5.206
+            },
+            "proposal": 0.1041,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1041
+            }
+          },
+          "DESI_TB1_ELG2": {
+            "latex": "s_\\mathrm{ELG2}",
+            "prior": {
+              "max": 5.187,
+              "min": -5.187
+            },
+            "proposal": 0.1037,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1037
+            }
+          },
+          "DESI_TB1_LRG3": {
+            "latex": "s_\\mathrm{LRG3}",
+            "prior": {
+              "max": 6.422,
+              "min": -6.422
+            },
+            "proposal": 0.1284,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1284
+            }
+          },
+          "DESI_TB2_BGS": {
+            "latex": "t_{\\Delta_{2}}^{\\mathrm{BGS}}",
+            "prior": {
+              "max": 100,
+              "min": -100
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_TB2_ELG1": {
+            "latex": "t_{\\Delta_{2}}^{\\mathrm{ELG1}}",
+            "prior": {
+              "max": 100,
+              "min": -100
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_TB2_ELG2": {
+            "latex": "t_{\\Delta_{2}}^{\\mathrm{ELG2}}",
+            "prior": {
+              "max": 100,
+              "min": -100
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_TB2_LRG1": {
+            "value": 0.0
+          },
+          "DESI_TB2_LRG2": {
+            "value": 0.0
+          },
+          "DESI_TB2_LRG3": {
+            "latex": "t_{\\Delta_{2}}^{\\mathrm{LRG3}}",
+            "prior": {
+              "max": 100,
+              "min": -100
+            },
+            "proposal": 0.2,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.2
+            }
+          },
+          "DESI_TBS_BGS": {
+            "latex": "t_{\\Delta_{s}}^{\\mathrm{BGS}}",
+            "prior": {
+              "max": 100,
+              "min": -100
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "DESI_TBS_ELG1": {
+            "latex": "t_{\\Delta_{s}}^{\\mathrm{ELG1}}",
+            "prior": {
+              "max": 100,
+              "min": -100
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "DESI_TBS_ELG2": {
+            "latex": "t_{\\Delta_{s}}^{\\mathrm{ELG2}}",
+            "prior": {
+              "max": 100,
+              "min": -100
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "DESI_TBS_LRG1": {
+            "value": 0.0
+          },
+          "DESI_TBS_LRG2": {
+            "value": 0.0
+          },
+          "DESI_TBS_LRG3": {
+            "latex": "t_{\\Delta_{s}}^{\\mathrm{LRG3}}",
+            "prior": {
+              "max": 100,
+              "min": -100
+            },
+            "proposal": 0.1,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0,
+              "scale": 0.1
+            }
+          },
+          "H0": {
+            "latex": "H_0",
+            "prior": {
+              "max": 91,
+              "min": 55
+            },
+            "proposal": 3,
+            "ref": {
+              "dist": "norm",
+              "loc": 67.32,
+              "scale": 3
+            }
+          },
+          "age": {
+            "derived": true,
+            "latex": "{\\rm{Age}}/\\mathrm{Gyr}"
+          },
+          "mnu": {
+            "prior": {
+              "max": 0.6,
+              "min": 0.06
+            },
+            "proposal": 0.05,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.25,
+              "scale": 0.1
+            }
+          },
+          "ns": {
+            "latex": "n_\\mathrm{s}",
+            "prior": {
+              "max": 1.07,
+              "min": 0.87
+            },
+            "proposal": 0.015,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.96605,
+              "scale": 0.015
+            }
+          },
+          "omegab": {
+            "drop": true,
+            "latex": "\\Omega_\\mathrm{b}",
+            "prior": {
+              "max": 0.07,
+              "min": 0.03
+            },
+            "proposal": 0.005,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.0495,
+              "scale": 0.005
+            }
+          },
+          "omegabh2": {
+            "derived": true,
+            "latex": "\\Omega_\\mathrm{b} h^2",
+            "renames": [
+              "ombh2"
+            ],
+            "value": "lambda omegab, H0: omegab*(H0/100)**2"
+          },
+          "omegach2": {
+            "derived": true,
+            "latex": "\\Omega_\\mathrm{c} h^2",
+            "renames": [
+              "omch2"
+            ],
+            "value": "lambda omegam, omegab, mnu, H0: (omegam-omegab)*(H0/100)**2-(mnu*(3.046/3)**0.75)/94.0708"
+          },
+          "omegal": {
+            "derived": true,
+            "latex": "\\Omega_\\Lambda",
+            "renames": [
+              "omega_de"
+            ]
+          },
+          "omegam": {
+            "drop": true,
+            "latex": "\\Omega_\\mathrm{m}",
+            "prior": {
+              "max": 0.5,
+              "min": 0.2
+            },
+            "proposal": 0.015,
+            "ref": {
+              "dist": "norm",
+              "loc": 0.316,
+              "scale": 0.015
+            }
+          },
+          "omegamh2": {
+            "derived": "lambda omegam, H0: omegam*(H0/100)**2",
+            "latex": "\\Omega_\\mathrm{m} h^2"
+          },
+          "omegan": {
+            "derived": "lambda omegan2, H0: omegan2/((H0/100)**2)",
+            "latex": "\\Omega_\\mathrm{\\\\nu}"
+          },
+          "omegan2": {
+            "derived": true,
+            "latex": "\\Omega_\\mathrm{\\\\nu} h^2",
+            "renames": [
+              "omnuh2"
+            ]
+          },
+          "rdrag": {
+            "derived": true,
+            "latex": "r_\\mathrm{drag}"
+          },
+          "s8h5": {
+            "derived": "lambda sigma8, H0: sigma8*(H0*1e-2)**(-0.5)",
+            "latex": "\\sigma_8/h^{0.5}"
+          },
+          "s8omegamp25": {
+            "derived": "lambda sigma8, omegam: sigma8*omegam**0.25",
+            "latex": "\\sigma_8 \\Omega_\\mathrm{m}^{0.25}"
+          },
+          "s8omegamp5": {
+            "derived": "lambda sigma8, omegam: sigma8*omegam**0.5",
+            "latex": "\\sigma_8 \\Omega_\\mathrm{m}^{0.5}"
+          },
+          "sigma8": {
+            "derived": true,
+            "latex": "\\sigma_8"
+          },
+          "tau": {
+            "latex": "\\tau_\\mathrm{reio}",
+            "value": 0.0697186
+          },
+          "w": {
+            "latex": "w_{0,\\mathrm{DE}}",
+            "prior": {
+              "max": -0.33333,
+              "min": -3
+            },
+            "proposal": 0.05,
+            "ref": {
+              "dist": "norm",
+              "loc": -0.99,
+              "scale": 0.05
+            }
+          },
+          "w0pwa": {
+            "drop": true,
+            "latex": "w_{0,\\mathrm{DE}}+w_{a,\\mathrm{DE}}",
+            "prior": {
+              "max": -0.01,
+              "min": -3
+            },
+            "proposal": 0.05,
+            "ref": {
+              "dist": "norm",
+              "loc": -0.99,
+              "scale": 0.05
+            }
+          },
+          "wa": {
+            "derived": true,
+            "latex": "w_{a,\\mathrm{DE}}",
+            "value": "lambda w0pwa, w: w0pwa - w"
+          },
+          "yheused": {
+            "derived": true,
+            "latex": "Y_P^\\mathrm{BBN}",
+            "renames": [
+              "YHe"
+            ]
+          }
+        },
+        "point": {
+          "As_1e9": 2.1,
+          "DESI_A0_BGS": 0.0,
+          "DESI_A0_ELG1": 0.0,
+          "DESI_A0_ELG2": 0.0,
+          "DESI_A0_LRG1": 0.0,
+          "DESI_A0_LRG2": 0.0,
+          "DESI_A0_LRG3": 0.0,
+          "DESI_B1_BGS": 1.34,
+          "DESI_B1_ELG1": 0.84,
+          "DESI_B1_ELG2": 0.84,
+          "DESI_B1_LRG1": 1.7,
+          "DESI_B1_LRG2": 1.7,
+          "DESI_B1_LRG3": 1.7,
+          "DESI_DB2_BGS": 0.0,
+          "DESI_DB2_ELG1": 0.0,
+          "DESI_DB2_ELG2": 0.0,
+          "DESI_DB2_LRG1": 0.0,
+          "DESI_DB2_LRG2": 0.0,
+          "DESI_DB2_LRG3": 0.0,
+          "DESI_DBS_BGS": 0.0,
+          "DESI_DBS_ELG1": 0.0,
+          "DESI_DBS_ELG2": 0.0,
+          "DESI_DBS_LRG1": 0.0,
+          "DESI_DBS_LRG2": 0.0,
+          "DESI_DBS_LRG3": 0.0,
+          "DESI_SIGV_1": 371.0,
+          "DESI_SIGV_2": 358.0,
+          "DESI_SIGV_3": 357.0,
+          "DESI_SIGV_4": 348.0,
+          "DESI_SIGV_5": 343.0,
+          "DESI_SIGV_7": 304.0,
+          "DESI_SIGV_9": 289.0,
+          "DESI_SN0_BGS": 0.0,
+          "DESI_SN0_ELG1": 0.0,
+          "DESI_SN0_ELG2": 0.0,
+          "DESI_SN0_LRG1": 0.0,
+          "DESI_SN0_LRG2": 0.0,
+          "DESI_SN0_LRG3": 0.0,
+          "DESI_SN2_BGS": 0.0,
+          "DESI_SN2_ELG1": 0.0,
+          "DESI_SN2_ELG2": 0.0,
+          "DESI_SN2_LRG1": 0.0,
+          "DESI_SN2_LRG2": 0.0,
+          "DESI_SN2_LRG3": 0.0,
+          "DESI_TA0_BGS": 0.0,
+          "DESI_TA0_ELG1": 0.0,
+          "DESI_TA0_ELG2": 0.0,
+          "DESI_TA0_LRG3": 0.0,
+          "DESI_TB1_BGS": 0.0,
+          "DESI_TB1_ELG1": 0.0,
+          "DESI_TB1_ELG2": 0.0,
+          "DESI_TB1_LRG3": 0.0,
+          "DESI_TB2_BGS": 0.0,
+          "DESI_TB2_ELG1": 0.0,
+          "DESI_TB2_ELG2": 0.0,
+          "DESI_TB2_LRG3": 0.0,
+          "DESI_TBS_BGS": 0.0,
+          "DESI_TBS_ELG1": 0.0,
+          "DESI_TBS_ELG2": 0.0,
+          "DESI_TBS_LRG3": 0.0,
+          "H0": 67.32,
+          "mnu": 0.06,
+          "ns": 0.96605,
+          "omegab": 0.04,
+          "omegam": 0.3,
+          "w": -1.0,
+          "w0pwa": -1.0
+        },
+        "prior": {
+          "amplitude_cut": "lambda As_1e9, DESI_B1_BGS, DESI_B1_LRG1, DESI_B1_LRG2, DESI_B1_LRG3, DESI_B1_ELG1, DESI_B1_ELG2: 0.0 if (As_1e9/2.1)*max((DESI_B1_BGS/1.34)**2, (DESI_B1_LRG1/1.7)**2, (DESI_B1_LRG2/1.7)**2, (DESI_B1_LRG3/1.7)**2, (DESI_B1_ELG1/0.84)**2, (DESI_B1_ELG2/0.84)**2) <= 8 else -np.inf"
+        },
+        "theory": {
+          "camb": {
+            "external_primordial_pk": false,
+            "extra_args": {
+              "AccuracyBoost": 2.0,
+              "accurate_massive_neutrino_transfers": false,
+              "dark_energy_model": "ppf",
+              "halofit_version": "takahashi",
+              "k_per_logint": 30,
+              "kmax": 7.5,
+              "lens_potential_accuracy": 1.0
+            },
+            "ignore_obsolete": false,
+            "path": "./external_modules/code/CAMB",
+            "renames": {
+              "YpBBN": "Y_p",
+              "omegabh2": "ombh2",
+              "omegach2": "omch2",
+              "omegak": "omk",
+              "omegal": "omega_de",
+              "omegan2": "omnuh2",
+              "yhe": "YHe",
+              "yheused": "YHe"
+            },
+            "speed": 0.3,
+            "stop_at_error": false,
+            "use_non_linear_ratio": false,
+            "use_renames": true,
+            "version": null
+          }
+        },
+        "tier": "final"
+      },
+      "tier": "final",
+      "yaml": "projects/lssty1xdesi/EXAMPLE_EVALUATE4_PAIRMAX.yaml",
+      "yaml_sha256": "9819b7794e3a06599a058032f3ebe8ce5d377e76d1e0a202d63d82ca52f5e458"
+    }
+  },
+  "name": "model_templates_dz0p20_pairmax_final",
+  "notes": {
+    "code": "the repositories at write time (code_at_write)",
+    "computed": "in the session that wrote the cache, before the write",
+    "resolved_input": "resolved from the files at write time; every stored fingerprint verified equal"
+  },
+  "settings": {
+    "a2_step": 5.0,
+    "accuracy_boost": 1.0,
+    "alpha2_keyword": "A2",
+    "alpha2_setter": "set_nuisance_bias_alpha2",
+    "bias_params": "projects/lssty1xdesi/likelihood/params_desi_dr1_dz0p20_bias_pessimistic.yaml",
+    "camb": {
+      "AccuracyBoost": 2.0,
+      "k_per_logint": 30
+    },
+    "dataset": "lssty1xdesi_desi_dr1_dz0p20_pairmax",
+    "fingerprint": "ba9447d008a0fbff463eef64d83dd3463e99c6416ec3ae6cdd21b4a9c4f39051",
+    "overrides": {
+      "accuracyboost": 3.0,
+      "data_file": "lssty1xdesi_desi_dr1_dz0p20_pairmax.dataset",
+      "integration_accuracy": 1,
+      "kmax_boltzmann": 20.0,
+      "nonlimber_accuracyboost": 64.0
+    },
+    "stencil": "five-point",
+    "tier": "final",
+    "yaml": "projects/lssty1xdesi/EXAMPLE_EVALUATE4_PAIRMAX.yaml"
+  },
+  "tiers": {
+    "settings/tier": "final"
+  },
+  "written": "2026-11-11T16:47:15-05:00"
+}

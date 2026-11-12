@@ -214,6 +214,42 @@ LAYOUTS = {
         "dataset": "lssty1xdesi_desi_dr1_dz0p20",
         "bias_params": "params_desi_dr1_dz0p20_bias_pessimistic.yaml",
     },
+    # the Delta z = 0.02 bins with a longer cross-pair list: every pair
+    # whose blurred kernels overlap at sigma_v = 600 km/s (run it with
+    # --yaml EXAMPLE_EVALUATE2_SIGV600.yaml, the yaml of its dataset)
+    "dz0p02_sigv600": {
+        "number": 2,
+        "label": "Delta z = 0.02, sigma_v = 600 km/s pairs",
+        "dataset": "lssty1xdesi_desi_dr1_dz0p02_sigv600",
+        "bias_params": "params_desi_dr1_dz0p02_bias_pessimistic.yaml",
+    },
+    # the maximal cross-pair lists of the pair-axes study: each layout's
+    # bins with every pair up to a few bin widths apart added (run each
+    # with --yaml EXAMPLE_EVALUATE<n>_PAIRMAX.yaml, the yaml of its dataset)
+    "dcom62_pairmax": {
+        "number": 1,
+        "label": "Delta d_com = 62 Mpc, maximal pair list",
+        "dataset": "lssty1xdesi_desi_dr3_pairmax",
+        "bias_params": "params_desi_bias_pessimistic.yaml",
+    },
+    "dz0p02_pairmax": {
+        "number": 2,
+        "label": "Delta z = 0.02, maximal pair list",
+        "dataset": "lssty1xdesi_desi_dr1_dz0p02_pairmax",
+        "bias_params": "params_desi_dr1_dz0p02_bias_pessimistic.yaml",
+    },
+    "dz0p05_pairmax": {
+        "number": 3,
+        "label": "Delta z = 0.05, maximal pair list",
+        "dataset": "lssty1xdesi_desi_dr1_dz0p05_pairmax",
+        "bias_params": "params_desi_dr1_dz0p05_bias_pessimistic.yaml",
+    },
+    "dz0p20_pairmax": {
+        "number": 4,
+        "label": "Delta z = 0.2, maximal pair list",
+        "dataset": "lssty1xdesi_desi_dr1_dz0p20_pairmax",
+        "bias_params": "params_desi_dr1_dz0p20_bias_pessimistic.yaml",
+    },
 }
 
 # The notebook's derivative settings, which the caches record and the
@@ -299,7 +335,9 @@ def parse_arguments():
     parser.add_argument(
         "--layout", required=True, choices=list(LAYOUTS),
         help="dcom62 (Delta d_com = 62 Mpc), dz0p02, dz0p05 or dz0p20 "
-             "(Delta z = 0.02, 0.05, 0.2)")
+             "(Delta z = 0.02, 0.05, 0.2), or dz0p02_sigv600 (Delta z = 0.02 "
+             "with the sigma_v = 600 km/s pair list), or <layout>_pairmax "
+             "(the layout with the maximal pair list of the pair-axes study)")
     parser.add_argument(
         "--yaml", default=None,
         help="the example yaml of the paper likelihood of the layout (default: "

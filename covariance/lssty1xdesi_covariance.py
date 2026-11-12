@@ -94,8 +94,18 @@ _PROJECT = Path(__file__).resolve().parents[1]
 CASES = {
     "dr3": ("lssty1xdesi_desi_dr3", "desi"),
     "dr1_dz0p02": ("lssty1xdesi_desi_dr1_dz0p02", "desi"),
+    # the Delta z = 0.02 bins with a longer cross-pair list: every pair
+    # whose blurred kernels overlap when every velocity dispersion is
+    # sigma_v = 600 km/s (scripts/make_desi_pairs.py's overlap rule)
+    "dr1_dz0p02_sigv600": ("lssty1xdesi_desi_dr1_dz0p02_sigv600", "desi"),
     "dr1_dz0p05": ("lssty1xdesi_desi_dr1_dz0p05", "desi"),
     "dr1_dz0p20": ("lssty1xdesi_desi_dr1_dz0p20", "desi"),
+    # the maximal cross-pair lists of the pair-axes study: each layout's
+    # bins with every pair up to a few bin widths apart added
+    "dr3_pairmax": ("lssty1xdesi_desi_dr3_pairmax", "desi"),
+    "dr1_dz0p02_pairmax": ("lssty1xdesi_desi_dr1_dz0p02_pairmax", "desi"),
+    "dr1_dz0p05_pairmax": ("lssty1xdesi_desi_dr1_dz0p05_pairmax", "desi"),
+    "dr1_dz0p20_pairmax": ("lssty1xdesi_desi_dr1_dz0p20_pairmax", "desi"),
     "lsst_y1_3x2pt": ("lssty1xdesi_lsst_y1_3x2pt", "lsst"),
 }
 

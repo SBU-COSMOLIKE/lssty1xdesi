@@ -94,10 +94,10 @@ bias_model: [0,0,0,1,0,0]
 # counterterm alpha_2 mu^2 k^2, a stochastic amplitude SN0 and the
 # line-of-sight stochastic term SN2 k^2 mu^2, with mu the cosine to the
 # line of sight, all per bin (DESI_DB2_<n>, DESI_DBS_<n>, DESI_A0_<n>,
-# DESI_A2_<n>, DESI_SN0_<n>, DESI_SN2_<n>; see desi_cl.py). Models A and B
-# of the note are parameter files of option 1 (model A fixes alpha_2 = 0).
+# DESI_A2_<n>, DESI_SN0_<n>, DESI_SN2_<n>; see desi_cl.py). The fiducial
+# model of the note is a parameter file of option 1 (it fixes alpha_2 = 0).
 # Option 1 needs bias_model: [0,0,0,0,0,0] (every bias per bin, b3 = 0);
-# the desi_cl*_model_a and desi_cl*_model_b likelihoods set both
+# the desi_cl*_model_b likelihoods set both
 higher_order_bias: 0
 add_baryons_on_dv: False
 which_bsims_add_on_dv: "antilles-2"

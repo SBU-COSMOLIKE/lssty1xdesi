@@ -11,5 +11,5 @@
 # defaults. The nuisance-parameter priors are params_source.yaml,
 # params_lens.yaml and the DESI fragments params_desi*.yaml (written by
 # scripts/make_desi_params.py); _cosmolike_prototype_base.py is the shared
-# code. The subpackage exploration holds the bias models the paper does not
-# use (model A, model B on the growth-tied linear bias).
+# code. The subpackage exploration holds the parameter fragment the paper
+# does not use (the DR3 forecast fiducials).

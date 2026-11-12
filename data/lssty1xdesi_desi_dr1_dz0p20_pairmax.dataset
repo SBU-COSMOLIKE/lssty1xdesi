@@ -1,0 +1,10 @@
+data_file = lssty1xdesi_desi_dr1_dz0p20_pairmax_fid.datavector
+cov_file = lssty1xdesi_desi_dr1_dz0p20_pairmax_cov
+mask_file = lssty1xdesi_desi_dr1_dz0p20_pairmax.mask
+nz_lens_file = lssty1xdesi_desi_dr1_dz0p20.nz
+nz_source_file = lssty1xdesi_source.nz
+lens_ntomo = 10
+source_ntomo = 5
+ell_file = lssty1xdesi_desi_dr3_ells.txt
+lens_bin_table = lssty1xdesi_desi_dr1_dz0p20_bins.txt
+gg_cross_pairs_file = lssty1xdesi_desi_dr1_dz0p20_pairmax_pairs.txt

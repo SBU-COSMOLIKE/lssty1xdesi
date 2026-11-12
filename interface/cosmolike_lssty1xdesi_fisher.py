@@ -130,17 +130,41 @@ FIVE_POINT_WEIGHTS = (-1.0/12.0, 8.0/12.0, -8.0/12.0, 1.0/12.0)
 # tier's chi grid is the same on every layout, 3 x 64 = 192 rounded up to
 # 256: the coarsest grid at which the figures of merit do not depend on
 # the stencil step.
+#
+# lssty1xdesi_desi_dr1_dz0p02_sigv600 is the Delta z = 0.02 layout with a
+# longer cross-pair list (every pair whose blurred kernels overlap at
+# sigma_v = 600 km/s); it shares the Delta z = 0.02 settings.
+#
+# The four <stem>_pairmax datasets are the layouts with the maximal
+# cross-pair lists of the pair-axes study (every pair up to a few bin
+# widths apart added); each shares the settings of its layout.
 DERIVATIVE_DATASETS = ("lssty1xdesi_desi_dr3", "lssty1xdesi_desi_dr1_dz0p02",
-                       "lssty1xdesi_desi_dr1_dz0p05", "lssty1xdesi_desi_dr1_dz0p20")
+                       "lssty1xdesi_desi_dr1_dz0p05", "lssty1xdesi_desi_dr1_dz0p20",
+                       "lssty1xdesi_desi_dr1_dz0p02_sigv600",
+                       "lssty1xdesi_desi_dr3_pairmax", "lssty1xdesi_desi_dr1_dz0p02_pairmax",
+                       "lssty1xdesi_desi_dr1_dz0p05_pairmax",
+                       "lssty1xdesi_desi_dr1_dz0p20_pairmax")
 DERIVATIVE_EXPLORATION = {
     "lssty1xdesi_desi_dr3": {
         "likelihood_overrides": {}, "camb_overrides": {}, "accuracy_boost": 1.0},
     "lssty1xdesi_desi_dr1_dz0p02": {
         "likelihood_overrides": {}, "camb_overrides": {}, "accuracy_boost": 1.0},
+    "lssty1xdesi_desi_dr1_dz0p02_sigv600": {
+        "likelihood_overrides": {}, "camb_overrides": {}, "accuracy_boost": 1.0},
     "lssty1xdesi_desi_dr1_dz0p05": {
         "likelihood_overrides": {"nonlimber_accuracyboost": 32.0},
         "camb_overrides": {}, "accuracy_boost": 1.0},
     "lssty1xdesi_desi_dr1_dz0p20": {
+        "likelihood_overrides": {"nonlimber_accuracyboost": 64.0},
+        "camb_overrides": {}, "accuracy_boost": 3.0},
+    "lssty1xdesi_desi_dr3_pairmax": {
+        "likelihood_overrides": {}, "camb_overrides": {}, "accuracy_boost": 1.0},
+    "lssty1xdesi_desi_dr1_dz0p02_pairmax": {
+        "likelihood_overrides": {}, "camb_overrides": {}, "accuracy_boost": 1.0},
+    "lssty1xdesi_desi_dr1_dz0p05_pairmax": {
+        "likelihood_overrides": {"nonlimber_accuracyboost": 32.0},
+        "camb_overrides": {}, "accuracy_boost": 1.0},
+    "lssty1xdesi_desi_dr1_dz0p20_pairmax": {
         "likelihood_overrides": {"nonlimber_accuracyboost": 64.0},
         "camb_overrides": {}, "accuracy_boost": 3.0},
 }
@@ -151,10 +175,25 @@ DERIVATIVE_OVERRIDES = {
     "lssty1xdesi_desi_dr1_dz0p02": {
         "accuracyboost": 3.0, "nonlimber_accuracyboost": 64.0,
         "integration_accuracy": 1, "kmax_boltzmann": 20.0},
+    "lssty1xdesi_desi_dr1_dz0p02_sigv600": {
+        "accuracyboost": 3.0, "nonlimber_accuracyboost": 64.0,
+        "integration_accuracy": 1, "kmax_boltzmann": 20.0},
     "lssty1xdesi_desi_dr1_dz0p05": {
         "accuracyboost": 3.0, "nonlimber_accuracyboost": 64.0,
         "integration_accuracy": 1, "kmax_boltzmann": 20.0},
     "lssty1xdesi_desi_dr1_dz0p20": {
+        "accuracyboost": 3.0, "nonlimber_accuracyboost": 64.0,
+        "integration_accuracy": 1, "kmax_boltzmann": 20.0},
+    "lssty1xdesi_desi_dr3_pairmax": {
+        "accuracyboost": 3.0, "nonlimber_accuracyboost": 64.0,
+        "integration_accuracy": 1, "kmax_boltzmann": 20.0},
+    "lssty1xdesi_desi_dr1_dz0p02_pairmax": {
+        "accuracyboost": 3.0, "nonlimber_accuracyboost": 64.0,
+        "integration_accuracy": 1, "kmax_boltzmann": 20.0},
+    "lssty1xdesi_desi_dr1_dz0p05_pairmax": {
+        "accuracyboost": 3.0, "nonlimber_accuracyboost": 64.0,
+        "integration_accuracy": 1, "kmax_boltzmann": 20.0},
+    "lssty1xdesi_desi_dr1_dz0p20_pairmax": {
         "accuracyboost": 3.0, "nonlimber_accuracyboost": 64.0,
         "integration_accuracy": 1, "kmax_boltzmann": 20.0},
 }
@@ -685,7 +724,7 @@ class ModelFisher:
             raise RuntimeError(f"{self.likelihood_name}: the likelihood "
                                f"failed at {point}")
         # a likelihood that adds terms to the compiled-interface vector
-        # (desi_cl's model A stochastic term) keeps its full vector in
+        # (a desi_cl stochastic term outside the interface) keeps its full vector in
         # last_datavector; the others are the interface vector itself
         like = self.model.likelihood[self.likelihood_name]
         stored = getattr(like, "last_datavector", None)
@@ -1378,7 +1417,7 @@ def _model_specs(settings):
 
     A settings dict that holds a model's inputs and its fingerprint -
     "yaml" and "fingerprint", or a "fingerprints" dict keyed by the
-    settings fields that name yamls ("yaml", "model_a_yaml") - names one
+    settings fields that name yamls (e.g. "yaml") - names one
     model per fingerprint, with its own likelihood overrides
     ("likelihood_overrides" or "overrides"), CAMB overrides
     ("camb_overrides" or "camb"), overall boost and tier. A fingerprint
