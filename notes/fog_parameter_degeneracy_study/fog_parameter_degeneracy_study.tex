@@ -52,13 +52,18 @@
 \label{sec:summary}
 
 \paragraph{The question.}
-The forecast's one-loop model carries two descriptions of nonlinear
-velocities along the line of sight.  One is the Fingers-of-God blur:
-each bin's redshift distribution is convolved with a Gaussian whose
-width is set by a velocity dispersion $\sv$, one per dispersion group,
-sampled under a Gaussian prior.  The other is the line-of-sight
-counterterm $\alpha_2$ of the DESI 2024 full-shape
-convention~\cite{Maus2024},
+The forecast's one-loop model -- the galaxy-clustering model one
+order beyond linear theory, defined in
+\texttt{notes/higher\us order\us bias} -- carries two descriptions of
+nonlinear velocities along the line of sight.  One is the
+Fingers-of-God blur: each bin's redshift distribution is convolved
+with a Gaussian whose width is set by a velocity dispersion $\sv$, one
+per dispersion group (a set of bins sharing one $\sv$;
+Table~\ref{tab:sigv}), sampled under a Gaussian prior.  The other is a
+counterterm: a free term with a fixed scale shape, here
+$k^2 P_{\rm lin}$, that absorbs the small-scale physics the
+perturbative model cannot predict.  The line-of-sight counterterm
+$\alpha_2$ of the DESI 2024 full-shape convention~\cite{Maus2024} is
 \begin{equation}
   P_{\rm CT}(k, \mu) \;=\; \bigl(b_1 + f\mu^2\bigr)\,
   f\,\alpha_2\,\mu^2 k^2\,P_{\rm lin}(k) ,
@@ -69,7 +74,8 @@ line of sight, $b_1$ the bin's linear galaxy bias, $f = d\ln D/d\ln a$
 the linear growth rate ($D$ the linear growth factor, $a$ the scale
 factor), $P_{\rm lin}$ the linear matter power spectrum, and
 $\alpha_2$ in $h^{-2}\,{\rm Mpc}^2$, one value per group plus a free
-tilt in redshift in the fits that free it.  The leading effect of the blur
+tilt (a straight line in redshift across the group's bins) in the
+fits that free it.  The leading effect of the blur
 on the power spectrum is a damping $-\sigma_\chi^2 k_\parallel^2$ with
 $k_\parallel = k\mu$ and $\sigma_\chi = (1 + z)\,\sv/H(z)$ the
 dispersion in comoving distance: the same $k_\parallel^2$ shape as
@@ -164,8 +170,10 @@ $w(a) = w_0 + w_a(1 - a)$; $\Omega_m$ is the matter density today in
 units of the critical density; $A_s$ is the amplitude of the primordial
 curvature power spectrum, sampled as $10^9 A_s$; and
 ${\rm FoM}(w_0, w_a) = [\det{\rm Cov}(w_0, w_a)]^{-1/2}$ is the inverse
-area of the marginalized $(w_0, w_a)$ ellipse, likewise
-${\rm FoM}(\Omega_m, 10^9 A_s)$.  In short: one $k_\parallel^2$ effect,
+area of the marginalized $(w_0, w_a)$ error ellipse -- marginalized
+meaning every other parameter is left free, so their uncertainty is
+included -- and likewise ${\rm FoM}(\Omega_m, 10^9 A_s)$: a larger FoM
+is a tighter constraint.  In short: one $k_\parallel^2$ effect,
 counted twice at the template level; the posterior keeps the two apart
 only as long as the $\sv$ priors do, and the whole dark-energy gain of
 dropping $\alpha_2$ is exactly as strong as those priors.  The paper
@@ -174,12 +182,20 @@ surrenders that gain, so that a true DESI-size $\alpha_2$ is absorbed.
 
 \paragraph{The setup.}
 The data are the DESI angular clustering band powers $C_\ell^{gg}$
-alone, computed without the Limber approximation, on four bin layouts:
+alone -- the angular power spectrum of galaxy counts in tomographic
+redshift bins, averaged in bands of multipole $\ell$ -- computed
+without the Limber approximation, which ties each multipole to a
+single wavenumber and fails for thin bins~\cite{FangKEM2020}, on four
+bin layouts:
 \dcom{} (equal comoving width) and $\Delta z = 0.02$, $0.05$ and $0.2$
 (fixed redshift width); the first two are the thin layouts.  The scan
 runs over $\kmax = 0.05$ to $0.2\hMpc$, each the $z = 0$ value of a
 per-bin cut at $\kmax/D(\bar{z}_i)$, with $\bar{z}_i$ the mean redshift
-of bin $i$.  Every number and figure of this note comes from section 11
+of bin $i$.  Every result is a Fisher forecast: the data vector is
+linearized at the fiducial point, and the posterior is approximated by
+a Gaussian whose inverse covariance is the Fisher matrix of the
+appendix; \texttt{notes/fisher\us machinery} builds that machinery
+step by step.  Every number and figure of this note comes from section 11
 of \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL.ipynb}; the per-cut
 values are in the four figure folders' \texttt{data.json}.
 
@@ -225,11 +241,13 @@ with $D$ the linear growth factor read off the linear $P(k)$ ratio at
 $k = 0.005$/Mpc and the group amplitudes $B_{\rm BGS} = 1.34$,
 $B_{\rm LRG1} = B_{\rm LRG2} = B_{\rm LRG3} = 1.7$,
 $B_{\rm ELG1} = B_{\rm ELG2} = 0.84$.  The linear-bias prior is the
-pessimistic one: per-bin residuals around each group's free amplitude
+pessimistic one of \texttt{notes/correlated\us bias\us prior\us v2}:
+per-bin residuals around each group's free amplitude
 and free straight line in redshift, with width $\sigma_g = 0.03$ in
 every group and correlation length $L = 0.05$ in redshift; the Fisher
-uses the projected precision, which charges only the residuals and
-leaves the amplitude and the line flat.
+uses the projected precision, that prior's inverse covariance with the
+amplitude and line directions removed, so only the wiggles around each
+group's line are charged and the amplitude and the line stay flat.
 
 \paragraph{Higher-order terms.}
 The bias model is the fiducial model: per group, offsets $\Delta_2$ and
@@ -242,22 +260,26 @@ $\Delta_2$, $\Delta_s$, $\alpha_0$ and $\alpha_2$.  Every offset,
 counterterm, stochastic amplitude and tilt is zero at the fiducial.
 Gaussian prior widths per group: $\Delta_2$: $2.0$; $\Delta_s$: $1.0$;
 $\alpha_0$ and $\alpha_2$: $0.5/\kmax^2$ at each cut ($12.5\aunit$ at
-$\kmax = 0.2\hMpc$); ${\rm SN}_0$: $2$ (Poisson units); ${\rm SN}_2$:
-$5$; tilts flat.  The paper model fixes $\alpha_2$ and its tilts at
+$\kmax = 0.2\hMpc$); ${\rm SN}_0$: $2$ (in units of the bin's Poisson
+shot noise $1/\bar{n}_i$); ${\rm SN}_2$: $5$; tilts flat.  The paper model fixes $\alpha_2$ and its tilts at
 zero in every bin.
 
 \paragraph{Velocity dispersions.}
 Seven dispersion groups (BGS split at $\bar{z} = 0.255$), each sampled
-on its group's leader bin, with the fiducials and prior widths of
+on its group's leader bin -- one designated bin carries the sampled
+parameter, and every bin of the group reads its value -- with the
+fiducials and prior widths of
 Table~\ref{tab:sigv}: the reference model and the width scan's $s = 1$
 use the exploration widths; the paper model uses six times those
 widths.
 
 \paragraph{Scale cuts.}
-The non-Limber UV-fraction criterion (arXiv:2603.13031): a band is
-kept while $|C_{\rm UV}|/(|C_{\rm UV}| + |C_{\rm IR}|) < 0.05$, with
-the split at $\kmax/D(\bar{z}_i)$ per bin, intersected with the
-shipped mask.  The cuts are computed on the paper model's fiducial
+The non-Limber ultraviolet-fraction criterion (arXiv:2603.13031): a
+band is kept while $|C_{\rm UV}|/(|C_{\rm UV}| + |C_{\rm IR}|) < 0.05$,
+with $C_{\rm UV}$ and $C_{\rm IR}$ the parts of the band's non-Limber
+integral from wavenumbers above and below the split at
+$\kmax/D(\bar{z}_i)$ per bin, intersected with the shipped mask, the
+dataset's own fixed cut at $k = 0.1185/{\rm Mpc}$ in every bin.  The cuts are computed on the paper model's fiducial
 ($b_2$ and $b_{s^2}$ on their calibrations, every other higher-order
 term zero), at the final derivative tier (the settings of the
 derivatives below), and cached in
@@ -336,8 +358,11 @@ each Fourier mode by the distribution's transform: for a Gaussian $p$
 of width $\sigma_\chi$, the density picks up
 $\exp(-k_\parallel^2\sigma_\chi^2/2)$ and the power spectrum
 $\exp(-k_\parallel^2\sigma_\chi^2)$, with $k_\parallel = k\mu$ the
-line-of-sight wavenumber.  Applied to the linear redshift-space
-(Kaiser~\cite{Kaiser1987}) power, to leading order in
+line-of-sight wavenumber.  Applied to the linear redshift-space power
+$(b_1 + f\mu^2)^2 P_{\rm lin}$ -- the Kaiser form~\cite{Kaiser1987},
+in which the coherent infall toward overdensities adds $f\mu^2$ to the
+bias $b_1$ and so boosts the clustering along the line of sight -- to
+leading order in
 $k_\parallel^2\sigma_\chi^2$,
 \begin{equation}
   \bigl(b_1 + f\mu^2\bigr)^2 P_{\rm lin}\,
@@ -361,8 +386,10 @@ $\sigma_\chi^2 \approx 16\aunit$, the order of the DESI prior width
 $12.5\aunit$ of $\alpha_2$ at $\kmax = 0.2\hMpc$.
 
 \paragraph{Why both exist.}
-In a three-dimensional full-shape analysis there is no radial window
-to convolve, so there is no sampled $\sv$: the counterterm $\alpha_2$
+In a three-dimensional full-shape analysis -- a fit to the galaxy
+power spectrum $P(k, \mu)$ itself rather than to its projection on the
+sky -- there is no radial window to convolve, so there is no sampled
+$\sv$: the counterterm $\alpha_2$
 is that analysis's effective description of small-scale velocities,
 Fingers of God included~\cite{Maus2024,DESI2024V}.  This forecast
 works on projected spectra, where the window-side convolution is
@@ -375,7 +402,7 @@ what each choice costs.
 \paragraph{The seven dispersions and their priors.}
 Each bin's $\sv$ is its dispersion group's value
 (Table~\ref{tab:sigv}): the measured dispersion curve of the source
-forecast's simulated galaxies steps inside BGS, so BGS takes two
+forecast's simulated galaxies has a step inside BGS, so BGS takes two
 values, split at $\bar{z} = 0.255$, giving seven dispersion groups for
 six bias groups.  Each prior is a Gaussian centred on the measured
 value and truncated at zero; its provenance is the section ``Where the
@@ -389,10 +416,11 @@ width scan of Section~\ref{sec:width}; the paper model widens every
 width by $s = 6$ (the paper files
 \texttt{likelihood/params\us desi*\us bias\us pessimistic.yaml}).  The
 same seven values and widths serve every layout.  At $s = 6$ the
-truncation matters for BGS0: its prior is
-${\rm truncnorm}(a = -0.426,\ {\rm loc} = 371,\ {\rm scale} = 870)$
-km/s, cut at zero, with mean $847$~km/s (about $850$), median $748$,
-and $33.5\%$ of the Gaussian mass removed.  The Fisher matrices treat
+truncation matters for BGS0: its prior is a Gaussian of center
+$371$~km/s and width $870$~km/s cut at zero, which sits only $0.426$
+widths below the center, so $33.5\%$ of the Gaussian mass is removed
+and the truncated prior has mean $847$~km/s (about $850$) and median
+$748$.  The Fisher matrices treat
 every $\sv$ prior as an untruncated Gaussian of the quoted width
 centred on the fiducial, so near zero the Fisher's prior is slightly
 wider than the real one; an MCMC with these files would see the
@@ -440,8 +468,8 @@ $\sigma_\ell = \sqrt{\Cov_{ii}}$, the scaled template
 $\sigma_\ell^{-1}\,\partial C_\ell/\partial(p/\Delta_p)$ reads
 directly as how many error bars the parameter can move each band while
 staying within its prior; Figure~\ref{fig:templates} draws the
-templates this way, following Fig.~1 of Obied et
-al.~\cite{Obied2017}.  The $\alpha_2$ templates here are group
+templates this way, following the scaled-template presentation of
+Obied et al.~\cite{Obied2017}.  The $\alpha_2$ templates here are group
 templates: the response to the group's value, all bins of the group
 moving together (and, for the tilts, moving along a straight line in
 redshift).
@@ -498,7 +526,16 @@ With one $\alpha_2$ amplitude, one $\sv$ and nothing else free
 two-parameter Fisher matrix is built from $a\T\Cov^{-1}a$,
 $a\T\Cov^{-1}s$ and $s\T\Cov^{-1}s$, and the correlation of its
 inverse is $\rho = -\,a\T\Cov^{-1}s\,/\sqrt{(a\T\Cov^{-1}a)
-(s\T\Cov^{-1}s)}$, so $\rho^2 = f$.  Mirror-image templates
+(s\T\Cov^{-1}s)}$.  The best single weight in
+Eq.~\eqref{eq:leftover} is $c = a\T\Cov^{-1}s/(s\T\Cov^{-1}s)$, which
+leaves $\min_c r\T\Cov^{-1}r = a\T\Cov^{-1}a -
+(a\T\Cov^{-1}s)^2/(s\T\Cov^{-1}s)$; dividing by $a\T\Cov^{-1}a$ as in
+Eq.~\eqref{eq:fdef} gives
+\begin{equation*}
+  f \;=\; \frac{(a\T\Cov^{-1}s)^2}{(a\T\Cov^{-1}a)(s\T\Cov^{-1}s)}
+  \;=\; \rho^2 .
+\end{equation*}
+Mirror-image templates
 ($a\T\Cov^{-1}s < 0$) give a \emph{positive} posterior correlation:
 the direction the data cannot see has $\alpha_2$ and $\sv$ rising
 together, each undoing the other's change of the spectra.  The
@@ -512,9 +549,12 @@ $0.002$ to $0.89$ across cuts and layouts.
 \paragraph{Many against many: canonical correlations.}
 For the full sets -- six $\alpha_2$ group columns (plus tilts) against
 seven $\sv$ columns -- the squared canonical correlations generalize
-$\rho^2$: they are the cosines of the principal angles between the two
-template subspaces in the $\Cov^{-1}$ metric, the per-direction
-version of Eq.~\eqref{eq:fdef}.
+$\rho^2$: the first is the largest $f$ any combination of $\alpha_2$
+columns reaches against any combination of $\sv$ columns, the second
+repeats the question in the directions orthogonal to that first pair,
+and so on.  Geometrically they are the squared cosines of the
+principal angles between the two template subspaces in the
+$\Cov^{-1}$ metric, the per-direction version of Eq.~\eqref{eq:fdef}.
 
 \section{Results}
 \label{sec:results}
@@ -647,10 +687,16 @@ constraint the $\sv$ priors supply.
 The absorption test fits the fit without $\alpha_2$ -- the reference
 model with $\alpha_2$ and its tilts fixed at zero -- to a truth with
 $\alpha_2 = 12.5\aunit$ in every group, the DESI prior width at
-$\kmax = 0.2\hMpc$.  The shift is a linear-response estimate of how
+$\kmax = 0.2\hMpc$.  The shift is a linear-response estimate -- the
+parameter displacement predicted by the same linearization that builds
+the Fisher matrix, not a refit -- of how
 safe an MCMC with the reduced model would be on real data (the paper
 itself is Fisher-only), and the $+12.5$ and $-12.5$ truths shift
-equally in this response (appendix ``Method and checks'').  If $\sv$
+equally in this response (appendix ``Method and checks'').  Shifts are
+quoted in ellipse units: the $(w_0, w_a)$ displacement measured
+against the fit's marginalized one-sigma ellipse in the displacement's
+direction, so one unit moves the best fit onto its own one-sigma
+contour.  If $\sv$
 could stand in for $\alpha_2$ in practice, freeing it would absorb the
 shift.  On the exploration priors it barely does: the $(w_0, w_a)$
 shift falls from the fixed-$\sv$ value by $4\%$ at $0.075$
@@ -702,8 +748,10 @@ $s$ is scored by $\delta_{\max}$, the largest of the $(w_0, w_a)$
 shift in its ellipse and the $\Omega_m$ and $A_s$ shifts in their own
 $\sigma$, and by ${\rm FoM}_{\alpha_0\,{\rm only}}/{\rm FoM}$, that
 fit's ${\rm FoM}(w_0, w_a)$ over the reference model's at $s = 1$.
-The passing $s$ is the smallest $s$ with every shift below $\sigma/3$,
-interpolated linearly in $\log s$ between the scanned values.
+The passing $s$ is the smallest $s$ with every shift below $\sigma/3$
+-- a bias under a third of the quoted error bar, small enough not to
+move any conclusion -- interpolated linearly in $\log s$ between the
+scanned values.
 Figure~\ref{fig:sigvwidth} draws the scan; every cut, the per-shift
 values and the one-sample variants below are in that folder's
 \texttt{data.json}.

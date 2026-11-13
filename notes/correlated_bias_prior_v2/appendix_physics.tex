@@ -97,7 +97,8 @@ of a group's amplitudes is
 \end{equation}
 $\Prec\,\ones = 0$, so a uniform shift costs nothing; a pure shape
 change keeps the penalty of the plain prior; $\Prec$ is positive
-semidefinite with rank $n - 1$; and $\Prec$ is exactly the prior
+semidefinite (no displacement has a negative penalty) with rank
+$n - 1$; and $\Prec$ is exactly the prior
 obtained by sampling $B_g$ with a flat prior and marginalizing it.
 Appendices~\ref{sec:twobins}, \ref{sec:threeviews} and
 \ref{sec:general} show these for two bins, by marginalization, and for
@@ -183,8 +184,10 @@ group, while the BGS flux-limit curve is much steeper, and convex.
     comparable to the group width.
   \item \textbf{Color-selection features.}  A spectral feature crossing
     a filter edge moves a color cut quickly in redshift.  The sharpest
-    is the $4000$~\AA\ break: a filter edge $100$--$200$~\AA\ wide maps
-    to $\Delta z \approx 0.03$--$0.05$.  The crossing is known; its
+    is the $4000$~\AA\ break, the step in an old galaxy's rest-frame
+    spectrum at $4000$~\AA, which redshift slides across the filters: a
+    filter edge $100$--$200$~\AA\ wide maps to
+    $\Delta z = \Delta\lambda/(4000~\text{\AA}) \approx 0.03$--$0.05$.  The crossing is known; its
     amplitude in bias is unmeasured.
   \item \textbf{Mergers} turn two members into one.
   \item \textbf{Emission-line selection.}  An ELG belongs to the sample
@@ -240,7 +243,9 @@ $r < 19.5$~\cite{Hahn2023} (measured), which drives a $10$--$25\%$ bias
 drift across the group (derived; Appendix~\ref{app:bgsflux}).
 
 \paragraph{The ELG bias shape is stable.}
-HOD fits of the DESI One-Percent ELGs in $0.8 < z < 1.1$ and
+Fits of the halo occupation distribution (HOD: how many sample
+galaxies live in a halo of each mass) to the DESI One-Percent ELGs in
+$0.8 < z < 1.1$ and
 $1.1 < z < 1.6$ agree within one sigma~\cite{Rocher2023} (measured);
 at these host masses the halo bias depends weakly on mass, so the
 implied drift is at the percent level (derived, slope assumed).  The
@@ -339,7 +344,9 @@ The best guess of the next bin becomes
 with $(\hat{c}, \hat{s}_g)$ the level and slope of the best straight
 line through all past bins, weighted by $\Cov^{-1}$: every past bin
 enters through the fitted line, and only the wiggle around it stays
-Markov (the universal-kriging predictor; Appendix~\ref{app:memory}).
+Markov (the universal-kriging predictor; kriging is the geostatistics
+name for the best linear prediction from correlated data;
+Appendix~\ref{app:memory}).
 Figure~\ref{fig:theorydraws} shows the difference on the BGS bins at
 $\Delta z = 0.02$: kernel draws wide enough to admit the BGS drift
 zigzag and forget, while memory draws are lines with small wiggles,
@@ -511,8 +518,9 @@ BGS Bright keeps every galaxy brighter than $r = 19.5$~\cite{Hahn2023}
 ($r$ the magnitude band).  The apparent magnitude $r$ and the absolute
 magnitude $M$ are related by
 $r = M + 25 + 5\log_{10}[d_L/(h^{-1}\,{\rm Mpc})] + K(z)$, with $d_L$
-the luminosity distance and $K(z)$ the
-K-correction~\cite{BlantonRoweis2007}.  With $K = 0$ the faintest
+the luminosity distance and $K(z)$ the K-correction, the magnitude
+correction for the part of the redshifted spectrum that falls outside
+the observed band~\cite{BlantonRoweis2007}.  With $K = 0$ the faintest
 absolute magnitude that passes at redshift $z$ is
 \begin{equation}
   M_{\rm lim}(z) - 5\log_{10} h

@@ -83,19 +83,32 @@ at the shipped mask.
 \label{sec:scope}
 
 The lssty1xdesi project forecasts DESI spectroscopic galaxy clustering
-as angular power spectra $C_\ell^{gg}$ in thin redshift bins, combined
-with LSST Y1 3x2pt.  The DESI spectra are computed on four bin
+(DESI is the Dark Energy Spectroscopic Instrument; DR1, below, its
+first data release) as angular power spectra $C_\ell^{gg}$ in thin
+redshift bins, combined
+with LSST Y1 3x2pt, the first-year Rubin Observatory combination of
+cosmic shear, galaxy--galaxy lensing and galaxy clustering.  The
+spectra are computed without the Limber approximation, which ties
+each multipole to a single wavenumber and fails for thin bins.  The
+DESI spectra are computed on four bin
 layouts: 76 bins of equal comoving width
 ($\Delta d_{\rm com} = 62$\,Mpc), and bins of fixed redshift width
 $\Delta z = 0.02$, $0.05$ and $0.2$.  The bins fall into six tracer
-groups: BGS, LRG1, LRG2, LRG3, ELG1 and ELG2.  A bin of comoving width
+groups: the bright low-redshift galaxies BGS, the luminous red
+galaxies LRG1--LRG3 and the emission-line galaxies ELG1 and ELG2.
+A bin of comoving width
 $\Delta\chi$ resolves radial Fourier modes up to
 $k_\parallel \simeq \pi/\Delta\chi$, about $0.075\hMpc$ for the
 $62$\,Mpc bins, so the angular analysis recovers most of the
 three-dimensional information at that scale \cite{Asorey2012}.
 
-With linear bias the likelihood models the galaxy power as
-$P_{gg} = \bone^2\pnl$, with $\pnl$ the halofit matter power spectrum,
+Galaxies are biased tracers: on large scales the galaxy overdensity
+follows the matter overdensity with one amplitude, the linear galaxy
+bias, $\delta_g = \bone\,\delta$.  With linear bias the likelihood
+models the galaxy power as
+$P_{gg} = \bone^2\pnl$, with $\pnl$ the halofit matter power spectrum
+(halofit: a fitting formula for the nonlinear matter power,
+calibrated on N-body simulations),
 and a linear-bias fit holds only to $\kmax = 0.05\hMpc$ on this data
 vector (\texttt{notes/linear\_bias\_kmax}).  This note describes the
 one-loop model that replaces it: the fiducial parameter values behind
@@ -109,7 +122,10 @@ projection of each term to thin-bin spectra
 \texttt{notes/correlated\_bias\_prior\_v2}, the correlated-prior note:
 the linear-bias priors and their accuracy test, the fiducial model
 against
-$\kmax$, and where it breaks.
+$\kmax$, and where it breaks.  The Fisher machinery that scores those
+forecasts -- derivative columns of the data vector, cached once per
+layout and recombined per model -- is the subject of
+\texttt{notes/fisher\_machinery}.
 
 \paragraph{Conventions.}
 $\ell$ is the multipole; $k$ is the comoving wavenumber, in $h$/Mpc
@@ -123,7 +139,11 @@ tracer number density.  The matter overdensity is $\delta$, the galaxy
 overdensity $\delta_g$, and
 $s_{ij} = (\partial_i\partial_j/\partial^2 - \delta_{ij}/3)\,\delta$ is
 the tidal field, with $s^2 = s_{ij}s_{ij}$.  A parameter's
-marginalized one-sigma error is $\sigma$.  $\kmax$ is quoted at
+marginalized one-sigma error is $\sigma$ (marginalized: quoted after
+every other parameter has been integrated out).  The spectra enter
+every fit as band powers, averages over multipole bands of width
+$\Delta\ell = 10$; a band is kept or cut as one unit.  $\kmax$ is
+quoted at
 $z = 0$: bin $i$ is cut at $\kmax/D(\bar{z}_i)$ by the non-Limber
 UV-fraction criterion \cite{Saraivanov2026}, which keeps a band while
 less than $5\%$ of it comes from the power spectrum above that
@@ -184,6 +204,9 @@ $6.084\,(h^{-1}\mathrm{Mpc})^2$ for BGS and LRG and
 $0.841\,(h^{-1}\mathrm{Mpc})^2$ for ELG.
 
 \paragraph{Fingers-of-God dispersions.}
+The Fingers-of-God smearing of radial positions by virial motions
+(Section~\ref{sec:redshift-space} defines it) is modeled per bin with
+a sampled velocity dispersion $\sigma_v$.
 Seven sampled $\sigma_v$ groups (BGS split at $\bar{z} = 0.255$), with
 fiducials $371$, $358$, $357$, $348$, $343$, $304$ and $289$\,km/s
 (BGS0, BGS1, LRG1--3, ELG1--2) and exploration prior widths $145$,
@@ -218,9 +241,14 @@ difference between the two).
 \subsection{Real space, Eulerian basis}
 \label{sec:realspace}
 
+Perturbation theory expands the matter overdensity in powers of the
+linear density; a correction built from two powers of the linear power
+spectrum is a one-loop term, the first order beyond linear theory.
 At one loop, every rotationally invariant local gravitational
 observable up to third order in the linear density enters the galaxy
-density.  After renormalization, the McDonald--Roy basis
+density.  After renormalization -- absorbing the operators' means and
+their sensitivity to unmodeled small scales into redefined
+coefficients -- the McDonald--Roy basis
 \cite{McDonaldRoy2009,Saito2014} carries four deterministic bias
 parameters, a derivative bias and a noise field:
 \begin{equation}
@@ -236,8 +264,10 @@ at one loop (Appendix~\ref{app:conversions} writes it out) and
 $\epsilon$ is the stochastic field, uncorrelated with the long modes.
 Higher-order bias means the coefficients beyond linear order: $\btwo$
 and $\bs$ at second order and $\bthree$ at third.  This is the
-convention of FAST-PT, of CCL's \texttt{EulerianPTCalculator}
-(\texttt{pyccl/nl\_pt/ept.py}) and of CosmoLike, which all assemble the
+convention of FAST-PT (the Python code that evaluates the loop
+integrals as FFT convolutions), of \texttt{EulerianPTCalculator}
+(\texttt{pyccl/nl\_pt/ept.py}) in CCL, the Core Cosmology Library, and
+of CosmoLike, the project's compiled C code, which all assemble the
 auto spectrum as
 \begin{align}
 P_{gg}(k) ={}& \bone^2\,\pnl(k)
@@ -255,7 +285,10 @@ mode-coupling integrals of two linear spectra over the second-order
 kernels (Appendix~\ref{app:loops}); $\sigma_3^2(k)$ is the third-order
 filter of \cite{McDonaldRoy2009,Saito2014}; and $b_{k^2}$ is CCL's name
 for the derivative bias, degenerate at this order with the
-effective-field-theory counterterm $\alpha_0 k^2\plin$.  The draft
+effective-field-theory counterterm $\alpha_0 k^2\plin$.  A counterterm
+is a free coefficient on a fixed $k$-shape, here $k^2\plin$, that
+absorbs what the loop integrals wrongly import from small scales the
+perturbative model does not describe.  The draft
 paper's expression is exactly the first six terms of
 Eq.~\eqref{eq:pgg}, plus $\alpha_0 k^2\plin$, with $\bthree = 0$.
 
@@ -271,7 +304,10 @@ that subtracted convention.  The choice matters for a dense sample: at
 the calibrated biases of BGS at $z = 0.3$ the three constants sum to
 about $920\,(h^{-1}\mathrm{Mpc})^3$, five times the Poisson power
 $1/\bar{n} \simeq 170\,(h^{-1}\mathrm{Mpc})^3$ of the project's BGS
-bins there, so a CCL vector at its default and a CosmoLike vector
+bins there (a sample of discrete objects at number density $\bar{n}$
+has the constant power $1/\bar{n}$ even without clustering: the
+Poisson, or shot-noise, power), so a CCL vector at its default and a
+CosmoLike vector
 differ by that white noise.  Section~\ref{sec:whitenoise} follows the
 subtraction to high $k$, where it leaves a negative constant.
 
@@ -289,7 +325,12 @@ $\pnl$ in the data vector, the covariance and the Fisher derivatives.
 \subsection{The Lagrangian basis and the exact conversions}
 \label{sec:lagrangian}
 
-The velocileptors code, the DESI DR1 baseline, expands the galaxy
+An Eulerian expansion like Eq.~\eqref{eq:basis} writes the galaxy
+field in terms of the evolved matter fields at the time of
+observation.  A Lagrangian expansion writes it instead in terms of the
+initial linear fields at the positions where the galaxies formed, and
+lets gravity carry the result forward.  The velocileptors code, the
+DESI DR1 baseline, expands the galaxy
 field in the initial (Lagrangian) coordinates
 \cite{ChenVlahWhite2020,Maus2024}:
 \begin{equation}
@@ -390,6 +431,18 @@ Section~\ref{sec:fiducial} (Appendix~\ref{app:numerics}).}
 \subsection{Redshift space}
 \label{sec:redshift-space}
 
+A galaxy's measured redshift carries its peculiar velocity along the
+line of sight, so the radial position inferred from it is displaced.
+Positions mapped this way are said to be in redshift space, and the
+resulting distortions of the clustering are redshift-space
+distortions.  On large scales, coherent infall toward overdensities
+compresses structures along the line of sight and enhances the radial
+power: the linear (Kaiser) effect, which multiplies a density mode by
+$\bone + f\mu^2$.  On small scales, the random virial motions of
+galaxies inside their halos smear radial positions and damp the radial
+power: the Fingers of God, which the likelihood models with the
+sampled dispersions $\sigma_v$ of Section~\ref{sec:fiducial}.
+
 In redshift space the one-loop model gains no new bias parameters but
 several new terms.  The DESI DR1 methodology paper \cite{DESI2024V}
 writes every full-shape model in the generic form
@@ -422,7 +475,9 @@ survive the projection into thin bins.
 \label{sec:desi}
 
 The DESI DR1 full-shape analysis \cite{DESI2024V,DESI2024VII} fits the
-power spectrum monopole and quadrupole of six tracer bins (BGS at
+power spectrum monopole and quadrupole (the $\ell = 0$ and $\ell = 2$
+Legendre moments of $P(k,\mu)$ in $\mu$; the hexadecapole below is
+$\ell = 4$) of six tracer bins (BGS at
 $z_{\rm eff}=0.295$, LRG1--3 at $0.510$, $0.706$, $0.919$, ELG2 at
 $1.317$, QSO at $1.491$) over $0.02 < k < 0.2\hMpc$.  The ELG1 bin
 ($0.8<z<1.1$) failed the fibre-collision systematics tests and is
@@ -451,7 +506,9 @@ $\bsL\sigma_8^2$; Gaussian with mean zero and width $12.5\aunit$ on
 $\alpha_0$ and $\alpha_2$ (the $50\%$-correction-at-$\kmax$ rule);
 Gaussian widths of 2 Poisson units on $\SNz$ and of 5 units of
 $f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}$ on $\SNt$, where $f_{\rm sat}$
-is the satellite fraction and $\sigma_{\rm sat}$ the satellites'
+is the satellite fraction (the share of the sample's galaxies that
+orbit inside a halo as satellites rather than sitting at its center)
+and $\sigma_{\rm sat}$ the satellites'
 velocity dispersion in distance units \cite{DESI2024V,DESI2024VII}.
 \item \textbf{Fixed parameters.}  $\bthreeL = 0$, because the cubic
 bias is expected to be small for intermediate-mass halos and is
@@ -622,7 +679,8 @@ Poisson power, the non-Poisson stochasticity Nicola et al.
 \cite{Nicola2023} detect in red samples, is $4$--$5\%$ of $P_{gg}$ for
 the LRG-like tracers at their cuts and $31\%$ for the ELG-like tracer,
 whose Poisson power there exceeds its clustering power.  Against the
-forecast's sub-percent amplitude precision per group, none of these
+forecast's sub-percent precision on each group's bias amplitude (the
+correlated-prior note's forecasts), none of these
 is negligible.  Below the cut their scale dependence is mild, so the
 linear amplitudes absorb most of each term and what remains is the
 residual shape: the case for calibration-centered freedom with modest
@@ -739,8 +797,10 @@ size changes with $b_{1,i}$ and $f$ from bin to bin.
 \subsection{Bias evolution within a group}
 \label{sec:evolution}
 
-The linear sector is the per-bin bias of the correlated-prior note
-(its memory model).  Bin $i$ of group $g$ has
+The linear sector is the per-bin bias construction of the
+correlated-prior note (its ``memory model''): one amplitude per
+group, with each bin free to
+deviate under a correlated prior.  Bin $i$ of group $g$ has
 \begin{equation}
 b_{1,i} = \frac{B_g\,(1 + \delta_i)}{D(\bar{z}_i)} , \qquad
 \delta_i = s_g\,(\bar{z}_i - \bar{z}_g) + \varepsilon_i ,
@@ -748,7 +808,8 @@ b_{1,i} = \frac{B_g\,(1 + \delta_i)}{D(\bar{z}_i)} , \qquad
 \end{equation}
 with $B_g$ the group amplitude, $\bar{z}_g$ the mean redshift of the
 group's bins, $\delta_i$ the fractional deviation from the growth-tied
-trend $B_g/D$, $s_g$ a free tilt, and $\varepsilon_i$ a residual under
+trend $B_g/D$ (one number per bin, not the matter overdensity
+$\delta$), $s_g$ a free tilt, and $\varepsilon_i$ a residual under
 a Gaussian prior correlated within the group,
 \begin{equation}
 \bigl\langle \varepsilon_i\,\varepsilon_j \bigr\rangle
@@ -906,7 +967,8 @@ dispersions reproduce the $\alpha_2$ derivative templates almost
 exactly, so dropping $\alpha_2$ and widening the $\sigma_v$ priors
 sixfold lets the dispersions absorb an $\alpha_2$ of DESI's size:
 fitted to a truth with $\alpha_2 = \pm12.5\aunit$, the paper model
-moves no scored parameter by more than $0.33\sigma$
+moves no scored parameter (the cosmological parameters the forecast
+reports) by more than $0.33\sigma$
 (\texttt{notes/fog\_parameter\_degeneracy\_study} derives the factor
 of six and the shifts).  Every other width is the fiducial one of
 Table~\ref{tab:widths}; Section~\ref{sec:fiducial} lists the
@@ -928,7 +990,9 @@ non-Limber recompute stays linear (Appendix~\ref{app:open}).
 cross spectra to $2\%$ and the diagonal to $0.4\%$.  The covariance
 takes massless neutrinos, so its signal sits $3\%$ above the data
 vector ($m_\nu = 0.06$\,eV) at every redshift.  Against a linear-bias
-covariance, the figures of merit move by $-0.4\%$ to $+1.2\%$.
+covariance, the figures of merit (FoM: the inverse area of a parameter
+pair's marginalized error ellipse; \texttt{notes/fisher\_machinery})
+move by $-0.4\%$ to $+1.2\%$.
 
 \section{Projection to thin-bin angular spectra}
 \label{sec:projection}
@@ -976,8 +1040,13 @@ templates ($Q_{11} = \pnl$, $Q_{12} = \tfrac12 P_{\delta_1\delta_2}$,
 $Q_{22} = \tfrac14 P_{\delta_2\delta_2}$, and so on).  A cross pair of
 bins $i$ and $j$ carries the bilinear form $u_i^{\mathsf T} Q\, u_j$:
 each product of two biases is shared between the two bins.  The
-low-rank engine projects each bin's full one-loop $P_{gg,i}$,
-counterterm included, through an SVD of its square root, so it carries
+low-rank engine -- the project's non-Limber method for galaxy
+clustering, which writes the power spectrum as a short sum of terms
+separable in $k$ and redshift and projects each term exactly (the
+correlated-prior note builds and tests it) -- projects each bin's
+full one-loop $P_{gg,i}$,
+counterterm included, through a singular-value decomposition (SVD) of
+its square root, so it carries
 the one-loop sum with no structural change; for the cross pairs it
 uses the bilinear form.
 
@@ -1003,7 +1072,10 @@ separately (Section~\ref{sec:whitenoise}).
 Linear (Kaiser) redshift-space distortions enter Eq.~\eqref{eq:cl}
 through the transformation of the density kernel: each factor of
 $f\mu^2$ in the flat-sky spectrum becomes a second derivative of the
-Bessel function in the exact projection,
+Bessel function in the exact projection, because $\mu^2 =
+(k_\parallel/k)^2$ and each radial derivative of the projected plane
+wave brings down one power of $k_\parallel$ -- two of them acting on
+$j_\ell(k\chi)$ give $j_\ell''$:
 \begin{align}
 \Delta_\ell^i(k) &= \int d\chi\,W_i(\chi)
  \left[\bone(z)\,j_\ell(k\chi) - f(z)\,j_\ell''(k\chi)\right] D(z) ,
@@ -1023,8 +1095,9 @@ alive here.
 
 \paragraph{$\alpha_0$.}  The $\alpha_0$ term is $\mu$-independent and
 projects like the density: one extra $k$-shape, $k^2\pnl$, in each
-bin's $P_{gg,i}$.  The engine matters.  FKEM, the FFTLog method of
-Fang et al. \cite{FangKEM2020}, projects only the linear term exactly
+bin's $P_{gg,i}$.  The engine matters.  FKEM, the method of
+Fang et al. \cite{FangKEM2020} built on FFTLog (the fast Bessel
+transform on a logarithmic grid), projects only the linear term exactly
 and moves every nonlinear term, the counterterm included, through its
 Limber difference; the low-rank engine projects the
 counterterm without the Limber approximation.  On the $\Delta z = 0.05$
@@ -1074,7 +1147,10 @@ C_\ell^{ij}\big|_{\rm stoch}
 \end{equation}
 independent of $\ell$.  Equation~\eqref{eq:sn-projection} is exact,
 not a Limber approximation: for a constant $\mathcal{P}$ the $k$
-integral of Eq.~\eqref{eq:cl} collapses by Bessel orthogonality, so
+integral of Eq.~\eqref{eq:cl} collapses by Bessel orthogonality,
+$\int dk\,k^2 j_\ell(k\chi_1)\,j_\ell(k\chi_2)
+ = \tfrac{\pi}{2\chi_1^2}\,\delta_D(\chi_1 - \chi_2)$ with $\delta_D$
+the Dirac delta, so
 the Limber formula is exact for white noise.  For a top-hat bin of
 width $\Delta\chi$ the result is $N/(\chi^2\Delta\chi)$, and at the
 Poisson value $N = 1/\bar{n}$ it reproduces the angular shot noise
@@ -1305,7 +1381,8 @@ white-noise splice are in Sections~\ref{sec:rsd-projection} and
 \item \textbf{Loop templates.}  With $\bthree = 0$, CosmoLike's
 C-FASTPT templates and Python FAST-PT agree to
 $\Delta\chi^2 \le 3.5\times10^{-5}$ on the $62$\,Mpc vector, cross
-pairs included.  Doubling the C-FASTPT grid moves $\Delta\chi^2$ by
+pairs included ($\Delta\chi^2$: the $\chi^2$ of the difference of the
+two data vectors under the forecast covariance).  Doubling the C-FASTPT grid moves $\Delta\chi^2$ by
 $\sim10^{-8}$, raising \texttt{accuracyboost} to 3--4 moves the
 one-loop part by $\Delta\chi^2 \le 4.5\times10^{-3}$, and the low-rank
 rank is converged at 5 (5 to 12: $10^{-10}$).  One setting fails:
@@ -1314,7 +1391,9 @@ rank is converged at 5 (5 to 12: $10^{-10}$).  One setting fails:
 \item \textbf{Cross pairs.}  The one-loop pair code leaves linear-bias
 vectors bitwise unchanged with the low-rank, FKEM and Limber engines.  A pair of two bins with
 identical redshift distributions equals the polarization of the auto
-spectra (the bilinear form recovered from the quadratic one) to
+spectra -- the bilinear form recovered from the quadratic one, as
+$u_i^{\mathsf T} Q u_j = \tfrac14\!\left[(u_i + u_j)^{\mathsf T} Q
+(u_i + u_j) - (u_i - u_j)^{\mathsf T} Q (u_i - u_j)\right]$ -- to
 $10^{-14}$ of the one-loop increment.  One and eight threads give
 identical vectors.
 \item \textbf{The likelihood option.}  A zero amplitude reproduces the

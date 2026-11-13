@@ -86,7 +86,9 @@ and, for $b_1$ alone, a correlated per-bin residual.
 
 \paragraph{The accuracy test.}
 At every cut, the fiducial model fits truths that carry the known drifts
-plus a residual drawn from the pessimistic prior
+plus a residual drawn from the pessimistic prior, and each fit is
+scored by $\chidof$, a statistic that equals $1$ when the quoted error
+bars cover the truth as often as they claim
 (Section~\ref{sec:accuracy}).  On the pessimistic prior its error bars
 stay honest, $\chidof \le 1.03$ in every score.  On the growth-tied
 prior they collapse: the statistic reaches $3.9$, $4.5$ and $3.1$ on
@@ -109,7 +111,7 @@ shift is $0.53$--$2.8\sigma$.  The pessimistic scenario absorbs the
 drift exactly and passes every cut; its reported in-prior shifts reach
 $0.98\sigma$ at $0.075$ on $\Delta d_{\rm com} = 62$~Mpc and
 $1.10\sigma$ at $0.1$ on $\Delta z = 0.02$, mostly through $\alpha_2$,
-and $0.33$--$0.73\sigma$ from $0.125$ on on the three thinner
+and $0.33$--$0.73\sigma$ from $0.125$ onward on the three thinner
 layouts.  These shifts estimate how safely an MCMC with the model
 would run on real data.  The fiducial model on the pessimistic prior
 gives ${\rm FoM}(w_0, w_a) = 0.407$, $0.237$, $0.155$ and $0.0426$ at
@@ -158,7 +160,8 @@ is sampled as $w_0 + w_a$.  At this point $\sigma_8 = 0.8278$.
 
 \paragraph{Layouts.}
 Four DESI bin layouts, each with the five LSST Y1 source bins and $53$
-band powers per spectrum ($\Delta\ell = 10$, $\ell = 15$ to $544$):
+band powers per spectrum (averages of $C_\ell$ over multipole bands of
+width $\Delta\ell = 10$, $\ell = 15$ to $544$):
 bins of equal comoving width $\Delta d_{\rm com} = 62$~Mpc ($76$ lens
 bins, $107$ cross pairs, $10{,}494$ entries), and bins of fixed width
 $\Delta z = 0.02$ ($90$ bins, $133$ pairs, $12{,}614$ entries), $0.05$
@@ -190,7 +193,8 @@ $f_{\rm sat}\sigma_{\rm sat}^2$ is $6.084\,({\rm Mpc}/h)^2$ for BGS and
 LRG and $0.841\,({\rm Mpc}/h)^2$ for ELG.
 
 \paragraph{Velocity dispersions.}
-The Fingers-of-God smearing convolves each bin's redshift distribution
+The Fingers-of-God smearing (Section~\ref{sec:biasmodel}) convolves
+each bin's redshift distribution
 with a Gaussian of width $(1 + \bar{z}_i)\,\sigma_v/c$, with one
 sampled $\sigma_v$ per group and BGS split at $\bar{z} = 0.255$
 (Table~\ref{tab:sigv}).  The yamls truncate each prior at
@@ -261,7 +265,10 @@ scale cut.
 \label{sec:forecast}
 
 The data are the DESI angular band powers $C_\ell^{gg}$ of thin
-redshift bins, computed without the Limber approximation, for six
+redshift bins: the angular power spectrum of galaxy clustering,
+averaged in bands of multipole $\ell$, and computed without the Limber
+approximation, which ties each multipole to a single wavenumber at the
+bin's distance and fails for thin bins.  The spectra cover six
 tracer groups (BGS, LRG1, LRG2, LRG3, ELG1 and ELG2) on four bin
 layouts: bins of equal comoving width $\Delta d_{\rm com} = 62$~Mpc,
 and bins of fixed redshift width $\Delta z = 0.02$, $0.05$ and $0.2$.
@@ -270,7 +277,9 @@ factor, $D(0) = 1$.  $w(a) = w_0 + w_a(1 - a)$ is the dark-energy
 equation of state, with $a$ the scale factor; $\Omega_m$ is the matter
 density today in units of the critical density, and $A_s$ the
 amplitude of the primordial curvature power spectrum, sampled as
-$10^9 A_s$.  A parameter's marginalized one-sigma error is $\sigma$.
+$10^9 A_s$.  A parameter's marginalized one-sigma error is $\sigma$:
+the error after every other parameter is fitted as well, with their
+uncertainty included.
 ${\rm FoM}(w_0, w_a) = [\det \mathrm{Cov}(w_0, w_a)]^{-1/2}$ is the
 inverse area of the marginalized $(w_0, w_a)$ error ellipse, and
 ${\rm FoM}(\Omega_m, 10^9 A_s)$ is defined the same way.  The
@@ -301,17 +310,21 @@ Section~\ref{sec:fiducial}).  The scan runs over
 $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$.
 
 \paragraph{The covariance.}
-The band-power covariance is Gaussian, computed for $14{,}000$ square
-degrees with its inverse rescaled to the survey's $12{,}300$, at the
-one-loop fiducial (Section~\ref{sec:biasmodel}):
+The band-power covariance is Gaussian: it keeps the term in which the
+band powers scatter as Gaussian fields and drops the connected
+higher-order terms.  It is computed for $14{,}000$ square degrees,
+and every Fisher matrix rescales its inverse by
+$12{,}300/14{,}000 = 0.879$ to the survey area, because the scatter of
+every band power shrinks as more sky is averaged.  It is evaluated at
+the one-loop fiducial (Section~\ref{sec:biasmodel}):
 $b_{1,i} = B_g/D(\bar{z}_i)$, $b_2$ and $\bstwo$ on their calibrations,
 every other term zero.  The model shares this fiducial point with
 every
 one-loop variant of \texttt{notes/higher\_order\_bias}, so one
 covariance serves them all.  Its one-loop terms come from CosmoLike's
 C-FAST-PT tables, through the data vector's pair formula, in the
-Limber approximation; its low-$\ell$ non-Limber recompute is linear
-(Appendix~\ref{app:open}).  Its non-Limber grid converges the adjacent
+Limber approximation; the non-Limber recompute of its lowest bands
+uses linear theory only (Appendix~\ref{app:open}).  Its non-Limber grid converges the adjacent
 thin-bin cross spectra to $2\%$ and the diagonal to $0.4\%$.  It takes
 massless neutrinos, so its signal sits $3\%$ above the data vector
 ($m_\nu = 0.06$~eV) at every redshift.
@@ -364,8 +377,10 @@ straight line across its group (Appendix~\ref{sec:memory}): the line
 absorbs coherent evolution, and the residual the curvature of a drift
 and local features of the selection (Appendix~\ref{sec:memphysics}).
 In the Fisher matrix the prior is one projected precision block per
-group that charges only the residual (Appendix~\ref{sec:memcharge}), so
-a group of one or two bins is free.  Every group of the
+group, an inverse-covariance penalty with the level and the line
+projected out, so that it charges only the residual
+(Appendix~\ref{sec:memcharge}); a line fits one or two bins exactly,
+so such a group is free.  Every group of the
 $\Delta z = 0.2$ layout is of this kind, and there the baseline,
 pessimistic and free priors coincide.
 
@@ -378,7 +393,8 @@ pessimistic and free priors coincide.
     curvature that a straight line leaves of the $22\%$ drift of its
     $r < 19.5$ flux limit (Appendix~\ref{app:bgsflux}); the $1\%$ is a
     stated hedge for unmodeled selection curvature, at least six times
-    the $0.16\%$ rms a conserved population leaves after its line
+    the largest rms ($0.16\%$) a conserved population leaves after its
+    line
     (Appendix~\ref{sec:memphysics}).  $L = 0.2$, comparable to the
     group spans, keeps the residual smooth across a group.
   \item \textbf{The pessimistic prior}: $\sigma_g = 3\%$ in every group
@@ -403,8 +419,9 @@ features nobody has measured.
   \includegraphics[width=\linewidth]{plots/prior_draws/prior_draws.pdf}
   \caption{Draws of the baseline prior (top row) and the pessimistic
     prior (bottom row) on the $\Delta z = 0.02$ bins, one column per
-    group, each column divided by the round constant $\delta_g$ of its
-    top panel.  Thick dashed: the conserved-population drift; thick
+    group.  The vertical axis is $\delta(z)/\delta_g$, with $\delta_g$
+    the round per-group scale printed in the top panel, so every
+    column fills its frame.  Thick dashed: the conserved-population drift; thick
     dash-dot (BGS): the $r < 19.5$ flux-limit drift.  Thin curves: four
     draws of $\delta(z)$ on the line of the group's reference drift, so
     draw and drift differ by the residual $\varepsilon$.}
@@ -430,7 +447,9 @@ galaxy power spectrum of bin $i$ is
   \label{eq:oneloop}
 \end{equation}
 where $P_{\rm mm}$ is the nonlinear matter power spectrum and
-$P_{\rm loop}$ holds the one-loop terms.  These carry the quadratic
+$P_{\rm loop}$ holds the one-loop terms: the first corrections of
+cosmological perturbation theory beyond linear, built from products of
+two power spectra.  These carry the quadratic
 bias $b_2$, the response of the galaxy density to the square of the
 matter density contrast $\delta_m$ (the galaxy density contrast
 contains $b_2\,\delta_m^2/2$), and the tidal bias $\bstwo$, its
@@ -438,7 +457,9 @@ response to the squared tidal field; the third-order bias $b_3$ is
 zero.  $\alpha_0$ is the $k^2$ counterterm, in $h^{-2}\,{\rm Mpc}^2$,
 which absorbs the sensitivity of the loops to small scales, and $\SNz$
 the white-noise power beyond Poisson, in units of the bin's Poisson
-power $1/\bar{n}_i$, with $\bar{n}_i$ the bin's number density.  The
+power $1/\bar{n}_i$, with $\bar{n}_i$ the bin's number density:
+counting a finite number of galaxies adds the flat shot-noise power
+$1/\bar{n}_i$, and $\SNz$ measures the excess over it.  The
 higher-order biases follow each bin's own linear bias through
 calibrations, plus one offset per group:
 \begin{equation}
@@ -452,9 +473,14 @@ al.~\cite{Lazeyras2016} and the second relation the co-evolution of a
 population formed with local bias~\cite{Saito2014}.
 
 \paragraph{Redshift space.}
-Redshift-space distortions are linear (Kaiser), with each bin's
-redshift distribution convolved by the sampled velocity dispersion
-$\sigma_v$ (the Fingers-of-God smearing).  Two more terms depend on
+A galaxy is placed at the distance its redshift implies, and its
+peculiar velocity along the line of sight shifts that redshift, so the
+inferred map is distorted.  The model treats these redshift-space
+distortions to linear order (the Kaiser effect: coherent infall toward
+overdensities), and the random motions within groups and clusters, the
+Fingers of God, by convolving each bin's redshift distribution with a
+Gaussian set by the sampled velocity dispersion $\sigma_v$, one per
+group (Section~\ref{sec:fiducial}).  Two more terms depend on
 $\mu$, the cosine of the angle to the line of sight.  The counterterm
 $\alpha_2$ adds, in the convention of the DESI DR1 full-shape
 analysis~\cite{Maus2024},
@@ -516,10 +542,13 @@ parameters.  $\SNz$ and $\SNt$ never tilt: their Poisson part is known
 bin by bin.  The Gaussian priors are centered on zero, with the DESI
 DR1 stochastic widths~\cite{Maus2024} and the counterterm rule of the
 DESI 2024 full-shape analysis~\cite{DESI2024V,Maus2024} moved to each
-cut: $\alpha\,k^2 = 0.5$ at $k = \kmax$, DESI's $12.5\aunit$ at
-$0.2\hMpc$.  Since $\alpha_0$ multiplies $P_{\rm mm}$, at bin $i$'s
-own cut its width is a correction of $0.5/B_g^2$ to the linear galaxy
-power, the same in every bin of a group.
+cut: the width obeys $\alpha\,\kmax^2 = 0.5$, so it is $0.5/\kmax^2$,
+which at $\kmax = 0.2\hMpc$ gives $0.5/0.04 = 12.5\aunit$, DESI's
+value.  Since $\alpha_0$ multiplies $P_{\rm mm}$, at bin $i$'s own cut
+$k = \kmax/D(\bar{z}_i)$ the width contributes
+$\alpha_0 k^2 = 0.5/D^2(\bar{z}_i)$, while the bin's linear galaxy
+power carries $b_{1,i}^2 = B_g^2/D^2(\bar{z}_i)$: the ratio, a
+correction of $0.5/B_g^2$, is the same in every bin of a group.
 Appendix~\ref{app:impl} gives the implementation.
 
 \begin{table}[tbp]
@@ -549,7 +578,8 @@ Appendix~\ref{app:impl} gives the implementation.
 \section{The accuracy test}
 \label{sec:accuracy}
 
-No mock catalogs and only two derived drift laws are available, so
+No mock catalogs (simulated galaxy surveys against which a prior
+could be checked) and only two derived drift laws are available, so
 this note does not defend one prior: it tests each prior against
 random truths and quotes the FoM only for the priors that pass.
 
@@ -636,31 +666,13 @@ offsets---can move the fit by up to about $1\sigma$ without making its
 error bars dishonest, so its shifts are reported, never held to a
 threshold; the one truth outside the prior, the calibration drift, is
 tested.  A model holds at a cut when the tested truth moves none of
-$(w_0, w_a)$, $\Omega_m$ and $A_s$ by more than $\sigma/3$, there and
+$(w_0, w_a)$, $\Omega_m$ and $A_s$ by more than $\sigma/3$ (a shift
+that widens the effective error bar by only a few percent;
+Appendix~\ref{sec:biasformula}), there and
 at every smaller fitted cut; it breaks at the next cut.
 Figure~\ref{fig:fomkmax}c draws the largest tested shift.  Each
 variant breaks at the same cut under the baseline, pessimistic and
 free priors.
-
-\begin{itemize}
-  \item The baseline scenario breaks at $0.075\hMpc$ on the two thin
-    layouts, where the drift moves $(w_0, w_a)$ by $0.82$ and
-    $0.86\sigma$ at $0.1$, and at $0.05$ on $\Delta z = 0.05$ and
-    $0.2$ ($0.35$ and $0.36\sigma$ at $0.075$).  From $0.1$ on its
-    largest tested shift is $0.53$--$2.8\sigma$.
-  \item The pessimistic scenario passes every cut by construction: the
-    fiducial model's tilts have the drift's shape and absorb it
-    exactly (shifts of order $10^{-12}\sigma$), so the pass carries no
-    information on its own.  Its accuracy rests on its honest error
-    bars (Section~\ref{sec:accuracy}) and on the reported in-prior
-    shifts: up to $0.98\sigma$ at $0.075$ on
-    $\Delta d_{\rm com} = 62$~Mpc and $1.10\sigma$ at $0.1$ on
-    $\Delta z = 0.02$, both through $\alpha_2$;
-    $0.33$--$0.73\sigma$ from $0.125$ on on the three thinner layouts;
-    at most $0.25\sigma$ on $\Delta z = 0.2$.
-\end{itemize}
-An $\SNt$ truth at one prior width moves no parameter by more than
-$0.26\sigma$ at any cut, in either scenario.
 
 \begin{figure}[tbp]
   \centering
@@ -684,6 +696,26 @@ $0.26\sigma$ at any cut, in either scenario.
     \kmaxscanclause}
   \label{fig:fomkmax}
 \end{figure}
+
+\begin{itemize}
+  \item The baseline scenario breaks at $0.075\hMpc$ on the two thin
+    layouts, where the drift moves $(w_0, w_a)$ by $0.82$ and
+    $0.86\sigma$ at $0.1$, and at $0.05$ on $\Delta z = 0.05$ and
+    $0.2$ ($0.35$ and $0.36\sigma$ at $0.075$).  From $0.1$ on its
+    largest tested shift is $0.53$--$2.8\sigma$.
+  \item The pessimistic scenario passes every cut by construction: the
+    fiducial model's tilts have the drift's shape and absorb it
+    exactly (shifts of order $10^{-12}\sigma$), so the pass carries no
+    information on its own.  Its accuracy rests on its honest error
+    bars (Section~\ref{sec:accuracy}) and on the reported in-prior
+    shifts: up to $0.98\sigma$ at $0.075$ on
+    $\Delta d_{\rm com} = 62$~Mpc and $1.10\sigma$ at $0.1$ on
+    $\Delta z = 0.02$, both through $\alpha_2$;
+    $0.33$--$0.73\sigma$ from $0.125$ onward on the three thinner layouts;
+    at most $0.25\sigma$ on $\Delta z = 0.2$.
+\end{itemize}
+An $\SNt$ truth at one prior width moves no parameter by more than
+$0.26\sigma$ at any cut, in either scenario.
 
 \paragraph{The FoM against $\kmax$.}
 Figure~\ref{fig:fomkmax}a and b draw the FoMs of the two scenarios,
@@ -831,7 +863,8 @@ so $F_{\rm data} = \mathsf{M}\T (\mathsf{B}\T \mathsf{C}_d^{-1}
 \mathsf{B})\,\mathsf{M}$ on the entries each cut keeps: $168$ systems
 (four layouts, seven cuts, two variants, three priors), $162$ with a
 fit and $6$ without any band.  Every Fisher matrix is inverted
-through a pseudo-inverse (Appendix~\ref{app:checks}).
+through a pseudo-inverse, an inverse taken only over the directions
+that carry information (Appendix~\ref{app:checks}).
 
 \subsection{The priors, the response and the truths}
 \label{sec:ladderimpl}
@@ -918,7 +951,8 @@ and the PDF.  The data come from the notebook
 \label{app:counterterm}
 
 CosmoLike has two non-Limber engines for $C_\ell^{gg}$.  FKEM, the
-FFTLog method of Fang et al.~\cite{FangKEM2020}, projects the linear
+method of Fang et al.~\cite{FangKEM2020} built on FFTLog (a fast
+Hankel transform on a logarithmic grid), projects the linear
 term exactly and moves everything nonlinear, the counterterm included,
 through its Limber difference.  The low-rank engine factorizes each
 bin's full one-loop $P_{gg}$, less the white-noise constant of the

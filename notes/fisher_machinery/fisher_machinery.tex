@@ -76,10 +76,11 @@ The project's Fisher notebooks report figures of merit (FoMs),
 parameter errors and parameter shifts for the linear-bias and one-loop
 bias models, up to four
 linear-bias priors, seven scale cuts and four bin layouts, under dozens
-of assumed truths.  One evaluation of the data vector runs CAMB, the
-code that computes the matter power spectrum, and CosmoLike, the code
-that projects it onto the sky for every thin bin; it takes seconds to
-tens of seconds.  How,
+of assumed truths.  One evaluation of the data vector -- the model's
+prediction for every measured number, stacked in one list -- runs
+CAMB, the code that computes the matter power spectrum, and CosmoLike,
+the code that projects it onto the sky for every thin bin; it takes
+seconds to tens of seconds.  How,
 then, can a change of model, prior or scale cut cost only seconds?
 
 \paragraph{The answer.}
@@ -114,14 +115,20 @@ then, can a change of model, prior or scale cut cost only seconds?
 
 \paragraph{The setup.}
 The data are the DESI band powers $C_\ell^{gg}$: the angular power
-spectrum of galaxy clustering, averaged in $53$ bands of multipole
-$\ell$.  They are computed without the Limber approximation, which
-ties each multipole to a single wavenumber and fails for thin bins, for
-six tracer groups $g$ (BGS, LRG1, LRG2, LRG3,
-ELG1 and ELG2) on four layouts: bins of equal comoving width
-$\Delta d_{\rm com} = 62$~Mpc, and bins of fixed redshift width
-$\Delta z = 0.02$, $0.05$ and $0.2$.  Bin $i$ has mean redshift
-$\bar{z}_i$, and $D(z)$ is the linear growth factor, $D(0) = 1$.  The
+spectrum of galaxy clustering -- how strongly the galaxy counts in two
+directions on the sky correlate, as a function of the multipole
+$\ell$, the angular frequency on the sky (the larger $\ell$, the
+smaller the angle) -- averaged in $53$ bands of $\ell$, one number per
+band: a band power.  Each of six tracer groups $g$ (BGS, LRG1, LRG2,
+LRG3, ELG1 and ELG2; a tracer is a galaxy sample that traces the
+matter) is sliced into thin bins, narrow adjacent slices in redshift,
+and a layout is one such slicing.  Four layouts are used: bins of
+equal comoving width $\Delta d_{\rm com} = 62$~Mpc, and bins of fixed
+redshift width $\Delta z = 0.02$, $0.05$ and $0.2$.  The spectra are
+computed without the Limber approximation, which ties each multipole
+to a single wavenumber and fails for thin bins.  Bin $i$ has mean
+redshift $\bar{z}_i$, and $D(z)$ is the linear growth factor,
+$D(0) = 1$.  The
 model being forecast is the paper model: a one-loop bias model with
 per-group offsets and tilts (defined in the higher-order note,
 \texttt{notes/higher\us order\us bias}) under the pessimistic
@@ -142,11 +149,14 @@ This section freezes the point at which every derivative of this note
 was taken, so the note does not depend on files that may drift.
 
 \paragraph{The cosmology.}
-The fiducial point is the \texttt{override} block of the paper yamls
-\texttt{EXAMPLE\us EVALUATE1}--\texttt{4.yaml}, the same in all four
+The fiducial point is the \texttt{override} block -- the entries that
+pin the evaluation point -- of the paper yamls
+\texttt{EXAMPLE\us EVALUATE1}--\texttt{4.yaml} (the runs' configuration
+files), the same in all four
 (Table~\ref{tab:fidcosmo}).  The Fisher matrices vary the first seven
 parameters; the neutrino mass stays at $0.06$~eV and $\tau$ is fixed.
-At this point $\sigma_8 = 0.8278$.
+At this point $\sigma_8 = 0.8278$ (the rms linear density contrast in
+spheres of $8\,h^{-1}$Mpc, a common amplitude measure).
 
 \begin{table}[tbp]
   \centering
@@ -160,7 +170,7 @@ At this point $\sigma_8 = 0.8278$.
     $\Omega_b$ & baryon density today & $0.04$ & flat \\
     $\Omega_m$ & matter density today & $0.3$ & flat \\
     $w_0$ & dark-energy equation of state today & $-1$ & flat \\
-    $w_a$ & its slope, $w(a) = w_0 + w_a(1 - a)$ & $0$ & flat, as $w_0 + w_a$ \\
+    $w_a$ & its slope, $w(a) = w_0 + w_a(1 - a)$ & $0$ & flat on $w_0 + w_a$ \\
     $\sum m_\nu$ & neutrino mass sum [eV] & $0.06$ & fixed in the Fisher \\
     $\tau$ & optical depth to reionization & $0.0697186$ & fixed \\
     \hline
@@ -195,7 +205,8 @@ group amplitudes
 \end{center}
 $b_{2,i}$ sits on the Lazeyras calibration~\cite{Lazeyras2016},
 $b_2^{\rm L}(b_1) = 0.412 - 2.143\,b_1 + 0.929\,b_1^2 + 0.008\,b_1^3$,
-and $b_{s^2,i}$ on co-evolution, $-\tfrac{4}{7}(b_{1,i} - 1)$; at the
+and $b_{s^2,i}$ on co-evolution, $-\tfrac{4}{7}(b_{1,i} - 1)$
+(Section~\ref{sec:model} defines both relations); at the
 fiducial every offset, tilt, bias residual, counterterm
 ($\alpha_{0,i}$, $\alpha_{2,i}$, both in $h^{-2}\,{\rm Mpc}^2$) and
 stochastic amplitude ($\SNzi$ in units of the bin's Poisson power
@@ -204,7 +215,8 @@ $f_{\rm sat}\sigma_{\rm sat}^2/\bar{n}_i$, with
 $f_{\rm sat}\sigma_{\rm sat}^2 = 6.084$ for BGS and LRG and $0.841$ for
 ELG, in $({\rm Mpc}/h)^2$) is zero.  The linear-bias prior is the
 pessimistic one: residual width $\sigma_g = 0.03$ in every group,
-correlation length $L = 0.05$ in redshift, charging only the wiggles
+correlation length $L = 0.05$ in redshift, charging -- penalizing in
+the $\chi^2$ -- only the wiggles
 around each group's free line (Section~\ref{sec:cuts}).
 
 \paragraph{The velocity dispersions.}
@@ -244,15 +256,18 @@ or free linear-bias prior.
 
 \paragraph{The scale cuts.}
 The non-Limber ultraviolet-fraction criterion of
-Saraivanov et al.~\cite{Saraivanov2026} at $\alpha = 0.05$, bin $i$
+Saraivanov et al.~\cite{Saraivanov2026} at ultraviolet fraction $0.05$
+(spelled out in Section~\ref{sec:cuts}), bin $i$
 cut at $\kmax/D(\bar{z}_i)$ with $\kmax$ quoted at $z = 0$,
-intersected with the shipped mask ($k = 0.1185/{\rm Mpc} =
+intersected with the shipped mask, the per-band keep flags of the
+data files ($k = 0.1185/{\rm Mpc} =
 0.176\hMpc$ in every bin).  The cuts are computed on the paper
 fiducial above, at the final derivative settings (those of the
 derivative base), for
 $\kmax = 0.05, 0.075, \ldots, 0.25\hMpc$, and cached in
 \texttt{chains/model\us scale\us cuts\us final.npz}
 (Section~\ref{sec:usage}); figures and FoMs use $\kmax \le 0.2\hMpc$.
+Section~\ref{sec:cuts} walks through what a cut does.
 
 \paragraph{The covariance.}
 Gaussian, computed at the one-loop fiducial above (with massless
@@ -268,7 +283,8 @@ $3 \times 64 = 192$, which the code rounds up to the power of two
 $256$), \texttt{integration\us accuracy} $1$,
 \texttt{kmax\us boltzmann} $20/{\rm Mpc}$ (so the CAMB transfer
 reaches $60/{\rm Mpc}$), the low-rank engine's rank $5$ and multipole
-cap $1000$, CAMB \texttt{AccuracyBoost} $2$ and
+cap $1000$ (the non-Limber engine of Section~\ref{sec:templates}),
+CAMB \texttt{AccuracyBoost} $2$ and
 \texttt{k\us per\us logint} $30$, with the halofit tolerance patch.
 Five-point stencils everywhere, never central differences: relative
 step $h = 0.02$ for the sampled parameters, per-bin operator steps
@@ -283,9 +299,11 @@ Section~\ref{sec:accuracy} is the evidence.
 Let $m(p)$ be the expected data vector at the parameters $p$, and $p_0$
 the fiducial point, the parameter values around which the forecast is
 made.  The vector $m$ has $n$ entries: the band powers of
-every bin's auto spectrum and of every measured cross spectrum between
+every bin's auto spectrum (the bin correlated with itself) and of
+every measured cross spectrum between
 two bins, after $795$ entries that the data format reserves for
-cosmic-shear blocks and that stay zero for DESI alone.  $\Cov$ is the
+cosmic-shear blocks -- the correlations of galaxy shapes distorted by
+lensing, not used here -- and that stay zero for DESI alone.  $\Cov$ is the
 covariance of the data: how the measured band powers scatter around
 $m$ and how their errors correlate.
 
@@ -297,22 +315,32 @@ parameters,
   \mD_{rj} = \frac{\partial m_r}{\partial p_j}\bigg|_{p_0} ,
   \label{eq:linearize}
 \end{equation}
-with $r$ one row, that is one band power.  With Gaussian data errors
-and Gaussian priors, the probability of the parameters given the data
+with $r$ one row, that is one band power.
+
+With Gaussian data errors, the probability of measuring the data $d$
+when the parameters are $p$ is proportional to $e^{-\chi^2/2}$, with
+$\chi^2(p) = [d - m(p)]\T\,\Cov^{-1}\,[d - m(p)]$.  Insert the
+straight line of Eq.~\eqref{eq:linearize}: $\chi^2$ becomes a
+quadratic in $p$, whose curvature -- the matrix of its second
+derivatives, $2\,\mD\T\Cov^{-1}\mD$ -- no longer depends on the data.
+A prior is what is assumed about a parameter before the data arrive;
+a Gaussian prior multiplies the probability by a Gaussian of its own.
+The probability of the parameters given the data
 is then a Gaussian in $p$, whose inverse covariance is the Fisher matrix
 \begin{equation}
   F \;=\; \mD\T \Cov^{-1} \mD \;+\; F_{\rm prior} .
   \label{eq:fisher}
 \end{equation}
 $F_{\rm prior}$ is the priors' contribution: a Gaussian prior of width
-$w$ adds $1/w^2$ to its parameter's diagonal entry, and a flat prior
-adds nothing.
+$w$ adds $1/w^2$ to its parameter's diagonal entry, and a flat prior,
+which prefers no value over another, adds nothing.
 
 The inverse $F^{-1}$ is the forecast covariance of the parameters.
 $\sigma_j = [(F^{-1})_{jj}]^{1/2}$ is the marginalized error of
 parameter $j$, its error when every other parameter is free.
 ${\rm FoM}(w_0, w_a) = [\det \Cov_w]^{-1/2}$ is the inverse area of the
-$(w_0, w_a)$ error ellipse, with $\Cov_w$ the $(w_0, w_a)$ block of
+$(w_0, w_a)$ error ellipse (a Gaussian's error ellipse has an area
+proportional to $\sqrt{\det \Cov_w}$), with $\Cov_w$ the $(w_0, w_a)$ block of
 $F^{-1}$ and $w(a) = w_0 + w_a(1 - a)$ the dark-energy equation of state
 ($a$ the scale factor).  ${\rm FoM}(\Omega_m, 10^9 A_s)$ is defined the
 same way, with $\Omega_m$ the matter density today in units of the
@@ -346,8 +374,11 @@ Everything the notebooks fit is built from a small set of quantities:
   \item seven velocity dispersions
     $\sigma_{v,1}, \ldots, \sigma_{v,7}$, with Gaussian priors, one
     per set of bins that shares a value.  They smooth each bin's
-    redshift distribution for the random velocities of galaxies (the
-    Fingers-of-God effect).  The sets follow the six tracer groups,
+    redshift distribution for the random velocities of galaxies: a
+    galaxy's measured redshift carries its line-of-sight velocity on
+    top of the expansion, so random velocities blur where the bin's
+    galaxies appear to sit (the Fingers-of-God effect).  The sets
+    follow the six tracer groups,
     except that BGS takes two: on $\Delta d_{\rm com} = 62$~Mpc the
     dispersions cover bins $1$--$10$ and $11$--$18$ (BGS), $19$--$29$
     (LRG1), $30$--$38$ (LRG2), $39$--$49$ (LRG3), $50$--$61$ (ELG1)
@@ -747,7 +778,7 @@ families, and one amplitude per bin.
       {one column per knob: $\partial m/\partial(\text{knob})$};
     \node[anchor=east] at (-0.1,2.6) {$\mB$};
     \node[anchor=east, align=right, font=\scriptsize, text=okblue]
-      at (-0.1,1.3) {rows kept\\by cut $m$};
+      at (-0.1,1.3) {rows kept\\by the cut};
     \node[anchor=east, font=\scriptsize] at (-0.1,0.3) {$n$ rows};
     \draw[decorate, decoration={brace, mirror, amplitude=4pt}]
       (0,-0.08) -- (1.4,-0.08)
@@ -800,12 +831,12 @@ families, and one amplitude per bin.
     \tikzset{flow/.style={draw, rounded corners, align=center,
         font=\scriptsize, text width=4.0cm, inner sep=4pt}}
     \node[flow] (cut) at (9.8,1.6)
-      {cut $m$ keeps the rows $K_m$\\(shaded in $\mB$)};
+      {a cut keeps a set $K$ of rows\\(shaded in $\mB$)};
     \node[flow] (gram) at (9.8,-0.3)
-      {$\mG_m = f_A\,\mB_K\T\,\Cov_{KK}^{-1}\,\mB_K$\\
+      {$\mG_K = f_A\,\mB_K\T\,\Cov_{KK}^{-1}\,\mB_K$\\
        $\nbase \times \nbase$, once per cut};
     \node[flow] (fish) at (9.8,-2.4)
-      {$F = \mM\T\mG_m\mM + F_{\rm prior}$\\
+      {$F = \mM\T\mG_K\mM + F_{\rm prior}$\\
        $\npar \times \npar$, every model and prior};
     \node[flow] (out) at (9.8,-4.3)
       {FoM, $\sigma$, shifts $\delta p$, $\langle\chi^2\rangle$};
@@ -821,7 +852,7 @@ families, and one amplitude per bin.
     base $\mB$ of one layout.  Each cosmological parameter $\theta_k$ and
     each velocity dispersion $\sigma_{v,k}$ has one column; every bias
     family is a block of $N$ columns, one per thin bin (thin gray
-    lines).  Shaded: the rows a cut $m$ keeps.  Bottom left: a model's
+    lines).  Shaded: the rows a cut keeps.  Bottom left: a model's
     recipe matrix $\mM$, with a row per knob, in the column order of
     $\mB$, and a column per model parameter.  Orange marks its nonzero
     entries: the identity on the cosmology and $\sigma_v$; for one group
@@ -832,8 +863,8 @@ families, and one amplitude per bin.
     for the other groups and the stochastic amplitudes; and three
     diagonals for the per-bin amplitudes $\beta_i$,
     Eq.~\eqref{eq:chain}.  Right: a cut
-    is reduced once to $\mG_m$, and every model and prior at that cut is
-    $\mM\T\mG_m\mM$ plus priors; $f_A = 12{,}300/14{,}000$ rescales
+    is reduced once to $\mG_K$, and every model and prior at that cut is
+    $\mM\T\mG_K\mM$ plus priors; $f_A = 12{,}300/14{,}000$ rescales
     the inverse covariance to the survey area
     (Section~\ref{sec:linear}).  The $\alpha_{2,i}$ block and the
     check column of $\mB$ are not drawn.}
@@ -1411,8 +1442,13 @@ alone, the $b_{1,i}\,j_\ell$ term of $\Delta^i_\ell$, the term is
   \label{eq:rsdterm}
 \end{equation}
 the density$\times$RSD and RSD$\times$RSD products, computed with the
-separable linear spectrum by FFTLog and corrected in Limber with the
-full one (the FKEM split).  The term depends on $b_{1,i}$, already
+separable linear spectrum by FFTLog -- a fast Fourier transform on a
+grid log-spaced in distance, which computes the Bessel-function
+integrals quickly (Section~\ref{sec:accuracy} describes the grid) --
+and corrected in Limber with the full one.  This is the FKEM split,
+named for Fang, Krause, Eifler and MacCrann~\cite{Fang2020}, whose
+method it is: the separable part exactly, the correction in Limber.
+The term depends on $b_{1,i}$, already
 covered by its stencil, and on cosmology through $f$ and $D$.  It has
 no amplitude of its own.
 
@@ -1822,10 +1858,12 @@ of the adopted prior.
 How far does the fit itself go?  The paper model carries no
 $\alpha_{2,i}$, so when the truth does, the fit absorbs it, mostly
 into the dispersions, and a negative $\alpha_2$ raises them.  The
-linear response of Section~\ref{sec:downstream}, Eq.~\eqref{eq:shift},
+linear response -- the first-order shift formula,
+Eq.~\eqref{eq:shift} of Section~\ref{sec:downstream} --
 gives the dispersion each group reaches under a truth
 $\alpha_{2,i} = -A$ in every bin, for three sizes: (a)
-$A = 0.5/\kmax^2\aunit$, the model-B prior width at the cut; (b)
+$A = 0.5/\kmax^2\aunit$, the counterterm prior width at the cut
+(Section~\ref{sec:fiducial}); (b)
 $A = 12.5\aunit$, the DESI-size truth of the shift tests; (c)
 $A = 25\aunit$, twice that.  Table~\ref{tab:sigvmax} shows
 $\sigma_v^{\max}$, each group's largest dispersion over the cuts
@@ -1954,7 +1992,7 @@ Saraivanov et al.~\cite{Saraivanov2026} within the shipped mask: a band
 is kept while less than $5\%$ of it comes from the power spectrum above
 that wavenumber.  The Fisher matrix at a cut follows in four steps.
 \begin{enumerate}
-  \item The cut keeps a set $K_m$ of rows of $m$.  It drops the other
+  \item The cut keeps a set $K$ of the rows of $m$.  It drops the other
     rows of $\mB$ and keeps every column: a cut never changes a
     derivative.  $\mB_K$ is the kept rows of $\mB$, and $\Cov_{KK}$ the
     kept block of the covariance.
@@ -1965,56 +2003,56 @@ that wavenumber.  The Fisher matrix at a cut follows in four steps.
     $\mD_K = \mB_K\mM$,
     \begin{equation}
       F_{\rm data} \;=\; \mM\T \bigl(f_A\,\mB_K\T\,\Cov_{KK}^{-1}\,\mB_K\bigr)\mM
-      \;=\; \mM\T\, \mG_m\, \mM ,
+      \;=\; \mM\T\, \mG_K\, \mM ,
       \qquad
-      \mG_m \;\equiv\; f_A\, \mB_K\T\, \Cov_{KK}^{-1}\, \mB_K .
+      \mG_K \;\equiv\; f_A\, \mB_K\T\, \Cov_{KK}^{-1}\, \mB_K .
       \label{eq:fdata}
     \end{equation}
-    $\mG_m$ is what the data of cut $m$ say about every pair of knobs:
+    $\mG_K$ is what the cut's kept data say about every pair of knobs:
     its entry $(a, b)$ is the information shared by knobs $a$ and $b$.
-  \item $\mG_m$ contains neither $\mM$ nor a prior.  It depends only on
+  \item $\mG_K$ contains neither $\mM$ nor a prior.  It depends only on
     the base, the cut and the covariance, so the notebook computes it
     once per cut, and every model and prior at that cut reuses it.
   \item The priors add their precision:
-    $F = \mM\T\mG_m\mM + F_{\rm prior}$.
+    $F = \mM\T\mG_K\mM + F_{\rm prior}$.
 \end{enumerate}
 
 \paragraph{The toy, cut.}
-Suppose cut $m$ drops the cross spectrum $C^{23}$, which fails the
+Suppose the cut drops the cross spectrum $C^{23}$, which fails the
 ultraviolet criterion.  Then:
 \begin{itemize}
   \item $K = \{C^{11}, C^{22}, C^{33}, C^{12}\}$, and $\mB_K$ is the
     $4 \times 7$ matrix of the first four rows of Eq.~\eqref{eq:toyB};
-  \item $\Cov_{KK}$ is $4 \times 4$, and $\mG_m$ is $7 \times 7$;
+  \item $\Cov_{KK}$ is $4 \times 4$, and $\mG_K$ is $7 \times 7$;
   \item the group model's $F$ is
     $(6 \times 7)(7 \times 7)(7 \times 6) = 6 \times 6$, and the free
-    model's $7 \times 7$, both from the same $\mG_m$.
+    model's $7 \times 7$, both from the same $\mG_K$.
 \end{itemize}
 After this cut, $v_3$ survives only on $C^{33}$.
 
 \paragraph{The real sizes.}
 On $\Delta d_{\rm com} = 62$~Mpc, $\mB$ is $10{,}494 \times 547$.  The
 shipped mask keeps $5{,}674$ rows, so $\mB_K$ is $5{,}674 \times 547$,
-$\Cov_{KK}$ is $5{,}674 \times 5{,}674$ and $\mG_m$ is $547 \times 547$.
+$\Cov_{KK}$ is $5{,}674 \times 5{,}674$ and $\mG_K$ is $547 \times 547$.
 $F$ is $138 \times 138$ for the paper model.  The large block is
 handled once per cut, and every Fisher system at that cut (one Fisher
 matrix with its inverse and results, for each model and prior the
-notebook evaluates) reuses $\mG_m$.
+notebook evaluates) reuses $\mG_K$.
 
-\paragraph{How $\mG_m$ is computed.}
-The notebook computes $\mG_m$ in \texttt{layout\us grams}, without ever
+\paragraph{How $\mG_K$ is computed.}
+The notebook computes $\mG_K$ in \texttt{layout\us grams}, without ever
 inverting the covariance:
 \begin{enumerate}
   \item it writes $\Cov_{KK} = L L\T$ with $L$ lower triangular, the
     Cholesky factorization, a matrix analogue of the square root;
   \item it solves $L\,W = \mB_K$ for $W$ row by row, which a
     triangular $L$ allows (forward substitution);
-  \item it forms $\mG_m = f_A\, W\T W$, with $f_A$ the area
+  \item it forms $\mG_K = f_A\, W\T W$, with $f_A$ the area
     rescaling of the inverse covariance.
 \end{enumerate}
 This saves work, avoids amplifying round-off when the covariance is
 ill-conditioned (when its inverse magnifies small errors), and makes
-$\mG_m$ symmetric with no negative information, by construction.
+$\mG_K$ symmetric with no negative information, by construction.
 
 Each layout gets eight such matrices: the seven cuts
 $\kmax = 0.05, 0.075, \ldots, 0.2\hMpc$, and the shipped mask alone,
@@ -2041,7 +2079,7 @@ prior is a change of $\mM$.
 
 \paragraph{Parameters without data.}
 At small cuts some bins keep no band, and their columns vanish on
-$K_m$.  A parameter whose information at the cut, data plus prior,
+the kept rows $K$.  A parameter whose information at the cut, data plus prior,
 falls below $10^{-10}$ of its information on the shipped mask with the
 same priors leaves the fit: it is removed from $\mM$ and from $F$, and
 the quoted FoMs, errors and shifts are over the remaining parameters.
@@ -2091,7 +2129,7 @@ touching the scored parameters by at most $1.1\times10^{-7}$.
 \section{Everything downstream reuses $\mG$}
 \label{sec:downstream}
 
-Once $\mG_m$ is built, nothing in the notebook touches an $n \times n$
+Once $\mG_K$ is built, nothing in the notebook touches an $n \times n$
 matrix or the data vector again.  $F$ is Eq.~\eqref{eq:fdata} plus the
 priors, inverted by Eq.~\eqref{eq:pinv}, and $\sigma_j$ and the FoMs
 follow as in Section~\ref{sec:linear}.
@@ -2116,14 +2154,14 @@ $\delta m = \mB c$, with $c$ a vector of coefficients:
 To first order the best fit then moves by
 \begin{equation}
   \delta p \;=\; F^{-1} \mD\T \Cov^{-1} \delta m
-  \;=\; F^{-1} \mM\T\, \mG_m\, c
+  \;=\; F^{-1} \mM\T\, \mG_K\, c
   \label{eq:shift}
 \end{equation}
 (the correlated-prior note, on the shift formula).  $\delta m = \mB c$
 is exact for the $\alpha_{2,i}$, $\SNzi$ and $\SNti$ truths, whose terms
 are linear, and first order for truths in $b_{1,i}$, $b_{2,i}$ and
 $b_{s^2,i}$, since the band powers are quadratic in them.  A truth costs
-one product with $\mG_m$.
+one product with $\mG_K$.
 
 \paragraph{Random truths.}
 Eq.~\eqref{eq:shift} is linear in $c$, so a family of random truths
@@ -2164,10 +2202,10 @@ row; $1$ means honest error bars.  The random draws only make the
 percentile bars of the correlated-prior note's figures.
 
 \paragraph{The cost.}
-Each $\mG_m$ costs one Cholesky factorization of at most $7{,}621$
+Each $\mG_K$ costs one Cholesky factorization of at most $7{,}621$
 rows, about $n_K^3/3 \approx 1.5\times10^{11}$ floating-point
 operations, and one triangular solve, eight times per layout.  A Fisher
-system then costs $\mM\T\mG_m\mM$, with $\nbase \le 645$ and
+system then costs $\mM\T\mG_K\mM$, with $\nbase \le 645$ and
 $\npar \le 164$ (the fiducial model with $\alpha_2$ free on
 $\Delta z = 0.02$), about
 $2\,\nbase^2 \npar \approx 1.4\times10^{8}$ operations, plus the
@@ -2193,16 +2231,16 @@ The work splits into three levels.
   \item \textbf{On disk, once per layout (hours):} the base columns and
     the fiducial vector $m(p_0)$.  Table~\ref{tab:arrays} lists every
     array on $\Delta d_{\rm com} = 62$~Mpc.
-  \item \textbf{In memory, at every run (seconds):} for each scale cut
-    $m$, its kept rows $K_m$ and the matrix
-    $\mG_m = f_A\,\mB_K\T\Cov_{KK}^{-1}\mB_K$, with
+  \item \textbf{In memory, at every run (seconds):} for each scale
+    cut, its kept rows $K$ and the matrix
+    $\mG_K = f_A\,\mB_K\T\Cov_{KK}^{-1}\mB_K$, with
     $f_A = 12{,}300/14{,}000$ the factor that rescales the inverse
     covariance to the survey area (Section~\ref{sec:linear}),
     $547 \times 547$ on
     $\Delta d_{\rm com} = 62$~Mpc (Section~\ref{sec:cuts}).  The
     covariance is read fresh from its file at every run.
   \item \textbf{For every model and prior (a fraction of a second):}
-    $\mM$, then $F = \mM\T\mG_m\mM + F_{\rm prior}$, its inverse, the
+    $\mM$, then $F = \mM\T\mG_K\mM + F_{\rm prior}$, its inverse, the
     FoMs, the shifts and $\langle\chi^2\rangle$
     (Section~\ref{sec:cuts} and this section).  No evaluation
     of the data vector at all.
@@ -3590,10 +3628,10 @@ kernels.
 \paragraph{Where the grid factor enters.}
 The grid is endpoint-inclusive in $\log\chi$, with spacing
 $d\ln\chi = \ln(\chi_{\rm max}/\chi_{\rm min})/(N_\chi - 1)$ and
-$N_\chi - 1 = 511\,m$: the combined factor $g$, the product
+$N_\chi - 1 = 511\,g_2$: the combined factor $g$, the product
 \texttt{accuracyboost} $\times$ \texttt{nonlimber\us accuracyboost},
 is rounded up to the power of two
-$m$ (at most $1024$; \texttt{init\us nonlimber\us accuracy\us boost}
+$g_2$ (at most $1024$; \texttt{init\us nonlimber\us accuracy\us boost}
 in \texttt{generic\us interface.cpp}).  Doubling $g$ halves every
 interval and keeps the old nodes, so a higher $g$ strictly refines the
 same grid, and ``about $511\,g$ comoving distances'' is exact whenever
@@ -3932,13 +3970,17 @@ columns to $4.6\times10^{-14}$.
     calibration law that moves the fiducial $b_{2,i}$ needs new base
     columns, and a new covariance, which sits at the one-loop fiducial.
     A new covariance alone needs no evaluation: the notebook rebuilds
-    every $\mG_m$ from the current covariance file at every run.
+    every $\mG_K$ from the current covariance file at every run.
   \item \textbf{Dependence beyond first order.}  The forecast is the
     curvature at $p_0$, and Eq.~\eqref{eq:shift} is first order in
     $\delta m$.  The band powers are quadratic in the biases, so a large
     truth, such as an offset of twice a prior width or the $22\%$ BGS
-    flux-limit drift, is treated to first order, and a shift near the
-    $\sigma/3$ threshold needs a refit, with new evaluations, to be
+    flux-limit drift (the change of the BGS linear bias from one end of
+    the group's redshift range to the other that the sample's flux limit
+    produces, about $11\%$ at either edge), is
+    treated to first order, and a shift near the
+    $\sigma/3$ threshold (a third of the parameter's forecast error)
+    needs a refit, with new evaluations, to be
     confirmed.
 \end{itemize}
 
@@ -4017,7 +4059,7 @@ holds, the layout and the tier, with the layouts \texttt{dcom62}
     \texttt{scripts/compute\us fisher\us base\us mpi.py}, which writes
     the same files bit for bit.
 \end{itemize}
-Neither the notebook nor the script caches a Fisher matrix, $\mG_m$ or
+Neither the notebook nor the script caches a Fisher matrix, $\mG_K$ or
 FoM: these depend on the covariance and are rebuilt at every run.
 
 \paragraph{The file format.}
@@ -4335,6 +4377,12 @@ with Velocileptors for DESI 2024 and beyond'',
 E. Saraivanov, H. Rubira, V. Miranda and T. Eifler,
 ``Towards the Two-Loop EFTofLSS in Galaxy Lensing Surveys'',
 2026, arXiv:2603.13031.
+
+\bibitem{Fang2020}
+X. Fang, E. Krause, T. Eifler and N. MacCrann,
+``Beyond Limber: efficient computation of angular power spectra for
+galaxy clustering and weak lensing'',
+JCAP 05 (2020) 010, arXiv:1911.11947.
 
 \bibitem{Petersen2012}
 K. B. Petersen and M. S. Pedersen,

@@ -465,25 +465,28 @@ free bin by bin; tying the bins too tightly instead turns assumptions
 about the bias into cosmology.
 
 \paragraph{The model.}
-The fiducial model's galaxy power spectrum is one-loop, with seven
-bias quantities per
-bin: the linear, quadratic and tidal biases, the counterterms
+The fiducial model's galaxy power spectrum is one-loop -- it keeps
+the first nonlinear corrections of perturbation theory -- with seven
+bias quantities per bin: the linear, quadratic and tidal biases, the counterterms
 $\alpha_0$ and $\alpha_2$, and the stochastic terms $\SNz$ and $\SNt$.
 Each of them is its group's value, which follows calibrations where
 they exist, plus, depending on the quantity, a free tilt in redshift
 across the group and a residual of the bin with a Gaussian prior
 correlated in redshift (Section~\ref{sec:model}).  The line-of-sight
 counterterm is fixed, $\alpha_2 = 0$ in every bin: the sampled
-Fingers-of-God dispersions, whose priors are widened \SigVfactor{}-fold,
-carry that freedom instead.  One principle sets
+Fingers-of-God dispersions -- the smearing of each bin in redshift by
+the galaxies' random velocities -- whose priors are widened
+\SigVfactor{}-fold, carry that freedom instead.  One principle sets
 the priors: slicing a wide DESI sample into thin bins adds measurements
 but no knowledge of the bias, so the group value and the tilt carry
 exactly the freedom of the wide sample, and the residual is what the
 slicing may add within it (Section~\ref{sec:prior}).
 
 \paragraph{The result.}
-On the two thin layouts, ${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$
-alone grows from \FoMwLowCom{} and \FoMwLowTwo{} at
+On the two thin layouts -- $\Delta d_{\rm com} = 62$~Mpc and
+$\Delta z = 0.02$, the finest slicings of Section~\ref{sec:data} --
+the figure of merit ${\rm FoM}(w_0, w_a)$ of DESI $C_\ell^{gg}$
+alone, the inverse area of the $(w_0, w_a)$ error ellipse, grows from \FoMwLowCom{} and \FoMwLowTwo{} at
 $\kmax = 0.075\hMpc$ to \FoMwHighCom{} and \FoMwHighTwo{} at $0.2\hMpc$,
 below the \LSSTw{} of LSST Y1 3x2pt alone; ${\rm FoM}(\Omega_m, 10^9
 A_s)$ stays below LSST Y1 as well (Section~\ref{sec:forecast}).  Over
@@ -492,7 +495,8 @@ prior, the quoted error bars are honest at every cut and on every
 layout (Section~\ref{sec:forecast}).
 
 \paragraph{Pairs beyond the list.}
-Cross spectra of bins further apart than the pair list measures
+Cross spectra of bins further apart than those of the pair list --
+the set of bin pairs whose cross spectra the data vector holds --
 would raise ${\rm FoM}(w_0, w_a)$ by up to a factor of \PairGainCom{}
 on the thin layouts, widening their lead over the wide
 $\Delta z = 0.2$ layout from \WideHighCom{}--\WideHighTwo{} times
@@ -502,8 +506,8 @@ freedom the prior grants: each group's free bias level and slope
 mimic the growth history in the auto spectra, the added cross
 spectra separate the two, and with that level and slope held fixed
 most of the gain goes.  The analysis keeps the current data vector;
-the longer lists are a comparison against it.  Open is a finite
-prior on the levels and slopes.
+the longer lists are a comparison against it.  What stays open is a
+finite prior on the levels and slopes.
 
 \paragraph{What the grouping is worth.}
 A per-bin prior that looks looser than the model gains information by
@@ -521,7 +525,8 @@ bars up to \ConstEtaHighMax{} times too small.
 \label{sec:fiducial}
 
 Every number of this note was computed at the fiducial below, the
-evaluate point of the paper configurations
+evaluate point -- the parameter values at which the data vectors and
+derivatives are evaluated -- of the paper configurations
 \texttt{EXAMPLE\_EVALUATE1}--\texttt{4.yaml}, frozen here so the note
 does not depend on files that may change.
 
@@ -550,6 +555,12 @@ $15 \le \ell \le 544$ (Section~\ref{sec:data}).
     \bottomrule
   \end{tabular}
 \end{center}
+
+The entries count the stored data vector: \Nbands{} band powers for
+each auto and cross spectrum, plus $795$ entries the data format
+reserves for cosmic-shear blocks and keeps at zero for DESI
+$C_\ell^{gg}$ alone -- on $\Delta d_{\rm com} = 62$~Mpc,
+$53\,(76 + 107) + 795 = 10{,}494$ (\texttt{notes/fisher\_machinery}).
 
 \paragraph{Bias.}
 The group amplitudes are $B_g = 1.34$ (BGS), $1.7$ (LRG1, LRG2, LRG3)
@@ -628,7 +639,8 @@ $0.005$.
 
 The data are the DESI angular galaxy power spectra $C_\ell^{gg}$ in
 \Nbands{} bands of width $\Delta\ell = 10$ over $15 \le \ell \le 544$,
-with $\ell$ the multipole: the auto spectrum of every redshift bin and
+with $\ell$ the multipole (a band power is one spectrum averaged over
+one band): the auto spectrum of every redshift bin and
 the cross spectra of neighboring and overlapping bins.  On
 $\Delta d_{\rm com} = 62$~Mpc these are \NcrossCom{} pairs: the
 \NcrossDESI{} of the DESI forecast's pair list and \NcrossExtra{} LRG3$\times$ELG1
@@ -642,7 +654,9 @@ and $\Delta z = 0.02$, $0.05$ and $0.2$, with \NbinsTwo{}, \NbinsFive{}
 and \NbinsTwenty{} bins of fixed redshift width.  The first two are the
 thin layouts: a bin of comoving width $\Delta\chi$ resolves
 line-of-sight wavenumbers up to $k_\parallel \simeq \pi/\Delta\chi$,
-about \KparCom{}$\hMpc$ for the 62~Mpc bins, so thin bins keep much of
+about \KparCom{}$\hMpc$ for the 62~Mpc bins
+($\pi/62\,{\rm Mpc} = 0.051\,{\rm Mpc}^{-1}$, or
+$0.051/h = 0.075\hMpc$), so thin bins keep much of
 the three-dimensional information~\cite{Asorey2012}.  Bin $i$ has mean
 redshift $\bar{z}_i$, and $D(z)$ is the linear growth factor,
 $D(0) = 1$.
@@ -654,12 +668,16 @@ spectral index $n_s$; the Hubble constant $H_0$; the baryon and matter
 densities today, $\Omega_b$ and $\Omega_m$, in units of the critical
 density; and $w_0$ and $w_a$ of the dark-energy equation of state
 $w_0 + w_a(1 - a)$, with $a$ the scale factor.  Seven Fingers-of-God
-velocity dispersions $\sigma_v$, which smooth the bins' redshift
-distributions, vary under the Gaussian priors of
-Section~\ref{sec:fiducial} (widened to carry the line-of-sight
-counterterm's freedom, Section~\ref{sec:model}).  With $\sigma$ a
-parameter's
-marginalized one-sigma error, ${\rm FoM}(w_0, w_a) = [\det {\rm
+velocity dispersions $\sigma_v$ vary under the Gaussian priors of
+Section~\ref{sec:fiducial}, widened to carry the line-of-sight
+counterterm's freedom (Section~\ref{sec:model}): the line-of-sight
+peculiar velocities of galaxies -- the bulk motion of their halos plus
+their motion inside them -- shift the measured redshifts, and
+$\sigma_v$, the rms of those velocities, sets the width of the
+smearing this adds to a bin's redshift distribution
+(\texttt{notes/velocity\_dispersion\_per\_bin}).  With $\sigma$ a parameter's
+marginalized one-sigma error -- its error after every other parameter
+is fitted and its uncertainty folded in -- ${\rm FoM}(w_0, w_a) = [\det {\rm
 Cov}(w_0, w_a)]^{-1/2}$ is the inverse area of the marginalized
 $(w_0, w_a)$ ellipse, and ${\rm FoM}(\Omega_m, 10^9 A_s)$ is defined the
 same way.  The reference is LSST Y1 3x2pt alone~\cite{DESCSRD2018}: the
@@ -670,8 +688,9 @@ whose fiducial differs from this note's (Section~\ref{sec:fiducial}).
 Matter is less nonlinear at higher redshift, so bin $i$ is cut at
 $\kmax/D(\bar{z}_i)$, and every $\kmax$ here is the $z = 0$ value.  The
 cut is the non-Limber UV-fraction criterion of Saraivanov et
-al.~\cite{Saraivanov2026}, after DeRose and Chen~\cite{DeRoseChen2025}:
-each band power splits into $C_\ell^{\rm IR}$, from the power spectrum
+al.~\cite{Saraivanov2026}, after DeRose and Chen~\cite{DeRoseChen2025},
+evaluated with the exact (non-Limber) projection of
+Section~\ref{sec:method}: each band power splits into $C_\ell^{\rm IR}$, from the power spectrum
 below the bin's cut wavenumber, and $C_\ell^{\rm UV}$, from the power
 above it, and a band is kept while
 \begin{equation}
@@ -679,7 +698,8 @@ above it, and a band is kept while
   \;<\; 0.05
   \label{eq:uvfraction}
 \end{equation}
-and within the shipped mask, which stops every bin at $\kMask\hMpc$.
+and within the shipped mask, the $k$ mask built into the data files
+before any scale cut, which stops every bin at $\kMask\hMpc$.
 The cut is computed on the model's own fiducial
 (Section~\ref{sec:fiducial}), at the final derivative tier, the
 settings of the derivative base.  Computing it on linear-bias spectra
@@ -710,7 +730,8 @@ reads directly as how correlated the two maps are.
 The data vector holds DESI's measured pairs plus every pair with
 $O_{ij} \ge \OvThreshold$ at the fiducial dispersions, which adds the
 \NcrossExtra{} LRG3$\times$ELG1 pairs of
-$\Delta d_{\rm com} = 62$~Mpc whose raw redshift ranges just miss.  No
+$\Delta d_{\rm com} = 62$~Mpc whose raw redshift ranges -- the
+ranges before the Fingers-of-God blur -- just miss.  No
 unmeasured pair overlaps between $\OvThreshold$ and $\OvGapTop$, so
 the list does not depend on where in that window the threshold sits
 (\texttt{notes/cross\_correlations}).  This list is the current data
@@ -896,9 +917,9 @@ across them within about \PairPriorSpread{} of the ratio.  The
 growth-tied prior -- one amplitude per group, with no slope and no
 residuals -- fails that test, so no figure of merit is quoted for
 it.  The analysis keeps the current data vector; the longer lists
-are a comparison against it.  Open is a finite prior on the levels
-and slopes, which no passing prior imposes and which would keep only
-part of the gain.  The templates, tables and
+are a comparison against it.  What stays open is a finite prior on
+the levels and slopes, which no passing prior imposes and which would
+keep only part of the gain.  The templates, tables and
 checks behind these statements are in
 \texttt{notes/cross\_correlations}, in its sections on what pairs
 beyond the list would add and on the free bias levels and slopes.
@@ -907,7 +928,9 @@ beyond the list would add and on the free bias levels and slopes.
 \label{sec:model}
 
 \paragraph{The one-loop power spectrum.}
-The galaxy power spectrum of bin $i$, in redshift space, is
+The galaxy power spectrum of bin $i$, in redshift space -- with
+distances inferred from redshifts, so that peculiar velocities
+displace galaxies along the line of sight -- is
 \begin{align}
   P_{g,i}(k, \mu) \;={}& b_{1,i}^2\,P_{\rm mm}(k)
   + P_{\rm loop}(k;\, b_{1,i}, b_{2,i}, b_{s^2,i})
@@ -922,16 +945,21 @@ The galaxy power spectrum of bin $i$, in redshift space, is
   \label{eq:pgg}
 \end{align}
 with $k$ the comoving wavenumber, $\mu$ the cosine of the angle to the
-line of sight, $P_{\rm mm}$ the nonlinear (halofit) matter power
-spectrum, $P_{\rm lin}$ the linear one, $f = d\ln D/d\ln a$ the growth
-rate and $\bar{n}_i$ the bin's number density.  $P_{\rm loop}$ holds
+line of sight, $P_{\rm mm}$ the nonlinear matter power
+spectrum (halofit, a fit to N-body simulations), $P_{\rm lin}$ the
+linear one, $f = d\ln D/d\ln a$ the growth
+rate and $\bar{n}_i$ the bin's number density.  One-loop means one
+order beyond linear perturbation theory: corrections quadratic in the
+linear power spectrum.  $P_{\rm loop}$ holds
 the one-loop terms of the quadratic bias $b_2$ and the tidal bias
 $\bstwo$, the responses of the galaxy density to the squared density
 contrast and to the squared tidal field~\cite{McDonaldRoy2009,Saito2014};
 the third-order bias is zero.  $\alpha_0$ is the $k^2$ counterterm,
 which absorbs the sensitivity of the loops to small scales.  The
-$P_{\rm lin}$ terms are linear (Kaiser) redshift-space distortions on
-each bin's Fingers-of-God-convolved redshift distribution, with no
+$P_{\rm lin}$ terms are linear (Kaiser) redshift-space distortions --
+the coherent infall toward overdensities, which boosts line-of-sight
+power by the factors $f\mu^2$ -- on each bin's
+Fingers-of-God-convolved redshift distribution, with no
 redshift-space one-loop terms, and $\alpha_2$ is the line-of-sight
 counterterm in the convention of the DESI 2024 full-shape
 analysis~\cite{Maus2024}, in which $\alpha_2 k^2$ is a fractional
@@ -939,9 +967,10 @@ correction to the velocity part of the Kaiser power.  Equation~\eqref{eq:pgg}
 writes these terms with $P_{\rm lin}$; their projection adds the Limber
 difference between $P_{\rm mm}$ and $P_{\rm lin}$ (Section~\ref{sec:method}),
 so where the Limber approximation holds they carry the nonlinear power.
-Both counterterms are in $h^{-2}\,{\rm Mpc}^2$.  $\SNz$ is the white noise
-beyond Poisson, in units of the Poisson power $1/\bar{n}_i$ that the
-covariance carries, and $\SNt\,k^2\mu^2$ the stochastic term of the
+Both counterterms are in $h^{-2}\,{\rm Mpc}^2$.  $\SNz$ is the white
+(scale-independent) noise beyond Poisson, in units of the Poisson
+shot-noise power $1/\bar{n}_i$ -- the power the finite number of
+galaxies adds -- that the covariance carries, and $\SNt\,k^2\mu^2$ the stochastic term of the
 satellites' velocities, in units of $f_{\rm sat}\sigma_{\rm
 sat}^2/\bar{n}_i$, with $f_{\rm sat}$ the satellite fraction and
 $\sigma_{\rm sat}$ the satellites' velocity dispersion in distance
@@ -961,7 +990,9 @@ five times the median per-bin uncertainty of the dispersion
 measurements).  With that widening, a fit without $\alpha_2$ absorbs a
 line-of-sight correction of the DESI 2024 prior size through the
 dispersions alone, on every layout and at every cut; the degeneracy,
-the choice of the factor and the linear-response shifts behind it are
+the choice of the factor and the linear-response shifts behind it
+(parameter shifts to first order in the truth, as in
+Section~\ref{sec:method}) are
 in \texttt{notes/fog\_parameter\_degeneracy\_study}.
 
 \paragraph{One form for every bias quantity.}
@@ -1093,8 +1124,9 @@ with $\sigma_g$ the width of one bin's residual and $L$ the correlation
 length in redshift.  The kernel defines a random process
 $\varepsilon(z)$ along each group before any binning, which a layout
 only samples at its bin redshifts: the prior on a coarse set of
-redshifts is the marginal of the prior on a finer one, so slicing finer
-adds no prior knowledge.  Two neighbors at separation $\Delta z$ differ
+redshifts is the marginal of the prior on a finer one -- integrate
+the finer prior over the bins the coarse layout does not use and the
+coarse prior remains -- so slicing finer adds no prior knowledge.  Two neighbors at separation $\Delta z$ differ
 by an rms $\sigma_g[2(1 - e^{-\Delta z/L})]^{1/2}$.  The prior charges
 only the residual around each group's best straight line
 (Section~\ref{sec:method}), so a group of one or two bins, as on
@@ -1108,7 +1140,9 @@ absorbs: a conserved population, whose bias obeys
 $b_1 - 1 \propto 1/D$~\cite{Fry1996}, departs from $B_g/D$ by about
 \ConsDrift{} per $\Delta z = 0.05$, and the $r < 19.5$ flux limit of
 BGS~\cite{Hahn2023} drifts its bias by \BGSspan{} across the group.
-Local changes, such as the 4000~\AA\ break crossing a filter edge over
+Local changes, such as the 4000~\AA\ break -- a sharp step in the
+spectrum of an old stellar population -- crossing an edge of a
+selection filter over
 $\Delta z \approx \FilterDzMin$--$\FilterDzMax$, move bins
 independently.  Hence $\sigma_g = \sigG$ in every group, above the
 largest derived departure from a line (the \BGScurv{} rms that the BGS
@@ -1158,8 +1192,9 @@ Poisson part is known bin by bin.
 
 \paragraph{Non-Limber spectra.}
 The Limber approximation evaluates the power spectrum only at the
-transverse wavenumber $(\ell + 1/2)/\chi$ and misses the
-line-of-sight modes that a thin bin with sharp edges passes.  The
+transverse wavenumber $(\ell + 1/2)/\chi$: accurate for a wide radial
+kernel, which averages the line-of-sight modes away, it misses the
+modes that a thin bin with sharp edges passes.  The
 exact projection keeps them: between bins $i$ and
 $j$, with $W_i(\chi) = n_i(z)\,dz/d\chi$ the radial kernel of bin $i$,
 $n_i$ its normalized redshift distribution, $j_\ell$ the spherical
@@ -1182,7 +1217,8 @@ linear part is separable, $P_{\rm lin}(k;\, z_1, z_2) =
 D(z_1)\,D(z_2)\,P_{\rm lin}(k)$, with $P_{\rm lin}(k)$ the linear
 matter power spectrum today, so in Eq.~\eqref{eq:exactcl} each
 $\chi$ integral closes around its own Bessel function and becomes a
-one-dimensional transform that the FFTLog algorithm computes quickly.
+one-dimensional transform that the FFTLog algorithm, a fast Fourier
+transform on a logarithmic grid, computes quickly.
 The remainder $P_{\rm mm} - P_{\rm lin}$, with $P_{\rm mm}$ the
 nonlinear matter power spectrum, matters only at high $k$, which
 projects to multipoles where the Limber approximation is accurate, so
@@ -1277,7 +1313,8 @@ precision $\mathsf{P} = \mathsf{Q} - \mathsf{Q}\mathsf{U}(\mathsf{U}\T
 deviations from the group value ($\delta_i$ for $b_1$), with
 $\mathsf{Q}$ the inverse kernel matrix of Eq.~\eqref{eq:kernel} and
 $\mathsf{U}$ the matrix with columns $1$ and $\bar{z}_i - \bar{z}_g$:
-it charges only the residual around the group's best straight line.
+it charges only the residual around the group's best straight line
+(the projected precision of \texttt{notes/correlated\_bias\_prior\_v2}).
 The marginalized error of parameter $j$ is
 $\sigma_j = [(F^{-1})_{jj}]^{1/2}$, and the FoMs of
 Section~\ref{sec:data} are $[\det \mathsf{C}_p]^{-1/2}$, with
@@ -1329,9 +1366,12 @@ fiducial point.
       \end{cases}
       \label{eq:batch}
     \end{equation}
-    A greedy coloring of the graph of measured pairs gives \Nbatch{}
-    such batches on every layout, so each per-bin family costs
-    \NevalFamily{} evaluations, whatever the number of bins.
+    A greedy coloring of the graph of measured pairs -- bins are the
+    vertices, measured pairs the edges, and bins of one color share no
+    edge -- gives \Nbatch{} such batches on every layout, so each
+    per-bin family costs \NevalFamily{} evaluations (\Nbatch{} batches
+    times the four off-center points of Eq.~\eqref{eq:stencil}),
+    whatever the number of bins.
 \end{enumerate}
 
 \paragraph{One base, every model.}

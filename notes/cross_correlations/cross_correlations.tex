@@ -93,7 +93,10 @@ common test value (Section~\ref{sec:axes}).  Those pairs have no
 kernel overlap; their signal is the low-$\ell$ correlation that
 survives only outside the Limber approximation
 (Section~\ref{sec:limber}).  On the three thinner
-layouts those pairs raise the paper model's ${\rm FoM}(w_0, w_a)$ by
+layouts those pairs raise the paper model's dark-energy figure of
+merit ${\rm FoM}(w_0, w_a)$ -- the inverse area of the error ellipse
+of the dark-energy parameters $w_0$ and $w_a$, defined in
+Section~\ref{sec:threshold} -- by
 up to $55$--$59\%$, on $\Delta z = 0.2$ by at most $2\%$.  Measured
 against the wide layout itself, the thin slicing is worth far more
 than the added pairs: at $k_{\rm max} = 0.2\,h$/Mpc the two thin
@@ -102,7 +105,8 @@ $\Delta z = 0.2$ on the current lists, and the added pairs raise the
 factors to $28$--$37$ (Section~\ref{sec:axes}).  Attribution
 fits trace the gain to the free level and slope of each sample
 group's bias amplitude $\beta_i = b_{1,i}\,D(\bar{z}_i)$, the linear
-bias times the growth factor: in the auto spectra the level is
+bias times the growth factor $D$, the amplitude of matter clustering
+at the bin's epoch relative to today: in the auto spectra the level is
 degenerate with the clustering amplitude and the slope with the
 evolution of growth that $w_0$ and $w_a$ control -- $\sv$ rides on
 the same degeneracy -- while the cross spectra's correlation
@@ -129,12 +133,17 @@ Figure~\ref{fig:limberreal} are the fiducial spectra of the
 pair-axes forecasts and one Limber evaluation of the same model.
 Only the
 Fisher forecasts of Sections~\ref{sec:threshold} and~\ref{sec:axes}
-run a fit.  This section freezes the values behind both, so the record
+run a fit.  A Fisher forecast predicts the error bars a data set will
+deliver from the derivatives of the model spectra and from the
+covariance, without running chains;
+\texttt{notes/fisher\us machinery} builds that method from scratch.
+This section freezes the values behind both fits, so the record
 does not depend on configuration files that can change.
 
 \paragraph{Geometry of the pair rule and the masks.}
 The comoving distances of the \dcom{} slicing, of the pair rule and of
-the shipped masks use $\chi(z)$ of a flat $\Lambda$CDM with
+the shipped masks -- the files that list which data-vector entries a
+fit keeps -- use $\chi(z)$ of a flat $\Lambda$CDM with
 $H_0 = 67.32$~km/s/Mpc and $\Omega_m = 0.3$; the masks stop every bin
 at $\ell + 1/2 \le k\,\chi(\bar{z}_i)$ with
 $k = 0.1185\,{\rm Mpc}^{-1}$ (about $0.176\,h$/Mpc), with no growth
@@ -160,7 +169,9 @@ the exploration widths, the forecasts of Section~\ref{sec:axes} the
 paper widths.
 
 \paragraph{The pair-threshold fit.}
-Its cosmology is the evaluate override of the example yamls:
+Its cosmology is the evaluate override of the example yamls, the
+values the example configuration files fix when they evaluate one
+model instead of sampling:
 $10^9 A_s = 2.1$ ($A_s$ the amplitude of the primordial curvature
 power spectrum), $n_s = 0.96605$, $H_0 = 67.32$~km/s/Mpc,
 $\Omega_b = 0.04$, $\Omega_m = 0.3$, $w_0 = -1$, $w_a = 0$,
@@ -170,12 +181,16 @@ with $B_g = 1.34$ (BGS), $1.70$ (LRG1--LRG3) and $0.84$ (ELG1, ELG2),
 under the pessimistic prior ($3\%$ correlated residuals, $L = 0.05$,
 a free amplitude and tilt per group;
 \texttt{notes/correlated\us bias\us prior\us v2}).  The higher-order
-terms are those of the fiducial model
-(\texttt{notes/higher\us order\us bias}):
-offsets $\Delta_2$ and $\Delta_s$ of widths $2$ and $1$, counterterms
-$\alpha_0$ and $\alpha_2$ of width $0.5/k_{\rm max}^2$ at each cut,
+terms are those of the fiducial model, the one-loop terms beyond the
+linear bias that \texttt{notes/higher\us order\us bias} defines one by
+one: the offsets $\Delta_2$ and $\Delta_s$ of the quadratic and tidal
+biases from their calibrations, of prior widths $2$ and $1$; the
+counterterms
+$\alpha_0$ and $\alpha_2$, $k^2$ terms that absorb small-scale physics
+the perturbative model cannot predict ($\alpha_2$ on the
+redshift-space part), of width $0.5/k_{\rm max}^2$ at each cut; the
 stochastic amplitudes ${\rm SN}_0$ and ${\rm SN}_2$ of widths $2$ and
-$5$, and flat tilts, with $\alpha_2$ free and the exploration $\sv$
+$5$; and flat tilts, with $\alpha_2$ free and the exploration $\sv$
 widths: the reference model of
 \texttt{notes/fog\us parameter\us degeneracy\us study}, not the paper
 model, which fixes $\alpha_2 = 0$ in every bin and widens every $\sv$
@@ -190,9 +205,15 @@ model's fiducial at the final derivative tier
 while less than $5\%$ of it comes
 from the power spectrum above $k_{\rm max}/D(\bar{z}_i)$),
 intersected with the shipped mask.  The covariance is the Gaussian
-covariance of the $107$-pair data set, built on the one-loop fiducial
-($b_2$ and $b_{s^2}$ on their calibrations) with massless neutrinos
-over $14{,}000$~deg$^2$, its inverse rescaled by $12{,}300/14{,}000$.
+covariance of the $107$-pair data set -- the covariance the band
+powers would have if the maps were Gaussian random fields, computed
+from the model spectra and the shot noise -- built on the one-loop
+fiducial, the fiducial point of the one-loop bias model
+($b_2$ and $b_{s^2}$ on their calibrations), with massless neutrinos
+over $14{,}000$~deg$^2$.  The forecast sky is $12{,}300$~deg$^2$, and
+a Gaussian covariance scales inversely with the area (more sky, more
+independent modes), so the inverse covariance is rescaled by
+$12{,}300/14{,}000$.
 The forecasts of Section~\ref{sec:axes} build the same Gaussian
 covariance on each layout's largest pair list.
 
@@ -214,7 +235,9 @@ bins $i$ and $j$ is their covariance, $C^{ij}_\ell = \langle a^i_{\ell
 m} a^{j*}_{\ell m} \rangle$.  Two unrelated maps have a cross spectrum
 that averages to zero; two maps of the same structures have a positive
 one.  The data vector holds these spectra in $53$ bands of width
-$\Delta\ell = 10$ over $15 \le \ell \le 544$.
+$\Delta\ell = 10$ over $15 \le \ell \le 544$: a band averages the
+spectrum over ten consecutive multipoles, and one band of one
+spectrum is one entry of the data vector.
 
 \paragraph{Why neighbouring thin bins correlate.}
 A thin bin is a shell of the universe a few tens of Mpc deep: $62$~Mpc
@@ -236,7 +259,8 @@ modes perpendicular to the line of sight contribute, and
   \label{eq:limber}
 \end{equation}
 with $\chi$ the comoving distance, $W_i(\chi)$ the redshift
-distribution of bin $i$ written per unit comoving distance, and $P(k)$
+distribution of bin $i$ written per unit comoving distance -- the
+bin's \emph{kernel}, the name used from here on -- and $P(k)$
 the power spectrum of the galaxy density at wavenumber $k$.  Two shells
 whose $W$ do not overlap then have no cross spectrum.  At low $\ell$
 the approximation fails for thin shells: modes with a component along
@@ -332,7 +356,10 @@ has no shot noise, because no galaxy is in two bins: within one
 sample each galaxy has one measured redshift, and two samples are
 different galaxies.
 
-The one-loop model adds stochastic terms beyond this Poisson noise,
+The one-loop model -- the perturbation-theory model of the galaxy
+spectrum one order beyond the linear bias of the previous paragraph,
+whose terms \texttt{notes/higher\us order\us bias} defines -- adds
+stochastic terms beyond this Poisson noise,
 ${\rm SN}_0$ and ${\rm SN}_2$.  They are properties of the
 three-dimensional galaxy field, so they reach the cross spectrum of two
 bins of one sample through the overlap of their kernels, $\int d\chi\,
@@ -444,7 +471,11 @@ split at $z = 0.255$: seven dispersion groups for six bias groups.
   \label{tab:sigv}
 \end{table}
 
-Each prior is a Gaussian centred on the default and truncated at zero.
+A prior is the knowledge the fit assumes about a parameter before
+seeing the data; a Gaussian prior of width $145$~km/s penalizes a
+sampled dispersion once it departs from the default by about that
+much.  Each prior here is a Gaussian centred on the default and
+truncated at zero, since a negative dispersion has no meaning.
 The exploration width is five times the per-bin error bar of the
 measurement; the paper model multiplies every width by six, so that
 the sampled dispersions can absorb the radial counterterm it drops
@@ -486,8 +517,11 @@ $\Delta z$ is a thinner shell at high $z$.  On $\Delta z = 0.05$ it is
 $0.028$--$0.050$, and on $\Delta z = 0.2$ $0.007$--$0.023$
 (Figure~\ref{fig:fog}, top right).
 
-A Gaussian blur of a sharp edge moves a fraction of about
-$\sigma_z/(\sqrt{2\pi}\,w)$ of a bin's galaxies across each edge.  The
+A Gaussian blur moves galaxies across a sharp edge: a galaxy a
+distance $x$ inside the edge leaves with the probability that its
+blur exceeds $x$, and integrating that Gaussian tail over the bin
+moves a fraction of about
+$\sigma_z/(\sqrt{2\pi}\,w)$ of the bin's galaxies across each edge.  The
 blurred $n(z)$ of a thin bin has $5$--$8\%$ of its weight outside its
 raw range on \dcom{} and $5$--$10\%$ on $\Delta z = 0.02$, against
 $2$--$4\%$ on $\Delta z = 0.05$ and $0.5$--$2\%$ on $\Delta z = 0.2$.
@@ -513,12 +547,21 @@ Section~\ref{sec:groups} is nearly the same integral.
 
 \paragraph{Neighbours.}
 Without the blur, two neighbouring bins touch only over the one grid
-step where their tabulated edges meet, and their overlap is about
+step ($h = 3.5 \times 10^{-4}$ in redshift) where their tabulated
+edges meet.  The tables are read with linear interpolation, so across
+that step one bin falls from its height to zero while the other
+rises; the product of the falling and the rising ramp integrates to
+$h/6$ ($\int_0^1 t\,(1 - t)\,dt = 1/6$, in units of $h$ and of the
+heights), while the normalization of Eq.~\eqref{eq:overlap}
+contributes about the bin width $w$.  The overlap is therefore about
 $h/(6\,w)$: $0.0015$--$0.0039$ on \dcom{}, $0.0027$--$0.0029$ on
 $\Delta z = 0.02$, $0.0011$--$0.0012$ on $\Delta z = 0.05$ and
 $0.0003$--$0.0004$ on $\Delta z = 0.2$.  This number measures the grid,
 not the galaxies.  With the blur at the default $\sv$ the edges become
-ramps about $4\sigma_z$ wide, and the overlap becomes about
+smooth ramps about $4\sigma_z$ wide.  Where the bins meet, the
+falling ramp of one times the rising ramp of the other now integrates
+to $\sigma_z/\sqrt{\pi} \approx 0.56\,\sigma_z$, so the overlap
+becomes about
 $0.6\,\sigma_z/w$: $0.039$--$0.061$ on \dcom{} (median $0.057$),
 $0.043$--$0.083$ on $\Delta z = 0.02$ ($0.066$), $0.018$--$0.032$ on
 $\Delta z = 0.05$ ($0.024$) and $0.006$--$0.009$ on $\Delta z = 0.2$
@@ -598,7 +641,8 @@ the fixed-$\Delta z$ layouts.
 For the three fixed-$\Delta z$ layouts the first step writes the pair
 list (\texttt{cross\us pairs} in \texttt{scripts/make\us desi\us
 dz\us case.py}), and the second adds nothing.  On \dcom{} the first
-list comes from the DESI forecast's data file (a \texttt{sacc} file),
+list comes from the DESI forecast's data file (a \texttt{sacc} file,
+a standard container format for survey data vectors),
 which pairs bins by redshift proximity; \texttt{scripts/make\us
 desi\us dataset.py} imports it.  The first step reproduces $96$ of its
 $97$ pairs.  The exception is the boundary pair of BGS bin $18$ and
@@ -611,7 +655,13 @@ $3 \times 10^{-7}$: the ranges are six times $\sigma_z$ apart.  The second step 
 \paragraph{The \dcom{} data vector.}
 With the added pairs the \dcom{} data vector holds $198$ spectra:
 $15$ cosmic-shear spectra, $76$ autos and $107$ cross spectra, in $53$
-bands each, $10{,}494$ entries of which the mask keeps $5{,}674$.  Each
+bands each, $10{,}494$ entries of which the mask keeps $5{,}674$.
+The cosmic-shear spectra are the correlations of the measured shapes
+of the LSST source galaxies, which gravitational lensing distorts;
+the data vector carries them alongside the DESI clustering spectra
+($15 \times 53 = 795$ entries), but every forecast of this note masks
+them and uses the clustering spectra alone, and the pair rule concerns
+only the clustering part.  Each
 added pair keeps the bands where both of its autos are kept, the rule
 every other pair follows.  The Gaussian covariance rebuilt on this
 layout is positive definite and bitwise equal to the $97$-pair
@@ -1201,7 +1251,12 @@ ${\rm FoM}(w_0, w_a) = [\det{\rm Cov}(w_0, w_a)]^{-1/2}$, the inverse
 area of the marginalized ellipse of $w_0$ and $w_a$ (the dark-energy
 equation of state $w(a) = w_0 + w_a(1 - a)$, $a$ the scale factor),
 and by ${\rm FoM}(\Omega_m, 10^9 A_s)$, defined the same way for the
-matter density $\Omega_m$ and the primordial amplitude $A_s$.  Each
+matter density $\Omega_m$ and the primordial amplitude $A_s$.
+Marginalized means that every other parameter is left free, so its
+uncertainty widens the ellipse: ${\rm Cov}(w_0, w_a)$ is the
+$(w_0, w_a)$ block of the inverse Fisher matrix
+(\texttt{notes/fisher\us machinery}), and a larger figure of merit is
+a tighter dark-energy measurement.  Each
 score is quoted over ${\rm FoM}_{\rm current}$, the same figure of
 merit of the current data vector: the pairs whose blurred overlap at
 the default dispersions reaches $10^{-6}$, plus the BGS--LRG1 boundary
@@ -1314,7 +1369,8 @@ pairs).  Each point of Figures~\ref{fig:axesgap}
 and~\ref{fig:axessigv} is then a row selection: it keeps the rows of
 the data vector that belong to its own list (every auto band and the
 bands of the list's cross pairs that pass the scale cut; the shear
-rows are masked in these forecasts) together with the matching rows and
+rows are masked in these forecasts, which therefore use the
+clustering spectra alone) together with the matching rows and
 columns of the covariance, and builds its Fisher matrix from those
 alone.  For a Gaussian likelihood this is exact, not an
 approximation: selecting the rows equals rebuilding the data set on
@@ -1464,8 +1520,12 @@ penalty, while each bin's departure from that straight line, its
 residual, carries a Gaussian prior of width $3\%$ of the group's
 fiducial amplitude, correlated between bins as
 $\exp(-|z_i - z_j|/L)$ with $L = 0.05$.  Per sample come the
-higher-order biases $b_2$ and $b_{s^2}$, the counterterm $\alpha_0$,
-their redshift tilts, and two shot-noise amplitudes; and there are
+higher-order biases $b_2$ and $b_{s^2}$ -- the galaxies' responses to
+the squared density and to the tidal field -- the counterterm
+$\alpha_0$,
+their redshift tilts, and the two stochastic amplitudes ${\rm SN}_0$
+and ${\rm SN}_2$ of Section~\ref{sec:groups} (the ``shot noise''
+block below); and there are
 the seven $\sv$.  Every figure of merit of Section~\ref{sec:axes} is
 marginalized: it quotes the dark-energy errors with every one of
 these left free, so that their uncertainty is included in the error

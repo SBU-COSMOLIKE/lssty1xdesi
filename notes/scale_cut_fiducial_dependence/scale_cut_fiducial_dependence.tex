@@ -29,6 +29,10 @@
 \newcommand{\kmaxclause}{$\kmax$ quoted at $z = 0$; each bin is cut at
   $\kmax/D(\bar{z}_i)$.}
 
+% Long code names sit in tight lines; let TeX stretch rather than
+% overflow, as the sibling notes do.
+\emergencystretch=2em
+
 \title{How much does the scale cut depend on its fiducial?}
 \date{November 2026}
 \author{}
@@ -60,10 +64,14 @@ it must be computed on some model at some parameter point -- a
 fiducial, the single point in parameter space at which a forecast is
 evaluated.  The forecast computes the cut on the model it analyzes.
 The paper notebook computes it on the paper model's fiducial -- the
-fiducial model: one-loop galaxy bias with per-group offsets and
+fiducial model: one-loop galaxy bias (linear bias plus the
+second-order bias terms, a counterterm and stochastic terms; the model
+is built in \texttt{notes/higher\us order\us bias}) with per-group
+offsets and
 tilts, the line-of-sight
 counterterm $\alpha_2$ fixed at zero and the Fingers-of-God
-dispersion priors widened by a factor of six.  The linear-bias
+dispersion priors (on $\sigma_v$, the velocity spread that smears each
+bin's galaxies along the line of sight) widened by a factor of six.  The linear-bias
 experiments keep a cut computed on the linear fiducial, where each
 bin carries only its linear galaxy bias $b_1$ (the coefficient
 relating the galaxy density contrast to the matter one on large
@@ -89,7 +97,8 @@ fiducials.
     spectra change sign swing by tens of bands at
     $\kmax \ge 0.175\hMpc$ under either fiducial.
   \item \textbf{The science moves less.}  The paper model's
-    ${\rm FoM}(w_0, w_a)$ under the paper-fiducial cut is
+    ${\rm FoM}(w_0, w_a)$ (the dark-energy figure of merit; the setup
+    paragraph below defines it) under the paper-fiducial cut is
     $0.95$--$1.00$ of its value under the linear-bias cut on the main
     layouts, with one outlier of $0.85$ on the coarsest layout at its
     smallest useful cut (Figure~\ref{fig:fom}).  The statistic
@@ -110,7 +119,9 @@ fiducials.
 \end{enumerate}
 The consistent choice is adopted.  The paper notebook,
 \texttt{EXAMPLE\us EVALUATE\us FISHER\us MODEL.ipynb}, computes its
-cut on the paper model's fiducial at the final derivative tier and
+cut on the paper model's fiducial at the final derivative tier (the
+accuracy settings every published derivative uses;
+Section~\ref{sec:fiducial}) and
 caches it (\texttt{chains/model\us scale\us cuts\us final.npz}), and
 every Fisher result of the paper model uses that cache; the
 linear-bias notebooks keep the cut computed on the linear fiducial
@@ -123,7 +134,8 @@ posterior implies stays open (appendix ``Open issues'').
 \paragraph{The setup.}
 The data are the DESI angular clustering band powers $C_\ell^{gg}$
 alone, computed without the Limber
-approximation~\cite{FangKEM2020}, on four bin layouts: \dcom{} (equal
+approximation (which ties each multipole to a single wavenumber and
+fails for thin bins)~\cite{FangKEM2020}, on four bin layouts: \dcom{} (equal
 comoving width) and $\Delta z = 0.02$, $0.05$ and $0.2$ (fixed
 redshift width).  The first three are the main layouts;
 $\Delta z = 0.2$ is the coarse control.  Here $w_0$ and $w_a$
@@ -134,9 +146,16 @@ primordial curvature power spectrum, sampled as $10^9 A_{\rm s}$; and
 ${\rm FoM}(w_0, w_a) = [\det{\rm Cov}(w_0, w_a)]^{-1/2}$ is the
 inverse area of the marginalized $(w_0, w_a)$ ellipse, likewise
 ${\rm FoM}(\Omega_m, 10^9 A_{\rm s})$.  The paper model is scored on
-the pessimistic linear-bias prior throughout.  Every number of this
+the pessimistic linear-bias prior throughout: each group's linear
+biases may wiggle by $3\%$ per bin around a free line in redshift,
+with a short correlation length (the prior is derived in the
+correlated-prior note, \texttt{notes/correlated\us bias\us prior\us
+v2}).  Every number of this
 note is a property of one comparison: the same model, the same
-derivative caches and the same covariance, under two sets of kept
+derivative caches (a Fisher forecast needs only the derivatives of
+the data vector at the fiducial, computed once and stored;
+\texttt{notes/fisher\us machinery} builds that machinery) and the
+same covariance, under two sets of kept
 rows.  The per-cut values behind both figures are in the figure
 folders' \texttt{data.json}.
 
@@ -175,13 +194,18 @@ override of \texttt{EXAMPLE\us EVALUATE1}--\texttt{4.yaml}
 \paragraph{The two cut caches.}
 Both caches hold the UV-fraction cut with $\auv = 0.05$ at
 $\kmax = 0.05$ to $0.25\hMpc$ (results use $\kmax \le 0.2$),
-intersected with the shipped mask:
+intersected with the shipped mask (the fixed per-bin mask distributed
+with each layout's dataset; Section~\ref{sec:cut}):
 \begin{itemize}
   \item \textbf{the paper-fiducial cache}, computed on the paper
-    fiducial at this study's reference settings (CosmoLike accuracy
+    fiducial at this study's reference settings (CosmoLike, the
+    compiled code that projects the power spectrum onto the sky, at
+    accuracy
     boost 4 with integration accuracy 2, the non-Limber $\chi$ grid at
-    four times the sampling examples' factors, low-rank rank 8 with
-    multipole cap 2000, CAMB AccuracyBoost 2 with
+    four times the sampling examples' factors, the low-rank engine --
+    the project's non-Limber method -- at rank 8 with
+    multipole cap 2000, and CAMB, the code that computes the matter
+    power spectrum, at AccuracyBoost 2 with
     \texttt{k\_per\_logint} 30 and transfer $k$ up to
     $80\,{\rm Mpc}^{-1}$).  The paper notebook's own cache,
     \texttt{chains/model\us scale\us cuts\us final.npz}, holds the
@@ -207,7 +231,11 @@ scored from the paper model's derivative base at the final tier
 \texttt{nonlimber\us accuracyboost} 64, patched halofit tolerance)
 and the Gaussian covariance of the paper data sets, built on the
 one-loop fiducial with massless neutrinos over $14{,}000$\,deg$^2$,
-its inverse rescaled by $12{,}300/14{,}000$.
+its inverse rescaled by $12{,}300/14{,}000$.  The final tier is the
+accuracy bundle that the convergence study of
+\texttt{notes/fisher\us machinery} fixed for every published
+derivative; a five-point stencil is the five-evaluation finite
+difference it uses in place of a simple two-sided one.
 
 \section{The UV-fraction scale cut}
 \label{sec:cut}
@@ -251,7 +279,8 @@ comes from above the threshold,
 with absolute values so that a negative term counts like a positive
 one.  A spectrum's kept bands run from its first band up to, and not
 including, the first band where ${\rm uvfrac} \ge \auv$; every later
-band is dropped even if its fraction dips back below.  The
+band is dropped even if its fraction dips back below (the prefix
+rule: the kept bands are one unbroken run from the first band).  The
 baseline threshold is $\auv = 0.05$~\cite{Saraivanov2026}, following
 DeRose and Chen~\cite{DeRoseChen2025}.  Throughout, ``kept'' means a band the cut
 keeps \emph{and} the shipped mask keeps -- the fixed per-bin mask
@@ -331,7 +360,9 @@ $P_\infty \propto -(b_2 + \tfrac{2}{3} b_{s^2})^2$, a negative
 shot-noise-like term; the density counterterm $\alpha_0 k^2 P$; the
 line-of-sight counterterm $\alpha_2$~\cite{Maus2024} when it is
 switched on; linear redshift-space distortions on each bin's
-Fingers-of-God--blurred redshift distribution; and magnification.
+Fingers-of-God--blurred redshift distribution; and magnification (the
+change of a bin's observed counts by gravitational lensing of
+foreground matter, with amplitude zero at both fiducials).
 Table~\ref{tab:terms} lists each term with its value at the paper
 fiducial.
 
@@ -463,7 +494,9 @@ $1.031$ under both cuts and changes by at most $0.004$; the
 coverage of the $68.3\%$ region changes by at most $0.003$.  The
 largest change of any tested parameter shift is $0.034\sigma$.  The
 break points of the bias tests -- the largest cut at which every
-tested truth shifts the fit by less than $\sigma/3$ -- are identical
+tested truth (the paper notebook's fixed drifts and offsets, data the
+model does not contain; \texttt{notes/higher\us order\us bias} lists
+them) shifts the fit by less than $\sigma/3$ -- are identical
 under both cuts on every layout: no cut moves from pass to fail or
 back.
 

@@ -48,7 +48,9 @@
 
 \paragraph{The question.}
 The forecast fits the DESI galaxy clustering band powers
-$C_\ell^{gg}$ of thin redshift bins with linear galaxy bias,
+$C_\ell^{gg}$ -- the angular power spectrum of galaxy counts,
+averaged in bands of multipole $\ell$ -- of thin redshift bins with
+linear galaxy bias,
 $\delta_g = b_1\,\delta$: the galaxy density contrast $\delta_g$ is
 the matter density contrast $\delta$ times one number $b_1$ per bin.
 This is exact on large scales, but higher-order bias terms grow with
@@ -71,18 +73,23 @@ primordial curvature power spectrum, sampled as $10^9 A_s$.
   \item Linear bias is safe only at the smallest scanned cut,
     $\kmax = 0.05\hMpc$, and for every prior and every truth only on
     the layout of equal comoving width, where it keeps about $1\%$ of
-    the dark-energy figure of merit.  At $0.075\hMpc$ a linear fit is
+    the dark-energy figure of merit (the inverse area of the
+    $(w_0, w_a)$ error ellipse, defined with
+    Figure~\ref{fig:fomkmax}).  At $0.075\hMpc$ a linear fit is
     biased on every layout under every prior, a free bias per bin
     included, so from there on the forecast needs the one-loop models
     of \texttt{notes/higher\_order\_bias}.
   \item Yes.  The test excludes the growth-tied prior, finds the
     baseline prior honest only under its own scatter, and the
-    pessimistic prior honest under both.
+    pessimistic prior honest under both (``honest'' and the test's
+    score $\eta$ are defined with the test below).
 \end{enumerate}
 
 \paragraph{The setup.}
 The data are the DESI $C_\ell^{gg}$ alone, computed without the
-Limber approximation, for six tracer groups (BGS, LRG1--3, ELG1--2)
+Limber approximation -- which ties each multipole to a single
+wavenumber and fails for thin bins -- for six tracer groups (BGS,
+LRG1--3, ELG1--2)
 on four bin layouts: equal comoving width,
 $\Delta d_{\rm com} = 62$~Mpc, and fixed redshift width,
 $\Delta z = 0.02$, $0.05$ and $0.2$.  The first two are the thin
@@ -93,16 +100,25 @@ mean redshift of bin $i$ and $B_g$ one amplitude per group $g$, the
 four priors are: \textbf{growth-tied}, $b_i = B_g/D(\bar{z}_i)$;
 \textbf{baseline}, a free amplitude and tilt per group plus a
 residual of width $\sigma_g = 3\%$ for BGS and $1\%$ elsewhere,
-correlated over $L = 0.2$ in redshift; \textbf{pessimistic},
+correlated over $L = 0.2$ in redshift (bins closer than $L$ share
+most of their residual; farther apart, their residuals decouple);
+\textbf{pessimistic},
 $\sigma_g = 3\%$ everywhere and $L = 0.05$; and \textbf{free}, one
 flat-prior bias per bin.  The covariance is Gaussian, evaluated at
 the calibrated truth defined below.
 
-A fit's shift is its Fisher linear response (Appendix~\ref{app:method}),
+Every fit here is a Fisher forecast: the data vector is linearized at
+the fiducial point, and the posterior is approximated by a Gaussian
+whose inverse covariance is the Fisher matrix of
+Appendix~\ref{app:method}; \texttt{notes/fisher\_machinery} builds
+that machinery step by step.  A fit's shift is its Fisher linear
+response (Appendix~\ref{app:method}),
 in units of its marginalized error ellipse for $(w_0, w_a)$ and of
-its marginalized error $\sigma$ for $\Omega_m$ and $A_s$.  A fit is
+its marginalized error $\sigma$ for $\Omega_m$ and $A_s$ --
+marginalized meaning every other parameter is left free, so its
+uncertainty is included.  A fit is
 unbiased when every shift is below $\sigma/3$, the correlated-prior
-note's threshold.
+note's threshold (Appendix~\ref{sec:scores} says why a third).
 
 \paragraph{The scale cut.}
 $\kmax$ labels one cut per bin: bin $i$ is cut at
@@ -144,17 +160,22 @@ small-scale sensitivity of the loops.
 The \emph{calibrated} truth keeps the fiducial $b_1$, puts $b_2$ and
 $b_{s^2}$ on their calibrations (Appendix~\ref{sec:truths}), and sets
 $\alpha_0$, the third-order bias $b_3$ and the stochastic terms to
-zero.  Four brackets offset every group's $b_2$ by $\pm 1$
+zero.  Four bracket truths -- variations that surround the calibrated
+truth from either side -- offset every group's $b_2$ by $\pm 1$
 (``$b_2 \pm 1$'', one unit of the offset) or set
 $\alpha_0 = \pm 12.5\,h^{-2}\,{\rm Mpc}^2$, the counterterm prior
-width of the DESI 2024 full-shape analysis~\cite{DESI2024V}.  ``Every
+width of the DESI 2024 full-shape analysis (the three-dimensional fit
+to the galaxy power spectrum itself)~\cite{DESI2024V}.  ``Every
 truth'' means all five.
 
 \paragraph{The safe cut, layout by layout.}
 The safe $\kmax$ is the largest scanned cut at which every shift of
 every truth considered stays below $\sigma/3$, there and at every
 smaller cut with a fit.  Table~\ref{tab:safe} lists it;
-Figure~\ref{fig:fobkmax} draws the shifts.
+Figure~\ref{fig:fobkmax} draws the shifts.  In the figure, on every
+layout the largest shift crosses the dashed $\sigma/3$ line between
+$0.05$ and $0.075\hMpc$ and stays above it at every larger cut: the
+verdict is a jump between the two smallest cuts, not a slow drift.
 \begin{itemize}
   \item $\Delta d_{\rm com} = 62$~Mpc: the largest shift at $0.05$ is
     $0.10\sigma$.
@@ -201,7 +222,8 @@ $b_2 + 1$ sets it ($0.067$).
   \centering
   \includegraphics[width=\linewidth]{plots/fob_kmax/fob_kmax.pdf}
   \caption{The shift of a linear-bias fit to the one-loop truth
-    against the scale cut, one column per layout.  Lines: the
+    against the scale cut, one column per layout and, from top to
+    bottom, the $(w_0, w_a)$, $\Omega_m$ and $A_s$ shifts.  Lines: the
     calibrated truth; color: the layout (black: growth-tied); line
     width and marker: the prior (growth-tied thickest with stars,
     baseline down-triangles, pessimistic crosses, free thinnest with
@@ -238,9 +260,13 @@ $\Omega_m$ ($0.45$, against $1.07$ for growth-tied) to $(w_0, w_a)$
 \paragraph{The accuracy test for $\Omega_m$ and $A_s$.}
 Figure~\ref{fig:ladderbiasparams} repeats the correlated-prior note's
 accuracy test with linear-bias fits and linear truths at
-$\kmax = 0.075\hMpc$.  Each truth is a known bias drift (the
-$r < 19.5$ flux limit in BGS, a conserved galaxy population
-elsewhere) plus a residual drawn from the baseline or the pessimistic
+$\kmax = 0.075\hMpc$.  Each truth is a known bias drift -- a
+redshift evolution of $b_1$ that the correlated-prior note derives:
+for BGS the drift of the galaxies brighter than the $r < 19.5$ flux
+limit, elsewhere that of a conserved galaxy population, one carried
+by gravity with no galaxies created or destroyed, whose bias obeys
+$b_1 - 1 \propto 1/D$ -- plus a residual drawn from the baseline or
+the pessimistic
 prior: $2000$ draws, each fitted under every prior.  A fit is scored
 by $\eta = \chidof$, with $\chi^2$ the squared distance of the
 recovered parameters from the truth in units of the fit's
@@ -276,8 +302,10 @@ Every value is in \texttt{plots/ladder\_bias\_params/data.json}.
     plus a residual drawn from the baseline (left) or the pessimistic
     prior (right), each fitted under every prior.  Points: the mean
     shift over the truths; bars: 16th--84th percentiles; color and
-    marker: the layouts; gray columns: the baseline and pessimistic
-    priors; dashed: $\sigma/3$.  Where
+    marker: the layouts; gray vertical bands: the fits under the
+    baseline and pessimistic priors; open markers on the $10^{-3}$
+    floor: exact recovery, drawn at the axis floor; dashed:
+    $\sigma/3$.  Where
     the fit's prior equals the truth's scatter, the fit's error covers
     the mean shift and $\eta = 1$.  $\kmax = 0.075\hMpc$; \kmaxclause}
   \label{fig:ladderbiasparams}
@@ -328,7 +356,9 @@ $n_s$, $H_0$, $\Omega_b$, $\Omega_m$, $w_0$ and $w_a$ with flat
 priors; $m_\nu$ and $\tau$ stay fixed.
 
 \paragraph{The linear bias and the velocity dispersions.}
-One sampled amplitude per group on its leader bin, every other bin of
+One sampled amplitude per group on its leader bin (one designated bin
+carries the sampled parameter; every bin of the group reads its
+value), every other bin of
 the group tied by $b_{1,i} = B_g/D(\bar{z}_i)$, with $B_g = 1.34$
 (BGS), $1.70$ (LRG1--LRG3) and $0.84$ (ELG1, ELG2), a flat prior
 $[0.8, 4]$ per leader, and $D$ read off the linear power spectrum at
@@ -387,7 +417,9 @@ patched to $10^{-7}$.
 \paragraph{The LSST Y1 3x2pt reference.}
 The gray reference line of Figure~\ref{fig:fomkmax},
 ${\rm FoM}(w_0, w_a) = 17.26$, is the \texttt{lsst\_y1} project's
-real-space SRD Fisher forecast,
+real-space Fisher forecast of the 3x2pt analysis -- the joint fit of
+cosmic shear, galaxy--galaxy lensing and galaxy clustering -- in the
+configuration of the LSST Science Requirements Document (SRD),
 \texttt{EXAMPLE\_EVALUATE2\_FISHER\_3x2pt.pkl} in that project's
 \texttt{chains/} (1560 entries), not a band-power case of this
 project.  Its fiducial
@@ -406,7 +438,9 @@ shear-calibration centers.
 
 Each truth is a full one-loop data vector at the fiducial cosmology,
 with $b_{1,i} = B_g/D(\bar{z}_i)$.  The calibrations are the Lazeyras
-et al.\ separate-universe fit~\cite{Lazeyras2016},
+et al.\ separate-universe fit~\cite{Lazeyras2016} -- simulations that
+measure how halo abundance responds to a change of the background
+density --
 $b_2(b_1) = 0.412 - 2.143\,b_1 + 0.929\,b_1^2 + 0.008\,b_1^3$, and
 $b_{s^2} = -\tfrac{4}{7}(b_1 - 1)$, the co-evolution of a population
 formed with local bias and moved by gravity~\cite{Saito2014}.  The
@@ -505,7 +539,8 @@ gives no fit, and the search for the safe $\kmax$ skips it.
     notebook's seed and order, so they are the truths of the
     correlated-prior note's accuracy test.  When the fit's prior
     equals the truth's scatter, the scatter and noise terms of
-    $\langle\chi^2_w\rangle$ sum to exactly $2$ (here to
+    $\langle\chi^2_w\rangle$ sum to exactly $2$, the honest
+    expectation for $n_{\rm dof} = 2$ (here to
     $9.4\times10^{-11}$), and $\eta$ of $(w_0, w_a)$ is within $0.05$ of
     $1$, the remainder being the drift.
   \item \textbf{The covariance grid.}  The covariance's non-Limber
