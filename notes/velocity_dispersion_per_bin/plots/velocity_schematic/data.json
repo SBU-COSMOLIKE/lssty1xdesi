@@ -1,0 +1,10 @@
+{
+  "about": "make_velocity_schematic_data.py: quantitative elements of the hand-drawn schematic (the two parts of a galaxy's velocity, and the Fingers-of-God blur across a thin bin edge).  sigma_chi = (1 + z) sigma_v / H(z) at z = 0.5 with the LRG1 fiducial sigma_v and flat LambdaCDM (H_0 = 67.32 km/s/Mpc, Omega_m = 0.3); bin width of the equal-comoving-width layout; one example galaxy velocity and its comoving shift (1 + z) v / H(z).",
+  "z": 0.5,
+  "sigma_v_kms": 357.0,
+  "H_kms_per_Mpc": 88.1,
+  "sigma_chi_Mpc": 6.08,
+  "bin_width_Mpc": 62.0,
+  "example_v_kms": 587.0,
+  "example_shift_Mpc": 9.99
+}

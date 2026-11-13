@@ -36,6 +36,9 @@ by term, so a shifted array holds the same floats as the notebook's:
   a0   b_{K,i} -> b_{K,i} + step/(2 b_{1,i} (c/H0)^2), step in h^-2 Mpc^2:
        CosmoLike's k^2 term is 2 b_1 b_K k^2 P with k in units of H0/c
   a2   alpha_{2,i} -> alpha_{2,i} + step, step in h^-2 Mpc^2
+  sigv sigma_{v,i} -> sigma_{v,i} (1 + step)   (a relative step of the
+       velocity dispersion DESI_SIGV_<i> that blurs bin i's n(z); used by
+       compute_sigv_bins_mpi.py, the per-bin sigma_v study)
 
 How a step reaches CosmoLike. desi_cl's set_lens_related computes the
 per-bin arrays of a point and passes them to the compiled interface,
@@ -87,6 +90,12 @@ TIDAL_OPERATORS = (
     "a0",
 )
 ALPHA2_OPERATOR = "a2"
+# the velocity dispersion of a bin's Fingers-of-God blur (DESI_SIGV_<i>,
+# km/s, i 1-based). Unlike the bias operators, it is not a compiled
+# setter's argument: it shapes the lens n(z) the likelihood builds, so its
+# step is applied to the point's DESI_SIGV_<i> before the likelihood
+# builds the blurred n(z)
+SIGV_OPERATOR = "sigv"
 
 
 # ---------------------------------------------------------------------------
@@ -104,13 +113,17 @@ class PerBinStepMixin:
     attribute, which cobaya would read as an option).
 
     State kept on the instance:
-      _step   = None, or a dict {"operator": one of TIDAL_OPERATORS or
-                ALPHA2_OPERATOR, "bins": int array of 0-based bin
-                indices, "step": float}; set by set_per_bin_step.
+      _step   = None, or a dict {"operator": one of TIDAL_OPERATORS,
+                ALPHA2_OPERATOR or SIGV_OPERATOR, "bins": int array of
+                0-based bin indices, "step": float}; set by
+                set_per_bin_step.
       _passed = the per-bin arrays the likelihood computed at the last
                 evaluated point, before any step: {"B1", "B2", "BS2",
                 "BK"} (one float64 array per bias, length = number of
                 lens bins), or None before the first point.
+      _passed_sigv = the per-bin velocity dispersions DESI_SIGV_<i> [km/s]
+                of the last evaluated point, before any step, or None
+                before the first point.
     """
 
     def initialize(self):
@@ -122,6 +135,7 @@ class PerBinStepMixin:
         super().initialize()
         self._step = None
         self._passed = None
+        self._passed_sigv = None
 
     def set_per_bin_step(self, operator, bins, step):
         """Add a step to one operator of some bins at every next point.
@@ -130,17 +144,19 @@ class PerBinStepMixin:
         evaluates one point and clears it (try/finally).
 
         Arguments:
-          operator = "b1", "b2", "bs2", "a0" or "a2" (module docstring).
+          operator = "b1", "b2", "bs2", "a0", "a2" or "sigv" (module
+                     docstring).
           bins     = 0-based indices of the bins to shift (a non-empty
                      integer sequence without repeats).
-          step     = the step, finite: relative for "b1", absolute for
-                     "b2" and "bs2", in h^-2 Mpc^2 for "a0" and "a2".
+          step     = the step, finite: relative for "b1" and "sigv",
+                     absolute for "b2" and "bs2", in h^-2 Mpc^2 for "a0"
+                     and "a2".
 
         Raises:
           ValueError naming the operator, the bins or the step that is
           not valid, before anything is stored.
         """
-        known = TIDAL_OPERATORS + (ALPHA2_OPERATOR,)
+        known = TIDAL_OPERATORS + (ALPHA2_OPERATOR, SIGV_OPERATOR)
         if operator not in known:
             raise ValueError(
                 f"per-bin step: operator {operator!r} is not one of {known}")
@@ -191,6 +207,24 @@ class PerBinStepMixin:
             out[key] = values.copy()
         return out
 
+    def passed_sigv(self):
+        """Return a copy of the per-bin dispersions of the last evaluated point.
+
+        These are the DESI_SIGV_<i> [km/s] the point's parameters give
+        (group members tied to their leaders), before any step.
+
+        Returns:
+          float64 array (length = number of lens bins).
+
+        Raises:
+          RuntimeError before the first evaluated point.
+        """
+        if self._passed_sigv is None:
+            raise RuntimeError(
+                "passed_sigv: no point has been evaluated yet; evaluate the "
+                "fiducial point first")
+        return self._passed_sigv.copy()
+
     def one_loop_biases(self, b1, params):
         """Return the parent's (b2, bs2, bk), and record the four arrays.
 
@@ -221,7 +255,11 @@ class PerBinStepMixin:
         The parent sends every array of the point; with a step set, the
         setter of the stepped operator is called again with the step
         added to the shifted bins (the arithmetic of each operator is in
-        the module docstring).
+        the module docstring). A "sigv" step works one stage earlier:
+        the shifted bins' DESI_SIGV_<i> are scaled by (1 + step) in a copy
+        of the point's parameters, and the parent builds every array and
+        the blurred n(z) from that copy, so only those bins' n(z) (and the
+        stochastic kernels the likelihood keeps with them) change.
 
         Arguments:
           **params = the point's parameters (logp's keyword arguments).
@@ -230,6 +268,24 @@ class PerBinStepMixin:
         in the parent; with a step, the shifted values replace the
         stepped operator's.
         """
+        # record the point's own dispersions before any step:
+        # per_bin_values resolves DESI_SIGV_<i> for every bin from the
+        # point's parameters (a group member reads its leader's value)
+        self._passed_sigv = np.array(self.per_bin_values("DESI_SIGV", params),
+                                     dtype=float)
+        if self._step is not None and self._step["operator"] == SIGV_OPERATOR:
+            # dict(params) is a shallow copy: the step edits the copy's
+            # entries, and the caller's params stay unchanged
+            shifted = dict(params)
+            for i in self._step["bins"]:
+                # the parameters count bins from 1, the step's indices from 0
+                name = f"DESI_SIGV_{i + 1}"
+                shifted[name] = float(params[name])*(1.0 + self._step["step"])
+            # **shifted passes the dict entries back as keyword arguments;
+            # the early return skips the re-call below, which serves the
+            # bias operators only
+            super().set_lens_related(**shifted)
+            return
         super().set_lens_related(**params)
         if self._step is None:
             return
