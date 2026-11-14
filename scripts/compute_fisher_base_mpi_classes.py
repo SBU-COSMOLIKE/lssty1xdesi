@@ -322,7 +322,12 @@ class PerBinStepMixin:
             # units: an alpha_0 step [h^-2 Mpc^2] is a bK step of
             # step/(2 b1 (c/H0)^2), with c/H0 in Mpc/h
             BK[members] += step/(2.0*B1[members]*C_OVER_H0**2)
-        ci.set_nuisance_bias_tidal(B1=B1, B2=B2, BS2=BS2, B_MAG=zeros,
+        # re-send the likelihood's magnification coefficients (zeros
+        # unless a study set them with set_magnification_coefficients):
+        # the setter replaces every array it names, so passing zeros here
+        # would silently switch magnification off in the stepped call
+        bmag = np.array(self.desi_bmag, dtype=float)
+        ci.set_nuisance_bias_tidal(B1=B1, B2=B2, BS2=BS2, B_MAG=bmag,
                                    B3nl=zeros, BK=BK)
 
 

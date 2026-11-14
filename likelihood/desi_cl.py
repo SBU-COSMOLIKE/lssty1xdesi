@@ -39,6 +39,11 @@ every sampled point:
     through the external-n(z) path (set_lens_sample), so the raw
     histograms on disk are never modified.
 
+Lensing magnification is off by default: every bin's magnification
+coefficient C = 5 s - 2 starts at zero, and a study switches it on by
+calling set_magnification_coefficients on the built likelihood (the
+method defines C and explains why it is not a yaml option).
+
 With higher_order_bias: 1 the bias is the one-loop model of
 notes/higher_order_bias (the physics reference; see its recommendation
 section), every term per bin:
@@ -212,6 +217,16 @@ class desi_cl(_cosmolike_prototype_base):
           self.log, "the bin table lists %d bins; the dataset declares "
           "lens_ntomo = %d", len(self.desi_zbar), int(self.lens_ntomo))
 
+    # lensing magnification: one coefficient per bias chunk (column 3 of
+    # the bin table names each bin's chunk), off at every start. A study
+    # switches it on with set_magnification_coefficients after building
+    # the model. It is not an option of desi_cl.yaml on purpose: a new
+    # option changes the resolved cobaya input, whose sha256 the archived
+    # Fisher caches store, so every cache would stop matching its model.
+    self.desi_chunk = np.atleast_1d(
+        np.loadtxt(table_file, usecols=3, dtype=str))
+    self.set_magnification_coefficients(None)
+
     # the n(z) table the base read for the external-n(z) path: column 0
     # is the shared redshift grid, column i + 1 the raw histogram of bin
     # i; the FoG kernel width is expressed in steps of this grid
@@ -272,6 +287,53 @@ class desi_cl(_cosmolike_prototype_base):
   # ------------------------------------------------------------------------
   # ------------------------------------------------------------------------
 
+  def set_magnification_coefficients(self, coefficients):
+    """Set the lensing-magnification coefficient of every lens bin.
+
+    Lensing by the matter in front of a bin changes its observed counts
+    by C times the convergence kappa of the bin's galaxies, where
+    C = 5 s - 2, s = dlog10 N(<m)/dm the slope of the cumulative counts
+    at the sample's magnitude limit (the 5 s is the flux brightening,
+    the -2 the area dilution). C is cosmolike's per-bin b_mag. Every bin
+    of a bias chunk gets its chunk's value; the values persist until the
+    next call, and every evaluated point sends the array to cosmolike
+    (set_lens_related).
+
+    Arguments:
+      coefficients = None (every C = 0: the forecast without
+                     magnification), or a mapping {chunk: C} with one
+                     float per chunk of the bin table (BGS, LRG1, ...).
+
+    Raises:
+      LoggedError when a chunk of the bin table has no entry, an entry
+      names no chunk of the table, or a value is not finite.
+
+    Side effects: sets self.desi_bmag, a float64 array of length
+    lens_ntomo.
+    """
+    ntomo = int(self.lens_ntomo)
+    if coefficients is None:
+      self.desi_bmag = np.zeros(ntomo)
+      return
+    chunks = [str(c) for c in self.desi_chunk]
+    unknown = sorted(set(coefficients) - set(chunks))
+    if unknown:
+      raise LoggedError(
+          self.log, "magnification_coefficients names %s, which no bin of "
+          "the bin table carries (chunks: %s)", unknown, sorted(set(chunks)))
+    values = np.empty(ntomo)
+    for i, chunk in enumerate(chunks):
+      if chunk not in coefficients:
+        raise LoggedError(
+            self.log, "magnification_coefficients has no value for the "
+            "chunk %s of bin %d", chunk, i)
+      values[i] = float(coefficients[chunk])
+    if not np.all(np.isfinite(values)):
+      raise LoggedError(
+          self.log, "magnification coefficients must be finite; got %s",
+          dict(coefficients))
+    self.desi_bmag = values
+
   def set_lens_related(self, **params):
     """Send the DESI nuisance parameters of this point to cosmolike.
 
@@ -279,11 +341,12 @@ class desi_cl(_cosmolike_prototype_base):
     DESI model: per-bin linear bias from the sampled chunk amplitudes
     divided by the growth at each bin's mean redshift, the
     Fingers-of-God convolution of every raw thin-bin n(z) with the
-    sample's sampled velocity dispersion, and zeros for every lens
-    nuisance this forecast does not model (the higher-order biases and
-    the counterterm alpha_2 under linear bias, magnification, point
-    masses, photo-z shifts - spectroscopic redshifts carry no shift
-    parameter).
+    sample's sampled velocity dispersion, the magnification
+    coefficients kept by set_magnification_coefficients (zeros unless
+    a study set them), and zeros for every lens nuisance this forecast
+    does not model (the higher-order biases and the counterterm
+    alpha_2 under linear bias, point masses, photo-z shifts -
+    spectroscopic redshifts carry no shift parameter).
 
     Every array crosses the compiled-interface boundary as a numpy
     array, never a plain Python list: the carma list-to-arma conversion
@@ -333,12 +396,15 @@ class desi_cl(_cosmolike_prototype_base):
           b1[:3], np.asarray(growth)[:3], self.desi_zbar[:3])
 
     ci.set_point_mass(PMV=zeros)
+    # the per-bin magnification coefficients: zeros unless a study
+    # called set_magnification_coefficients
+    bmag = np.asarray(self.desi_bmag, dtype=np.float64)
     if self.higher_order_bias == 1:
       b2, bs2, bk = self.one_loop_biases(b1, params)
-      ci.set_nuisance_bias_tidal(B1=b1, B2=b2, BS2=bs2, B_MAG=zeros,
+      ci.set_nuisance_bias_tidal(B1=b1, B2=b2, BS2=bs2, B_MAG=bmag,
                                  B3nl=zeros, BK=bk)
     else:
-      ci.set_nuisance_bias(B1=b1, B2=zeros, B_MAG=zeros,
+      ci.set_nuisance_bias(B1=b1, B2=zeros, B_MAG=bmag,
                            B3nl=zeros, BK=zeros)
 
     # the radial counterterm alpha_2 [h^-2 Mpc^2] of the one-loop model.
