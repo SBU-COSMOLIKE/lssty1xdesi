@@ -118,7 +118,17 @@ project's accuracy test gives the same gain within a few percent;
 under a prior on the bias levels and slopes themselves it would be
 smaller, by an amount not yet computed.  The analysis keeps the
 current list; the longer lists are a comparison against that
-standard choice.
+standard choice.  The gain and a magnification sensitivity travel
+together.  The model sets the magnification bias $b_{\rm mag}$, the
+response of the observed number density to the lensing convergence,
+to zero, and the added pairs' neglected magnification signal looks
+to the fit like a change of those same bias levels and slopes: at
+the measured count slopes the neglect shifts the fits by at most
+about $0.07$ of the marginalized errors on the current and the
+longer lists alike, while at an unfavourable value of the unmeasured
+ELG count slope the largest lists reach $0.30$--$0.46$ where the
+current lists stay below $0.06$ (Section~\ref{sec:axes};
+\texttt{notes/lensing\us magnification}).
 
 \section{Fiducial model and parameter values}
 \label{sec:fiducial}
@@ -1488,6 +1498,36 @@ information pays off mainly by separating each group's free bias
 level and slope from the growth history, and the dispersions ride
 on the same separation.
 
+\paragraph{The neglected magnification.}
+Every forecast here sets the magnification bias $b_{\rm mag}$ -- the
+response of the observed number density to the lensing convergence
+-- to zero, in the model and in the covariance.  Lensing by the
+matter in front of a bin changes how many of its galaxies pass the
+flux limit, and for two bins with no kernel overlap that lensing is
+a correlated signal the model then misses.
+\texttt{notes/lensing\us magnification} measures what the neglect
+costs as linear-response shifts of the fits, in units of each
+parameter's marginalized error ($(w_0, w_a)$ against its error
+ellipse).  The amplitude is one coefficient per sample,
+$C = 5s - 2$, with $s$ the count slope, the logarithmic slope of
+the cumulative number counts at the flux limit; the measured slopes
+give $C = 2$ for BGS and $3$ for LRG, and the unmeasured ELG slope
+is taken as $C_{\rm ELG} = 0$ with corners at $\pm 2$.
+
+At the measured slopes the shifts stay below about $0.07$ on the
+three thinner layouts, on the current and the largest lists alike:
+magnification at gaps of a few thin-bin widths is still small, and
+the free bias levels and slopes absorb most of it.  The ELG corners
+dominate the budget: at $C_{\rm ELG} = +2$ the largest lists reach
+$0.30$--$0.46$ in $(w_0, w_a)$ against at most $0.06$ on the
+current lists, and at $-2$ the current lists themselves reach
+$0.2$--$0.3$ across the layouts.  On $\Delta z = 0.2$ the measured
+cross spectra are magnification-dominated -- two wide adjacent bins
+share little density signal while the lensing across a wide bin is
+strong, and magnification lifts one measured adjacent cross
+spectrum to $25$ times its magnification-free size -- so
+$(w_0, w_a)$ shifts by $0.19$ even at the measured slopes.
+
 \section{Why the added pairs help: the free bias levels and slopes}
 \label{sec:bias}
 
@@ -1896,6 +1936,21 @@ fixed leaves it at $2.7$; with the whole bias block fixed it falls
 from $2.1$ to $1.5$ on \dcom{}.  The extra gain of the fitted
 curves shrinks with the cost.
 
+\paragraph{Magnification rides it too.}
+The neglected magnification of Section~\ref{sec:axes} enters
+through the same freedom.  At the measured count slopes the free
+levels and slopes absorb part of the neglected signal away from the
+cosmology: freezing every nuisance parameter raises the largest
+$(w_0, w_a)$ shifts by a factor of $1.7$ to $3.5$ on the three
+thinner layouts.  At the ELG corner $C_{\rm ELG} = +2$ the
+balance flips on the largest lists: their magnification signal is
+read as a change of the bias lines and pulls the cosmology with it,
+so the free fits shift \emph{more} than the frozen ones ($0.46$
+against $0.20$ on $\Delta z = 0.05$ at its largest list).  The
+freedom that buys the gain of the added pairs is the freedom that
+lets an unmodeled magnification signal move the cosmology; the two
+travel together (\texttt{notes/lensing\us magnification}).
+
 \subsection{How the gain depends on the linear-bias prior}
 \label{sec:priorgain}
 
@@ -2035,6 +2090,17 @@ of this note.
     (Section~\ref{sec:bias}).  A finite prior on them would land
     between those curves; no forecast with one has been run, so
     where the gain lands is not known.
+  \item \textbf{The neglected magnification.}  Every forecast sets
+    the magnification bias $b_{\rm mag}$ to zero.  At the measured
+    count slopes that costs at most about $0.07$ of the marginalized
+    errors on the three thinner layouts, on the current and the
+    largest lists alike, but the unmeasured ELG count slope
+    dominates the budget: at its $C_{\rm ELG} = +2$ corner the
+    largest lists shift by $0.30$--$0.46$ in $(w_0, w_a)$
+    (Section~\ref{sec:axes};
+    \texttt{notes/lensing\us magnification}).  Measuring the ELG
+    count slope, and putting magnification into the model, are the
+    open steps.
 \end{itemize}
 
 \paragraph{Reproducing the figures.}

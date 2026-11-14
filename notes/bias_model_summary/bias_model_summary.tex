@@ -79,7 +79,11 @@
 %     (the section "The cross pairs and their overlaps");
 %   - the thin-over-wide factors of the same section (and the Summary)
 %     track the Wide* macros below, from the wide-ratio figure and the
-%     companion note's attribution against wide bins.
+%     companion note's attribution against wide bins;
+%   - the magnification shifts of the Summary and of the paragraph
+%     "The neglected magnification" track the Mag* macros below
+%     (recomputed by the magnification study's fits, not by the
+%     notebook).
 % ---------------------------------------------------------------------
 % The refresh switch: \numbersfinalfalse prints every \refresh value in
 % red and the note under the title; \numbersfinaltrue prints them plain.
@@ -230,6 +234,38 @@
 \newcommand{\WideLowFive}{\refresh{4}}
 \newcommand{\WideLineMin}{\refresh{7}}
 \newcommand{\WideLineMax}{\refresh{9}}
+% The neglected lensing magnification (notes/lensing_magnification):
+% linear-response shifts of this model's fits when the data carry the
+% magnification signal that b_mag = 0 leaves out, in units of each
+% parameter's marginalized error ((w0, wa) of its error ellipse),
+% sigma_v fitted, largest over the cuts k_max <= 0.2 h/Mpc.  They are
+% computed on the same final-tier derivative bases as Part 1 (by the
+% magnification study's fits, not by the notebook), so a derivative
+% recompute puts them out of date together with Part 1.  MagFid: the
+% largest shift of any of (w0, wa), Omega_m and A_s on the three
+% thinner layouts at the measured count slopes (C_ELG = 0), current
+% and longer lists alike.  MagPlusPair*: the range over the thinner
+% layouts of the largest (w0, wa) shift of the gap axis' largest
+% lists at C_ELG = +2; MagPlusPaperMax: the current lists' bound at
+% the same corner.  MagMinusPaper*: the current lists' (w0, wa) range
+% at C_ELG = -2 over the four layouts.  MagTwenty: Delta z = 0.2's
+% (w0, wa) shift at the measured slopes (either list); MagTwentyAs:
+% its A_s shift at C_ELG = +2 (current list; 1.06 on the largest).
+% MagFrozen*: the factor by which freezing every nuisance parameter
+% raises the largest (w0, wa) shift at the measured slopes, over the
+% three thinner layouts and both lists (1.6 on Delta z = 0.2; cut by
+% cut the factor is 1.5 to 13, largest where the free shift nearly
+% vanishes).
+\newcommand{\MagFid}{\refresh{0.07}}
+\newcommand{\MagPlusPairMin}{\refresh{0.30}}
+\newcommand{\MagPlusPairMax}{\refresh{0.46}}
+\newcommand{\MagPlusPaperMax}{\refresh{0.06}}
+\newcommand{\MagMinusPaperMin}{\refresh{0.2}}
+\newcommand{\MagMinusPaperMax}{\refresh{0.3}}
+\newcommand{\MagTwenty}{\refresh{0.19}}
+\newcommand{\MagTwentyAs}{\refresh{1.0}}
+\newcommand{\MagFrozenMin}{\refresh{1.7}}
+\newcommand{\MagFrozenMax}{\refresh{3.5}}
 % ---------------------------------------------------------------------
 % Part 2: inputs and template properties (not moved by the recompute).
 %
@@ -505,7 +541,15 @@ $\kmax = 0.2\hMpc$ (Section~\ref{sec:pairs}).  The gain rests on the
 freedom the prior grants: each group's free bias level and slope
 mimic the growth history in the auto spectra, the added cross
 spectra separate the two, and with that level and slope held fixed
-most of the gain goes.  The analysis keeps the current data vector;
+most of the gain goes.  The same freedom prices the lensing
+magnification the model neglects: its signal in the added pairs
+mimics the bias levels and slopes, so at the measured count slopes
+the thin layouts' fits shift by at most about \MagFid{} of the
+marginalized errors on either list, while at an unfavourable value
+of the unmeasured ELG count slope the longer lists reach
+\MagPlusPairMin{}--\MagPlusPairMax{} where the current lists stay
+below \MagPlusPaperMax{} (Section~\ref{sec:method};
+\texttt{notes/lensing\_magnification}).  The analysis keeps the current data vector;
 the longer lists are a comparison against it.  What stays open is a
 finite prior on the levels and slopes.
 
@@ -1254,8 +1298,9 @@ redshift-space distortions move galaxies between neighbouring shells.
 The third kernel, lensing magnification, is proportional to
 the magnification bias $b_{\rm mag}$, the response of the observed
 number density to the lensing convergence; this forecast sets
-$b_{\rm mag} = 0$ in every DESI bin and every LSST Y1 lens bin, so
-magnification is neglected.
+$b_{\rm mag} = 0$ in every DESI bin and every LSST Y1 lens bin, in
+the model and in the covariance, so magnification is neglected.
+What the neglect costs is measured below.
 
 For thin bins the split of Eq.~\eqref{eq:fkem} is not enough.
 Limber's error shrinks with the width of the radial kernel, so for a
@@ -1282,6 +1327,39 @@ stochastic terms are projected as exact templates; and magnification
 is neglected.  The one-loop power is not pushed through the velocity
 terms because velocities do not grow like the density field once
 nonlinear.
+
+\paragraph{The neglected magnification.}
+What does $b_{\rm mag} = 0$ cost?  For a sample observed to a flux
+limit, one coefficient per sample, $C = 5s - 2$, sets the
+$b_{\rm mag}$ of its bins.  Here $s$ is the count slope, the
+logarithmic slope of the cumulative number counts at the limit: it
+says how many extra galaxies lensing lifts across the limit, and
+the $-2$ is the dilution of the counts by the same lensing's
+stretching of the sky, so $C$ can take either sign.  The measured
+slopes give $C = 2$ for BGS and $C = 3$ for LRG; the ELG slope is
+not measured, and the fiducial takes $C_{\rm ELG} = 0$.  At these
+coefficients, fitting this model to data that carry the neglected
+signal shifts the fit -- a linear-response estimate, in units of
+each parameter's marginalized error, the $(w_0, w_a)$ pair measured
+against its error ellipse -- by at most about \MagFid{} on the
+three thinner layouts, on the current data vector and on the longer
+pair lists of Section~\ref{sec:pairs} alike.  The free bias levels
+and slopes absorb part of the signal: with every nuisance parameter
+frozen the largest $(w_0, w_a)$ shifts are
+\MagFrozenMin{}--\MagFrozenMax{} times larger.
+
+The unmeasured ELG count slope dominates the budget.  At the corner
+$C_{\rm ELG} = -2$ the current lists reach
+\MagMinusPaperMin{}--\MagMinusPaperMax{} in $(w_0, w_a)$ across the
+layouts, and at $+2$ the longer lists reach
+\MagPlusPairMin{}--\MagPlusPairMax{} against at most
+\MagPlusPaperMax{} on the current lists.  The wide
+$\Delta z = 0.2$ layout is the exception: its measured cross
+spectra are magnification-dominated, so $(w_0, w_a)$ shifts by
+\MagTwenty{} even at the measured slopes, and $A_s$ by about
+\MagTwentyAs{} of its marginalized error at $C_{\rm ELG} = +2$.
+Measuring the ELG count slope is the next step;
+\texttt{notes/lensing\_magnification} holds the study.
 
 \paragraph{The covariance.}
 The band-power covariance is Gaussian, computed at the one-loop
@@ -1731,6 +1809,10 @@ most \EtaW{} (Section~\ref{sec:forecast}).
     beyond the list -- the gap and $\sigma_v$ axes, the attribution of
     the gain to the free bias levels and slopes, and the comparison
     across the linear-bias priors.
+  \item \texttt{notes/lensing\_magnification}: the lensing-magnification
+    signal that $b_{\rm mag} = 0$ neglects -- its size on every layout
+    and pair list, the linear-response shifts of the fits, and their
+    dependence on the unmeasured ELG count slope.
   \item \texttt{notes/fog\_parameter\_degeneracy\_study}: the degeneracy
     of the line-of-sight counterterm $\alpha_2$ with the dispersions
     $\sigma_v$, the choice of their prior widths, and the
